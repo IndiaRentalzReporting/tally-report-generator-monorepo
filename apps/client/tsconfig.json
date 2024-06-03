@@ -1,0 +1,10 @@
+{
+  "extends": "@fullstack_package/typescript-config/react.json",
+  "include": ["src", "*.js", "*.ts", "*.cjs"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

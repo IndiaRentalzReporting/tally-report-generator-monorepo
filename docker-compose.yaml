@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mern_template_server_container:
+    image: kapoor17/mern_template_server_image:0.0.0.RELEASE
+    build:
+      dockerfile: ./apps/server
+    ports:
+      - 4000:4000
+    networks:
+      - mern_template_network
+  mern_template_client_container:
+    image: kapoor17/mern_template_client_image:0.0.0.RELEASE
+    build:
+      dockerfile: ./apps/client
+    ports:
+      - 3000:3000
+    networks:
+      - mern_template_network
+
+networks:
+  mern_template_network:
+    driver: bridge

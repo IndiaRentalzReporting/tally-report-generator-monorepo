@@ -1,0 +1,3 @@
+{
+  "extends": "@fullstack_package/typescript-config/base.json"
+}
