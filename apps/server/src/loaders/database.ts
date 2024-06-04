@@ -1,16 +1,20 @@
-import { connect } from 'mongoose';
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import config from '../config';
+import * as schema from '../models/schema';
 
-const databaseLoader = async () => {
-  const { MONGO_URI } = config.mongo;
+const { PG_URL } = config.postgres;
+
+const client = postgres(PG_URL);
+export const db = drizzle(client, { schema, logger: true });
+
+export async function connectAndLog() {
   try {
-    return await connect(MONGO_URI).then(() =>
-      console.log('Successfully connected to the Database!')
-    );
+    await client`SELECT NOW() AS now`;
+    console.log('Connected to the PostgreSQL database');
   } catch (err) {
-    console.error('Could not connect to the Database! :(');
-    throw err;
+    console.error('Error connecting to the PostgreSQL database', err);
+  } finally {
+    await client.end();
   }
-};
-
-export default databaseLoader;
+}
