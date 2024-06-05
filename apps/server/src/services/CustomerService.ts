@@ -1,14 +1,20 @@
-import { HydratedDocument, Types } from 'mongoose';
-
-import { Customer } from '../models/Customer';
-import { NotFoundError } from '../errors';
+import { eq } from 'drizzle-orm';
+import { db } from '../models';
+import { UserInsert, UserSchema, UserSelect } from '../models/schema';
+import AuthService from './AuthService';
 
 class CustomerService {
   public static async createOne(
-    data: Customer
-  ): Promise<HydratedDocument<Customer>> {
+    data: UserInsert
+  ): Promise<UserSelect | undefined> {
     try {
-      const customer = await Customer.create(data);
+      const [customer] = await db
+        .insert(UserSchema)
+        .values({
+          ...data,
+          password: await AuthService.hashPassword(data.password)
+        })
+        .returning();
       return customer;
     } catch (err) {
       console.error('Could not create a new User!');
@@ -17,13 +23,12 @@ class CustomerService {
   }
 
   public static async findOne(
-    data: Record<'email', string> | Record<'_id', Types.ObjectId>
-  ): Promise<HydratedDocument<Customer>> {
-    const customer = await Customer.findOne(data);
-    console.log({ customer, data });
-    if (!customer) {
-      throw new NotFoundError('User does not exist!');
-    }
+    data: Record<'email', string>
+  ): Promise<UserSelect | undefined> {
+    const customer = await db.query.UserSchema.findFirst({
+      where: eq(UserSchema.email, data.email)
+    });
+
     return customer;
   }
 

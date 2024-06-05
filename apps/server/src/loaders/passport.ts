@@ -4,7 +4,6 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
-import { Types } from 'mongoose';
 import Customer from '../services/CustomerService';
 import AuthService from '../services/AuthService';
 
@@ -31,11 +30,11 @@ const passportLoader = (app: Express) => {
   passport.use(localStrategy);
 
   passport.serializeUser(async (user, done) => {
-    done(null, user._id);
+    done(null, user.email);
   });
 
-  passport.deserializeUser((_id: Types.ObjectId, done) => {
-    Customer.findOne({ _id })
+  passport.deserializeUser((email: string, done) => {
+    Customer.findOne({ email })
       .then((user) => done(null, user))
       .catch((e) => done(e));
   });
