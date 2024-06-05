@@ -1,5 +1,4 @@
 import { eq } from 'drizzle-orm';
-import { NotFoundError } from '../errors';
 import { db } from '../models';
 import { UserInsert, UserSchema, UserSelect } from '../models/schema';
 import AuthService from './AuthService';

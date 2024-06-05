@@ -5,7 +5,7 @@ const { PG_URL } = config.postgres;
 
 export default defineConfig({
   dialect: 'postgresql',
-  schema: './src/models/schema.ts',
+  schema: './src/models/schema',
   out: './src/models/migrations',
   dbCredentials: {
     url: PG_URL
