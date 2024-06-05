@@ -20,7 +20,7 @@ const expressLoader = (): Express => {
   app.use(express.urlencoded({ extended: true }));
   app.use(helmet());
 
-  // sessionsLoader(app);
+  sessionsLoader(app);
   passportLoader(app);
 
   routesLoader(app);

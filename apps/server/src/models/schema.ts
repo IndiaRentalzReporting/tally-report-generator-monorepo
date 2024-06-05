@@ -7,6 +7,12 @@ import {
   pgTable
 } from 'drizzle-orm/pg-core';
 
+declare global {
+  namespace Express {
+    interface User extends UserSelect {}
+  }
+}
+
 export const UserSchema = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   first_name: varchar('first_name', { length: 50 }).notNull(),
