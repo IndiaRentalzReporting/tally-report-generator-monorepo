@@ -16,3 +16,6 @@ export const PermissionSchema = pgTable('permissions', {
     .notNull()
     .$onUpdate(() => new Date())
 });
+
+export type PermissionInsert = typeof PermissionSchema.$inferInsert;
+export type PermissionSelect = typeof PermissionSchema.$inferSelect;

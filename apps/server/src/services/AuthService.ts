@@ -1,58 +1,54 @@
 import bcrypt from 'bcrypt';
 import { BadRequestError, CustomError, NotFoundError } from '../errors';
-import { UserInsert, UserSchema, UserSelect } from '../models/schema';
-import { db } from '../models';
-import CustomerService from './CustomerService';
+import { UserInsert, UserSelect } from '../models/schema';
+import UserService from './UserService';
 
 class AuthService {
-  public static async register(
-    data: UserInsert
-  ): Promise<UserSelect | undefined> {
-    const doesUserAlreadyExists = await CustomerService.findOne({
+  public static async register(data: UserInsert): Promise<UserSelect> {
+    const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
 
     if (doesUserAlreadyExists != null) {
       throw new CustomError('User Already Exists', 409);
     }
-    const customer = await db
-      .insert(UserSchema)
-      .values({
-        ...data,
-        password: await this.hashPassword(data.password)
-      })
-      .returning();
+    const user = await UserService.createOne({
+      ...data,
+      password: await this.hashPassword(data.password)
+    });
 
-    return customer[0];
+    if (!user) {
+      throw new CustomError('Database error: User returned as undefined', 500);
+    }
+
+    return user;
   }
 
-  public static async login(data: Pick<UserInsert, 'email' | 'password'>) {
+  public static async login(
+    data: Pick<UserInsert, 'email' | 'password'>
+  ): Promise<UserSelect> {
     const { email, password } = data;
-    const customer = await CustomerService.findOne({ email });
+    const user = await UserService.findOne({ email });
 
-    if (customer === undefined) {
+    if (user === undefined) {
       throw new NotFoundError('User does not exist');
     }
 
-    const passwordMatch = await this.comparePassword(
-      password,
-      customer?.password
-    );
+    const passwordMatch = await this.comparePassword(password, user.password);
     if (!passwordMatch) {
       throw new BadRequestError('Wrong Password');
     }
 
-    console.log({ passwordMatch, customer });
-    return customer;
+    return user;
   }
 
-  public static async hashPassword(password: string): Promise<string> {
+  static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
     return passwordHash;
   }
 
-  public static async comparePassword(
+  static async comparePassword(
     password: string,
     hash: string
   ): Promise<boolean> {
