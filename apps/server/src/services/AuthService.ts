@@ -17,10 +17,6 @@ class AuthService {
       password: await this.hashPassword(data.password)
     });
 
-    if (!user) {
-      throw new CustomError('Database error: User returned as undefined', 500);
-    }
-
     return user;
   }
 

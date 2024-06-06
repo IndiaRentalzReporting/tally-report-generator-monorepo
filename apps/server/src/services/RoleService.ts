@@ -7,7 +7,9 @@ import {
   PermissionSelect,
   RoleInsert,
   RoleSchema,
-  RoleSelect
+  RoleSelect,
+  UserRoleSchema,
+  UserRoleSelect
 } from '../models/schema';
 
 class RoleService {
@@ -43,6 +45,25 @@ class RoleService {
     });
 
     return permission;
+  }
+
+  public static async assignRole(
+    userId: string,
+    roleId: string
+  ): Promise<UserRoleSelect> {
+    const [userRoleRelation] = await db
+      .insert(UserRoleSchema)
+      .values({ user_id: userId, role_id: roleId })
+      .returning();
+
+    if (!userRoleRelation) {
+      throw new CustomError(
+        'Database error: UserRoleRelation returned as undefined',
+        500
+      );
+    }
+
+    return userRoleRelation;
   }
 }
 

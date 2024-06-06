@@ -13,6 +13,7 @@ class UserService {
   public static async createOne(data: UserInsert): Promise<UserSelect> {
     try {
       const [user] = await db.insert(UserSchema).values(data).returning();
+      console.log({ user });
       if (!user) {
         throw new CustomError(
           'Database error: User returned as undefined',
@@ -28,14 +29,10 @@ class UserService {
 
   public static async findOne(
     data: Record<'email', string>
-  ): Promise<UserSelect> {
+  ): Promise<UserSelect | undefined> {
     const user = await db.query.UserSchema.findFirst({
       where: eq(UserSchema.email, data.email)
     });
-
-    if (!user) {
-      throw new CustomError('Database error: User returned as undefined', 500);
-    }
 
     return user;
   }
