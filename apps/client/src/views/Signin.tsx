@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { ChangeEvent, useState, FormEvent } from 'react';
+import { LoginUser } from '@fullstack_package/interfaces';
 import {
   Button,
   Card,
@@ -9,8 +11,28 @@ import {
   Input,
   Label
 } from '@/components/ui';
+import services from '@/services';
 
 export const SigninForm = () => {
+  const [loginData, setLoginData] = useState<LoginUser>({
+    email: '',
+    password: ''
+  });
+
+  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const user = await services.auth.signin(loginData);
+    console.log(user);
+  };
+
   return (
     <div className="h-full flex flex-col justify-center items-center">
       <Card className="mx-auto max-w-sm">
@@ -21,12 +43,15 @@ export const SigninForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <form onSubmit={handleLogin} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
+                value={loginData.email}
+                onChange={handleFormChange}
                 placeholder="m@example.com"
                 required
               />
@@ -38,12 +63,19 @@ export const SigninForm = () => {
                   Forgot your password?
                 </Link>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={loginData.password}
+                onChange={handleFormChange}
+                required
+              />
             </div>
             <Button type="submit" className="w-full">
               Login
             </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
             Don't have an account?{' '}
             <Link to="/register" className="underline">

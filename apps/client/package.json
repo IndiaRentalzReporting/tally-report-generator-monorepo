@@ -12,6 +12,7 @@
   "dependencies": {
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.378.0",
@@ -24,6 +25,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@fullstack_package/interfaces": "*",
     "@fullstack_package/eslint-config": "*",
     "@fullstack_package/typescript-config": "*",
     "@types/node": "^20.12.12",

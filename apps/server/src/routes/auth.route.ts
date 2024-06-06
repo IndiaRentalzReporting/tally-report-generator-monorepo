@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Customer as ZodCustomerSchema } from '@fullstack_package/interfaces';
+import { User as ZodCustomerSchema } from '@fullstack_package/interfaces';
 import { handleRegister, handleLogin } from '../controller/auth.controller';
 import { authenticate, validateSchema } from '../middlewares';
 
