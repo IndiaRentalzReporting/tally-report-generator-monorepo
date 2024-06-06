@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router';
+import { Navigate, Outlet } from 'react-router-dom';
 import useAuthentication from '../../lib/hooks/useAuthentication';
 
 export const PrivateRoutes: React.FC = () => {
