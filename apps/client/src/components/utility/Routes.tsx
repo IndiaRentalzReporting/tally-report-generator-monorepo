@@ -5,7 +5,7 @@ import useAuthentication from '../../lib/hooks/useAuthentication';
 export const PrivateRoutes: React.FC = () => {
   const isAuthenticated = useAuthentication();
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/sign-in" />;
 };
 
 export const PublicRoutes: React.FC = () => {

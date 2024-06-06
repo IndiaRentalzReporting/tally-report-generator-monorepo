@@ -4,7 +4,7 @@ import { UserInsert, UserSelect } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
-  public static async register(data: UserInsert): Promise<UserSelect> {
+  public static async signUp(data: UserInsert): Promise<UserSelect> {
     const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
@@ -20,7 +20,7 @@ class AuthService {
     return user;
   }
 
-  public static async login(
+  public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
   ): Promise<UserSelect> {
     const { email, password } = data;

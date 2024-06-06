@@ -14,7 +14,7 @@ const passportLoader = (app: Express) => {
 
   const verifyCallback: VerifyFunction = async (email, password, done) => {
     try {
-      const user = await AuthService.login({ email, password });
+      const user = await AuthService.signIn({ email, password });
       return done(null, user);
     } catch (e) {
       console.error(`Error while authenticating the User`);

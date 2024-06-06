@@ -27,9 +27,9 @@ export const SigninForm = () => {
     }));
   };
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await services.auth.signin(loginData);
+    const user = await services.auth.signIn(loginData);
     console.log(user);
   };
 
@@ -37,13 +37,13 @@ export const SigninForm = () => {
     <div className="h-full flex flex-col justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Sign In</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to sign in to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="grid gap-4">
+          <form onSubmit={handleSignIn} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -78,7 +78,7 @@ export const SigninForm = () => {
           </form>
           <div className="mt-4 text-center text-sm">
             Don't have an account?{' '}
-            <Link to="/register" className="underline">
+            <Link to="/sign-up" className="underline">
               Sign up
             </Link>
           </div>

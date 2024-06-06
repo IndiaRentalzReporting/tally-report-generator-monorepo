@@ -2,21 +2,21 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
 import { UserInsert, UserSelect } from '../models/schema';
 
-export const handleRegister = async (
+export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
   res: Response<UserSelect>,
   next: NextFunction
 ) => {
   try {
-    const user = await AuthService.register(req.body);
+    const user = await AuthService.signUp(req.body);
     res.json(user);
   } catch (err) {
-    console.error(`Could not register the User`);
+    console.error(`Could not sign up the User`);
     next(err);
   }
 };
 
-export const handleLogin = async (
+export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
   res: Response<UserSelect>,
   next: NextFunction
@@ -24,7 +24,7 @@ export const handleLogin = async (
   try {
     res.json(req.user);
   } catch (err) {
-    console.error(`Could not login the User`);
+    console.error(`Could not sign in the User`);
     next(err);
   }
 };

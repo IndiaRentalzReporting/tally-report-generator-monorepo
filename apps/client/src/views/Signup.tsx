@@ -29,9 +29,9 @@ export const SignupForm = () => {
     }));
   };
 
-  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await services.auth.signup(registerData);
+    const user = await services.auth.signUp(registerData);
     console.log(user);
   };
   return (
@@ -44,7 +44,7 @@ export const SignupForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleRegister} className="grid gap-4">
+          <form onSubmit={handleSignUp} className="grid gap-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="first-name">First name</Label>
@@ -96,8 +96,10 @@ export const SignupForm = () => {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Already have an account?
-            <Link to="/login">Sign in</Link>
+            Already have an account?{' '}
+            <Link to="/sign-in" className="underline">
+              Sign in
+            </Link>
           </div>
         </CardContent>
       </Card>

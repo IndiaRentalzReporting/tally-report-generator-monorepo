@@ -4,11 +4,11 @@ import config from '@/config';
 
 const services = {
   auth: {
-    signin: (data: LoginUser): AxiosPromise<User> => {
-      return axios.post(`${config.apiUrl()}/auth/login`, data);
+    signIn: (data: LoginUser): AxiosPromise<User> => {
+      return axios.post(`${config.apiUrl()}/auth/sign-in`, data);
     },
-    signup: (data: RegisterUser): AxiosPromise<User> => {
-      return axios.post(`${config.apiUrl()}/auth/register`, data);
+    signUp: (data: RegisterUser): AxiosPromise<User> => {
+      return axios.post(`${config.apiUrl()}/auth/sign-up`, data);
     }
   }
 };
