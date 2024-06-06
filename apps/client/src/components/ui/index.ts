@@ -3,3 +3,4 @@ export * from './Typography';
 export * from './label';
 export * from './input';
 export * from './card';
+export * from './dropdown-menu';

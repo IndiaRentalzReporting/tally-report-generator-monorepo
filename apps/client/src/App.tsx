@@ -8,6 +8,7 @@ import {
 import { PublicRoutes, PrivateRoutes } from './components/utility';
 import { SignupForm, SigninForm } from './views';
 import { Layout } from './components/composite';
+import { ThemeProvider } from './providers/ThemeProvider';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,7 +23,11 @@ const router = createBrowserRouter(
   )
 );
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 };
 
 export default App;
