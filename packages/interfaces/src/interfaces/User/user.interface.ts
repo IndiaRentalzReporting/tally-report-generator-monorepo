@@ -29,6 +29,7 @@ export const RegisterUser = User.pick({
 
 export type RegisterUser = z.infer<typeof RegisterUser>;
 
+
 export const LoginUser = User.pick({
   email: true,
   password: true

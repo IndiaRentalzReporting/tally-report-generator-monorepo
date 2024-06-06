@@ -4,7 +4,7 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
-import Customer from '../services/CustomerService';
+import UserService from '../services/UserService';
 import AuthService from '../services/AuthService';
 
 const passportLoader = (app: Express) => {
@@ -17,7 +17,7 @@ const passportLoader = (app: Express) => {
       const user = await AuthService.login({ email, password });
       return done(null, user);
     } catch (e) {
-      console.error(`Error while authenticating the Customer`);
+      console.error(`Error while authenticating the User`);
       return done(e);
     }
   };
@@ -34,7 +34,7 @@ const passportLoader = (app: Express) => {
   });
 
   passport.deserializeUser((email: string, done) => {
-    Customer.findOne({ email })
+    UserService.findOne({ email })
       .then((user) => done(null, user))
       .catch((e) => done(e));
   });

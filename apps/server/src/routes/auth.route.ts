@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User as ZodCustomerSchema } from '@fullstack_package/interfaces';
+import { User as ZodUserSchema } from '@fullstack_package/interfaces';
 import { handleRegister, handleLogin } from '../controller/auth.controller';
 import { authenticate, validateSchema } from '../middlewares';
 
@@ -8,7 +8,7 @@ const authRouter = Router();
 authRouter.post(
   '/login',
   validateSchema({
-    body: ZodCustomerSchema.pick({ email: true, password: true })
+    body: ZodUserSchema.pick({ email: true, password: true })
   }),
   authenticate,
   handleLogin
@@ -16,7 +16,7 @@ authRouter.post(
 authRouter.post(
   '/register',
   validateSchema({
-    body: ZodCustomerSchema.omit({
+    body: ZodUserSchema.omit({
       id: true,
       created_at: true,
       updated_at: true

@@ -5,7 +5,6 @@ declare global {
     interface User extends UserSelect {}
   }
 }
-
 export const UserSchema = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   first_name: varchar('first_name', { length: 50 }).notNull(),
@@ -21,5 +20,5 @@ export const UserSchema = pgTable('users', {
     .$onUpdate(() => new Date())
 });
 
-export type UserInsert = typeof UserSchema.$inferInsert; // type for inserting new users
+export type UserInsert = typeof UserSchema.$inferInsert;
 export type UserSelect = typeof UserSchema.$inferSelect;
