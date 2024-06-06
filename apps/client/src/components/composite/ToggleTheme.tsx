@@ -9,7 +9,7 @@ import {
 } from '@/components/ui';
 import { useTheme } from '@/providers/ThemeProvider';
 
-export const ModeToggle = () => {
+export const ToggleTheme = () => {
   const { setTheme } = useTheme();
 
   return (

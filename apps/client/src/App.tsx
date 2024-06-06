@@ -6,7 +6,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { PublicRoutes, PrivateRoutes } from './components/utility';
-import { SignupForm, SigninForm } from './views';
+import { SignupForm, SigninForm, Dashboard } from './views';
 import { Layout } from './components/composite';
 import { ThemeProvider } from './providers/ThemeProvider';
 
@@ -17,6 +17,7 @@ const router = createBrowserRouter(
       <Route element={<PublicRoutes />}>
         <Route path="sign-up" element={<SignupForm />} />
         <Route path="sign-in" element={<SigninForm />} />
+        <Route path="dashboard" element={<Dashboard />} />
       </Route>
       <Route element={<PrivateRoutes />} />
     </Route>
