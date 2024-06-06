@@ -28,3 +28,36 @@ export const handleSignIn = async (
     next(err);
   }
 };
+
+export const handleLogout = (
+  req: Request,
+  res: Response<{ message: string }>,
+  next: NextFunction
+) => {
+  req.logOut((err) => {
+    if (err) return next(err);
+    req.session.destroy((err) => {
+      if (err) return next(err);
+
+      res.clearCookie('connect.sid', { path: '/' }); // 'connect.sid' is the default session cookie name
+      return res.json({ message: 'Logged Out' });
+    });
+  });
+};
+
+export const handleStatusCheck = (
+  req: Request,
+  res: Response<{ user: UserSelect | null; isAuthenticated: boolean }>
+) => {
+  if (req.isAuthenticated()) {
+    res.json({
+      user: req.user,
+      isAuthenticated: true
+    });
+    return;
+  }
+  res.json({
+    user: null,
+    isAuthenticated: false
+  });
+};

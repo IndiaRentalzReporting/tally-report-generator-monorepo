@@ -11,9 +11,10 @@ import {
   Input,
   Label
 } from '@/components/ui';
-import services from '@/services';
+import { useAuth } from '@/providers/AuthProvider';
 
 export const SigninForm = () => {
+  const { signIn } = useAuth();
   const [loginData, setLoginData] = useState<LoginUser>({
     email: '',
     password: ''
@@ -29,8 +30,7 @@ export const SigninForm = () => {
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await services.auth.signIn(loginData);
-    console.log(user);
+    signIn(loginData);
   };
 
   return (
@@ -77,7 +77,7 @@ export const SigninForm = () => {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/sign-up" className="underline">
               Sign up
             </Link>
