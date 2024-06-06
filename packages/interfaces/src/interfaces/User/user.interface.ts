@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { errorMessages } from '../../messages/error.messages';
 
-export const Customer = z.object({
+export const User = z.object({
   id: z.string().uuid({ message: errorMessages.invalid('UUID') }),
   first_name: z
     .string()
@@ -18,13 +18,13 @@ export const Customer = z.object({
   updated_at: z.date({ message: errorMessages.invalid('Date') })
 });
 
-export type Customer = z.infer<typeof Customer>;
+export type User = z.infer<typeof User>;
 
-export const RegisterCustomer = Customer.pick({
+export const RegisterUser = User.pick({
   first_name: true,
   last_name: true,
   email: true,
   password: true
 });
 
-export type RegisterCustomer = z.infer<typeof RegisterCustomer>;
+export type RegisterUser = z.infer<typeof RegisterUser>;

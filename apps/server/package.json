@@ -9,8 +9,9 @@
     "test": "jest",
     "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
-    "db:generateMigrations": "drizzle-kit generate",
-    "db:migrate": "tsx ./src/models/migrate.ts"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:drop": "drizzle-kit drop"
   },
   "devDependencies": {
     "@fullstack_package/eslint-config": "*",
@@ -42,6 +43,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.31.1",
+    "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.18.0",

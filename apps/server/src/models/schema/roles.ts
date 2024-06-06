@@ -11,3 +11,6 @@ export const RoleSchema = pgTable('roles', {
     .notNull()
     .$onUpdate(() => new Date())
 });
+
+export type RoleInsert = typeof RoleSchema.$inferInsert;
+export type RoleSelect = typeof RoleSchema.$inferSelect;

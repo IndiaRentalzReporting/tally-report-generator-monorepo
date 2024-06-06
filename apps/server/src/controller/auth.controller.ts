@@ -8,8 +8,8 @@ export const handleRegister = async (
   next: NextFunction
 ) => {
   try {
-    const customer = await AuthService.register(req.body);
-    res.json(customer);
+    const user = await AuthService.register(req.body);
+    res.json(user);
   } catch (err) {
     console.error(`Could not register the User`);
     next(err);
