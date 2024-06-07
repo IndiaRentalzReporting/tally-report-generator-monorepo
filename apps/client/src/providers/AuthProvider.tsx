@@ -1,6 +1,6 @@
 import { RegisterUser, User, LoginUser } from '@fullstack_package/interfaces';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import services from '@/services';
 import { showErrorAlert } from '@/lib/utils';
 
@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] =
     useState<Pick<AuthProviderState, 'isAuthenticated' | 'user'>>(initialState);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const checkAuthentication = async () => {
       const { user, isAuthenticated } = (await services.auth.status()).data;
@@ -49,7 +51,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user: null,
         isAuthenticated: false
       });
-      redirect('/sign-in');
     } catch (e) {
       console.error(e);
       showErrorAlert('Error logging out');
@@ -63,21 +64,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user,
         isAuthenticated: true
       });
-      redirect('/dashboard');
     } catch (e) {
+      console.error(e);
       showErrorAlert('Could not sign you in!');
     }
   };
 
   const signUp = async (data: RegisterUser) => {
     try {
-      const user = (await services.auth.signUp(data)).data;
+      await services.auth.signUp(data);
       setState({
-        user,
-        isAuthenticated: true
+        user: null,
+        isAuthenticated: false
       });
-      redirect('/sign-in');
+      navigate('/sign-in');
     } catch (e) {
+      console.error(e);
       showErrorAlert('Could not sign you up!');
     }
   };

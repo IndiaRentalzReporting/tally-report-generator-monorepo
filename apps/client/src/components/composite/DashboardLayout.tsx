@@ -1,11 +1,5 @@
-import React, {
-  ChangeEvent,
-  MouseEvent,
-  MouseEventHandler,
-  useState
-} from 'react';
-import { Outlet, useLocation, Link } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import React, { MouseEvent, useMemo, useState } from 'react';
+import { Outlet, Link } from 'react-router-dom';
 
 import {
   Bell,
@@ -72,9 +66,14 @@ const navigation: State[] = [
     isActive: false
   }
 ];
-export const Layout = () => {
+export const DashboardLayout = () => {
   const [navState, setNavState] = useState<State[]>(navigation);
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
+
+  const userName = useMemo(
+    () => `${user?.first_name} ${user?.last_name}`,
+    [user]
+  );
 
   const handleNavClick = (e: MouseEvent<HTMLAnchorElement>) => {
     const { lastChild } = e.currentTarget;
@@ -180,7 +179,7 @@ export const Layout = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{userName}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
@@ -196,7 +195,7 @@ export const Layout = () => {
             </h1>
           </div>
           <div
-            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
+            className="flex flex-col gap-6 items-center justify-center rounded-lg shadow-sm"
             x-chunk="dashboard-02-chunk-1"
           >
             <Outlet />
