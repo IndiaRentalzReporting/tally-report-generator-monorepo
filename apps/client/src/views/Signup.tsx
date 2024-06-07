@@ -11,9 +11,11 @@ import {
   Input,
   Label
 } from '@/components/ui';
-import services from '@/services';
+import { useAuth } from '@/providers/AuthProvider';
 
 export const SignupForm = () => {
+  const { signUp } = useAuth();
+
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
     password: '',
@@ -31,9 +33,9 @@ export const SignupForm = () => {
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const user = await services.auth.signUp(registerData);
-    console.log(user);
+    signUp(registerData);
   };
+
   return (
     <div className="h-full flex flex-col justify-center items-center">
       <Card className="mx-auto max-w-sm">

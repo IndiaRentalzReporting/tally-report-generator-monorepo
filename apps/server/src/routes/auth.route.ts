@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import { User as ZodUserSchema } from '@fullstack_package/interfaces';
-import { handleSignUp, handleSignIn } from '../controller/auth.controller';
+import {
+  handleSignUp,
+  handleSignIn,
+  handleStatusCheck,
+  handleLogout
+} from '../controller/auth.controller';
 import { authenticate, validateSchema } from '../middlewares';
 
 const authRouter = Router();
@@ -24,5 +29,9 @@ authRouter.post(
   }),
   handleSignUp
 );
+
+authRouter.get('/status', handleStatusCheck);
+
+authRouter.post('/sign-out', handleLogout);
 
 export default authRouter;

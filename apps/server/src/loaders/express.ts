@@ -14,7 +14,12 @@ dotenv.config();
 const expressLoader = (): Express => {
   const app = express();
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: 'http://localhost:3000', // Your frontend URL
+      credentials: true // Allow credentials (cookies, authorization headers, TLS client certificates)
+    })
+  );
   app.use(morgan('dev'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

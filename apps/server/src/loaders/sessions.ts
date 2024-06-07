@@ -7,17 +7,17 @@ const sessionsLoader = (app: Express) => {
   try {
     const { SESSION_SECRET } = config.session;
     const { NODE_ENV } = config.server;
-    // const { MONGO_URI } = config.mongo;
+    const { MONGO_URI } = config.mongo;
 
-    // let sessionStore;
-    // try {
-    //   sessionStore = MongoStore.create({
-    //     mongoUrl: MONGO_URI
-    //   });
-    // } catch (err) {
-    //   console.error('Could not connect to the Session Database');
-    //   throw err;
-    // }
+    let sessionStore;
+    try {
+      sessionStore = MongoStore.create({
+        mongoUrl: MONGO_URI
+      });
+    } catch (err) {
+      console.error('Could not connect to the Session Database');
+      throw err;
+    }
 
     const sessionObject: SessionOptions = {
       secret: SESSION_SECRET,
@@ -25,8 +25,8 @@ const sessionsLoader = (app: Express) => {
       saveUninitialized: false,
       cookie: {
         maxAge: 1000 * 60 * 60 * 4 // 4 hours,
-      }
-      // store: sessionStore
+      },
+      store: sessionStore
     };
 
     if (NODE_ENV === 'production' && sessionObject.cookie) {
