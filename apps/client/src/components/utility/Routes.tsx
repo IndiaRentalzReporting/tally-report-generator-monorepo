@@ -5,15 +5,23 @@ import { useAuth } from '@/providers/AuthProvider';
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/sign-in" />;
+  return isAuthenticated ? (
+    <div className="flex flex-col h-screen">
+      <Outlet />
+    </div>
+  ) : (
+    <Navigate to="/sign-in" />
+  );
 };
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? <Navigate to="/dashboard" /> : <Outlet />;
-};
-
-export const OpenRoutes: React.FC = () => {
-  return <Outlet />;
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" />
+  ) : (
+    <div className="flex flex-col h-screen">
+      <Outlet />
+    </div>
+  );
 };
