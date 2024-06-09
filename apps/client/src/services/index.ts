@@ -1,5 +1,10 @@
 import axios, { AxiosPromise } from 'axios';
-import { LoginUser, RegisterUser, User } from '@fullstack_package/interfaces';
+import {
+  CreatePermissions,
+  LoginUser,
+  RegisterUser,
+  User
+} from '@fullstack_package/interfaces';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -20,6 +25,25 @@ const services = {
     },
     signOut: (): AxiosPromise<{ message: string }> => {
       return axios.post(`/auth/sign-out`);
+    }
+  },
+  role: {
+    createOne: async (data: {
+      roleName: string;
+      rolePermissions: CreatePermissions;
+    }): AxiosPromise => {
+      const { role } = (
+        await axios.post(`/role/create`, { name: data.roleName })
+      ).data;
+      return axios.post('/role/assignPermission', {
+        permissions: data.rolePermissions,
+        roleId: role.id
+      });
+    }
+  },
+  user: {
+    getAll: async (): AxiosPromise<{ users: User[] }> => {
+      return axios.get('/user/all', {});
     }
   }
 };

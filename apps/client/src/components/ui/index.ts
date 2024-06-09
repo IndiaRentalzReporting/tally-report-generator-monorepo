@@ -4,5 +4,8 @@ export * from './label';
 export * from './input';
 export * from './card';
 export * from './badge';
+export * from './form';
 export * from './sheet';
 export * from './dropdown-menu';
+export * from './switch';
+export * from './table';

@@ -1,2 +1,3 @@
-export * from './Layout';
+export * from './DashboardLayout';
+export * from './RootLayout';
 export * from './ToggleTheme';
