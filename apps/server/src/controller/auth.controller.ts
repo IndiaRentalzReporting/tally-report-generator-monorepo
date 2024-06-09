@@ -47,17 +47,23 @@ export const handleLogout = (
 
 export const handleStatusCheck = (
   req: Request,
-  res: Response<{ user: UserSelect | null; isAuthenticated: boolean }>
+  res: Response<{ user: UserSelect | null; isAuthenticated: boolean }>,
+  next: NextFunction
 ) => {
-  if (req.isAuthenticated()) {
+  try {
+    if (req.isAuthenticated()) {
+      res.json({
+        user: req.user,
+        isAuthenticated: true
+      });
+      return;
+    }
     res.json({
-      user: req.user,
-      isAuthenticated: true
+      user: null,
+      isAuthenticated: false
     });
-    return;
+  } catch (e) {
+    console.error(`Couldn't check the status`);
+    next(e);
   }
-  res.json({
-    user: null,
-    isAuthenticated: false
-  });
 };

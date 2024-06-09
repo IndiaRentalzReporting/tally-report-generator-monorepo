@@ -3,13 +3,25 @@ import {
   PermissionInsert,
   PermissionSelect,
   RoleInsert,
-  RoleSelect,
-  UserRoleSelect
+  RoleSelect
 } from '../models/schema';
 import RoleService from '../services/RoleService';
-import { CustomError } from '../errors';
 
-export const createRole = async (
+export const getAll = async (
+  req: Request,
+  res: Response<{ roles: RoleSelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const roles = await RoleService.getAll();
+    res.json({ roles });
+  } catch (e) {
+    console.error("Couldn't fetch all Roles");
+    next(e);
+  }
+};
+
+export const create = async (
   req: Request<object, object, RoleInsert>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction
@@ -43,24 +55,6 @@ export const assignPermission = async (
     res.json({ permissions });
   } catch (e) {
     console.error("Couldn't assign permissions to a role");
-    next(e);
-  }
-};
-
-export const assignRole = async (
-  req: Request<object, object, { userId: string; roleId: string }>,
-  res: Response<{ userRoleRelation: UserRoleSelect }>,
-  next: NextFunction
-) => {
-  try {
-    const userRoleRelation = await RoleService.assignRole(
-      req.body.userId,
-      req.body.roleId
-    );
-
-    res.json({ userRoleRelation });
-  } catch (e) {
-    console.error("Couldn't assign UserRoleRelation to a role");
     next(e);
   }
 };

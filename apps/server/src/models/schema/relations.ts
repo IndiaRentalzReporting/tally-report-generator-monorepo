@@ -1,4 +1,5 @@
 import { timestamp, primaryKey, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 import { UserSchema } from './users';
 import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
@@ -45,6 +46,47 @@ export const PermissionRoleSchema = pgTable(
         permission_role_table.permission_id,
         permission_role_table.role_id
       ]
+    })
+  })
+);
+
+export const userSchemaRelation = relations(UserSchema, ({ many }) => ({
+  userToRole: many(UserRoleSchema)
+}));
+
+export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
+  userToRole: many(UserRoleSchema),
+  permissionToRole: many(PermissionRoleSchema)
+}));
+
+export const permissionSchemaRelation = relations(
+  PermissionSchema,
+  ({ many }) => ({
+    permissionToRole: many(PermissionRoleSchema)
+  })
+);
+
+export const userRoleSchemaRelation = relations(UserRoleSchema, ({ one }) => ({
+  user: one(UserSchema, {
+    fields: [UserRoleSchema.user_id],
+    references: [UserSchema.id]
+  }),
+  role: one(RoleSchema, {
+    fields: [UserRoleSchema.role_id],
+    references: [RoleSchema.id]
+  })
+}));
+
+export const permissionRoleSchemaRelation = relations(
+  PermissionRoleSchema,
+  ({ one }) => ({
+    role: one(RoleSchema, {
+      fields: [PermissionRoleSchema.role_id],
+      references: [RoleSchema.id]
+    }),
+    permission: one(PermissionSchema, {
+      fields: [PermissionRoleSchema.permission_id],
+      references: [PermissionSchema.id]
     })
   })
 );

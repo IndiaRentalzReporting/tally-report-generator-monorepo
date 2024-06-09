@@ -1,6 +1,7 @@
 import { eq, ne } from 'drizzle-orm';
 import { db } from '../models';
 import {
+  RoleSchema,
   UserInsert,
   UserRoleSchema,
   UserRoleSelect,
@@ -43,26 +44,54 @@ class UserService {
     });
   }
 
-  public static async assignRole(
-    userId: string,
-    roleId: string
-  ): Promise<UserRoleSelect> {
-    const [relation] = await db
-      .insert(UserRoleSchema)
-      .values({
-        user_id: userId,
-        role_id: roleId
-      })
-      .returning();
-
-    if (!relation) {
-      throw new CustomError(
-        'Database error: Relation returned as undefined',
-        500
-      );
+  public static extractUserRoles = async (
+    userId: string
+  ): Promise<(string | undefined)[]> => {
+    const userWithRole = await db.query.UserSchema.findFirst({
+      where: eq(UserSchema.id, userId),
+      with: {
+        userToRole: {
+          columns: {
+            role_id: true
+          }
+        }
+      }
+    });
+    if (userWithRole) {
+      const { userToRole } = userWithRole;
+      const userRoles = userToRole.map(async ({ role_id }) => {
+        const role = await db.query.RoleSchema.findFirst({
+          where: eq(RoleSchema.id, role_id)
+        });
+        return role?.name;
+      });
+      return Promise.all(userRoles);
     }
 
-    return relation;
+    return [];
+  };
+
+  public static async assignRole(
+    users: string[],
+    roleId: string
+  ): Promise<UserRoleSelect['user_id'][]> {
+    const userIds = users.map(async (userId) => {
+      const [userRoleRelation] = await db
+        .insert(UserRoleSchema)
+        .values({ user_id: userId, role_id: roleId })
+        .returning();
+
+      if (!userRoleRelation) {
+        throw new CustomError(
+          'Database error: UserRoleRelation returned as undefined',
+          500
+        );
+      }
+
+      return userRoleRelation.user_id;
+    });
+
+    return Promise.all(userIds).then((res) => res);
   }
 }
 
