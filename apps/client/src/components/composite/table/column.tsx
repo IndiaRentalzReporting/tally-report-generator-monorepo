@@ -44,11 +44,11 @@ export const columns: ColumnDef<UserWithRole>[] = [
     header: 'Roles',
     cell: ({ getValue }) => {
       // @ts-ignore
-      const roles: string[] = getValue();
+      const roles: { name: string; id: string }[] = getValue();
       return (
         <span>
           {roles.map((role, index) => (
-            <span className={clsx(index > 0 && 'ms-2')}>{role}</span>
+            <span className={clsx(index > 0 && 'ms-2')}>{role.name}</span>
           ))}
         </span>
       );
