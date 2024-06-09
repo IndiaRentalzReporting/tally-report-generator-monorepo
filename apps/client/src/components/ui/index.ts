@@ -8,3 +8,4 @@ export * from './form';
 export * from './sheet';
 export * from './dropdown-menu';
 export * from './switch';
+export * from './table';

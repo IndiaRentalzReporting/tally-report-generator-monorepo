@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CreatePermissions } from '@fullstack_package/interfaces';
+import { CreatePermissions, User } from '@fullstack_package/interfaces';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,6 +22,8 @@ import {
 } from '@/components/ui/select';
 import services from '@/services';
 import { showErrorAlert, showSuccessAlert } from '@/lib/utils';
+import { DataTable } from '@/components/composite/table/data-table';
+import { columns } from '@/components/composite/table/column';
 
 const CreateRole: React.FC = () => {
   const [roleName, setRoleName] = React.useState<string>('');
@@ -119,6 +121,14 @@ const CreateRole: React.FC = () => {
 };
 
 const AssignRole: React.FC = () => {
+  const [users, setUsers] = React.useState<User[]>([]);
+
+  React.useEffect(() => {
+    const fetchUsers = async () => {};
+
+    fetchUsers();
+  }, []);
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -128,21 +138,6 @@ const AssignRole: React.FC = () => {
           </CardDescription> */}
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a User" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Fruits</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
         <Select>
           <SelectTrigger>
             <SelectValue placeholder="Select a Role" />
@@ -158,6 +153,7 @@ const AssignRole: React.FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <DataTable columns={columns} data={users} />
         <Button className="mt-8">Assign Role</Button>
       </CardContent>
     </Card>
