@@ -13,6 +13,16 @@ import {
 } from '../models/schema';
 
 class RoleService {
+  public static async getAll(): Promise<RoleSelect[]> {
+    const roles = await db.query.RoleSchema.findMany({});
+
+    if (!roles) {
+      throw new CustomError('Database error: Roles returned as undefined', 500);
+    }
+
+    return roles;
+  }
+
   public static async createOne(roleData: RoleInsert): Promise<RoleSelect> {
     const [role] = await db.insert(RoleSchema).values(roleData).returning();
 

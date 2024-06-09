@@ -7,7 +7,21 @@ import {
 } from '../models/schema';
 import RoleService from '../services/RoleService';
 
-export const createRole = async (
+export const getAll = async (
+  req: Request,
+  res: Response<{ roles: RoleSelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const roles = await RoleService.getAll();
+    res.json({ roles });
+  } catch (e) {
+    console.error("Couldn't fetch all Roles");
+    next(e);
+  }
+};
+
+export const create = async (
   req: Request<object, object, RoleInsert>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction

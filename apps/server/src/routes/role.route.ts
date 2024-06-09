@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { assignPermission, createRole } from '../controller/role.controller';
+import {
+  assignPermission,
+  create,
+  getAll
+} from '../controller/role.controller';
 
 const roleRouter = Router();
 
-roleRouter.post('/create', createRole);
+roleRouter.get('/all', getAll);
+roleRouter.post('/create', create);
 roleRouter.post('/assignPermission', assignPermission);
 
 export default roleRouter;
