@@ -40,7 +40,7 @@ class UserService {
 
   public static async getAll(reqUserId: string): Promise<UserSelect[]> {
     return db.query.UserSchema.findMany({
-      where: ne(UserSchema.id, reqUserId),
+      // where: ne(UserSchema.id, reqUserId),
       with: {
         userToRole: {
           columns: {

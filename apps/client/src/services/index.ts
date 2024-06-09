@@ -8,7 +8,14 @@ import {
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
-
+interface UserWithRole extends User {
+  userToRole: {
+    role: {
+      name: string;
+      id: string;
+    };
+  }[];
+}
 const services = {
   auth: {
     signIn: (data: LoginUser): AxiosPromise<User> => {
@@ -45,7 +52,7 @@ const services = {
     }
   },
   user: {
-    getAll: async (): AxiosPromise<{ users: User[] }> => {
+    getAll: async (): AxiosPromise<{ users: UserWithRole[] }> => {
       return axios.get('/user/all', {});
     },
     assignRole: async (
