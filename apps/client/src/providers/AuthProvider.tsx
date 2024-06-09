@@ -1,23 +1,46 @@
+/* eslint-disable no-console */
 import { RegisterUser, User, LoginUser } from '@fullstack_package/interfaces';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  UseMutateAsyncFunction,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import services from '@/services';
 import { showErrorAlert } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean | null;
   user: User | null;
-  signIn: (data: LoginUser) => void;
-  signUp: (data: RegisterUser) => void;
-  signOut: () => void;
+  signIn: UseMutateAsyncFunction<
+    AxiosResponse<User, any>,
+    Error,
+    LoginUser,
+    unknown
+  > | null;
+  signUp: UseMutateAsyncFunction<
+    AxiosResponse<User, any>,
+    Error,
+    RegisterUser,
+    unknown
+  > | null;
+  signOut: UseMutateAsyncFunction<
+    AxiosResponse<{ message: string }, any>,
+    Error,
+    void,
+    unknown
+  > | null;
 }
 
 const initialState: AuthProviderState = {
   isAuthenticated: false,
   user: null,
-  signIn: () => null,
-  signUp: () => null,
-  signOut: () => null
+  signIn: null,
+  signUp: null,
+  signOut: null
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -31,66 +54,68 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     useState<Pick<AuthProviderState, 'isAuthenticated' | 'user'>>(initialState);
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data: authData } = useQuery({
+    queryFn: () => services.auth.status(),
+    queryKey: ['auth', 'status check'],
+    staleTime: 1000 * 60 * 60
+  });
 
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const { user, isAuthenticated } = (await services.auth.status()).data;
-      setState({
-        isAuthenticated,
-        user
-      });
-    };
-
-    checkAuthentication();
-  }, []);
-
-  const signOut = async () => {
-    try {
-      await services.auth.signOut();
-      setState({
-        user: null,
-        isAuthenticated: false
-      });
-    } catch (e) {
+  const { mutateAsync: signOutMutation } = useMutation({
+    mutationFn: () => services.auth.signOut(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
+    onError: (e) => {
       console.error(e);
-      showErrorAlert('Error logging out');
+      showErrorAlert(`Couldn't log you out!`);
     }
-  };
+  });
 
-  const signIn = async (data: LoginUser) => {
-    try {
-      const user = (await services.auth.signIn(data)).data;
-      setState({
-        user,
-        isAuthenticated: true
-      });
-    } catch (e) {
+  const { mutateAsync: signInMutation } = useMutation({
+    mutationFn: (data: LoginUser) => services.auth.signIn(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+    },
+    onError: (e) => {
       console.error(e);
-      showErrorAlert('Could not sign you in!');
+      showErrorAlert(`Couldn't sign you in!`);
     }
-  };
+  });
 
-  const signUp = async (data: RegisterUser) => {
-    try {
-      await services.auth.signUp(data);
+  const { mutateAsync: signUpMutation } = useMutation({
+    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
       setState({
         user: null,
         isAuthenticated: false
       });
       navigate('/sign-in');
-    } catch (e) {
+    },
+    onError: (e) => {
       console.error(e);
-      showErrorAlert('Could not sign you up!');
+      showErrorAlert(`Couldn't sign you out!`);
     }
-  };
+  });
+
+  useEffect(() => {
+    if (authData && authData.data) {
+      setState({
+        user: authData.data.user,
+        isAuthenticated: authData.data.isAuthenticated
+      });
+    }
+  }, [authData]);
 
   return (
     <AuthContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         ...state,
-        signIn,
-        signUp,
-        signOut
+        signIn: signInMutation,
+        signUp: signUpMutation,
+        signOut: signOutMutation
       }}
     >
       {children}
