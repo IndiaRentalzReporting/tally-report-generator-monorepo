@@ -3,12 +3,9 @@ import {
   PermissionInsert,
   PermissionSelect,
   RoleInsert,
-  RoleSelect,
-  UserRoleSelect
+  RoleSelect
 } from '../models/schema';
 import RoleService from '../services/RoleService';
-import { CustomError } from '../errors';
-import UserService from '../services/UserService';
 
 export const createRole = async (
   req: Request<object, object, RoleInsert>,
@@ -44,24 +41,6 @@ export const assignPermission = async (
     res.json({ permissions });
   } catch (e) {
     console.error("Couldn't assign permissions to a role");
-    next(e);
-  }
-};
-
-export const assignRole = async (
-  req: Request<object, object, { userIds: string[]; roleId: string }>,
-  res: Response<{ userIds: string[] }>,
-  next: NextFunction
-) => {
-  try {
-    const userIds = await UserService.assignRole(
-      req.body.userIds,
-      req.body.roleId
-    );
-
-    res.json({ userIds });
-  } catch (e) {
-    console.error("Couldn't assign UserRoleRelation to a role");
     next(e);
   }
 };
