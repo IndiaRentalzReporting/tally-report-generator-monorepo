@@ -105,7 +105,7 @@ const CreateRole: React.FC = () => {
               )
             )}
           </div>
-          <Button className="mt-8 w-full" type="submit">
+          <Button className="mt-8" type="submit">
             Create Role
           </Button>
         </form>
@@ -150,7 +150,7 @@ const AssignRole: React.FC = () => {
           </SelectContent>
         </Select>
         <DataTable columns={columns} data={users} />
-        <Button className="mt-8">Assign Role</Button>
+        <Button className="mt-8 max-w-fit">Assign Role</Button>
       </CardContent>
     </Card>
   );
