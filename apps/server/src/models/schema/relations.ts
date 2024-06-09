@@ -1,7 +1,7 @@
 import { timestamp, primaryKey, pgTable, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { UserSchema } from './users';
-import { RoleSchema } from './roles';
+import { UserSchema, UserSelect } from './users';
+import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSchema } from './permissions';
 
 export const UserRoleSchema = pgTable(
@@ -26,6 +26,14 @@ export const UserRoleSchema = pgTable(
 
 export type UserRoleInsert = typeof UserRoleSchema.$inferInsert;
 export type UserRoleSelect = typeof UserRoleSchema.$inferSelect;
+export type UserWithRole = UserSelect & {
+  userToRole: {
+    role: Pick<RoleSelect, 'name' | 'id'>;
+  }[];
+};
+export type UserWithRolePretty = UserSelect & {
+  roles: Pick<RoleSelect, 'name' | 'id'>[];
+};
 
 export const PermissionRoleSchema = pgTable(
   'permission_role',
