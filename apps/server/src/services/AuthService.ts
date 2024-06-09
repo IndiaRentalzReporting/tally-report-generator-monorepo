@@ -9,6 +9,8 @@ class AuthService {
       email: data.email
     });
 
+    console.log(doesUserAlreadyExists);
+
     if (doesUserAlreadyExists != null) {
       throw new CustomError('User Already Exists', 409);
     }

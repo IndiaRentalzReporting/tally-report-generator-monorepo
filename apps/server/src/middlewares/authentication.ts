@@ -35,9 +35,8 @@ export const isAdmin = async (
   next: NextFunction
 ) => {
   if (req.isAuthenticated()) {
-    const roles = await UserService.extractUserRoles(req.user.id);
-    console.log(roles);
-    if (roles?.userToRole.find(({ role }) => role.name === 'admin')) {
+    const user = await UserService.findOne({ email: req.user.email });
+    if (user?.roles.find(({ name }) => name === 'admin')) {
       return next();
     }
   }

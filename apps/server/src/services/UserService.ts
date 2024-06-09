@@ -1,14 +1,15 @@
 import { eq, ne } from 'drizzle-orm';
 import { db } from '../models';
 import {
-  RoleSchema,
   UserInsert,
   UserRoleSchema,
   UserRoleSelect,
   UserSchema,
-  UserSelect
+  UserSelect,
+  UserWithRolePretty
 } from '../models/schema';
 import { CustomError } from '../errors';
+import { formatUserObject } from '../utils';
 
 class UserService {
   public static async createOne(data: UserInsert): Promise<UserSelect> {
@@ -30,16 +31,37 @@ class UserService {
 
   public static async findOne(
     data: Record<'email', string>
-  ): Promise<UserSelect | undefined> {
+  ): Promise<UserWithRolePretty | undefined> {
     const user = await db.query.UserSchema.findFirst({
-      where: eq(UserSchema.email, data.email)
+      where: eq(UserSchema.email, data.email),
+      with: {
+        userToRole: {
+          columns: {
+            user_id: false,
+            role_id: false,
+            assignedAt: false
+          },
+          with: {
+            role: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        }
+      }
     });
 
-    return user;
+    if (user) {
+      return formatUserObject(user);
+    }
+
+    return undefined;
   }
 
-  public static async getAll(reqUserId: string): Promise<UserSelect[]> {
-    return db.query.UserSchema.findMany({
+  public static async getAll(reqUserId: string): Promise<UserWithRolePretty[]> {
+    const users = await db.query.UserSchema.findMany({
       where: ne(UserSchema.id, reqUserId),
       with: {
         userToRole: {
@@ -59,30 +81,11 @@ class UserService {
         }
       }
     });
-  }
 
-  public static extractUserRoles = async (userId: string) => {
-    return db.query.UserSchema.findFirst({
-      where: eq(UserSchema.id, userId),
-      with: {
-        userToRole: {
-          columns: {
-            role_id: false,
-            user_id: false,
-            assignedAt: false
-          },
-          with: {
-            role: {
-              columns: {
-                name: true,
-                id: true
-              }
-            }
-          }
-        }
-      }
-    });
-  };
+    const formattedUser = users.map((user) => formatUserObject(user));
+
+    return formattedUser;
+  }
 
   public static async assignRole(
     users: string[],
