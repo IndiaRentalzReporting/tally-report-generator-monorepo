@@ -36,7 +36,8 @@ export const isAdmin = async (
 ) => {
   if (req.isAuthenticated()) {
     const roles = await UserService.extractUserRoles(req.user.id);
-    if (roles.includes('admin')) {
+    console.log(roles);
+    if (roles?.userToRole.find(({ role }) => role.name === 'admin')) {
       return next();
     }
   }
