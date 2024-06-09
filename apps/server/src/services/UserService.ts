@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, ne } from 'drizzle-orm';
 import { db } from '../models';
 import {
   UserInsert,
@@ -35,6 +35,12 @@ class UserService {
     });
 
     return user;
+  }
+
+  public static async getAll(reqUserId: string): Promise<UserSelect[]> {
+    return db.query.UserSchema.findMany({
+      where: ne(UserSchema.id, reqUserId)
+    });
   }
 
   public static async assignRole(
