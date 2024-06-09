@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { CreatePermissions, User } from '@fullstack_package/interfaces';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label, Switch } from '@/components/ui';
 
@@ -124,8 +118,10 @@ const AssignRole: React.FC = () => {
   const [users, setUsers] = React.useState<User[]>([]);
 
   React.useEffect(() => {
-    const fetchUsers = async () => {};
-
+    const fetchUsers = async () => {
+      const { users } = (await services.user.getAll()).data;
+      setUsers(users);
+    };
     fetchUsers();
   }, []);
 

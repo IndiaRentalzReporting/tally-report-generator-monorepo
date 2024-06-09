@@ -31,7 +31,7 @@ const services = {
     createOne: async (data: {
       roleName: string;
       rolePermissions: CreatePermissions;
-    }): Promise<AxiosPromise> => {
+    }): AxiosPromise => {
       const { role } = (
         await axios.post(`/role/create`, { name: data.roleName })
       ).data;
@@ -39,6 +39,11 @@ const services = {
         permissions: data.rolePermissions,
         roleId: role.id
       });
+    }
+  },
+  user: {
+    getAll: async (): AxiosPromise<{ users: User[] }> => {
+      return axios.get('/user/all', {});
     }
   }
 };
