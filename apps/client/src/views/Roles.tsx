@@ -115,15 +115,30 @@ const CreateRole: React.FC = () => {
 };
 
 const AssignRole: React.FC = () => {
+  const [roles, setRoles] = React.useState<
+    { id: string; name: string; createdAt: Date; updatedAt: Date }[]
+  >([]);
   const [users, setUsers] = React.useState<User[]>([]);
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [selectedRole, setSelectedRole] = React.useState<string>('');
 
   React.useEffect(() => {
     const fetchUsers = async () => {
       const { users } = (await services.user.getAll()).data;
       setUsers(users);
+      const { roles } = (await services.role.getAll()).data;
+      setRoles(roles);
     };
     fetchUsers();
   }, []);
+
+  const handleRoleAssignment = async () => {
+    const keys = Object.keys(rowSelection);
+    const selectedUsers = users
+      .map((user, index) => (keys.includes(String(index)) ? user.id : ''))
+      .filter((id) => !!id);
+    await services.user.assignRole(selectedUsers, selectedRole);
+  };
 
   return (
     <Card className="w-full">
@@ -134,23 +149,30 @@ const AssignRole: React.FC = () => {
           </CardDescription> */}
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Select>
+        <Select onValueChange={setSelectedRole}>
           <SelectTrigger>
             <SelectValue placeholder="Select a Role" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Fruits</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
+              <SelectLabel>Roles</SelectLabel>
+              {roles.map((role) => (
+                <SelectItem value={role.id}>{role.name}</SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
-        <DataTable columns={columns} data={users} />
-        <Button className="mt-8 max-w-fit">Assign Role</Button>
+        <DataTable
+          columns={columns}
+          data={users}
+          selection={{
+            rowSelection,
+            setRowSelection
+          }}
+        />
+        <Button className="mt-8 max-w-fit" onClick={handleRoleAssignment}>
+          Assign Role
+        </Button>
       </CardContent>
     </Card>
   );

@@ -2,12 +2,14 @@
 
 import {
   ColumnDef,
+  OnChangeFn,
+  RowSelectionState,
   flexRender,
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table';
 
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import {
   Table,
   TableBody,
@@ -20,20 +22,24 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  selection: {
+    rowSelection: RowSelectionState;
+    setRowSelection: OnChangeFn<RowSelectionState>;
+  };
 }
 
 export const DataTable = <TData, TValue>({
   columns,
-  data
+  data,
+  selection
 }: DataTableProps<TData, TValue>) => {
-  const [rowSelection, setRowSelection] = React.useState({});
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: selection.setRowSelection,
     state: {
-      rowSelection
+      rowSelection: selection.rowSelection
     }
   });
 
