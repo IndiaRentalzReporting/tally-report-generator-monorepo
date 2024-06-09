@@ -45,7 +45,9 @@ const services = {
     }
   },
   user: {
-    getAll: async (): AxiosPromise<{ users: User[] }> => {
+    getAll: async (): AxiosPromise<{
+      users: (User & { roles: string[] })[];
+    }> => {
       return axios.get('/user/all', {});
     },
     assignRole: async (

@@ -118,7 +118,7 @@ const AssignRole: React.FC = () => {
   const [roles, setRoles] = React.useState<
     { id: string; name: string; createdAt: Date; updatedAt: Date }[]
   >([]);
-  const [users, setUsers] = React.useState<User[]>([]);
+  const [users, setUsers] = React.useState<(User & { roles: string[] })[]>([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
@@ -126,6 +126,7 @@ const AssignRole: React.FC = () => {
     const fetchUsers = async () => {
       const { users } = (await services.user.getAll()).data;
       setUsers(users);
+
       const { roles } = (await services.role.getAll()).data;
       setRoles(roles);
     };

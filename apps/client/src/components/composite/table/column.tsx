@@ -1,10 +1,12 @@
 import { User } from '@fullstack_package/interfaces';
 import { ColumnDef } from '@tanstack/react-table';
+import clsx from 'clsx';
 import { Checkbox } from '@/components/ui/checkbox';
 
-export const columns: ColumnDef<
-  Pick<User, 'first_name' | 'last_name' | 'email'>
->[] = [
+interface UserWithRole extends User {
+  roles: string[];
+}
+export const columns: ColumnDef<UserWithRole>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -36,5 +38,20 @@ export const columns: ColumnDef<
   {
     accessorKey: 'email',
     header: 'Email'
+  },
+  {
+    accessorKey: 'roles',
+    header: 'Roles',
+    cell: ({ getValue }) => {
+      // @ts-ignore
+      const roles: { name: string; id: string }[] = getValue();
+      return (
+        <span>
+          {roles.map((role, index) => (
+            <span className={clsx(index > 0 && 'ms-2')}>{role.name}</span>
+          ))}
+        </span>
+      );
+    }
   }
 ];
