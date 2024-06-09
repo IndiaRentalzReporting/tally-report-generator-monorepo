@@ -40,35 +40,48 @@ class UserService {
 
   public static async getAll(reqUserId: string): Promise<UserSelect[]> {
     return db.query.UserSchema.findMany({
-      where: ne(UserSchema.id, reqUserId)
-    });
-  }
-
-  public static extractUserRoles = async (
-    userId: string
-  ): Promise<(string | undefined)[]> => {
-    const userWithRole = await db.query.UserSchema.findFirst({
-      where: eq(UserSchema.id, userId),
+      where: ne(UserSchema.id, reqUserId),
       with: {
         userToRole: {
           columns: {
-            role_id: true
+            role_id: false,
+            user_id: false,
+            assignedAt: false
+          },
+          with: {
+            role: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
           }
         }
       }
     });
-    if (userWithRole) {
-      const { userToRole } = userWithRole;
-      const userRoles = userToRole.map(async ({ role_id }) => {
-        const role = await db.query.RoleSchema.findFirst({
-          where: eq(RoleSchema.id, role_id)
-        });
-        return role?.name;
-      });
-      return Promise.all(userRoles);
-    }
+  }
 
-    return [];
+  public static extractUserRoles = async (userId: string) => {
+    return db.query.UserSchema.findFirst({
+      where: eq(UserSchema.id, userId),
+      with: {
+        userToRole: {
+          columns: {
+            role_id: false,
+            user_id: false,
+            assignedAt: false
+          },
+          with: {
+            role: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        }
+      }
+    });
   };
 
   public static async assignRole(
