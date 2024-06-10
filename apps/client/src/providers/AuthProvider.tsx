@@ -8,7 +8,7 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import services from '@/services';
 import { showErrorAlert } from '@/lib/utils';
 
@@ -55,20 +55,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const { data: authData } = useQuery({
     queryFn: () => services.auth.status(),
-    queryKey: ['auth', 'status check'],
-    staleTime: 1000 * 60 * 60
+    queryKey: ['auth', 'statusCheck']
+    // refetchInterval: 1000 * 60 * 15
   });
 
   const { mutateAsync: signOutMutation } = useMutation({
     mutationFn: () => services.auth.signOut(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
-    },
-    onError: (e) => {
-      console.error(e);
-      showErrorAlert(`Couldn't log you out!`);
+      setState({
+        user: null,
+        isAuthenticated: false
+      });
     }
   });
 
@@ -76,10 +77,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     mutationFn: (data: LoginUser) => services.auth.signIn(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
-    },
-    onError: (e) => {
-      console.error(e);
-      showErrorAlert(`Couldn't sign you in!`);
     }
   });
 
@@ -92,10 +89,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         isAuthenticated: false
       });
       navigate('/sign-in');
-    },
-    onError: (e) => {
-      console.error(e);
-      showErrorAlert(`Couldn't sign you out!`);
     }
   });
 

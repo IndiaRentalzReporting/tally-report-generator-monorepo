@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { CreatePermissions, User } from '@fullstack_package/interfaces';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,6 +20,7 @@ import services from '@/services';
 import { showErrorAlert, showSuccessAlert } from '@/lib/utils';
 import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from '@/components/composite/table/column';
+import { useAuth } from '@/providers/AuthProvider';
 
 const CreateRole: React.FC = () => {
   const [roleName, setRoleName] = React.useState<string>('');
@@ -44,23 +47,28 @@ const CreateRole: React.FC = () => {
       };
     });
 
-  const handleRoleCreation = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await services.role.createOne({
-        roleName,
-        rolePermissions
-      });
-      setRoleName('');
+  const queryClient = useQueryClient();
+  const { mutateAsync: createRole } = useMutation({
+    mutationFn: ({ rn, rp }: { rn: string; rp: CreatePermissions }) =>
+      services.role.createOne({
+        roleName: rn,
+        rolePermissions: rp
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['role', 'getAll'] });
       setRolePermissions(initialPermissions);
       showSuccessAlert('Role created successfully!');
-    } catch (e) {
+    },
+    onError: (e) => {
       console.error(e);
       showErrorAlert('Error creating Role!');
     }
-  };
+  });
 
-  React.useEffect(() => console.log(rolePermissions), [rolePermissions]);
+  const handleRoleCreation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    createRole({ rn: roleName, rp: rolePermissions });
+  };
 
   return (
     <Card className="w-full">
@@ -122,16 +130,20 @@ const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
-  React.useEffect(() => {
-    const fetchUsers = async () => {
-      const { users } = (await services.user.getAll()).data;
-      setUsers(users);
+  const { data: allUsers } = useQuery({
+    queryFn: () => services.user.getAll(),
+    queryKey: ['users', 'getAll'],
+    staleTime: Infinity
+  });
 
-      const { roles } = (await services.role.getAll()).data;
-      setRoles(roles);
-    };
-    fetchUsers();
-  }, []);
+  const { data: allRoles } = useQuery({
+    queryFn: async () => services.role.getAll(),
+    queryKey: ['role', 'getAll'],
+    staleTime: Infinity
+  });
+
+  React.useEffect(() => setUsers(allUsers?.data.users ?? []), [allUsers]);
+  React.useEffect(() => setRoles(allRoles?.data.roles ?? []), [allRoles]);
 
   const handleRoleAssignment = async () => {
     const keys = Object.keys(rowSelection);
