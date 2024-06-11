@@ -1,13 +1,11 @@
-import { eq } from 'drizzle-orm';
 import { CustomError } from '../errors';
-import { db } from '../models';
+import db from '../models';
 import {
   PermissionInsert,
   PermissionSelect,
   RoleInsert,
   RoleSchema,
-  RoleSelect,
-  ActionSchema
+  RoleSelect
 } from '../models/schema';
 import { ActionInsert } from '../models/schema/action';
 import PermissionService from './PermissionService';

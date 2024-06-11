@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
-import { db } from '../models';
+import db from '../models';
 import { CustomError } from '../errors';
 
 class ActionService {

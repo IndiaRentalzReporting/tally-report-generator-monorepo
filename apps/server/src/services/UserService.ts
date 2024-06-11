@@ -1,5 +1,5 @@
 import { eq, ne } from 'drizzle-orm';
-import { db } from '../models';
+import db from '../models';
 import {
   UserInsert,
   UserSchema,

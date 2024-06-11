@@ -1,5 +1,5 @@
 import { CustomError } from '../errors';
-import { db } from '../models';
+import db from '../models';
 import {
   PermissionActionSchema,
   PermissionActionSelect
