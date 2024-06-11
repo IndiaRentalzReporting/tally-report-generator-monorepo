@@ -1,26 +1,22 @@
+import { eq } from 'drizzle-orm';
 import { CustomError } from '../errors';
 import { db } from '../models';
 import {
   PermissionInsert,
-  PermissionRoleSchema,
-  PermissionSchema,
   PermissionSelect,
   RoleInsert,
   RoleSchema,
   RoleSelect,
-  UserRoleSchema,
-  UserRoleSelect
+  ActionSchema
 } from '../models/schema';
+import { ActionInsert } from '../models/schema/action';
+import PermissionService from './PermissionService';
+import PermissionActionService from './PermissionActionService';
+import ActionService from './ActionService';
 
 class RoleService {
   public static async getAll(): Promise<RoleSelect[]> {
-    const roles = await db.query.RoleSchema.findMany({});
-
-    if (!roles) {
-      throw new CustomError('Database error: Roles returned as undefined', 500);
-    }
-
-    return roles;
+    return db.query.RoleSchema.findMany({});
   }
 
   public static async createOne(roleData: RoleInsert): Promise<RoleSelect> {
@@ -34,27 +30,22 @@ class RoleService {
   }
 
   public static async assignPermissions(
-    permissions: PermissionInsert,
-    roleId: string
-  ): Promise<PermissionSelect> {
-    const [permission] = await db
-      .insert(PermissionSchema)
-      .values(permissions)
-      .returning();
+    permissions: (PermissionInsert & Pick<ActionInsert, 'name'>)[],
+    role_id: string
+  ): Promise<PermissionSelect[]> {
+    const queries = permissions.map(async (permissionData) => {
+      const { name: actionName, ...pData } = permissionData;
 
-    if (!permission) {
-      throw new CustomError(
-        'Database error: Permission returned as undefined',
-        500
-      );
-    }
+      const permission = await PermissionService.createOne(pData, role_id);
 
-    await db.insert(PermissionRoleSchema).values({
-      permission_id: permission.id,
-      role_id: roleId
+      const action = await ActionService.findOne(actionName);
+
+      await PermissionActionService.createOne(permission.id, action.id);
+
+      return permission;
     });
 
-    return permission;
+    return Promise.all(queries);
   }
 }
 
