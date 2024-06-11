@@ -8,7 +8,6 @@ const { PORT, NODE_ENV } = config.server;
 
 (async () => {
   try {
-    // await databaseLoader();
     await connectAndLog();
     app.listen(PORT, () =>
       console.log(
