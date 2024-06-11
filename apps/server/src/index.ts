@@ -4,13 +4,17 @@ import { connectAndLog } from './loaders/database';
 
 const app = expressLoader();
 
-const { PORT } = config.server;
+const { PORT, NODE_ENV } = config.server;
 
 (async () => {
   try {
     // await databaseLoader();
     await connectAndLog();
-    app.listen(PORT, () => console.log(`Server Listening at PORT: ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(
+        `${NODE_ENV?.toLocaleUpperCase()} Server Listening at PORT: ${PORT}`
+      )
+    );
   } catch (err) {
     console.error('Could not connect to the server');
   }

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.development' });
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const {
   MONGO_PASSWORD = '',
@@ -8,7 +8,7 @@ const {
   MONGO_DB_NAME = 'db',
   PORT = '4000',
   SESSION_SECRET = '',
-  NODE_ENV = 'development',
+  NODE_ENV,
   PG_HOST,
   PG_PORT,
   PG_PASSWORD,

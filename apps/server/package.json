@@ -5,9 +5,11 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start:dev": "NODE_ENV=development node dist/src/index.js",
+    "start:staging": "NODE_ENV=staging node dist/src/index.js",
+    "start:production": "NODE_ENV=production node dist/src/index.js",
     "test": "jest",
-    "dev": "nodemon src/index.ts",
+    "dev": "NODE_ENV=development nodemon src/index.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
