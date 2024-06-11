@@ -3,6 +3,7 @@ import config from './src/config';
 
 const { PG_URL } = config.postgres;
 
+console.log(PG_URL);
 export default defineConfig({
   dialect: 'postgresql',
   schema: './src/models/schema',

@@ -1,103 +1,67 @@
-import { timestamp, primaryKey, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { primaryKey, pgTable, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { UserSchema, UserSelect } from './users';
-import { RoleSchema, RoleSelect } from './roles';
+import { UserSchema } from './users';
+import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
+import { ModuleSchema } from './modules';
+import { ActionSchema } from './action';
 
-export const UserRoleSchema = pgTable(
-  'user_role',
-  {
-    user_id: uuid('user_id')
-      .references(() => UserSchema.id)
-      .notNull(),
-    role_id: uuid('role_id')
-      .references(() => RoleSchema.id)
-      .notNull(),
-    assignedAt: timestamp('assignedAt', { mode: 'date', precision: 3 })
-      .defaultNow()
-      .notNull()
-  },
-  (user_role_table) => ({
-    primaryKey: primaryKey({
-      columns: [user_role_table.user_id, user_role_table.role_id]
-    })
-  })
-);
-
-export type UserRoleInsert = typeof UserRoleSchema.$inferInsert;
-export type UserRoleSelect = typeof UserRoleSchema.$inferSelect;
-export type UserWithRole = UserSelect & {
-  userToRole: {
-    role: Pick<RoleSelect, 'name' | 'id'>;
-  }[];
-};
-export type UserWithRolePretty = UserSelect & {
-  roles: Pick<RoleSelect, 'name' | 'id'>[];
-};
-
-export const PermissionRoleSchema = pgTable(
-  'permission_role',
+export const PermissionActionSchema = pgTable(
+  'permission_action',
   {
     permission_id: uuid('permission_id')
-      .references(() => PermissionSchema.id)
-      .notNull(),
-    role_id: uuid('role_id')
-      .references(() => RoleSchema.id)
-      .notNull(),
-    assignedAt: timestamp('assignedAt', { mode: 'date', precision: 3 })
-      .defaultNow()
       .notNull()
+      .references(() => PermissionSchema.id),
+    action_id: uuid('action_id')
+      .notNull()
+      .references(() => ActionSchema.id)
   },
-  (permission_role_table) => ({
+  (table) => ({
     primaryKey: primaryKey({
-      columns: [
-        permission_role_table.permission_id,
-        permission_role_table.role_id
-      ]
+      columns: [table.permission_id, table.action_id]
     })
   })
 );
 
-export const userSchemaRelation = relations(UserSchema, ({ many }) => ({
-  userToRole: many(UserRoleSchema)
-}));
-
-export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
-  userToRole: many(UserRoleSchema),
-  permissionToRole: many(PermissionRoleSchema)
-}));
-
-export const permissionSchemaRelation = relations(
-  PermissionSchema,
-  ({ many }) => ({
-    permissionToRole: many(PermissionRoleSchema)
-  })
-);
-
-export const userRoleSchemaRelation = relations(UserRoleSchema, ({ one }) => ({
-  user: one(UserSchema, {
-    fields: [UserRoleSchema.user_id],
-    references: [UserSchema.id]
-  }),
+export const userSchemaRelation = relations(UserSchema, ({ one }) => ({
   role: one(RoleSchema, {
-    fields: [UserRoleSchema.role_id],
+    fields: [UserSchema.role_id],
     references: [RoleSchema.id]
   })
 }));
 
-export const permissionRoleSchemaRelation = relations(
-  PermissionRoleSchema,
+export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
+  user: many(UserSchema),
+  permission: many(PermissionSchema)
+}));
+
+export const permissionSchemaRelation = relations(
+  PermissionSchema,
   ({ one }) => ({
     role: one(RoleSchema, {
-      fields: [PermissionRoleSchema.role_id],
+      fields: [PermissionSchema.role_id],
       references: [RoleSchema.id]
-    }),
-    permission: one(PermissionSchema, {
-      fields: [PermissionRoleSchema.permission_id],
-      references: [PermissionSchema.id]
     })
   })
 );
 
-export type PermissionRoleInsert = typeof PermissionRoleSchema.$inferInsert;
-export type PermissionRoleSelect = typeof PermissionRoleSchema.$inferSelect;
+export const moduleSchemaRelation = relations(ModuleSchema, ({ many }) => ({
+  moduleToRole: many(PermissionSchema)
+}));
+
+export const permissionActionSchemaRelation = relations(
+  PermissionActionSchema,
+  ({ one }) => ({
+    permission: one(PermissionSchema, {
+      fields: [PermissionActionSchema.permission_id],
+      references: [PermissionSchema.id]
+    }),
+    action: one(ActionSchema, {
+      fields: [PermissionActionSchema.action_id],
+      references: [ActionSchema.id]
+    })
+  })
+);
+
+export type PermissionActionInsert = typeof PermissionActionSchema.$inferInsert;
+export type PermissionActionSelect = typeof PermissionActionSchema.$inferSelect;

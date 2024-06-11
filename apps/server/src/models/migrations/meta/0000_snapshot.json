@@ -1,9 +1,47 @@
 {
-  "id": "c58d2234-d1de-4325-9863-c3b559cd5be3",
+  "id": "16adef16-165e-4190-8812-04db56d344a1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.action": {
+      "name": "action",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "name",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp (3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp (3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -14,6 +52,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         },
         "first_name": {
           "name": "first_name",
@@ -55,7 +99,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "users_role_id_roles_id_fk": {
+          "name": "users_role_id_roles_id_fk",
+          "tableFrom": "users",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_unique": {
@@ -78,47 +136,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "can_create": {
-          "name": "can_create",
-          "type": "boolean",
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": true
         },
-        "can_read": {
-          "name": "can_read",
-          "type": "boolean",
+        "module_id": {
+          "name": "module_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "can_update": {
-          "name": "can_update",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "can_delete": {
-          "name": "can_delete",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "can_import": {
-          "name": "can_import",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "can_export": {
-          "name": "can_export",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": true
         },
         "createdAt": {
           "name": "createdAt",
@@ -136,7 +164,34 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "permissions_role_id_roles_id_fk": {
+          "name": "permissions_role_id_roles_id_fk",
+          "tableFrom": "permissions",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "permissions_module_id_modules_id_fk": {
+          "name": "permissions_module_id_modules_id_fk",
+          "tableFrom": "permissions",
+          "tableTo": "modules",
+          "columnsFrom": [
+            "module_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -177,8 +232,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.permission_role": {
-      "name": "permission_role",
+    "public.permission_action": {
+      "name": "permission_action",
       "schema": "",
       "columns": {
         "permission_id": {
@@ -187,25 +242,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "role_id": {
-          "name": "role_id",
+        "action_id": {
+          "name": "action_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "assignedAt": {
-          "name": "assignedAt",
-          "type": "timestamp (3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "permission_role_permission_id_permissions_id_fk": {
-          "name": "permission_role_permission_id_permissions_id_fk",
-          "tableFrom": "permission_role",
+        "permission_action_permission_id_permissions_id_fk": {
+          "name": "permission_action_permission_id_permissions_id_fk",
+          "tableFrom": "permission_action",
           "tableTo": "permissions",
           "columnsFrom": [
             "permission_id"
@@ -216,12 +264,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "permission_role_role_id_roles_id_fk": {
-          "name": "permission_role_role_id_roles_id_fk",
-          "tableFrom": "permission_role",
-          "tableTo": "roles",
+        "permission_action_action_id_action_id_fk": {
+          "name": "permission_action_action_id_action_id_fk",
+          "tableFrom": "permission_action",
+          "tableTo": "action",
           "columnsFrom": [
-            "role_id"
+            "action_id"
           ],
           "columnsTo": [
             "id"
@@ -231,34 +279,42 @@
         }
       },
       "compositePrimaryKeys": {
-        "permission_role_permission_id_role_id_pk": {
-          "name": "permission_role_permission_id_role_id_pk",
+        "permission_action_permission_id_action_id_pk": {
+          "name": "permission_action_permission_id_action_id_pk",
           "columns": [
             "permission_id",
-            "role_id"
+            "action_id"
           ]
         }
       },
       "uniqueConstraints": {}
     },
-    "public.user_role": {
-      "name": "user_role",
+    "public.modules": {
+      "name": "modules",
       "schema": "",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "id": {
+          "name": "id",
           "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "role_id": {
-          "name": "role_id",
-          "type": "uuid",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
-        "assignedAt": {
-          "name": "assignedAt",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
           "notNull": true,
@@ -266,43 +322,8 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "user_role_user_id_users_id_fk": {
-          "name": "user_role_user_id_users_id_fk",
-          "tableFrom": "user_role",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "user_role_role_id_roles_id_fk": {
-          "name": "user_role_role_id_roles_id_fk",
-          "tableFrom": "user_role",
-          "tableTo": "roles",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "user_role_user_id_role_id_pk": {
-          "name": "user_role_user_id_role_id_pk",
-          "columns": [
-            "user_id",
-            "role_id"
-          ]
-        }
-      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }
   },

@@ -14,12 +14,10 @@ class AuthService {
     if (doesUserAlreadyExists != null) {
       throw new CustomError('User Already Exists', 409);
     }
-    const user = await UserService.createOne({
+    return UserService.createOne({
       ...data,
       password: await this.hashPassword(data.password)
     });
-
-    return user;
   }
 
   public static async signIn(
