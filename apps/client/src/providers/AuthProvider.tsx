@@ -58,38 +58,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { data: authData } = useQuery({
     queryFn: () => services.auth.status(),
-    queryKey: ['auth', 'statusCheck']
-    // refetchInterval: 1000 * 60 * 15
-  });
-
-  const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.auth.signOut(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-      setState({
-        user: null,
-        isAuthenticated: false
-      });
-    }
-  });
-
-  const { mutateAsync: signInMutation } = useMutation({
-    mutationFn: (data: LoginUser) => services.auth.signIn(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-    }
-  });
-
-  const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-      setState({
-        user: null,
-        isAuthenticated: false
-      });
-      navigate('/sign-in');
-    }
+    queryKey: ['auth', 'statusCheck'],
+    refetchInterval: 1000 * 60 * 15
   });
 
   useEffect(() => {
@@ -100,6 +70,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
     }
   }, [authData]);
+
+  const { mutateAsync: signOutMutation } = useMutation({
+    mutationFn: () => services.auth.signOut(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+    }
+  });
+
+  const { mutateAsync: signInMutation } = useMutation({
+    mutationFn: (data: LoginUser) => services.auth.signIn(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+    }
+  });
+
+  const { mutateAsync: signUpMutation } = useMutation({
+    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      navigate('/sign-in');
+    }
+  });
 
   return (
     <AuthContext.Provider
