@@ -2,4 +2,5 @@ export * from './users';
 export * from './permissions';
 export * from './roles';
 export * from './relations';
-export * from './action';
+export * from './actions';
+export * from './modules';

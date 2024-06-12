@@ -4,7 +4,7 @@ import { UserSchema } from './users';
 import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
-import { ActionSchema } from './action';
+import { ActionSchema } from './actions';
 
 export const PermissionActionSchema = pgTable(
   'permission_action',
