@@ -41,12 +41,16 @@ export const permissionSchemaRelation = relations(
     role: one(RoleSchema, {
       fields: [PermissionSchema.role_id],
       references: [RoleSchema.id]
+    }),
+    module: one(ModuleSchema, {
+      fields: [PermissionSchema.module_id],
+      references: [ModuleSchema.id]
     })
   })
 );
 
 export const moduleSchemaRelation = relations(ModuleSchema, ({ many }) => ({
-  moduleToRole: many(PermissionSchema)
+  permission: many(PermissionSchema)
 }));
 
 export const permissionActionSchemaRelation = relations(
