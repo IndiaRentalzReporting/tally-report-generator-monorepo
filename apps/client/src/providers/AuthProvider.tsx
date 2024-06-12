@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { RegisterUser, User, LoginUser } from '@fullstack_package/interfaces';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -8,13 +9,13 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import services from '@/services';
-import { showErrorAlert } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean | null;
   user: User | null;
+  loading: boolean;
   signIn: UseMutateAsyncFunction<
     AxiosResponse<User, any>,
     Error,
@@ -37,6 +38,7 @@ interface AuthProviderState {
 
 const initialState: AuthProviderState = {
   isAuthenticated: false,
+  loading: true,
   user: null,
   signIn: null,
   signUp: null,
@@ -51,12 +53,14 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] =
-    useState<Pick<AuthProviderState, 'isAuthenticated' | 'user'>>(initialState);
+    useState<Pick<AuthProviderState, 'isAuthenticated' | 'user' | 'loading'>>(
+      initialState
+    );
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: authData } = useQuery({
+  const { data: authData, fetchStatus } = useQuery({
     queryFn: () => services.auth.status(),
     queryKey: ['auth', 'statusCheck'],
     refetchInterval: 1000 * 60 * 15
@@ -66,24 +70,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (authData && authData.data) {
       setState({
         user: authData.data.user,
-        isAuthenticated: authData.data.isAuthenticated
+        isAuthenticated: authData.data.isAuthenticated,
+        loading: false
       });
     }
   }, [authData]);
 
-  const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.auth.signOut(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
-    }
-  });
+  const { mutateAsync: signOutMutation, isPending: isSignOutPending } =
+    useMutation({
+      mutationFn: () => services.auth.signOut(),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      }
+    });
 
-  const { mutateAsync: signInMutation } = useMutation({
+  const { mutateAsync: signInMutation, isPending } = useMutation({
     mutationFn: (data: LoginUser) => services.auth.signIn(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
     }
   });
+
+  useEffect(() => console.log({ isPending }), [isPending]);
 
   const { mutateAsync: signUpMutation } = useMutation({
     mutationFn: (data: RegisterUser) => services.auth.signUp(data),
@@ -92,6 +100,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       navigate('/sign-in');
     }
   });
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      loading: fetchStatus === 'fetching' || isSignOutPending
+    }));
+  }, [fetchStatus, isSignOutPending]);
 
   return (
     <AuthContext.Provider
@@ -108,6 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
