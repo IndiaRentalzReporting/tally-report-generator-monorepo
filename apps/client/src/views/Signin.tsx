@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { LoginUser } from '@fullstack_package/interfaces';
+import clsx from 'clsx';
 import {
   Button,
   Card,
@@ -9,12 +10,16 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Label
+  Label,
+  LoadingSpinner
 } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';
+import { Else, If, Then } from '@/components/utility';
 
 export const SigninForm = () => {
   const { signIn } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+
   const [loginData, setLoginData] = useState<LoginUser>({
     email: '',
     password: ''
@@ -30,7 +35,13 @@ export const SigninForm = () => {
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signIn(loginData);
+    setLoading(true);
+    if (signIn)
+      signIn(loginData, {
+        onSettled(d, e, v, c) {
+          setLoading(false);
+        }
+      });
   };
 
   return (
@@ -72,8 +83,19 @@ export const SigninForm = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
-              Login
+            <Button
+              type="submit"
+              className={clsx(
+                loading && 'cursor-default pointer-events-none',
+                'w-full'
+              )}
+            >
+              <If condition={loading}>
+                <Then>
+                  <LoadingSpinner />
+                </Then>
+                <Else>Login</Else>
+              </If>
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

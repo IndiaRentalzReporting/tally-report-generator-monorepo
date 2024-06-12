@@ -38,7 +38,7 @@ interface AuthProviderState {
 
 const initialState: AuthProviderState = {
   isAuthenticated: false,
-  loading: true,
+  loading: false,
   user: null,
   signIn: null,
   signUp: null,
@@ -63,7 +63,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: authData, fetchStatus } = useQuery({
     queryFn: () => services.auth.status(),
     queryKey: ['auth', 'statusCheck'],
-    refetchInterval: 1000 * 60 * 15
+    refetchInterval: 1000 * 60 * 15,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {
@@ -79,23 +80,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { mutateAsync: signOutMutation, isPending: isSignOutPending } =
     useMutation({
       mutationFn: () => services.auth.signOut(),
-      onSuccess: () => {
+      onSettled(data, error, variables, context) {
         queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       }
     });
 
-  const { mutateAsync: signInMutation, isPending } = useMutation({
-    mutationFn: (data: LoginUser) => services.auth.signIn(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
-    }
-  });
-
-  useEffect(() => console.log({ isPending }), [isPending]);
+  const { mutateAsync: signInMutation, isPending: isSignInPending } =
+    useMutation({
+      mutationFn: (data: LoginUser) => services.auth.signIn(data),
+      onSettled(data, error, variables, context) {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      }
+    });
 
   const { mutateAsync: signUpMutation } = useMutation({
     mutationFn: (data: RegisterUser) => services.auth.signUp(data),
-    onSuccess: () => {
+    onSettled(data, error, variables, context) {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       navigate('/sign-in');
     }
@@ -104,9 +104,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      loading: fetchStatus === 'fetching' || isSignOutPending
+      loading: fetchStatus === 'fetching' || isSignOutPending || isSignInPending
     }));
-  }, [fetchStatus, isSignOutPending]);
+  }, [fetchStatus, isSignOutPending, isSignInPending]);
 
   return (
     <AuthContext.Provider

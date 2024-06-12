@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { RegisterUser } from '@fullstack_package/interfaces';
 import { useState, ChangeEvent, FormEvent } from 'react';
+import clsx from 'clsx';
 import {
   Button,
   Card,
@@ -9,11 +10,14 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Label
+  Label,
+  LoadingSpinner
 } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';
+import { Else, If, Then } from '@/components/utility';
 
 export const SignupForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { signUp } = useAuth();
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
@@ -33,7 +37,12 @@ export const SignupForm = () => {
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signUp(registerData);
+    if (signUp)
+      signUp(registerData, {
+        onSettled(d, e, v, c) {
+          setLoading(false);
+        }
+      });
   };
 
   return (
@@ -93,8 +102,19 @@ export const SignupForm = () => {
                 type="password"
               />
             </div>
-            <Button type="submit" className="w-full">
-              Create an account
+            <Button
+              type="submit"
+              className={clsx(
+                loading && 'cursor-default pointer-events-none',
+                'w-full'
+              )}
+            >
+              <If condition={loading}>
+                <Then>
+                  <LoadingSpinner />
+                </Then>
+                <Else>Create an Account</Else>
+              </If>
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
