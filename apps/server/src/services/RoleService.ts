@@ -7,7 +7,7 @@ import {
   RoleSchema,
   RoleSelect
 } from '../models/schema';
-import { ActionInsert } from '../models/schema/action';
+import { ActionInsert } from '../models/schema/actions';
 import PermissionService from './PermissionService';
 import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';

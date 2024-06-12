@@ -16,6 +16,19 @@ class ActionService {
     }
     return action;
   }
+
+  public static async createOne(data: ActionInsert): Promise<ActionSelect> {
+    const [action] = await db.insert(ActionSchema).values(data).returning();
+
+    if (!action) {
+      throw new CustomError(
+        'Database error: Action returned as undefined',
+        500
+      );
+    }
+
+    return action;
+  }
 }
 
 export default ActionService;

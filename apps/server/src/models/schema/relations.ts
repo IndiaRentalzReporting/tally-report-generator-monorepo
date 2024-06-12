@@ -4,7 +4,7 @@ import { UserSchema } from './users';
 import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
-import { ActionSchema } from './action';
+import { ActionSchema } from './actions';
 
 export const PermissionActionSchema = pgTable(
   'permission_action',
@@ -41,12 +41,16 @@ export const permissionSchemaRelation = relations(
     role: one(RoleSchema, {
       fields: [PermissionSchema.role_id],
       references: [RoleSchema.id]
+    }),
+    module: one(ModuleSchema, {
+      fields: [PermissionSchema.module_id],
+      references: [ModuleSchema.id]
     })
   })
 );
 
 export const moduleSchemaRelation = relations(ModuleSchema, ({ many }) => ({
-  moduleToRole: many(PermissionSchema)
+  permission: many(PermissionSchema)
 }));
 
 export const permissionActionSchemaRelation = relations(

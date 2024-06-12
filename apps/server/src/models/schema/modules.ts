@@ -11,3 +11,6 @@ export const ModuleSchema = pgTable('modules', {
     .notNull()
     .$onUpdate(() => new Date())
 });
+
+export type ModuleInsert = typeof ModuleSchema.$inferInsert;
+export type ModuleSelect = typeof ModuleSchema.$inferSelect;

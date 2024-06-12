@@ -3,11 +3,13 @@ import authRouter from '../routes/auth.route';
 import roleRouter from '../routes/role.route';
 import userRouter from '../routes/user.route';
 import { isAdmin } from '../middlewares';
+import moduleRouter from '../routes/module.route';
 
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
   app.use('/role', isAdmin, roleRouter);
   app.use('/user', isAdmin, userRouter);
+  app.use('/module', isAdmin, moduleRouter);
 };
 
 export default routesLoader;
