@@ -36,7 +36,7 @@ export const isAdmin = async (
 ) => {
   if (req.isAuthenticated()) {
     const user = await UserService.findOne({ email: req.user.email });
-    if (user?.role?.name === 'admin') {
+    if (user?.role?.name.toLowerCase() === 'admin') {
       return next();
     }
   }
