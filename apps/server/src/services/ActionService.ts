@@ -4,6 +4,10 @@ import db from '../models';
 import { CustomError } from '../errors';
 
 class ActionService {
+  public static async getAll(): Promise<ActionSelect[]> {
+    return db.query.ActionSchema.findMany();
+  }
+
   public static async findOne(
     actionName: ActionInsert['name']
   ): Promise<ActionSelect> {
