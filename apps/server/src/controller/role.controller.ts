@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  ActionInsert,
+  ActionSelect,
   PermissionInsert,
   PermissionSelect,
   RoleInsert,
@@ -43,7 +43,9 @@ export const assignPermission = async (
     object,
     object,
     {
-      permissions: (PermissionInsert & Pick<ActionInsert, 'name'>)[];
+      permissions: (Pick<PermissionInsert, 'module_id'> & {
+        action_id: ActionSelect['id'];
+      })[];
       roleId: string;
     }
   >,

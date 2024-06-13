@@ -9,10 +9,10 @@ class ActionService {
   }
 
   public static async findOne(
-    actionName: ActionInsert['name']
+    actionId: ActionSelect['id']
   ): Promise<ActionSelect> {
     const action = await db.query.ActionSchema.findFirst({
-      where: eq(ActionSchema.name, actionName)
+      where: eq(ActionSchema.id, actionId)
     });
 
     if (!action) {

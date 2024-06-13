@@ -7,7 +7,7 @@ import {
   RoleSchema,
   RoleSelect
 } from '../models/schema';
-import { ActionInsert } from '../models/schema/actions';
+import { ActionSelect } from '../models/schema/actions';
 import PermissionService from './PermissionService';
 import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';
@@ -28,15 +28,17 @@ class RoleService {
   }
 
   public static async assignPermissions(
-    permissions: (PermissionInsert & Pick<ActionInsert, 'name'>)[],
+    permissions: (Pick<PermissionInsert, 'module_id'> & {
+      action_id: ActionSelect['id'];
+    })[],
     role_id: string
   ): Promise<PermissionSelect[]> {
     const queries = permissions.map(async (permissionData) => {
-      const { name: actionName, ...pData } = permissionData;
+      const { action_id, ...pData } = permissionData;
 
       const permission = await PermissionService.createOne(pData, role_id);
 
-      const action = await ActionService.findOne(actionName);
+      const action = await ActionService.findOne(action_id);
 
       await PermissionActionService.createOne(permission.id, action.id);
 

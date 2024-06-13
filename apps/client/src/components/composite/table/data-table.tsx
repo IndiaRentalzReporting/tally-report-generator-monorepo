@@ -18,12 +18,13 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui';
+import { When } from '@/components/utility';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   selection?: {
-    rowSelection: RowSelectionState;
+    rowSelection: RowSelectionState | null;
     setRowSelection: OnChangeFn<RowSelectionState>;
   };
 }
@@ -32,7 +33,7 @@ export const DataTable = <TData, TValue>({
   columns,
   data,
   selection = {
-    rowSelection: {},
+    rowSelection: null,
     setRowSelection: () => null
   }
 }: DataTableProps<TData, TValue>) => {
@@ -42,7 +43,7 @@ export const DataTable = <TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: selection.setRowSelection,
     state: {
-      rowSelection: selection.rowSelection
+      rowSelection: selection.rowSelection ?? {}
     }
   });
 
@@ -98,10 +99,12 @@ export const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
+      <When condition={selection.rowSelection !== null}>
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+      </When>
     </>
   );
 };
