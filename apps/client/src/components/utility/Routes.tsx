@@ -1,18 +1,13 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
-import { Else, If, Then, When } from './Conditionals';
-import { Skeleton } from '../ui/skeleton';
+import { Else, If, Then } from './Conditionals';
 
 export const PrivateRoutes: React.FC = () => {
-  const { isAuthenticated, loading } = useAuth();
-
+  const { isAuthenticated } = useAuth();
   return (
     <If condition={isAuthenticated ?? false}>
       <Then>
-        <When condition={loading}>
-          <Skeleton className="w-screen h-screen absolute z-10" />
-        </When>
         <Outlet />
       </Then>
       <Else>
@@ -25,11 +20,16 @@ export const PrivateRoutes: React.FC = () => {
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
-  return isAuthenticated ? (
-    <Navigate to="/dashboard" />
-  ) : (
-    <div className="flex flex-col h-screen">
-      <Outlet />
-    </div>
+  return (
+    <If condition={isAuthenticated ?? false}>
+      <Then>
+        <Navigate to="/dashboard" />
+      </Then>
+      <Else>
+        <div className="flex flex-col h-screen">
+          <Outlet />
+        </div>
+      </Else>
+    </If>
   );
 };

@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RegisterUser } from '@fullstack_package/interfaces';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import clsx from 'clsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -13,18 +14,28 @@ import {
   Label,
   LoadingSpinner
 } from '@/components/ui';
-import { useAuth } from '@/providers/AuthProvider';
 import { Else, If, Then } from '@/components/utility';
+import services from '@/services';
 
 export const SignupForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { signUp } = useAuth();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
     password: '',
     first_name: '',
     last_name: ''
+  });
+
+  const { mutateAsync: signUpMutation } = useMutation({
+    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
+    onSettled() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      setLoading(false);
+      navigate('/sign-in');
+    }
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,13 +47,9 @@ export const SignupForm = () => {
   };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
-    if (signUp)
-      signUp(registerData, {
-        onSettled(d, e, v, c) {
-          setLoading(false);
-        }
-      });
+    signUpMutation(registerData);
   };
 
   return (

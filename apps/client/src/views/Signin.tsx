@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { LoginUser } from '@fullstack_package/interfaces';
 import clsx from 'clsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -13,16 +14,24 @@ import {
   Label,
   LoadingSpinner
 } from '@/components/ui';
-import { useAuth } from '@/providers/AuthProvider';
 import { Else, If, Then } from '@/components/utility';
+import services from '@/services';
 
 export const SigninForm = () => {
-  const { signIn } = useAuth();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
   const [loginData, setLoginData] = useState<LoginUser>({
     email: '',
     password: ''
+  });
+
+  const { mutateAsync: signInMutation } = useMutation({
+    mutationFn: (data: LoginUser) => services.auth.signIn(data),
+    onSettled() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      setLoading(false);
+    }
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,12 +45,7 @@ export const SigninForm = () => {
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    if (signIn)
-      signIn(loginData, {
-        onSettled(d, e, v, c) {
-          setLoading(false);
-        }
-      });
+    signInMutation(loginData);
   };
 
   return (

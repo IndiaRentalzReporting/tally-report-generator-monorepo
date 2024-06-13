@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label, Switch } from '@/components/ui';
+import { Label, Skeleton, Switch } from '@/components/ui';
 
 import {
   Select,
@@ -21,6 +21,7 @@ import { showErrorAlert, showSuccessAlert } from '@/lib/utils';
 import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from '@/components/composite/table/column';
 import { useAuth } from '@/providers/AuthProvider';
+import { Else, If, Then } from '@/components/utility';
 
 const CreateRole: React.FC = () => {
   const [roleName, setRoleName] = React.useState<string>('');
@@ -130,13 +131,13 @@ const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
-  const { data: allUsers } = useQuery({
+  const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.user.getAll(),
     queryKey: ['users', 'getAll'],
     staleTime: Infinity
   });
 
-  const { data: allRoles } = useQuery({
+  const { data: allRoles, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => services.role.getAll(),
     queryKey: ['role', 'getAll'],
     staleTime: Infinity
@@ -169,20 +170,34 @@ const AssignRole: React.FC = () => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Roles</SelectLabel>
-              {roles.map((role) => (
-                <SelectItem value={role.id}>{role.name}</SelectItem>
-              ))}
+              <If condition={fetchingRoles}>
+                <Then>
+                  <Skeleton className="w-full h-10" />
+                </Then>
+                <Else>
+                  {roles.map((role) => (
+                    <SelectItem value={role.id}>{role.name}</SelectItem>
+                  ))}
+                </Else>
+              </If>
             </SelectGroup>
           </SelectContent>
         </Select>
-        <DataTable
-          columns={columns}
-          data={users}
-          selection={{
-            rowSelection,
-            setRowSelection
-          }}
-        />
+        <If condition={fetchingUsers}>
+          <Then>
+            <Skeleton className="w-full h-20" />
+          </Then>
+          <Else>
+            <DataTable
+              columns={columns}
+              data={users}
+              selection={{
+                rowSelection,
+                setRowSelection
+              }}
+            />
+          </Else>
+        </If>
         <Button className="mt-8 max-w-fit" onClick={handleRoleAssignment}>
           Assign Role
         </Button>

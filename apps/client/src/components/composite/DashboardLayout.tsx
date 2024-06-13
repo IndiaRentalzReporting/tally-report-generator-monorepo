@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React, { MouseEvent, useMemo, useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import clsx from 'clsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/providers/AuthProvider';
 import {
   Button,
@@ -27,9 +29,12 @@ import {
   Input,
   Sheet,
   SheetContent,
-  SheetTrigger
+  SheetTrigger,
+  Skeleton
 } from '@/components/ui';
 import { ToggleTheme } from '@/components/composite';
+import { When } from '../utility';
+import services from '@/services';
 
 interface State {
   to: string;
@@ -68,7 +73,15 @@ const navigation: State[] = [
 ];
 export const DashboardLayout = () => {
   const [navState, setNavState] = useState<State[]>(navigation);
-  const { signOut, user } = useAuth();
+  const { user, loading } = useAuth();
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: signOutMutation } = useMutation({
+    mutationFn: () => services.auth.signOut(),
+    onSettled() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+    }
+  });
 
   const userName = useMemo(
     () => `${user?.first_name} ${user?.last_name}`,
@@ -89,6 +102,9 @@ export const DashboardLayout = () => {
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <When condition={loading}>
+        <Skeleton className="w-screen h-screen absolute z-10" />
+      </When>
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
@@ -184,7 +200,9 @@ export const DashboardLayout = () => {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOutMutation()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
