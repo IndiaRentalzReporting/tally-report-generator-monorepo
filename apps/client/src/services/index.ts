@@ -1,47 +1,6 @@
-import Axios, { AxiosError, AxiosPromise } from 'axios';
-import {
-  CreatePermissions,
-  LoginUser,
-  RegisterUser,
-  User
-} from '@fullstack_package/interfaces';
-import { showErrorAlert } from '@/lib/utils';
-
-const axios = Axios.create();
-
-axios.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (e: AxiosError<any>) => {
-    // add logger
-    return Promise.reject(e);
-  }
-);
-
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (e: AxiosError<any>) => {
-    // add logger
-    let errorMapped: Array<{ message: string }> = [];
-    let errors: Array<string> = [];
-    try {
-      errorMapped = JSON.parse(e.response?.data?.error || '') as Array<{
-        message: string;
-      }>;
-      errors = errorMapped.map((er) => er.message);
-    } catch (_) {
-      errors.push(e.response?.data.error || `Couldn't sign you in!`);
-    }
-    errors.forEach((e) => showErrorAlert(e));
-    return Promise.reject(errors);
-  }
-);
-
-axios.defaults.baseURL = 'http://localhost:4000';
-axios.defaults.withCredentials = true;
+import { AxiosPromise } from 'axios';
+import { LoginUser, RegisterUser, User } from '@fullstack_package/interfaces';
+import axios from './client';
 
 const services = {
   auth: {
@@ -62,16 +21,27 @@ const services = {
     }
   },
   role: {
-    getAll: async (): AxiosPromise => {
+    getAll: async (): AxiosPromise<{
+      roles: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[];
+    }> => {
       return axios.get('/role/all');
     },
     createOne: async (data: {
       roleName: string;
-      rolePermissions: CreatePermissions;
+      rolePermissions: {
+        module_id: string;
+        action_id: string;
+      }[];
     }): AxiosPromise => {
       const { role } = (
         await axios.post(`/role/create`, { name: data.roleName })
       ).data;
+
       return axios.post('/role/assignPermission', {
         permissions: data.rolePermissions,
         roleId: role.id
@@ -80,9 +50,9 @@ const services = {
   },
   user: {
     getAll: async (): AxiosPromise<{
-      users: (User & { roles: string[] })[];
+      users: (User & { role: { id: string; name: string } })[];
     }> => {
-      return axios.get('/user/all', {});
+      return axios.get('/user/all');
     },
     assignRole: async (
       userIds: string[],
@@ -92,14 +62,14 @@ const services = {
     }
   },
   module: {
-    getAll: async (): AxiosPromise<
-      {
+    getAll: async (): AxiosPromise<{
+      modules: {
         id: string;
         name: string;
         createdAt: Date;
         updatedAt: Date;
-      }[]
-    > => {
+      }[];
+    }> => {
       return axios.get('/module/all');
     }
   },

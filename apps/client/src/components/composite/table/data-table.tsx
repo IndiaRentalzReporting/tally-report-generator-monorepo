@@ -9,7 +9,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 
-import React, { SetStateAction } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -22,7 +22,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  selection: {
+  selection?: {
     rowSelection: RowSelectionState;
     setRowSelection: OnChangeFn<RowSelectionState>;
   };
@@ -31,7 +31,10 @@ interface DataTableProps<TData, TValue> {
 export const DataTable = <TData, TValue>({
   columns,
   data,
-  selection
+  selection = {
+    rowSelection: {},
+    setRowSelection: () => null
+  }
 }: DataTableProps<TData, TValue>) => {
   const table = useReactTable({
     data,
