@@ -40,18 +40,7 @@ export const columns: ColumnDef<UserWithRole>[] = [
     header: 'Email'
   },
   {
-    accessorKey: 'roles',
-    header: 'Roles',
-    cell: ({ getValue }) => {
-      // @ts-ignore
-      const roles: { name: string; id: string }[] = getValue();
-      return (
-        <span>
-          {roles.map((role, index) => (
-            <span className={clsx(index > 0 && 'ms-2')}>{role.name}</span>
-          ))}
-        </span>
-      );
-    }
+    accessorKey: 'role',
+    header: 'Roles'
   }
 ];

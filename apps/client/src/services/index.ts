@@ -90,6 +90,30 @@ const services = {
     ): AxiosPromise<string[]> => {
       return axios.post('/user/assignRole', { userIds, roleId });
     }
+  },
+  module: {
+    getAll: async (): AxiosPromise<
+      {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    > => {
+      return axios.get('/module/all');
+    }
+  },
+  action: {
+    getAll: async (): AxiosPromise<{
+      actions: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updateAt: Date;
+      }[];
+    }> => {
+      return axios.get('/action/all');
+    }
   }
 };
 

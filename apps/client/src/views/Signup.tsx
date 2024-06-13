@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { RegisterUser } from '@fullstack_package/interfaces';
 import { useState, ChangeEvent, FormEvent } from 'react';
+import clsx from 'clsx';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -9,18 +11,31 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Label
+  Label,
+  LoadingSpinner
 } from '@/components/ui';
-import { useAuth } from '@/providers/AuthProvider';
+import { Else, If, Then } from '@/components/utility';
+import services from '@/services';
 
 export const SignupForm = () => {
-  const { signUp } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
     password: '',
     first_name: '',
     last_name: ''
+  });
+
+  const { mutateAsync: signUpMutation } = useMutation({
+    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
+    onSettled() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      setLoading(false);
+      navigate('/sign-in');
+    }
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,8 +47,9 @@ export const SignupForm = () => {
   };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
-    signUp(registerData);
+    signUpMutation(registerData);
   };
 
   return (
@@ -93,8 +109,19 @@ export const SignupForm = () => {
                 type="password"
               />
             </div>
-            <Button type="submit" className="w-full">
-              Create an account
+            <Button
+              type="submit"
+              className={clsx(
+                loading && 'cursor-default pointer-events-none',
+                'w-full'
+              )}
+            >
+              <If condition={loading}>
+                <Then>
+                  <LoadingSpinner />
+                </Then>
+                <Else>Create an Account</Else>
+              </If>
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

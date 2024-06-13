@@ -1,46 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import { RegisterUser, User, LoginUser } from '@fullstack_package/interfaces';
+import { User } from '@fullstack_package/interfaces';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  UseMutateAsyncFunction,
-  useMutation,
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { showErrorAlert } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean | null;
   user: User | null;
-  signIn: UseMutateAsyncFunction<
-    AxiosResponse<User, any>,
-    Error,
-    LoginUser,
-    unknown
-  > | null;
-  signUp: UseMutateAsyncFunction<
-    AxiosResponse<User, any>,
-    Error,
-    RegisterUser,
-    unknown
-  > | null;
-  signOut: UseMutateAsyncFunction<
-    AxiosResponse<{ message: string }, any>,
-    Error,
-    void,
-    unknown
-  > | null;
+  loading: boolean;
 }
 
 const initialState: AuthProviderState = {
-  isAuthenticated: false,
-  user: null,
-  signIn: null,
-  signUp: null,
-  signOut: null
+  isAuthenticated: true,
+  loading: true,
+  user: null
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -50,64 +24,36 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [state, setState] =
-    useState<Pick<AuthProviderState, 'isAuthenticated' | 'user'>>(initialState);
+  const [state, setState] = useState<AuthProviderState>(initialState);
 
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const { data: authData } = useQuery({
+  const { data: authData, fetchStatus } = useQuery({
     queryFn: () => services.auth.status(),
     queryKey: ['auth', 'statusCheck'],
-    refetchInterval: 1000 * 60 * 15
+    refetchInterval: 1000 * 60 * 15,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {
     if (authData && authData.data) {
       setState({
         user: authData.data.user,
-        isAuthenticated: authData.data.isAuthenticated
+        isAuthenticated: authData.data.isAuthenticated,
+        loading: false
       });
     }
   }, [authData]);
 
-  const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.auth.signOut(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
-    }
-  });
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      loading: fetchStatus === 'fetching'
+    }));
+  }, [fetchStatus]);
 
-  const { mutateAsync: signInMutation } = useMutation({
-    mutationFn: (data: LoginUser) => services.auth.signIn(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
-    }
-  });
-
-  const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
-      navigate('/sign-in');
-    }
-  });
-
-  return (
-    <AuthContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        ...state,
-        signIn: signInMutation,
-        signUp: signUpMutation,
-        signOut: signOutMutation
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
