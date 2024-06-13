@@ -103,7 +103,7 @@ export const DashboardLayout = () => {
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <When condition={loading}>
-        <Skeleton className="w-screen h-screen absolute z-10" />
+        <Skeleton className="w-full h-full absolute z-10" />
       </When>
       <div className="hidden border-r bg-muted/40 md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">

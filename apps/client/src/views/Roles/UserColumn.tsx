@@ -1,10 +1,12 @@
 import { User } from '@fullstack_package/interfaces';
 import { ColumnDef } from '@tanstack/react-table';
-import clsx from 'clsx';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface UserWithRole extends User {
-  roles: string[];
+  role: {
+    id: string;
+    name: string;
+  };
 }
 export const columns: ColumnDef<UserWithRole>[] = [
   {
@@ -40,7 +42,7 @@ export const columns: ColumnDef<UserWithRole>[] = [
     header: 'Email'
   },
   {
-    accessorKey: 'role',
+    accessorKey: 'role.name',
     header: 'Roles'
   }
 ];

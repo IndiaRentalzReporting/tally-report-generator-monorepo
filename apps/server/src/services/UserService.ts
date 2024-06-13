@@ -33,8 +33,7 @@ class UserService {
       with: {
         role: {
           columns: {
-            name: true,
-            id: true
+            name: true
           }
         }
       }
@@ -47,8 +46,7 @@ class UserService {
       with: {
         role: {
           columns: {
-            name: true,
-            id: true
+            name: true
           }
         }
       }

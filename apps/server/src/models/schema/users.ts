@@ -25,5 +25,5 @@ export const UserSchema = pgTable('users', {
 export type UserInsert = typeof UserSchema.$inferInsert;
 export type UserSelect = typeof UserSchema.$inferSelect;
 export type UserWithRole = UserSelect & {
-  role: Pick<RoleSelect, 'id' | 'name'> | null;
+  role: Pick<RoleSelect, 'name'> | null;
 };

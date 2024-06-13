@@ -3,7 +3,10 @@ import db from '../models';
 import { PermissionInsert, PermissionSchema } from '../models/schema';
 
 class PermissionService {
-  public static async createOne(data: PermissionInsert, role_id: string) {
+  public static async createOne(
+    data: Pick<PermissionInsert, 'module_id'>,
+    role_id: string
+  ) {
     const [permission] = await db
       .insert(PermissionSchema)
       .values({ ...data, role_id })
