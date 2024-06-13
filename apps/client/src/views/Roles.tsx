@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { CreatePermissions, User } from '@fullstack_package/interfaces';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -17,10 +16,9 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import services from '@/services';
-import { showErrorAlert, showSuccessAlert } from '@/lib/utils';
+import { showSuccessAlert } from '@/lib/utils';
 import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from '@/components/composite/table/column';
-import { useAuth } from '@/providers/AuthProvider';
 import { Else, If, Then } from '@/components/utility';
 
 const CreateRole: React.FC = () => {
@@ -40,13 +38,23 @@ const CreateRole: React.FC = () => {
   const handleRoleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setRoleName(e.target.value);
 
-  const handlePermissionsChange = (checked: boolean, key: string) =>
+  const handleActionsChange = (checked: boolean, key: string) =>
     setRolePermissions((prev) => {
       return {
         ...prev,
         [key]: checked
       };
     });
+
+  const { data: actions } = useQuery({
+    queryFn: () => services.action.getAll(),
+    select(data) {
+      return data.data.actions;
+    },
+    queryKey: ['actions', 'getAll'],
+    retry: false,
+    refetchOnMount: false
+  });
 
   const queryClient = useQueryClient();
   const { mutateAsync: createRole } = useMutation({
@@ -59,10 +67,6 @@ const CreateRole: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['role', 'getAll'] });
       setRolePermissions(initialPermissions);
       showSuccessAlert('Role created successfully!');
-    },
-    onError: (e) => {
-      console.error(e);
-      showErrorAlert('Error creating Role!');
     }
   });
 
@@ -95,24 +99,22 @@ const CreateRole: React.FC = () => {
             {/* <CardDescription>Assign permissions to your role</CardDescription> */}
           </CardHeader>
           <div className="flex space-x-4 justify-between">
-            {['Create', 'Read', 'Update', 'Delete', 'Export', 'Import'].map(
-              (permission) => (
-                <div className="flex flex-col items-center space-y-2">
-                  <Switch
-                    id={permission}
-                    onCheckedChange={(checked) =>
-                      handlePermissionsChange(
-                        checked,
-                        `can_${permission.toLowerCase()}`
-                      )
-                    }
-                  />
-                  <Label className="text-xs" htmlFor={permission}>
-                    {permission}
-                  </Label>
-                </div>
-              )
-            )}
+            {actions?.map((action) => (
+              <div className="flex flex-col items-center space-y-2">
+                <Switch
+                  id={action.name}
+                  onCheckedChange={(checked) =>
+                    handleActionsChange(
+                      checked,
+                      `can_${action.name.toLowerCase()}`
+                    )
+                  }
+                />
+                <Label className="text-xs" htmlFor={action.name}>
+                  {action.name}
+                </Label>
+              </div>
+            ))}
           </div>
           <Button className="mt-8" type="submit">
             Create Role

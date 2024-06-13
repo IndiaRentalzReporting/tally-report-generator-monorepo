@@ -102,6 +102,18 @@ const services = {
     > => {
       return axios.get('/module/all');
     }
+  },
+  action: {
+    getAll: async (): AxiosPromise<{
+      actions: {
+        id: string;
+        name: string;
+        createdAt: Date;
+        updateAt: Date;
+      }[];
+    }> => {
+      return axios.get('/action/all');
+    }
   }
 };
 
