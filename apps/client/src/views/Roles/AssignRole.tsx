@@ -69,7 +69,11 @@ const AssignRole: React.FC = () => {
     const selectedUsers = users
       .map((user, index) => (keys.includes(String(index)) ? user.id : ''))
       .filter((id) => !!id);
-    await assignRoleMutation({ selectedUsers, role: selectedRole });
+    if (selectedUsers.length > 0) {
+      await assignRoleMutation({ selectedUsers, role: selectedRole });
+    } else {
+      // throw weeoe
+    }
   };
 
   return (
@@ -78,45 +82,47 @@ const AssignRole: React.FC = () => {
         <CardTitle>Assign Role</CardTitle>
         <CardDescription>Select a Role to assign to users</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Select onValueChange={setSelectedRole}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a Role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Roles</SelectLabel>
-              <If condition={fetchingRoles}>
-                <Then>
-                  <Skeleton className="w-full h-10" />
-                </Then>
-                <Else>
-                  {roles.map((role) => (
-                    <SelectItem value={role.id}>{role.name}</SelectItem>
-                  ))}
-                </Else>
-              </If>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <If condition={fetchingUsers}>
-          <Then>
-            <Skeleton className="w-full h-20" />
-          </Then>
-          <Else>
-            <DataTable
-              columns={userColumns}
-              data={users}
-              selection={{
-                rowSelection,
-                setRowSelection
-              }}
-            />
-          </Else>
-        </If>
-        <Button className="mt-8 max-w-fit" onClick={handleRoleAssignment}>
-          Assign Role
-        </Button>
+      <CardContent>
+        <form onSubmit={handleRoleAssignment} className="flex flex-col gap-4">
+          <Select onValueChange={setSelectedRole} required>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a Role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Roles</SelectLabel>
+                <If condition={fetchingRoles}>
+                  <Then>
+                    <Skeleton className="w-full h-10" />
+                  </Then>
+                  <Else>
+                    {roles.map((role) => (
+                      <SelectItem value={role.id}>{role.name}</SelectItem>
+                    ))}
+                  </Else>
+                </If>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <If condition={fetchingUsers}>
+            <Then>
+              <Skeleton className="w-full h-20" />
+            </Then>
+            <Else>
+              <DataTable
+                columns={userColumns}
+                data={users}
+                selection={{
+                  rowSelection,
+                  setRowSelection
+                }}
+              />
+            </Else>
+          </If>
+          <Button className="mt-8 max-w-fit" type="submit">
+            Assign Role
+          </Button>
+        </form>
       </CardContent>
     </Card>
   );

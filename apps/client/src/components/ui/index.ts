@@ -11,4 +11,5 @@ export * from './switch';
 export * from './table';
 export * from './loadingSpinner';
 export * from './skeleton';
+export * from './accordion';
 export * from './select';
