@@ -3,7 +3,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const ModuleSchema = pgTable('modules', {
   id: uuid('id').notNull().defaultRandom().primaryKey(),
-  name: varchar('name').notNull(),
+  name: varchar('name', { length: 50 }).unique().notNull(),
   createdAt: timestamp('created_at', { mode: 'date', precision: 3 })
     .defaultNow()
     .notNull(),

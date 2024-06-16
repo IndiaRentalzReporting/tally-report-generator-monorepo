@@ -22,7 +22,13 @@ class ActionService {
   }
 
   public static async createOne(data: ActionInsert): Promise<ActionSelect> {
-    const [action] = await db.insert(ActionSchema).values(data).returning();
+    const [action] = await db
+      .insert(ActionSchema)
+      .values({
+        ...data,
+        name: data.name.toUpperCase() as ActionInsert['name']
+      })
+      .returning();
 
     if (!action) {
       throw new CustomError(

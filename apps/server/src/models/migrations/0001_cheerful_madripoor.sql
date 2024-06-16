@@ -1,1 +1,0 @@
-ALTER TABLE "action" ADD CONSTRAINT "action_name_unique" UNIQUE("name");

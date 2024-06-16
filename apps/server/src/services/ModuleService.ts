@@ -8,7 +8,10 @@ import {
 
 class ModuleService {
   public static async createOne(data: ModuleInsert): Promise<ModuleSelect> {
-    const [module] = await db.insert(ModuleSchema).values(data).returning();
+    const [module] = await db
+      .insert(ModuleSchema)
+      .values({ ...data, name: data.name.toUpperCase() })
+      .returning();
 
     if (!module) {
       throw new CustomError(
