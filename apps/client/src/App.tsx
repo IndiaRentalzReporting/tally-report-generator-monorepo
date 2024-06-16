@@ -9,7 +9,8 @@ import { PublicRoutes, PrivateRoutes } from './components/utility';
 import { SignupForm, SigninForm, Dashboard } from './views';
 import { DashboardLayout, RootLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
-import Roles from './views/Roles';
+import CreateRole from './views/Roles/CreateRole';
+import AssignRole from './views/Roles/AssignRole';
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -22,7 +23,12 @@ const router = createBrowserRouter(
       <Route element={<PrivateRoutes />}>
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path="roles" element={<Roles />} />
+          <Route path="create">
+            <Route path="roles" element={<CreateRole />} />
+          </Route>
+          <Route path="assign">
+            <Route path="roles" element={<AssignRole />} />
+          </Route>
         </Route>
       </Route>
     </Route>
