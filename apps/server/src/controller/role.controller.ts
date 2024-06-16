@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   ActionSelect,
-  PermissionInsert,
+  ModuleSelect,
   PermissionSelect,
   RoleInsert,
   RoleSelect
@@ -22,8 +22,8 @@ export const getAll = async (
   }
 };
 
-export const create = async (
-  req: Request<object, object, RoleInsert>,
+export const createOne = async (
+  req: Request<object, object, Pick<RoleInsert, 'name'>>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction
 ) => {
@@ -43,22 +43,23 @@ export const assignPermission = async (
     object,
     object,
     {
-      permissions: (Pick<PermissionInsert, 'module_id'> & {
+      permissions: {
+        module_id: ModuleSelect['id'];
         action_id: ActionSelect['id'];
-      })[];
-      roleId: string;
+      }[];
+      roleId: RoleSelect['id'];
     }
   >,
   res: Response<{ permissions: PermissionSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const permissions = await RoleService.assignPermissions(
-      req.body.permissions,
-      req.body.roleId
+    const promises = req.body.permissions.map(
+      async ({ module_id, action_id }) =>
+        RoleService.assignPermission({ module_id, action_id }, req.body.roleId)
     );
 
-    res.json({ permissions });
+    res.json({ permissions: await Promise.all(promises) });
   } catch (e) {
     console.error("Couldn't assign permissions to a role");
     next(e);

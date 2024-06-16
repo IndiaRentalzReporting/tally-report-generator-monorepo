@@ -71,7 +71,7 @@ class UserService {
   }
 
   public static async assignRole(
-    users: string[],
+    users: UserSelect['id'][],
     role_id: string
   ): Promise<UserWithRole['id'][]> {
     const userIds = users.map(async (user_id) => {

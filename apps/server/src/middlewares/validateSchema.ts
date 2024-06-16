@@ -14,10 +14,10 @@ export function validateSchema(validator: IValidator) {
         req.body = await validator.body.parseAsync(req.body);
       }
       if (validator.params) {
-        req.params = await validator.params.parseAsync(req.body);
+        req.params = await validator.params.parseAsync(req.params);
       }
       if (validator.body) {
-        req.body = await validator.body.parseAsync(req.body);
+        req.query = await validator.body.parseAsync(req.query);
       }
       next();
     } catch (err) {

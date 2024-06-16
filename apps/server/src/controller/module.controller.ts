@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
-export const create = async (
+export const createOne = async (
   req: Request<object, object, ModuleInsert>,
   res: Response<{ module: ModuleSelect }>,
   next: NextFunction

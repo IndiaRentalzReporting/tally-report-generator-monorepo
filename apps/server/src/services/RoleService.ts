@@ -1,7 +1,7 @@
 import { CustomError } from '../errors';
 import db from '../models';
 import {
-  PermissionInsert,
+  ModuleSelect,
   PermissionSelect,
   RoleInsert,
   RoleSchema,
@@ -27,25 +27,23 @@ class RoleService {
     return role;
   }
 
-  public static async assignPermissions(
-    permissions: (Pick<PermissionInsert, 'module_id'> & {
+  public static async assignPermission(
+    permissions: {
+      module_id: ModuleSelect['id'];
       action_id: ActionSelect['id'];
-    })[],
+    },
     role_id: string
-  ): Promise<PermissionSelect[]> {
-    const queries = permissions.map(async (permissionData) => {
-      const { action_id, ...pData } = permissionData;
+  ): Promise<PermissionSelect> {
+    const permission = await PermissionService.createOne(
+      { module_id: permissions.module_id },
+      role_id
+    );
 
-      const permission = await PermissionService.createOne(pData, role_id);
+    const action = await ActionService.findOne(permissions.action_id);
 
-      const action = await ActionService.findOne(action_id);
+    await PermissionActionService.createOne(permission.id, action.id);
 
-      await PermissionActionService.createOne(permission.id, action.id);
-
-      return permission;
-    });
-
-    return Promise.all(queries);
+    return permission;
   }
 }
 

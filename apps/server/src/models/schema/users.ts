@@ -1,4 +1,5 @@
 import { timestamp, varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
 
 declare global {
@@ -23,7 +24,9 @@ export const UserSchema = pgTable('users', {
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;
+export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
+export const UserSelectSchema = createSelectSchema(UserSchema);
 export type UserWithRole = UserSelect & {
   role: Pick<RoleSelect, 'name'> | null;
 };

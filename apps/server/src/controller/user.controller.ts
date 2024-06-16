@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
+import { RoleSelect, UserSelect } from '../models/schema';
 
-export const getAllUsers = async (
+export const getAll = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,7 +19,11 @@ export const getAllUsers = async (
 };
 
 export const assignRole = async (
-  req: Request<object, object, { userIds: string[]; roleId: string }>,
+  req: Request<
+    object,
+    object,
+    { userIds: UserSelect['id'][]; roleId: RoleSelect['id'] }
+  >,
   res: Response<{ userIds: string[] }>,
   next: NextFunction
 ) => {
