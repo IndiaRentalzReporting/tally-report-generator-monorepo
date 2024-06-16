@@ -1,3 +1,4 @@
+import { and, eq } from 'drizzle-orm';
 import { CustomError } from '../errors';
 import db from '../models';
 import {
@@ -25,6 +26,24 @@ class ModuleService {
 
   public static async getAll(): Promise<ModuleSelect[]> {
     return db.query.ModuleSchema.findMany({});
+  }
+
+  public static async findOne(
+    data: Partial<ModuleSelect>
+  ): Promise<ModuleSelect> {
+    const keys = Object.keys(data) as Array<keyof Partial<ModuleSelect>>;
+    const values = Object.values(data) as Array<any>;
+    const module = await db.query.ModuleSchema.findFirst({
+      where: and(
+        ...keys.map((key, index) => eq(ModuleSchema[key], values[index]))
+      )
+    });
+
+    if (!module) {
+      throw new CustomError(`Module does not exist`, 500);
+    }
+
+    return module;
   }
 }
 

@@ -39,7 +39,9 @@ class RoleService {
       role_id
     );
 
-    const action = await ActionService.findOne(permissions.action_id);
+    const action = await ActionService.findOne({
+      id: permissions.action_id
+    });
 
     await PermissionActionService.createOne(permission.id, action.id);
 

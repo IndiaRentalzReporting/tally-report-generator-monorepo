@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { BadRequestError, CustomError, NotFoundError } from '../errors';
-import { UserInsert, UserSelect } from '../models/schema';
+import { UserInsert, UserSelect, UserWithRole } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
@@ -22,7 +22,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<UserSelect> {
+  ): Promise<UserWithRole> {
     const { email, password } = data;
     const user = await UserService.findOne({ email });
 

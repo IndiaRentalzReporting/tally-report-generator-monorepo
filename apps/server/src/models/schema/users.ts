@@ -4,9 +4,10 @@ import { RoleSchema, RoleSelect } from './roles';
 
 declare global {
   namespace Express {
-    interface User extends UserSelect {}
+    interface User extends UserWithRole {}
   }
 }
+
 export const UserSchema = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   role_id: uuid('role_id').references(() => RoleSchema.id),

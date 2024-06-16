@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
 import db from '../models';
 import { CustomError } from '../errors';
@@ -9,10 +9,15 @@ class ActionService {
   }
 
   public static async findOne(
-    actionId: ActionSelect['id']
+    data: Partial<ActionSelect>
   ): Promise<ActionSelect> {
+    const keys = Object.keys(data) as Array<keyof Partial<ActionSelect>>;
+    const values = Object.values(data) as Array<any>;
+
     const action = await db.query.ActionSchema.findFirst({
-      where: eq(ActionSchema.id, actionId)
+      where: and(
+        ...keys.map((key, index) => eq(ActionSchema[key], values[index]))
+      )
     });
 
     if (!action) {

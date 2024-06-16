@@ -5,9 +5,11 @@ import userRouter from '../routes/user.route';
 import { isAdmin } from '../middlewares';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
+import { attachModuleActionData } from '../middlewares/attachModuleActionData';
 
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
+  app.use(attachModuleActionData);
   app.use('/role', isAdmin, roleRouter);
   app.use('/user', isAdmin, userRouter);
   app.use('/module', isAdmin, moduleRouter);
