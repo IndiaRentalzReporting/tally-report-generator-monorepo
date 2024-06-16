@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Skeleton } from '@/components/ui';
+import { SkeletonOverlay } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';
 import { When } from '../../utility';
 import DashboardHeader from './DashboardHeader';
@@ -14,7 +14,7 @@ export const DashboardLayout = () => {
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <When condition={loading}>
-        <Skeleton className="w-screen h-screen absolute z-10" />
+        <SkeletonOverlay className="w-screen h-screen absolute z-10" />
       </When>
       <DashboardSidebar key={location.pathname} />
       <div className="flex flex-col">

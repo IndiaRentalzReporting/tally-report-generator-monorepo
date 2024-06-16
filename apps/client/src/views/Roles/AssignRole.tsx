@@ -50,19 +50,20 @@ const AssignRole: React.FC = () => {
   React.useEffect(() => setRoles(allRoles ?? []), [allRoles]);
 
   const queryClient = useQueryClient();
-  const { mutateAsync: assignRoleMutation } = useMutation({
-    mutationFn: ({
-      selectedUsers,
-      role
-    }: {
-      selectedUsers: string[];
-      role: string;
-    }) => services.user.assignRole(selectedUsers, role),
-    onSettled() {
-      setSelectedRole('');
-      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
-    }
-  });
+  const { mutateAsync: assignRoleMutation, isPending: assignRoleLoading } =
+    useMutation({
+      mutationFn: ({
+        selectedUsers,
+        role
+      }: {
+        selectedUsers: string[];
+        role: string;
+      }) => services.user.assignRole(selectedUsers, role),
+      onSettled() {
+        setSelectedRole('');
+        queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+      }
+    });
 
   const handleRoleAssignment = async () => {
     const keys = Object.keys(rowSelection);
@@ -91,35 +92,29 @@ const AssignRole: React.FC = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
-                <If condition={fetchingRoles}>
-                  <Then>
-                    <Skeleton className="w-full h-10" />
-                  </Then>
-                  <Else>
-                    {roles.map((role) => (
-                      <SelectItem value={role.id}>{role.name}</SelectItem>
-                    ))}
-                  </Else>
-                </If>
+                <Skeleton isLoading={fetchingRoles} className="w-full h-10">
+                  {roles.map((role) => (
+                    <SelectItem value={role.id}>{role.name}</SelectItem>
+                  ))}
+                </Skeleton>
               </SelectGroup>
             </SelectContent>
           </Select>
-          <If condition={fetchingUsers}>
-            <Then>
-              <Skeleton className="w-full h-20" />
-            </Then>
-            <Else>
-              <DataTable
-                columns={userColumns}
-                data={users}
-                selection={{
-                  rowSelection,
-                  setRowSelection
-                }}
-              />
-            </Else>
-          </If>
-          <Button className="mt-8 max-w-fit" type="submit">
+          <Skeleton isLoading={fetchingRoles} className="w-full h-20">
+            <DataTable
+              columns={userColumns}
+              data={users}
+              selection={{
+                rowSelection,
+                setRowSelection
+              }}
+            />
+          </Skeleton>
+          <Button
+            className="mt-8 max-w-fit"
+            type="submit"
+            isLoading={assignRoleLoading}
+          >
             Assign Role
           </Button>
         </form>

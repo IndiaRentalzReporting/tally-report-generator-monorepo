@@ -109,19 +109,8 @@ export const SignupForm = () => {
                 type="password"
               />
             </div>
-            <Button
-              type="submit"
-              className={clsx(
-                loading && 'cursor-default pointer-events-none',
-                'w-full'
-              )}
-            >
-              <If condition={loading}>
-                <Then>
-                  <LoadingSpinner />
-                </Then>
-                <Else>Create an Account</Else>
-              </If>
+            <Button type="submit" className="w-full" isLoading={loading}>
+              Create an Account
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

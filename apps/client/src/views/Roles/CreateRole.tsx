@@ -166,27 +166,18 @@ const CreateRole: React.FC = () => {
           <CardHeader className="px-0 py-2">
             <CardDescription>Assign permissions to your role</CardDescription>
           </CardHeader>
-          <If condition={fetchingActions || fetchingModules}>
-            <Then>
-              <Skeleton className="w-full h-20" />
-            </Then>
-            <Else>
-              <DataTable columns={columns} data={data} />
-            </Else>
-          </If>
+          <Skeleton
+            isLoading={fetchingActions || fetchingModules}
+            className="w-full h-20"
+          >
+            <DataTable columns={columns} data={data} />
+          </Skeleton>
           <Button
             type="submit"
-            className={clsx(
-              createRoleLoading && 'cursor-default pointer-events-none',
-              'w-min mt-2'
-            )}
+            className="w-min mt-2"
+            isLoading={createRoleLoading}
           >
-            <If condition={createRoleLoading}>
-              <Then>
-                <LoadingSpinner />
-              </Then>
-              <Else>Create Role</Else>
-            </If>
+            Create Role
           </Button>
         </form>
       </CardContent>
