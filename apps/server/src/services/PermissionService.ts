@@ -54,24 +54,6 @@ class PermissionService {
   }): Promise<PermissionActionSelect> {
     return PermissionActionService.createOne({ ...data });
   }
-
-  public static async createOneAndAssign(data: {
-    module_id: PermissionInsert['module_id'];
-    action_id: ActionSelect['id'];
-    role_id: PermissionInsert['role_id'];
-  }): Promise<PermissionSelect> {
-    const permission = await this.createOne({
-      module_id: data.module_id,
-      role_id: data.role_id
-    });
-
-    await this.assignAction({
-      permission_id: permission.id,
-      action_id: data.action_id
-    });
-
-    return permission;
-  }
 }
 
 export default PermissionService;

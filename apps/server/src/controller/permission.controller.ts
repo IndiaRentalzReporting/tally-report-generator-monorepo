@@ -15,7 +15,7 @@ export const createMany = async (
     {
       permissions: {
         module_id: ModuleSelect['id'];
-        action_id: ActionSelect['id'];
+        action_ids: ActionSelect['id'][];
       }[];
       role_id: RoleSelect['id'];
     }
@@ -25,16 +25,21 @@ export const createMany = async (
 ) => {
   try {
     const { role_id, permissions } = req.body;
-    const promises = permissions.map(async ({ module_id, action_id }) => {
-      const _ = await ActionService.findOne({
-        id: action_id
-      });
-
-      return PermissionService.createOneAndAssign({
+    const promises = permissions.map(async ({ module_id, action_ids }) => {
+      const permission = await PermissionService.createOne({
         module_id,
-        action_id,
         role_id
       });
+      action_ids.forEach(async (action_id) => {
+        const _ = await ActionService.findOne({
+          id: action_id
+        });
+        await PermissionService.assignAction({
+          permission_id: permission.id,
+          action_id
+        });
+      });
+      return permission;
     });
     res.json({
       permissions: await Promise.all(promises)

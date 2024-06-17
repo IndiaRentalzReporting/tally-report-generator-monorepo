@@ -9,7 +9,7 @@ import { isAdmin, attachModuleActionData } from '../middlewares';
 
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
-  app.use(attachModuleActionData);
+  // app.use(attachModuleActionData);
   app.use('/role', isAdmin, roleRouter);
   app.use('/user', isAdmin, userRouter);
   app.use('/module', isAdmin, moduleRouter);

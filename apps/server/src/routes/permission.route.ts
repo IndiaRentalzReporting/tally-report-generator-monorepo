@@ -17,7 +17,7 @@ permissionRouter.post(
       permissions: z.array(
         z.object({
           module_id: ModuleSelectSchema.shape.id,
-          action_id: ActionSelectSchema.shape.id
+          action_ids: z.array(ActionSelectSchema.shape.id)
         })
       ),
       role_id: RoleSelectSchema.shape.id
