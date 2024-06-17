@@ -35,7 +35,7 @@ const services = {
       roleName: string;
       rolePermissions: {
         module_id: string;
-        action_id: string;
+        action_ids: string[];
       }[];
     }): AxiosPromise => {
       const { role } = (
@@ -44,7 +44,7 @@ const services = {
 
       return axios.post('/permission/create/many', {
         permissions: data.rolePermissions,
-        roleId: role.id
+        role_id: role.id
       });
     }
   },
