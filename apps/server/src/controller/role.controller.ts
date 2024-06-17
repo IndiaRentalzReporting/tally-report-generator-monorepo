@@ -8,13 +8,13 @@ import {
 } from '../models/schema';
 import RoleService from '../services/RoleService';
 
-export const getAll = async (
+export const readAll = async (
   req: Request,
   res: Response<{ roles: RoleSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.getAll();
+    const roles = await RoleService.readAll();
     res.json({ roles });
   } catch (e) {
     console.error("Couldn't fetch all Roles");
@@ -34,34 +34,6 @@ export const createOne = async (
     });
   } catch (e) {
     console.error("Couldn't create a new Role");
-    next(e);
-  }
-};
-
-export const assignPermission = async (
-  req: Request<
-    object,
-    object,
-    {
-      permissions: {
-        module_id: ModuleSelect['id'];
-        action_id: ActionSelect['id'];
-      }[];
-      roleId: RoleSelect['id'];
-    }
-  >,
-  res: Response<{ permissions: PermissionSelect[] }>,
-  next: NextFunction
-) => {
-  try {
-    const promises = req.body.permissions.map(
-      async ({ module_id, action_id }) =>
-        RoleService.assignPermission({ module_id, action_id }, req.body.roleId)
-    );
-
-    res.json({ permissions: await Promise.all(promises) });
-  } catch (e) {
-    console.error("Couldn't assign permissions to a role");
     next(e);
   }
 };

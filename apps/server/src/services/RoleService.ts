@@ -13,7 +13,7 @@ import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';
 
 class RoleService {
-  public static async getAll(): Promise<RoleSelect[]> {
+  public static async readAll(): Promise<RoleSelect[]> {
     return db.query.RoleSchema.findMany({});
   }
 
@@ -25,27 +25,6 @@ class RoleService {
     }
 
     return role;
-  }
-
-  public static async assignPermission(
-    permissions: {
-      module_id: ModuleSelect['id'];
-      action_id: ActionSelect['id'];
-    },
-    role_id: string
-  ): Promise<PermissionSelect> {
-    const permission = await PermissionService.createOne(
-      { module_id: permissions.module_id },
-      role_id
-    );
-
-    const action = await ActionService.findOne({
-      id: permissions.action_id
-    });
-
-    await PermissionActionService.createOne(permission.id, action.id);
-
-    return permission;
   }
 }
 

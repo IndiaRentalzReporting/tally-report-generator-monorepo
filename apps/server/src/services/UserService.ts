@@ -44,7 +44,7 @@ class UserService {
     });
   }
 
-  public static async getAll(reqUserId: string): Promise<UserWithRole[]> {
+  public static async readAll(reqUserId: string): Promise<UserWithRole[]> {
     return db.query.UserSchema.findMany({
       where: ne(UserSchema.id, reqUserId),
       with: {
@@ -74,7 +74,7 @@ class UserService {
     return user;
   }
 
-  public static async assignRole(
+  public static async updateRole(
     users: UserSelect['id'][],
     role_id: string
   ): Promise<UserWithRole['id'][]> {

@@ -16,13 +16,13 @@ export const createOne = async (
   }
 };
 
-export const getAll = async (
+export const readAll = async (
   req: Request,
   res: Response<{ modules: ModuleSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const modules = await ModuleService.getAll();
+    const modules = await ModuleService.readAll();
     res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");

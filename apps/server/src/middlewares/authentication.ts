@@ -19,7 +19,19 @@ export const isUnauthenticated = (
   }
 };
 
-export const isAuthenticated = () => {
+export const isAuthenticated = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    throw new BadRequestError('You are not authenticated!');
+  }
+};
+
+export const isRoleAllowed = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
       const {
@@ -34,7 +46,7 @@ export const isAuthenticated = () => {
         );
       }
 
-      if (module_id && role_id) {
+      if (module_id && action_id) {
         const { id: permission_id } = await PermissionService.findOne({
           module_id,
           role_id
@@ -67,6 +79,7 @@ export const isAdmin = async (
     if (user?.role?.name.toLowerCase() === 'superuser') {
       return next();
     }
+    throw new UnauthenticatedError('You are not an Admin!');
   }
-  throw new UnauthenticatedError('You are not an Admin!');
+  throw new UnauthenticatedError('You are not an logged in!');
 };

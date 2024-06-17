@@ -24,7 +24,7 @@ class ModuleService {
     return module;
   }
 
-  public static async getAll(): Promise<ModuleSelect[]> {
+  public static async readAll(): Promise<ModuleSelect[]> {
     return db.query.ModuleSchema.findMany({});
   }
 

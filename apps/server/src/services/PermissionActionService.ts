@@ -9,16 +9,13 @@ import {
 } from '../models/schema';
 
 class PermissionActionService {
-  public static async createOne(
-    permission_id: PermissionSelect['id'],
-    action_id: ActionSelect['id']
-  ): Promise<PermissionActionSelect> {
+  public static async createOne(data: {
+    permission_id: PermissionSelect['id'];
+    action_id: ActionSelect['id'];
+  }): Promise<PermissionActionSelect> {
     const [permissionAction] = await db
       .insert(PermissionActionSchema)
-      .values({
-        permission_id,
-        action_id
-      })
+      .values({ ...data })
       .returning();
 
     if (!permissionAction) {
@@ -46,7 +43,7 @@ class PermissionActionService {
     });
 
     if (!permission) {
-      throw new CustomError('No Permission for this Action!', 500);
+      throw new CustomError('No Permission Action combination!', 500);
     }
 
     return permission;

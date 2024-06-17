@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getAll } from '../controller/action.controller';
+import { readAll } from '../controller/action.controller';
 
 const actionRouter = Router();
 
-actionRouter.get('/all', getAll);
+actionRouter.get('/read/all', readAll);
 
 export default actionRouter;

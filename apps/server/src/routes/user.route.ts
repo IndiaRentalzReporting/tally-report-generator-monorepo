@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { assignRole, getAll } from '../controller/user.controller';
+import { updateRole, readAll } from '../controller/user.controller';
 
 const userRouter = Router();
 
-userRouter.get('/all', getAll);
-userRouter.post('/assignRole', assignRole);
+userRouter.get('/read/all', readAll);
+userRouter.post('/update/role', updateRole);
 
 export default userRouter;

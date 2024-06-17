@@ -4,7 +4,7 @@ import db from '../models';
 import { CustomError } from '../errors';
 
 class ActionService {
-  public static async getAll(): Promise<ActionSelect[]> {
+  public static async readAll(): Promise<ActionSelect[]> {
     return db.query.ActionSchema.findMany();
   }
 

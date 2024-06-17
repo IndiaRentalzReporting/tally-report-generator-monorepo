@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
 import { RoleSelect, UserSelect } from '../models/schema';
 
-export const getAll = async (
+export const readAll = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const users = await UserService.getAll(req.user?.id ?? '');
+    const users = await UserService.readAll(req.user?.id ?? '');
     res.json({
       users
     });
@@ -18,7 +18,7 @@ export const getAll = async (
   }
 };
 
-export const assignRole = async (
+export const updateRole = async (
   req: Request<
     object,
     object,
@@ -28,7 +28,7 @@ export const assignRole = async (
   next: NextFunction
 ) => {
   try {
-    const userIds = await UserService.assignRole(
+    const userIds = await UserService.updateRole(
       req.body.userIds,
       req.body.roleId
     );
