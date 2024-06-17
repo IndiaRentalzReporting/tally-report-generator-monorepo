@@ -11,7 +11,10 @@ import { CustomError } from '../errors';
 class UserService {
   public static async createOne(data: UserInsert): Promise<UserSelect> {
     try {
-      const [user] = await db.insert(UserSchema).values(data).returning();
+      const [user] = await db
+        .insert(UserSchema)
+        .values({ ...data, email: data.email.toLowerCase() })
+        .returning();
       if (!user) {
         throw new CustomError(
           'Database error: User returned as undefined',

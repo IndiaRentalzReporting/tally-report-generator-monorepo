@@ -17,8 +17,11 @@ class RoleService {
     return db.query.RoleSchema.findMany({});
   }
 
-  public static async createOne(roleData: RoleInsert): Promise<RoleSelect> {
-    const [role] = await db.insert(RoleSchema).values(roleData).returning();
+  public static async createOne(data: RoleInsert): Promise<RoleSelect> {
+    const [role] = await db
+      .insert(RoleSchema)
+      .values({ ...data, name: data.name.toLowerCase() })
+      .returning();
 
     if (!role) {
       throw new CustomError('Database error: Role returned as undefined', 500);
