@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User as ZodUserSchema } from '@fullstack_package/interfaces';
+import { UserInsertSchema } from '../models/schema';
 import {
   handleSignUp,
   handleSignIn,
@@ -13,18 +13,19 @@ const authRouter = Router();
 authRouter.post(
   '/sign-in',
   validateSchema({
-    body: ZodUserSchema.pick({ email: true, password: true })
+    body: UserInsertSchema.pick({ email: true, password: true })
   }),
   authenticate,
   handleSignIn
 );
+
 authRouter.post(
   '/sign-up',
   validateSchema({
-    body: ZodUserSchema.omit({
+    body: UserInsertSchema.omit({
       id: true,
-      created_at: true,
-      updated_at: true
+      createdAt: true,
+      updatedAt: true
     })
   }),
   handleSignUp

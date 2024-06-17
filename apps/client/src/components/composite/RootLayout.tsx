@@ -5,8 +5,18 @@ import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import 'react-toastify/ReactToastify.css';
 import { NavigationProvider } from '@/providers/NavigationProvider';
+import { AxiosPromise } from 'axios';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: false,
+      staleTime: Infinity
+    }
+  }
+});
 export const RootLayout = () => {
   return (
     <QueryClientProvider client={queryClient}>

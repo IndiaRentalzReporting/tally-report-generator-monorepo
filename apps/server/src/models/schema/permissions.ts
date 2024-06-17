@@ -1,4 +1,5 @@
-import { timestamp, pgTable, uuid, boolean } from 'drizzle-orm/pg-core';
+import { timestamp, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema } from './roles';
 import { ModuleSchema } from './modules';
 
@@ -20,4 +21,6 @@ export const PermissionSchema = pgTable('permissions', {
 });
 
 export type PermissionInsert = typeof PermissionSchema.$inferInsert;
+export const PermissionInsertSchema = createInsertSchema(PermissionSchema);
 export type PermissionSelect = typeof PermissionSchema.$inferSelect;
+export const PermissionSelectSchema = createSelectSchema(PermissionSchema);

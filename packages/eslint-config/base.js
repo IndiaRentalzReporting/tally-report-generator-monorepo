@@ -14,7 +14,8 @@ module.exports = {
   plugins: ['prettier', 'import', '@typescript-eslint', 'only-warn'],
   rules: {
     'import/prefer-default-export': 0,
-    'import/no-extraneous-dependencies': 0
+    'import/no-extraneous-dependencies': 0,
+    '@typescript-eslint/naming-convention': 0
   },
   parser: '@typescript-eslint/parser',
   settings: {

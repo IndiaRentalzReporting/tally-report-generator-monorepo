@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1718181286488,
-      "tag": "0000_boring_gravity",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1718183945149,
-      "tag": "0001_cheerful_madripoor",
+      "when": 1718540914447,
+      "tag": "0000_spooky_madame_masque",
       "breakpoints": true
     }
   ]

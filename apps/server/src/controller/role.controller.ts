@@ -1,20 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   ActionSelect,
-  PermissionInsert,
+  ModuleSelect,
   PermissionSelect,
   RoleInsert,
   RoleSelect
 } from '../models/schema';
 import RoleService from '../services/RoleService';
 
-export const getAll = async (
+export const readAll = async (
   req: Request,
   res: Response<{ roles: RoleSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.getAll();
+    const roles = await RoleService.readAll();
     res.json({ roles });
   } catch (e) {
     console.error("Couldn't fetch all Roles");
@@ -22,8 +22,8 @@ export const getAll = async (
   }
 };
 
-export const create = async (
-  req: Request<object, object, RoleInsert>,
+export const createOne = async (
+  req: Request<object, object, Pick<RoleInsert, 'name'>>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction
 ) => {
@@ -34,33 +34,6 @@ export const create = async (
     });
   } catch (e) {
     console.error("Couldn't create a new Role");
-    next(e);
-  }
-};
-
-export const assignPermission = async (
-  req: Request<
-    object,
-    object,
-    {
-      permissions: (Pick<PermissionInsert, 'module_id'> & {
-        action_id: ActionSelect['id'];
-      })[];
-      roleId: string;
-    }
-  >,
-  res: Response<{ permissions: PermissionSelect[] }>,
-  next: NextFunction
-) => {
-  try {
-    const permissions = await RoleService.assignPermissions(
-      req.body.permissions,
-      req.body.roleId
-    );
-
-    res.json({ permissions });
-  } catch (e) {
-    console.error("Couldn't assign permissions to a role");
     next(e);
   }
 };

@@ -1,4 +1,5 @@
 import { varchar, timestamp, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const RoleSchema = pgTable('roles', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
@@ -13,4 +14,6 @@ export const RoleSchema = pgTable('roles', {
 });
 
 export type RoleInsert = typeof RoleSchema.$inferInsert;
+export const RoleInsertSchema = createInsertSchema(RoleSchema);
 export type RoleSelect = typeof RoleSchema.$inferSelect;
+export const RoleSelectSchema = createSelectSchema(RoleSchema);

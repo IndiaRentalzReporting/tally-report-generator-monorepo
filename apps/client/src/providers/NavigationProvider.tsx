@@ -1,4 +1,4 @@
-import { LucideProps, Home, Eye } from 'lucide-react';
+import { LucideProps, Home, Eye, Package } from 'lucide-react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -33,19 +33,37 @@ const initialNavigation: NavigationProviderState[] = [
     isActive: false
   },
   {
-    to: '/roles',
+    to: '#',
     icon: Eye,
     name: 'Role',
     isActive: false,
     children: [
       {
         name: 'Assign Role',
-        to: '/dashboard/assign/roles',
+        to: '/dashboard/assign/role',
         isActive: false
       },
       {
         name: 'Create Role',
-        to: '/dashboard/create/roles',
+        to: '/dashboard/create/role',
+        isActive: false
+      }
+    ]
+  },
+  {
+    to: '#',
+    icon: Package,
+    name: 'Module',
+    isActive: false,
+    children: [
+      {
+        name: 'Assign Module',
+        to: '/dashboard/assign/module',
+        isActive: false
+      },
+      {
+        name: 'Create Module',
+        to: '/dashboard/create/module',
         isActive: false
       }
     ]

@@ -9,15 +9,16 @@ interface IValidator {
 }
 export function validateSchema(validator: IValidator) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     try {
       if (validator.body) {
         req.body = await validator.body.parseAsync(req.body);
       }
       if (validator.params) {
-        req.params = await validator.params.parseAsync(req.body);
+        req.params = await validator.params.parseAsync(req.params);
       }
-      if (validator.body) {
-        req.body = await validator.body.parseAsync(req.body);
+      if (validator.query) {
+        req.query = await validator.query.parseAsync(req.query);
       }
       next();
     } catch (err) {

@@ -1,9 +1,19 @@
 import { Router } from 'express';
-import { create, getAll } from '../controller/module.controller';
+import { createOne, readAll } from '../controller/module.controller';
+import { validateSchema } from '../middlewares';
+import { ModuleInsertSchema } from '../models/schema';
 
 const moduleRouter = Router();
 
-moduleRouter.post('/create', create);
-moduleRouter.get('/all', getAll);
+moduleRouter.post(
+  '/create/one',
+  validateSchema({
+    body: ModuleInsertSchema.pick({
+      name: true
+    })
+  }),
+  createOne
+);
+moduleRouter.get('/read/all', readAll);
 
 export default moduleRouter;

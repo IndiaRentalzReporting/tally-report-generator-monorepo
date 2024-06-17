@@ -1,4 +1,4 @@
-import { eq, ne } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import db from '../models';
 import {
   UserInsert,
@@ -26,10 +26,14 @@ class UserService {
   }
 
   public static async findOne(
-    data: Record<'email', string>
+    data: Partial<UserSelect>
   ): Promise<UserWithRole | undefined> {
+    const keys = Object.keys(data) as Array<keyof Partial<UserSelect>>;
+    const values = Object.values(data) as Array<any>;
     return db.query.UserSchema.findFirst({
-      where: eq(UserSchema.email, data.email),
+      where: and(
+        ...keys.map((key, index) => eq(UserSchema[key], values[index]))
+      ),
       with: {
         role: {
           columns: {
@@ -40,7 +44,7 @@ class UserService {
     });
   }
 
-  public static async getAll(reqUserId: string): Promise<UserWithRole[]> {
+  public static async readAll(reqUserId: string): Promise<UserWithRole[]> {
     return db.query.UserSchema.findMany({
       where: ne(UserSchema.id, reqUserId),
       with: {
@@ -70,8 +74,8 @@ class UserService {
     return user;
   }
 
-  public static async assignRole(
-    users: string[],
+  public static async updateRole(
+    users: UserSelect['id'][],
     role_id: string
   ): Promise<UserWithRole['id'][]> {
     const userIds = users.map(async (user_id) => {
