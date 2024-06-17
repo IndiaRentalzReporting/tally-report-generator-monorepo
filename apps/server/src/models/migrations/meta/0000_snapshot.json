@@ -1,5 +1,5 @@
 {
-  "id": "f7b65a90-6daa-4b87-80dc-ac95aa2527b9",
+  "id": "e9091872-5650-44c1-a00e-07648e98265f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -238,7 +238,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "roles_name_unique": {
+          "name": "roles_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     },
     "public.permission_action": {
       "name": "permission_action",
