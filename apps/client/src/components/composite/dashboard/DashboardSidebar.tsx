@@ -1,14 +1,7 @@
 import clsx from 'clsx';
-import {
-  Package2,
-  Bell,
-  ChevronDown,
-  LucideProps,
-  Eye,
-  Home
-} from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Package2, Bell, ChevronDown } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Accordion,
   AccordionItem,
@@ -41,7 +34,7 @@ const DashboardSidebar: React.FC = () => {
               {navState.map((navItem, index) => (
                 <AccordionItem value={`item-${index}`}>
                   <Link
-                    to={!navItem.children ? navItem.to : '#'}
+                    to={navItem.to}
                     className={clsx(
                       'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
                       navItem.isActive &&
@@ -66,7 +59,7 @@ const DashboardSidebar: React.FC = () => {
                     </AccordionTrigger>
                   </Link>
                   <When condition={!!navItem.children}>
-                    <AccordionContent className="flex flex-col gap-2 float-right pt-3">
+                    <AccordionContent className="flex flex-col float-right pb-0">
                       {navItem.children?.map((child) => (
                         <Link
                           to={child.to}

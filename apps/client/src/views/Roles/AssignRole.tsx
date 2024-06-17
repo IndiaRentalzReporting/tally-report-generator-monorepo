@@ -32,8 +32,7 @@ const AssignRole: React.FC = () => {
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.user.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
-    queryKey: ['users', 'getAll'],
-    staleTime: Infinity
+    queryKey: ['users', 'getAll']
   });
 
   const [roles, setRoles] = React.useState<
@@ -42,8 +41,7 @@ const AssignRole: React.FC = () => {
   const { data: allRoles, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => services.role.getAll(),
     select: (data) => data.data.roles,
-    queryKey: ['role', 'getAll'],
-    staleTime: Infinity
+    queryKey: ['role', 'getAll']
   });
 
   React.useEffect(() => setUsers(allUsers ?? []), [allUsers]);

@@ -71,6 +71,9 @@ const services = {
       }[];
     }> => {
       return axios.get('/module/read/all');
+    },
+    createOne: async (data: { name: string }): AxiosPromise => {
+      return axios.post('/module/create/one', data);
     }
   },
   action: {

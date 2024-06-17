@@ -11,6 +11,7 @@ import { DashboardLayout, RootLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateRole from './views/Roles/CreateRole';
 import AssignRole from './views/Roles/AssignRole';
+import CreateModule from './views/Modules/CreateModule';
 
 const router = createBrowserRouter(
   createRoutesFromElements([
@@ -24,10 +25,11 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="create">
-            <Route path="roles" element={<CreateRole />} />
+            <Route path="role" element={<CreateRole />} />
+            <Route path="module" element={<CreateModule />} />
           </Route>
           <Route path="assign">
-            <Route path="roles" element={<AssignRole />} />
+            <Route path="role" element={<AssignRole />} />
           </Route>
         </Route>
       </Route>

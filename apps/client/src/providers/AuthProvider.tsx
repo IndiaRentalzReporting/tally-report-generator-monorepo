@@ -29,8 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: authData, fetchStatus } = useQuery({
     queryFn: () => services.auth.status(),
     queryKey: ['auth', 'statusCheck'],
-    refetchInterval: 1000 * 60 * 15,
-    refetchOnWindowFocus: false
+    staleTime: 1000 * 60 * 15
   });
 
   useEffect(() => {

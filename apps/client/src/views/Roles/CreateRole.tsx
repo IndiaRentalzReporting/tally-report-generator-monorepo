@@ -41,10 +41,7 @@ const CreateRole: React.FC = () => {
     select(data) {
       return data.data.modules;
     },
-    queryKey: ['modules', 'getAll'],
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false
+    queryKey: ['modules', 'getAll']
   });
 
   const { data: actions, isFetching: fetchingActions } = useQuery({
@@ -52,10 +49,7 @@ const CreateRole: React.FC = () => {
     select(data) {
       return data.data.actions;
     },
-    queryKey: ['actions', 'getAll'],
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false
+    queryKey: ['actions', 'getAll']
   });
 
   const handlePermissionChange = (
