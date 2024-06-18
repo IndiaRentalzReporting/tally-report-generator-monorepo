@@ -1,9 +1,16 @@
-import { varchar, timestamp, uuid, pgTable } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  varchar,
+  timestamp,
+  uuid,
+  pgTable
+} from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const ModuleSchema = pgTable('modules', {
   id: uuid('id').notNull().defaultRandom().primaryKey(),
   name: varchar('name', { length: 50 }).unique().notNull(),
+  isPrivate: boolean('isPrivate').notNull().default(false),
   createdAt: timestamp('created_at', { mode: 'date', precision: 3 })
     .defaultNow()
     .notNull(),
