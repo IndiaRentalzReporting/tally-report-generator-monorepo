@@ -1,10 +1,11 @@
 import { timestamp, varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
+import { PermissionSelect } from './permissions';
 
 declare global {
   namespace Express {
-    interface User extends UserWithRole {}
+    interface User extends DetailedUser {}
   }
 }
 
@@ -28,6 +29,10 @@ export type UserInsert = typeof UserSchema.$inferInsert;
 export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
 export const UserSelectSchema = createSelectSchema(UserSchema);
-export type UserWithRole = UserSelect & {
-  role: Pick<RoleSelect, 'name'> | null;
+export type DetailedUser = UserSelect & {
+  role:
+    | (Pick<RoleSelect, 'name'> & {
+        permission: Omit<PermissionSelect, 'role_id'>[];
+      })
+    | null;
 };

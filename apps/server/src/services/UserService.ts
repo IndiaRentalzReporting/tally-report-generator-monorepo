@@ -4,7 +4,7 @@ import {
   UserInsert,
   UserSchema,
   UserSelect,
-  UserWithRole
+  DetailedUser
 } from '../models/schema';
 import { CustomError } from '../errors';
 
@@ -33,7 +33,7 @@ class UserService {
 
   public static async findOne(
     data: Partial<UserSelect>
-  ): Promise<UserWithRole | undefined> {
+  ): Promise<DetailedUser | undefined> {
     const keys = Object.keys(data) as Array<keyof Partial<UserSelect>>;
     const values = Object.values(data) as Array<any>;
     return db.query.UserSchema.findFirst({
@@ -44,6 +44,13 @@ class UserService {
         role: {
           columns: {
             name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false
+              }
+            }
           }
         }
       }
@@ -52,7 +59,7 @@ class UserService {
 
   public static async readAll(
     reqUserId: string
-  ): Promise<Omit<UserWithRole, 'password'>[]> {
+  ): Promise<Omit<DetailedUser, 'password'>[]> {
     return db.query.UserSchema.findMany({
       where: ne(UserSchema.id, reqUserId),
       columns: {
@@ -62,6 +69,13 @@ class UserService {
         role: {
           columns: {
             name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false
+              }
+            }
           }
         }
       }
@@ -71,7 +85,7 @@ class UserService {
   public static async updateUser(
     userId: UserSelect['id'],
     data: Partial<UserInsert>
-  ): Promise<UserSelect> {
+  ): Promise<Omit<UserSelect, 'password'>> {
     const [user] = await db
       .update(UserSchema)
       .set(data)
@@ -82,13 +96,15 @@ class UserService {
       throw new CustomError('Database error: User does not exist', 500);
     }
 
-    return user;
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   }
 
   public static async updateRole(
     users: UserSelect['id'][],
     role_id: string
-  ): Promise<UserWithRole['id'][]> {
+  ): Promise<DetailedUser['id'][]> {
     const userIds = users.map(async (user_id) => {
       const { id } = await this.updateUser(user_id, { role_id });
 

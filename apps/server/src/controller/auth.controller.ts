@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { UserInsert, UserSelect, UserWithRole } from '../models/schema';
+import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import { UnauthenticatedError } from '../errors';
 
 export const handleSignUp = async (
@@ -19,7 +19,7 @@ export const handleSignUp = async (
 
 export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
-  res: Response<Omit<UserWithRole, 'password'>>,
+  res: Response<Omit<DetailedUser, 'password'>>,
   next: NextFunction
 ) => {
   try {
@@ -53,7 +53,7 @@ export const handleLogout = (
 export const handleStatusCheck = (
   req: Request,
   res: Response<{
-    user: Omit<UserWithRole, 'password'> | null;
+    user: Omit<DetailedUser, 'password'> | null;
     isAuthenticated: boolean;
   }>,
   next: NextFunction

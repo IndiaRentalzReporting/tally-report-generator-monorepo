@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
-import { RoleSelect, UserSelect, UserWithRole } from '../models/schema';
+import { RoleSelect, UserSelect, DetailedUser } from '../models/schema';
 
 export const readAll = async (
   req: Request,
-  res: Response<{ users: Omit<UserWithRole, 'password'>[] }>,
+  res: Response<{ users: Omit<DetailedUser, 'password'>[] }>,
   next: NextFunction
 ) => {
   try {

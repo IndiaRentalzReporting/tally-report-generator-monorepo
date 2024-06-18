@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { BadRequestError, CustomError, NotFoundError } from '../errors';
-import { UserInsert, UserSelect, UserWithRole } from '../models/schema';
+import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
@@ -24,7 +24,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<UserWithRole> {
+  ): Promise<Omit<DetailedUser, 'password'>> {
     const { email, password } = data;
     const user = await UserService.findOne({ email });
 
@@ -37,7 +37,9 @@ class AuthService {
       throw new BadRequestError('Wrong Password');
     }
 
-    return user;
+    const { password: p, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
   }
 
   static async hashPassword(password: string): Promise<string> {
