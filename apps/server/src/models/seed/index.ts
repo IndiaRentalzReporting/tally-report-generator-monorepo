@@ -4,7 +4,7 @@ import RoleService from '../../services/RoleService';
 import UserService from '../../services/UserService';
 import { ActionSelect, RoleSelect } from '../schema';
 
-const seedActions = async () => {
+const createActions = async () => {
   const actions = (
     ['CREATE', 'READ', 'UPDATE', 'DELETE'] as ActionSelect['name'][]
   ).map(async (name) => ActionService.createOne({ name }));
@@ -12,7 +12,7 @@ const seedActions = async () => {
   Promise.all(actions);
 };
 
-const seedUsers = async (role: RoleSelect) => {
+const createUsers = async (role: RoleSelect) => {
   const actions = [
     {
       first_name: 'Admin',
@@ -33,13 +33,19 @@ const seedUsers = async (role: RoleSelect) => {
 
   const users = await Promise.all(actions);
 
-  UserService.updateRole(users, role.id);
+  await UserService.updateRole(users, role.id);
 };
 
-const seedRole = async () => {
+const createRoles = async () => {
   const name = 'superuser';
   return RoleService.createOne({ name });
 };
 
-seedActions();
-seedRole().then(seedUsers);
+const seed = async () => {
+  await createActions();
+  const roles = await createRoles();
+  await createUsers(roles);
+  process.exit();
+};
+
+seed();
