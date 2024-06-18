@@ -9,7 +9,9 @@ import {
 import { CustomError } from '../errors';
 
 class UserService {
-  public static async createOne(data: UserInsert): Promise<UserSelect> {
+  public static async createOne(
+    data: UserInsert
+  ): Promise<Omit<UserSelect, 'password'>> {
     try {
       const [user] = await db
         .insert(UserSchema)
@@ -21,7 +23,8 @@ class UserService {
           500
         );
       }
-      return user;
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
     } catch (err) {
       console.error('Could not create a new User!');
       throw err;
@@ -47,9 +50,14 @@ class UserService {
     });
   }
 
-  public static async readAll(reqUserId: string): Promise<UserWithRole[]> {
+  public static async readAll(
+    reqUserId: string
+  ): Promise<Omit<UserWithRole, 'password'>[]> {
     return db.query.UserSchema.findMany({
       where: ne(UserSchema.id, reqUserId),
+      columns: {
+        password: false
+      },
       with: {
         role: {
           columns: {

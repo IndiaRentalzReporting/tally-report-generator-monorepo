@@ -4,7 +4,9 @@ import { UserInsert, UserSelect, UserWithRole } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
-  public static async signUp(data: UserInsert): Promise<UserSelect> {
+  public static async signUp(
+    data: UserInsert
+  ): Promise<Omit<UserSelect, 'password'>> {
     const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
