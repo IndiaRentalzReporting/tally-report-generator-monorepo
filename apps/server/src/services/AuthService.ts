@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
 import { BadRequestError, CustomError, NotFoundError } from '../errors';
-import { UserInsert, UserSelect, UserWithRole } from '../models/schema';
+import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
-  public static async signUp(data: UserInsert): Promise<UserSelect> {
+  public static async signUp(
+    data: UserInsert
+  ): Promise<Omit<UserSelect, 'password'>> {
     const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
@@ -22,7 +24,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<UserWithRole> {
+  ): Promise<DetailedUser> {
     const { email, password } = data;
     const user = await UserService.findOne({ email });
 

@@ -17,15 +17,16 @@ import {
   CardDescription
 } from '@/components/ui';
 import { DataTable } from '@/components/composite/table/data-table';
+import { Action, Module } from '@/models';
 
 interface ColumnData {
-  module_name: string;
-  module_id: string;
+  module_name: Module['name'];
+  module_id: Module['id'];
 }
 
 interface ModuleAction {
-  module_id: string;
-  action_ids: Array<string>;
+  module_id: Module['id'];
+  action_ids: Action['id'][];
 }
 
 const CreateRole: React.FC = () => {

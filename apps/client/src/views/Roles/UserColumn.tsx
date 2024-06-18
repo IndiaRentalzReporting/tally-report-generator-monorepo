@@ -1,14 +1,8 @@
-import { User } from '@fullstack_package/interfaces';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DetailedUser } from '@/models';
 
-interface UserWithRole extends User {
-  role: {
-    id: string;
-    name: string;
-  };
-}
-export const columns: ColumnDef<UserWithRole>[] = [
+export const columns: ColumnDef<DetailedUser>[] = [
   {
     id: 'select',
     header: ({ table }) => (

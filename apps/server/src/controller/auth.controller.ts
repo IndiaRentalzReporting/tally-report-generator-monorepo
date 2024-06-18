@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { UserInsert, UserSelect } from '../models/schema';
+import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
+import { UnauthenticatedError } from '../errors';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
-  res: Response<UserSelect>,
+  res: Response<Omit<UserSelect, 'password'>>,
   next: NextFunction
 ) => {
   try {
@@ -18,11 +19,15 @@ export const handleSignUp = async (
 
 export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
-  res: Response<UserSelect>,
+  res: Response<Omit<DetailedUser, 'password'>>,
   next: NextFunction
 ) => {
   try {
-    res.json(req.user);
+    if (req.isAuthenticated()) {
+      const { password, ...user } = req.user;
+      return res.send(user);
+    }
+    throw new UnauthenticatedError('Not logged in');
   } catch (err) {
     console.error(`Could not sign in the User`);
     next(err);
@@ -47,13 +52,19 @@ export const handleLogout = (
 
 export const handleStatusCheck = (
   req: Request,
-  res: Response<{ user: UserSelect | null; isAuthenticated: boolean }>,
+  res: Response<{
+    user: Omit<DetailedUser, 'password'> | null;
+    isAuthenticated: boolean;
+  }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
+      const {
+        user: { password, ...userWithoutPassword }
+      } = req;
       res.json({
-        user: req.user,
+        user: userWithoutPassword,
         isAuthenticated: true
       });
       return;
