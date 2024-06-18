@@ -2,6 +2,9 @@ import { timestamp, varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSelect } from './permissions';
+import { ModuleSelect } from './modules';
+import { ActionSelect } from './actions';
+import { PermissionActionSelect } from './relations';
 
 declare global {
   namespace Express {
@@ -30,9 +33,19 @@ export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
 export const UserSelectSchema = createSelectSchema(UserSchema);
 export type DetailedUser = UserSelect & {
-  role:
-    | (Pick<RoleSelect, 'name'> & {
-        permission: Omit<PermissionSelect, 'role_id'>[];
-      })
-    | null;
+  role: {
+    name: RoleSelect['name'];
+    permission: Array<{
+      id: PermissionSelect['id'];
+      permissionAction: Array<{
+        action: {
+          name: ActionSelect['name'];
+        };
+      }>;
+      module: {
+        id: ModuleSelect['id'];
+        name: ModuleSelect['name'];
+      };
+    }>;
+  } | null;
 };

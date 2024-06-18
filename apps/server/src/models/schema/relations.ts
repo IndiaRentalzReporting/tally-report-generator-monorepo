@@ -37,7 +37,7 @@ export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
 
 export const permissionSchemaRelation = relations(
   PermissionSchema,
-  ({ one }) => ({
+  ({ one, many }) => ({
     role: one(RoleSchema, {
       fields: [PermissionSchema.role_id],
       references: [RoleSchema.id]
@@ -45,7 +45,8 @@ export const permissionSchemaRelation = relations(
     module: one(ModuleSchema, {
       fields: [PermissionSchema.module_id],
       references: [ModuleSchema.id]
-    })
+    }),
+    permissionAction: many(PermissionActionSchema)
   })
 );
 
@@ -66,6 +67,10 @@ export const permissionActionSchemaRelation = relations(
     })
   })
 );
+
+export const actionSchemaRelation = relations(ActionSchema, ({ many }) => ({
+  permissionAction: many(PermissionActionSchema)
+}));
 
 export type PermissionActionInsert = typeof PermissionActionSchema.$inferInsert;
 export type PermissionActionSelect = typeof PermissionActionSchema.$inferSelect;
