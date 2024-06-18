@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
-import { LoginUser } from '@fullstack_package/interfaces';
-import clsx from 'clsx';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -11,11 +9,10 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Label,
-  LoadingSpinner
+  Label
 } from '@/components/ui';
-import { Else, If, Then } from '@/components/utility';
 import services from '@/services';
+import { LoginUser } from '@/models';
 
 export const SigninForm = () => {
   const queryClient = useQueryClient();

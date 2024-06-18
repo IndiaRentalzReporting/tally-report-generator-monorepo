@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import { User } from '@fullstack_package/interfaces';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
+import { DetailedUser } from '@/models';
 
 interface AuthProviderState {
   isAuthenticated: boolean | null;
-  user: User | null;
+  user: DetailedUser | null;
   loading: boolean;
 }
 
@@ -28,15 +28,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { data: authData, fetchStatus } = useQuery({
     queryFn: () => services.auth.status(),
+    select: (data) => data.data,
     queryKey: ['auth', 'statusCheck'],
     staleTime: 1000 * 60 * 15
   });
 
   useEffect(() => {
-    if (authData && authData.data) {
+    if (authData) {
       setState({
-        user: authData.data.user,
-        isAuthenticated: authData.data.isAuthenticated,
+        user: authData.user,
+        isAuthenticated: authData.isAuthenticated,
         loading: false
       });
     }
