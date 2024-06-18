@@ -1,9 +1,9 @@
-CREATE TABLE IF NOT EXISTS "action" (
+CREATE TABLE IF NOT EXISTS "actions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" "name" NOT NULL,
 	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
 	"updatedAt" timestamp (3) DEFAULT now() NOT NULL,
-	CONSTRAINT "action_name_unique" UNIQUE("name")
+	CONSTRAINT "actions_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS "permission_action" (
 CREATE TABLE IF NOT EXISTS "modules" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(50) NOT NULL,
+	"isPrivate" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
 	"updated_at" timestamp (3) DEFAULT now() NOT NULL,
 	CONSTRAINT "modules_name_unique" UNIQUE("name")
@@ -73,7 +74,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "permission_action" ADD CONSTRAINT "permission_action_action_id_action_id_fk" FOREIGN KEY ("action_id") REFERENCES "public"."action"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "permission_action" ADD CONSTRAINT "permission_action_action_id_actions_id_fk" FOREIGN KEY ("action_id") REFERENCES "public"."actions"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

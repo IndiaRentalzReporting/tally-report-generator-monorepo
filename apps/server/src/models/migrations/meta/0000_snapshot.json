@@ -1,11 +1,11 @@
 {
-  "id": "e9091872-5650-44c1-a00e-07648e98265f",
+  "id": "56ce4056-cdc5-4c5a-8f1a-b7e8bf70fef9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.action": {
-      "name": "action",
+    "public.actions": {
+      "name": "actions",
       "schema": "",
       "columns": {
         "id": {
@@ -41,8 +41,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "action_name_unique": {
-          "name": "action_name_unique",
+        "actions_name_unique": {
+          "name": "actions_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"
@@ -280,10 +280,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "permission_action_action_id_action_id_fk": {
-          "name": "permission_action_action_id_action_id_fk",
+        "permission_action_action_id_actions_id_fk": {
+          "name": "permission_action_action_id_actions_id_fk",
           "tableFrom": "permission_action",
-          "tableTo": "action",
+          "tableTo": "actions",
           "columnsFrom": [
             "action_id"
           ],
@@ -321,6 +321,13 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
+        },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
