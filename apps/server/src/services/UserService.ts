@@ -48,7 +48,31 @@ class UserService {
           with: {
             permission: {
               columns: {
-                role_id: false
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
               }
             }
           }
@@ -73,7 +97,31 @@ class UserService {
           with: {
             permission: {
               columns: {
-                role_id: false
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
               }
             }
           }
