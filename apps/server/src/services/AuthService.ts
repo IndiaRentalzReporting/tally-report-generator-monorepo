@@ -24,7 +24,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<Omit<DetailedUser, 'password'>> {
+  ): Promise<DetailedUser> {
     const { email, password } = data;
     const user = await UserService.findOne({ email });
 
@@ -37,9 +37,7 @@ class AuthService {
       throw new BadRequestError('Wrong Password');
     }
 
-    const { password: p, ...userWithoutPassword } = user;
-
-    return userWithoutPassword;
+    return user;
   }
 
   static async hashPassword(password: string): Promise<string> {
