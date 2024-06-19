@@ -4,7 +4,6 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import clsx from 'clsx';
 import services from '@/services';
 import {
   Card,
@@ -15,15 +14,19 @@ import {
   Input,
   Switch,
   Skeleton,
-  CardDescription,
-  LoadingSpinner
+  CardDescription
 } from '@/components/ui';
 import { DataTable } from '@/components/composite/table/data-table';
-import { If, Then, Else } from '@/components/utility';
+import { Action, Module } from '@/models';
 
 interface ColumnData {
-  module_name: string;
-  module_id: string;
+  module_name: Module['name'];
+  module_id: Module['id'];
+}
+
+interface ModuleAction {
+  module_id: Module['id'];
+  action_ids: Action['id'][];
 }
 
 const CreateRole: React.FC = () => {
@@ -106,19 +109,17 @@ const CreateRole: React.FC = () => {
   const { mutateAsync: createRole, isPending: createRoleLoading } = useMutation(
     {
       mutationFn: () => {
-        const permissions = [];
+        const permissions: Array<ModuleAction> = [];
         for (const module_id in modulePermissions) {
           const module = modulePermissions[module_id];
-          if (module) {
-            for (const action_id in module) {
-              if (module[action_id]) {
-                permissions.push({
-                  module_id,
-                  action_id
-                });
-              }
-            }
-          }
+          const p: ModuleAction = {
+            module_id,
+            action_ids: []
+          };
+          if (module)
+            for (const action_id in module)
+              if (module[action_id]) p.action_ids.push(action_id);
+          permissions.push(p);
         }
         return services.role.createOne({
           roleName,

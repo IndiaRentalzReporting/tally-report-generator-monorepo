@@ -32,7 +32,7 @@ const DashboardSidebar: React.FC = () => {
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <Accordion type="single" collapsible className="w-full">
               {navState.map((navItem, index) => (
-                <AccordionItem value={`item-${index}`}>
+                <AccordionItem value={`item-${index}`} key={index}>
                   <Link
                     to={navItem.to}
                     className={clsx(
@@ -59,16 +59,22 @@ const DashboardSidebar: React.FC = () => {
                     </AccordionTrigger>
                   </Link>
                   <When condition={!!navItem.children}>
-                    <AccordionContent className="flex flex-col float-right pb-0">
-                      {navItem.children?.map((child) => (
+                    <AccordionContent className="flex flex-col float-right pb-0 py-2 px-3 ps-6 w-full">
+                      {navItem.children?.map((child, index) => (
                         <Link
                           to={child.to}
+                          key={index}
                           className={clsx(
                             'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
                             child.isActive && 'text-primary'
                           )}
                         >
-                          {child.name}
+                          <div className="mt-2 w-full h-[1px] bg-border self-stretch flex-grow" />
+
+                          <span className="flex gap-3 items-center flex-shrink">
+                            {/* <child.icon className="w-4 h-4" /> */}
+                            {child.name}
+                          </span>
                         </Link>
                       ))}
                     </AccordionContent>

@@ -62,7 +62,7 @@ const DashboardHeader: React.FC = () => {
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
               {navState.map((navItem, index) => (
-                <AccordionItem value={`item-${index}`}>
+                <AccordionItem value={`item-${index}`} key={index}>
                   <Link
                     to={!navItem.children ? navItem.to : '#'}
                     className={clsx(
@@ -90,9 +90,10 @@ const DashboardHeader: React.FC = () => {
                   </Link>
                   <When condition={!!navItem.children}>
                     <AccordionContent className="flex flex-col gap-2 float-right pt-3">
-                      {navItem.children?.map((child) => (
+                      {navItem.children?.map((child, index) => (
                         <Link
                           to={child.to}
+                          key={index}
                           className={clsx(
                             'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
                             child.isActive && 'text-primary'

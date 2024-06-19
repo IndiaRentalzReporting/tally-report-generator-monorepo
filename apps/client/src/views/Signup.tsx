@@ -1,7 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { RegisterUser } from '@fullstack_package/interfaces';
 import { useState, ChangeEvent, FormEvent } from 'react';
-import clsx from 'clsx';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -11,11 +9,10 @@ import {
   CardHeader,
   CardTitle,
   Input,
-  Label,
-  LoadingSpinner
+  Label
 } from '@/components/ui';
-import { Else, If, Then } from '@/components/utility';
 import services from '@/services';
+import { RegisterUser } from '@/models';
 
 export const SignupForm = () => {
   const [loading, setLoading] = useState<boolean>(false);

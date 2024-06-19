@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { User } from '@fullstack_package/interfaces';
 import React from 'react';
 import { DataTable } from '@/components/composite/table/data-table';
 import {
@@ -18,26 +17,22 @@ import {
   SelectItem,
   CardDescription
 } from '@/components/ui';
-import { If, Then, Else } from '@/components/utility';
 import services from '@/services';
 import { columns as userColumns } from './UserColumn';
+import { DetailedUser, Role } from '@/models';
 
 const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
-  const [users, setUsers] = React.useState<
-    (User & { role: { id: string; name: string } })[]
-  >([]);
+  const [users, setUsers] = React.useState<DetailedUser[]>([]);
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.user.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
   });
 
-  const [roles, setRoles] = React.useState<
-    { id: string; name: string; createdAt: Date; updatedAt: Date }[]
-  >([]);
+  const [roles, setRoles] = React.useState<Role[]>([]);
   const { data: allRoles, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => services.role.getAll(),
     select: (data) => data.data.roles,
@@ -91,8 +86,10 @@ const AssignRole: React.FC = () => {
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
                 <Skeleton isLoading={fetchingRoles} className="w-full h-10">
-                  {roles.map((role) => (
-                    <SelectItem value={role.id}>{role.name}</SelectItem>
+                  {roles.map((role, index) => (
+                    <SelectItem key={index} value={role.id}>
+                      {role.name}
+                    </SelectItem>
                   ))}
                 </Skeleton>
               </SelectGroup>
