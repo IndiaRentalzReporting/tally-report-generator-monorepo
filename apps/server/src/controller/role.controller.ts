@@ -37,3 +37,19 @@ export const createOne = async (
     next(e);
   }
 };
+
+export const updateOne = async (
+  req: Request<Pick<RoleSelect, 'id'>, object, Pick<RoleSelect, 'name'>>,
+  res: Response<{ role: RoleSelect }>,
+  next: NextFunction
+) => {
+  try {
+    const role = await RoleService.updateOne(req.params.id, req.body);
+    res.json({
+      role
+    });
+  } catch (e) {
+    console.error("Couldn't update the Role");
+    next(e);
+  }
+};

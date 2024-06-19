@@ -1,16 +1,7 @@
+import { eq } from 'drizzle-orm';
 import { CustomError } from '../errors';
 import db from '../models';
-import {
-  ModuleSelect,
-  PermissionSelect,
-  RoleInsert,
-  RoleSchema,
-  RoleSelect
-} from '../models/schema';
-import { ActionSelect } from '../models/schema/actions';
-import PermissionService from './PermissionService';
-import PermissionActionService from './PermissionActionService';
-import ActionService from './ActionService';
+import { RoleInsert, RoleSchema, RoleSelect } from '../models/schema';
 
 class RoleService {
   public static async readAll(): Promise<RoleSelect[]> {
@@ -26,6 +17,21 @@ class RoleService {
     if (!role) {
       throw new CustomError('Database error: Role returned as undefined', 500);
     }
+
+    return role;
+  }
+
+  public static async updateOne(
+    roleId: RoleSelect['id'],
+    data: Partial<RoleSelect>
+  ): Promise<RoleSelect> {
+    const [role] = await db
+      .update(RoleSchema)
+      .set(data)
+      .where(eq(RoleSchema.id, roleId))
+      .returning();
+
+    if (!role) throw new CustomError('Role does not exist', 500);
 
     return role;
   }

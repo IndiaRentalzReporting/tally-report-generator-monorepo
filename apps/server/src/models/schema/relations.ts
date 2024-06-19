@@ -11,10 +11,16 @@ export const PermissionActionSchema = pgTable(
   {
     permission_id: uuid('permission_id')
       .notNull()
-      .references(() => PermissionSchema.id),
+      .references(() => PermissionSchema.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
+      }),
     action_id: uuid('action_id')
       .notNull()
-      .references(() => ActionSchema.id)
+      .references(() => ActionSchema.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
+      })
   },
   (table) => ({
     primaryKey: primaryKey({

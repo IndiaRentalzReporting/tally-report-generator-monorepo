@@ -54,6 +54,10 @@ class PermissionService {
   }): Promise<PermissionActionSelect> {
     return PermissionActionService.createOne({ ...data });
   }
+
+  public static async deleteOne(id: PermissionSelect['id']): Promise<void> {
+    await db.delete(PermissionSchema).where(eq(PermissionSchema.id, id));
+  }
 }
 
 export default PermissionService;

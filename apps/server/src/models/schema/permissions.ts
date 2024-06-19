@@ -7,10 +7,16 @@ export const PermissionSchema = pgTable('permissions', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   role_id: uuid('role_id')
     .notNull()
-    .references(() => RoleSchema.id),
+    .references(() => RoleSchema.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    }),
   module_id: uuid('module_id')
     .notNull()
-    .references(() => ModuleSchema.id),
+    .references(() => ModuleSchema.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
+    }),
   createdAt: timestamp('createdAt', { mode: 'date', precision: 3 })
     .defaultNow()
     .notNull(),

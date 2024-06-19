@@ -76,7 +76,7 @@ export const isAdmin = async (
       user: { email }
     } = req;
     const user = await UserService.findOne({ email });
-    if (user?.role?.name.toLowerCase() === 'superuser') {
+    if (user?.role?.name.toLowerCase() === 'superlosser') {
       return next();
     }
     throw new UnauthenticatedError('You are not an Admin!');

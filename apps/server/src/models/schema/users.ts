@@ -4,7 +4,6 @@ import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSelect } from './permissions';
 import { ModuleSelect } from './modules';
 import { ActionSelect } from './actions';
-import { PermissionActionSelect } from './relations';
 
 declare global {
   namespace Express {
@@ -14,7 +13,10 @@ declare global {
 
 export const UserSchema = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
-  role_id: uuid('role_id').references(() => RoleSchema.id),
+  role_id: uuid('role_id').references(() => RoleSchema.id, {
+    onDelete: 'set null',
+    onUpdate: 'cascade'
+  }),
   first_name: varchar('first_name', { length: 50 }).notNull(),
   last_name: varchar('last_name', { length: 50 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
