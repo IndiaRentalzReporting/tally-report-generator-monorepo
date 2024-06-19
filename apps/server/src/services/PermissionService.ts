@@ -12,6 +12,7 @@ import {
 import PermissionActionService from './PermissionActionService';
 import RoleService from './RoleService';
 import ActionService from './ActionService';
+import config from '../config';
 
 class PermissionService {
   public static async createOne(
@@ -81,7 +82,9 @@ class PermissionService {
   }
 
   public static async extendSuperuserActions(action_id: string) {
-    const { id: role_id } = await RoleService.findOne({ name: 'superuser' });
+    const { id: role_id } = await RoleService.findOne({
+      name: config.app.SUPER_USER_NAME
+    });
     const permissions = await PermissionService.findMany({ role_id });
 
     console.log({
@@ -97,7 +100,9 @@ class PermissionService {
   }
 
   public static async extendSuperuserModules(module_id: string) {
-    const { id: role_id } = await RoleService.findOne({ name: 'superuser' });
+    const { id: role_id } = await RoleService.findOne({
+      name: config.app.SUPER_USER_NAME
+    });
     const { id: permission_id } = await PermissionService.createOne({
       module_id,
       role_id

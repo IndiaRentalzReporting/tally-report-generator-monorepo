@@ -1,5 +1,5 @@
 {
-  "id": "f1352e70-af70-41a4-a342-76b5ef85b9b1",
+  "id": "f608eb98-f343-4473-9309-41992d468d93",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -17,8 +17,7 @@
         },
         "name": {
           "name": "name",
-          "type": "name",
-          "typeSchema": "public",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -328,6 +327,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "icon": {
+          "name": "icon",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "actions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" "name" NOT NULL,
+	"name" varchar NOT NULL,
 	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
 	"updatedAt" timestamp (3) DEFAULT now() NOT NULL,
 	CONSTRAINT "actions_name_unique" UNIQUE("name")
@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS "modules" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(50) NOT NULL,
 	"isPrivate" boolean DEFAULT false NOT NULL,
+	"icon" text,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
 	"updated_at" timestamp (3) DEFAULT now() NOT NULL,
 	CONSTRAINT "modules_name_unique" UNIQUE("name")

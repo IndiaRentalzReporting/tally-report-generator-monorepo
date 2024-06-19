@@ -1,4 +1,5 @@
 import {
+  text,
   boolean,
   varchar,
   timestamp,
@@ -11,6 +12,7 @@ export const ModuleSchema = pgTable('modules', {
   id: uuid('id').notNull().defaultRandom().primaryKey(),
   name: varchar('name', { length: 50 }).unique().notNull(),
   isPrivate: boolean('isPrivate').notNull().default(false),
+  icon: text('icon'),
   createdAt: timestamp('created_at', { mode: 'date', precision: 3 })
     .defaultNow()
     .notNull(),

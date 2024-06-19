@@ -4,6 +4,7 @@ import { BadRequestError, UnauthenticatedError } from '../errors';
 import UserService from '../services/UserService';
 import PermissionService from '../services/PermissionService';
 import PermissionActionService from '../services/PermissionActionService';
+import config from '../config';
 
 export const authenticate = passport.authenticate('local');
 
@@ -76,7 +77,7 @@ export const isAdmin = async (
       user: { email }
     } = req;
     const user = await UserService.findOne({ email });
-    if (user?.role?.name.toLowerCase() === 'superuser') {
+    if (user?.role?.name.toLowerCase() === config.app.SUPER_USER_NAME) {
       return next();
     }
     throw new UnauthenticatedError('You are not an Admin!');

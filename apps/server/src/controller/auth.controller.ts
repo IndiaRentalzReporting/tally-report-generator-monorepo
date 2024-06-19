@@ -63,6 +63,7 @@ export const handleStatusCheck = (
       const {
         user: { password, ...userWithoutPassword }
       } = req;
+      console.log({ userWithoutPassword });
       res.json({
         user: userWithoutPassword,
         isAuthenticated: true
