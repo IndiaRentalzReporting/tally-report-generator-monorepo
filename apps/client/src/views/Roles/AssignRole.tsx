@@ -86,8 +86,10 @@ const AssignRole: React.FC = () => {
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
                 <Skeleton isLoading={fetchingRoles} className="w-full h-10">
-                  {roles.map((role) => (
-                    <SelectItem value={role.id}>{role.name}</SelectItem>
+                  {roles.map((role, index) => (
+                    <SelectItem key={index} value={role.id}>
+                      {role.name}
+                    </SelectItem>
                   ))}
                 </Skeleton>
               </SelectGroup>

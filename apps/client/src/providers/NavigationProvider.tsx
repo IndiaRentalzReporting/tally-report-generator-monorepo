@@ -1,81 +1,74 @@
-import { LucideProps, Home, Eye, Package } from 'lucide-react';
+import {
+  LucideProps,
+  Package,
+  Trash2 as Delete,
+  Eye as Read,
+  PencilLine as Create
+} from 'lucide-react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
+import { Case, Switch } from '@/components/utility';
 
-const NavigationContext = createContext<NavigationProviderState[] | null>(null);
+const NavigationContext = createContext<NavigationProviderState[]>([]);
 
 interface NavigationProviderProps {
   children: React.ReactNode;
 }
 
-interface NavigationProviderState {
+interface NavItem {
   to: string;
   icon: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
   name: string;
   isActive: boolean;
-  children?: {
-    to: string;
-    icon?: React.ForwardRefExoticComponent<
-      Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-    >;
-    name: string;
-    isActive: boolean;
-  }[];
 }
-
-const initialNavigation: NavigationProviderState[] = [
-  {
-    to: '/dashboard',
-    icon: Home,
-    name: 'Dashboard',
-    isActive: false
-  },
-  {
-    to: '#',
-    icon: Eye,
-    name: 'Role',
-    isActive: false,
-    children: [
-      {
-        name: 'Assign Role',
-        to: '/dashboard/assign/role',
-        isActive: false
-      },
-      {
-        name: 'Create Role',
-        to: '/dashboard/create/role',
-        isActive: false
-      }
-    ]
-  },
-  {
-    to: '#',
-    icon: Package,
-    name: 'Module',
-    isActive: false,
-    children: [
-      {
-        name: 'Assign Module',
-        to: '/dashboard/assign/module',
-        isActive: false
-      },
-      {
-        name: 'Create Module',
-        to: '/dashboard/create/module',
-        isActive: false
-      }
-    ]
-  }
-];
+interface NavigationProviderState extends NavItem {
+  children?: NavItem[];
+}
 
 export const NavigationProvider: React.FC<NavigationProviderProps> = ({
   children
 }) => {
   const location = useLocation();
-  const [navState, setNavState] =
-    useState<NavigationProviderState[]>(initialNavigation);
+  const [navState, setNavState] = useState<NavigationProviderState[]>([]);
+  const { permissions } = useAuth();
+
+  useEffect(() => {
+    if (!permissions) return;
+    setNavState(
+      permissions.map((permission) => {
+        const { module: moduleName, actions } = permission;
+        const childrenLinks: NavItem[] = actions.map((actionName) => {
+          return {
+            to: `/dashboard/${moduleName.toLowerCase()}/${actionName.toLowerCase()}`,
+            isActive: false,
+            name: actionName,
+            icon: Create
+          };
+        });
+        return {
+          to: '#',
+          name: moduleName,
+          children: childrenLinks,
+          isActive: false,
+          icon: Package
+        };
+      })
+    );
+
+    const fetchActionIcon = (action: string): React.ReactNode => {
+      return (
+        <Switch control={action}>
+          <Case value="create">{Create}</Case>
+          <Case value="read">{Read}</Case>
+          <Case value="update">{Read}</Case>
+          <Case value="delete">{Delete}</Case>
+        </Switch>
+      );
+    };
+  }, [permissions]);
 
   useEffect(() => {
     setNavState((prev) =>
