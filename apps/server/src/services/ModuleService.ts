@@ -6,6 +6,7 @@ import {
   ModuleSchema,
   ModuleSelect
 } from '../models/schema/modules';
+import PermissionService from './PermissionService';
 
 class ModuleService {
   public static async createOne(data: ModuleInsert): Promise<ModuleSelect> {
@@ -20,6 +21,8 @@ class ModuleService {
         500
       );
     }
+
+    await PermissionService.extendSuperuserModules(module.id);
 
     return module;
   }

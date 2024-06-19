@@ -2,6 +2,7 @@ import { and, eq } from 'drizzle-orm';
 import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
 import db from '../models';
 import { CustomError } from '../errors';
+import PermissionService from './PermissionService';
 
 class ActionService {
   public static async readAll(): Promise<ActionSelect[]> {
@@ -41,6 +42,8 @@ class ActionService {
         500
       );
     }
+
+    await PermissionService.extendSuperuserActions(action.id);
 
     return action;
   }

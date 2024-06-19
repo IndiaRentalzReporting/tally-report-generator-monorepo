@@ -1,7 +1,14 @@
 import { pgEnum, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-const name = pgEnum('name', ['CREATE', 'READ', 'UPDATE', 'DELETE']);
+const name = pgEnum('name', [
+  'CREATE',
+  'READ',
+  'UPDATE',
+  'DELETE',
+  'IMPORT',
+  'EXPORT'
+]);
 export const ActionSchema = pgTable('actions', {
   id: uuid('id').defaultRandom().notNull().primaryKey(),
   name: name('name').notNull().unique(),
