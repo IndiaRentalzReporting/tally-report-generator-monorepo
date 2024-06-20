@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (!authData) return;
-    const permissions = authData?.user?.role?.permission.map(
-      ({ module, permissionAction }) => {
+    const permissions =
+      authData.user?.role?.permission.map(({ module, permissionAction }) => {
         const moduleName = module.name;
         return {
           module: toTitleCase(moduleName),
@@ -60,8 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             toTitleCase(action.name)
           )
         };
-      }
-    );
+      }) ?? [];
     localStorage.setItem('permissions', JSON.stringify(permissions));
     setState({
       user: authData.user,

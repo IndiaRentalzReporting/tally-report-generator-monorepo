@@ -49,25 +49,14 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
           };
         });
         return {
-          to: '#',
+          to: `/dashboard/${moduleName}`,
           name: moduleName,
-          children: childrenLinks,
+          // children: childrenLinks,
           isActive: false,
           icon: Package
         };
       })
     );
-
-    const fetchActionIcon = (action: string): React.ReactNode => {
-      return (
-        <Switch control={action}>
-          <Case value="create">{Create}</Case>
-          <Case value="read">{Read}</Case>
-          <Case value="update">{Read}</Case>
-          <Case value="delete">{Delete}</Case>
-        </Switch>
-      );
-    };
   }, [permissions]);
 
   useEffect(() => {
@@ -75,10 +64,12 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
       prev.map((navItem) => {
         navItem.isActive = false;
         if (navItem.children) {
-          if (location.pathname.includes(navItem.to)) navItem.isActive = true;
           navItem.children.map((child) => {
             child.isActive = false;
-            if (location.pathname === child.to) child.isActive = true;
+            if (location.pathname === child.to) {
+              child.isActive = true;
+              navItem.isActive = true;
+            }
             return child;
           });
         } else if (location.pathname === navItem.to) navItem.isActive = true;

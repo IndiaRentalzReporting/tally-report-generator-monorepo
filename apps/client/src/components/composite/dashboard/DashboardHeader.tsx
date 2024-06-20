@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { Menu, Package2, CircleUser, Search, ChevronDown } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { If, Then, Else, When } from '@/components/utility';
+import { When } from '@/components/utility';
 import {
   Accordion,
   AccordionContent,
@@ -28,11 +28,13 @@ import { useNav } from '@/providers/NavigationProvider';
 
 const DashboardHeader: React.FC = () => {
   const navState = useNav();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutateAsync: signOutMutation } = useMutation({
     mutationFn: () => services.auth.signOut(),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      navigate('/sign-in');
     }
   });
 

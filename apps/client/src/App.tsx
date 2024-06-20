@@ -6,15 +6,13 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { PublicRoutes, PrivateRoutes } from './components/utility';
-import { SignupForm, SigninForm, Dashboard } from './views';
+import { SignupForm, SigninForm, Dashboard, ModuleMapper } from './views';
 import { DashboardLayout, RootLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
-import CreateRole from './views/Roles/CreateRole';
 import { useAuth } from './providers/AuthProvider';
 
 const App = () => {
   const { permissions } = useAuth();
-  console.log({ permissions });
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path="/" element={<RootLayout />}>
@@ -26,19 +24,13 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            {permissions?.map(({ module, actions }, index) => {
-              return (
-                <Route path={module.toLowerCase()} key={index}>
-                  {actions?.map((action, i) => (
-                    <Route
-                      key={i}
-                      path={action.toLowerCase()}
-                      element={<CreateRole />}
-                    />
-                  ))}
-                </Route>
-              );
-            })}
+            {permissions?.map(({ module }, index) => (
+              <Route
+                path={module.toLowerCase()}
+                key={index}
+                element={<ModuleMapper module={module} />}
+              />
+            ))}
           </Route>
         </Route>
       </Route>
