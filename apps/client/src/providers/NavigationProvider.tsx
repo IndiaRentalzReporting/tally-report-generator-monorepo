@@ -18,7 +18,7 @@ interface NavigationProviderProps {
 
 interface NavItem {
   to: string;
-  icon: React.ForwardRefExoticComponent<
+  icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >;
   name: string;
@@ -40,20 +40,20 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
     setNavState(
       permissions.map((permission) => {
         const { module: moduleName, actions } = permission;
-        const childrenLinks: NavItem[] = actions.map((actionName) => {
+        /* const childrenLinks: NavItem[] = actions.map((actionName) => {
           return {
             to: `/dashboard/${moduleName.toLowerCase()}/${actionName.toLowerCase()}`,
             isActive: false,
             name: actionName,
             icon: Create
           };
-        });
+        }); */
         return {
           to: `/dashboard/${moduleName}`,
           name: moduleName,
           // children: childrenLinks,
-          isActive: false,
-          icon: Package
+          isActive: false
+          // icon: Package
         };
       })
     );
