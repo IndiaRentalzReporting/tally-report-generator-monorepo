@@ -46,30 +46,12 @@ const CreateModule: React.FC = () => {
       }
     });
 
-  const modifySvgDimensions = (
-    svgStr: string,
-    newWidth: number,
-    newHeight: number
-  ): string => {
-    const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svgStr, 'image/svg+xml');
-    const svgElement = svgDoc.documentElement;
-
-    svgElement.setAttribute('width', String(newWidth));
-    svgElement.setAttribute('height', String(newHeight));
-
-    const serializer = new XMLSerializer();
-    const modifiedSvgStr = serializer.serializeToString(svgElement);
-    return modifiedSvgStr;
-  };
-
   const renderIcon = async () => {
     const icon = iconRef.current;
     if (!icon) return;
     try {
       const parsedIcon = await iconSchema.parseAsync(moduleIcon);
-      const modifiedParsedIcon = modifySvgDimensions(parsedIcon, 20, 20);
-      setModuleDetails((prev) => ({ ...prev, icon: modifiedParsedIcon }));
+      setModuleDetails((prev) => ({ ...prev, icon: parsedIcon }));
       icon.innerHTML = parsedIcon;
     } catch (e) {
       // SHOW TOAST

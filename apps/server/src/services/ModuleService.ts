@@ -7,12 +7,17 @@ import {
   ModuleSelect
 } from '../models/schema/modules';
 import PermissionService from './PermissionService';
+import { modifySvgDimensions } from '../utils';
 
 class ModuleService {
   public static async createOne(data: ModuleInsert): Promise<ModuleSelect> {
     const [module] = await db
       .insert(ModuleSchema)
-      .values({ ...data, name: data.name.toUpperCase() })
+      .values({
+        ...data,
+        name: data.name.toUpperCase(),
+        icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
+      })
       .returning();
 
     if (!module) {

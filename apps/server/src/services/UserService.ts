@@ -70,7 +70,8 @@ class UserService {
                 module: {
                   columns: {
                     name: true,
-                    id: true
+                    id: true,
+                    icon: true
                   }
                 }
               }

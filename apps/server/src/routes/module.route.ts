@@ -9,7 +9,9 @@ moduleRouter.post(
   '/create/one',
   validateSchema({
     body: ModuleInsertSchema.pick({
-      name: true
+      name: true,
+      isPrivate: true,
+      icon: true
     })
   }),
   createOne
