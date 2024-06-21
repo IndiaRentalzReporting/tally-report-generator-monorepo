@@ -63,36 +63,38 @@ const DashboardHeader: React.FC = () => {
           </Link>
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
-              {navState.map((navItem, index) => (
+              {navState.map(({ isActive, to, name, children, icon }, index) => (
                 <AccordionItem value={`item-${index}`} key={index}>
                   <Link
-                    to={!navItem.children ? navItem.to : '#'}
+                    to={!children ? to : '#'}
                     className={clsx(
                       'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
-                      navItem.isActive &&
-                        !navItem.children &&
-                        'bg-muted text-primary',
-                      navItem.children || 'hover:text-primary'
+                      isActive && !children && 'bg-muted text-primary',
+                      children || 'hover:text-primary'
                     )}
                   >
                     <AccordionTrigger
                       className={clsx(
                         'pt-0 rounded-lg px-3 py-2 w-full',
-                        navItem.isActive && 'bg-muted text-primary'
+                        isActive && 'bg-muted text-primary'
                       )}
                     >
                       <span className="flex gap-3 items-center w-full">
-                        <navItem.icon className="w-4 h-4" />
-                        {navItem.name}
+                        <When condition={!!icon}>
+                          <div
+                            dangerouslySetInnerHTML={{ __html: icon as string }}
+                          />
+                        </When>
+                        {name}
                       </span>
-                      <When condition={!!navItem.children}>
+                      <When condition={!!children}>
                         <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
                       </When>
                     </AccordionTrigger>
                   </Link>
-                  <When condition={!!navItem.children}>
+                  <When condition={!!children}>
                     <AccordionContent className="flex flex-col gap-2 float-right pt-3">
-                      {navItem.children?.map((child, index) => (
+                      {children?.map((child, index) => (
                         <Link
                           to={child.to}
                           key={index}

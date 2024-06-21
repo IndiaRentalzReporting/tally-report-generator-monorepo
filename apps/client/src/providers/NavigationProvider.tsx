@@ -1,14 +1,6 @@
-import {
-  LucideProps,
-  Package,
-  Trash2 as Delete,
-  Eye as Read,
-  PencilLine as Create
-} from 'lucide-react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { Case, Switch } from '@/components/utility';
 
 const NavigationContext = createContext<NavigationProviderState[]>([]);
 
@@ -18,9 +10,7 @@ interface NavigationProviderProps {
 
 interface NavItem {
   to: string;
-  icon?: React.ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-  >;
+  icon?: string;
   name: string;
   isActive: boolean;
 }
@@ -39,7 +29,10 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
     if (!permissions) return;
     setNavState(
       permissions.map((permission) => {
-        const { module: moduleName, actions } = permission;
+        const {
+          module: { name, icon },
+          actions
+        } = permission;
         /* const childrenLinks: NavItem[] = actions.map((actionName) => {
           return {
             to: `/dashboard/${moduleName.toLowerCase()}/${actionName.toLowerCase()}`,
@@ -49,11 +42,10 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
           };
         }); */
         return {
-          to: `/dashboard/${moduleName}`,
-          name: moduleName,
-          // children: childrenLinks,
-          isActive: false
-          // icon: Package
+          to: `/dashboard/${name}`,
+          name,
+          isActive: false,
+          icon
         };
       })
     );

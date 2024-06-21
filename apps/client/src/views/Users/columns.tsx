@@ -1,20 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Edit, Trash } from 'lucide-react';
-import { useMutation } from '@tanstack/react-query';
-import {
-  Select,
-  Checkbox,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui';
+import { Edit } from 'lucide-react';
 import { DetailedUser } from '@/models';
 import DeleteEntity from '@/components/composite/DeleteEntity';
 import services from '@/services';
 
 export const columns: ColumnDef<DetailedUser>[] = [
+  {
+    id: 'Sr. No.',
+    header: 'Sr. No.',
+    cell: ({ row }) => <span>{row.index + 1}</span>
+  },
   {
     accessorKey: 'first_name',
     header: 'First Name'

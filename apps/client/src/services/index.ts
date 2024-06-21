@@ -71,7 +71,7 @@ const services = {
     }> => {
       return axios.get('/module/read/all');
     },
-    createOne: async (data: { name: string }): AxiosPromise => {
+    createOne: async (data: Partial<Module>): AxiosPromise => {
       return axios.post('/module/create/one', data);
     }
   },

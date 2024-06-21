@@ -24,11 +24,11 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            {permissions?.map(({ module }, index) => (
+            {permissions?.map(({ module: { name } }, index) => (
               <Route
-                path={module.toLowerCase()}
+                path={name.toLowerCase()}
                 key={index}
-                element={<ModuleMapper module={module} />}
+                element={<ModuleMapper module={name} />}
               />
             ))}
           </Route>

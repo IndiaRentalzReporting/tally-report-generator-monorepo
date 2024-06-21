@@ -25,6 +25,7 @@ export interface DetailedUser extends Omit<User, 'password'> {
       module: {
         id: Module['id'];
         name: Module['name'];
+        icon: Module['icon'];
       };
     }>;
   } | null;
@@ -39,6 +40,7 @@ export interface Action {
 
 export interface Module {
   name: string;
+  icon: string;
   id: string;
   createdAt: Date;
   updatedAt: Date;

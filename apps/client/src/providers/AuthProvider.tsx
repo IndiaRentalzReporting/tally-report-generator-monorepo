@@ -11,7 +11,10 @@ interface AuthProviderState {
   loading: boolean;
   permissions:
     | {
-        module: string;
+        module: {
+          name: string;
+          icon: string;
+        };
         actions: string[];
       }[]
     | undefined;
@@ -53,9 +56,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (!authData) return;
     const permissions =
       authData.user?.role?.permission.map(({ module, permissionAction }) => {
-        const moduleName = module.name;
+        const { name, icon } = module;
         return {
-          module: toTitleCase(moduleName),
+          module: { name: toTitleCase(name), icon },
           actions: permissionAction.map(({ action }) =>
             toTitleCase(action.name)
           )

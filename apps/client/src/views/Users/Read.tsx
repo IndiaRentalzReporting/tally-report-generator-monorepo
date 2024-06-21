@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import services from '@/services';
 import { DetailedUser } from '@/models';
-import { Card, Skeleton } from '@/components/ui';
+import { Skeleton } from '@/components/ui';
 import { DataTable } from '@/components/composite/table/data-table';
-import { columns } from './UserColumn';
+import { columns } from './columns';
 
 const Create: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
