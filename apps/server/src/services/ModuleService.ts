@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { CustomError } from '../errors';
+import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
   ModuleInsert,
@@ -32,10 +32,6 @@ class ModuleService {
     return module;
   }
 
-  public static async readAll(): Promise<ModuleSelect[]> {
-    return db.query.ModuleSchema.findMany({});
-  }
-
   public static async findOne(
     data: Partial<ModuleSelect>
   ): Promise<ModuleSelect> {
@@ -48,7 +44,45 @@ class ModuleService {
     });
 
     if (!module) {
-      throw new CustomError(`Module does not exist`, 500);
+      throw new NotFoundError(`Module does not exist`);
+    }
+
+    return module;
+  }
+
+  public static async readAll(): Promise<ModuleSelect[]> {
+    return db.query.ModuleSchema.findMany({});
+  }
+
+  public static async updateOne(
+    data: ModuleInsert,
+    id: ModuleSelect['id']
+  ): Promise<ModuleSelect> {
+    const [module] = await db
+      .update(ModuleSchema)
+      .set({
+        ...data,
+        name: data.name.toUpperCase(),
+        icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
+      })
+      .where(eq(ModuleSchema.id, id))
+      .returning();
+
+    if (!module) {
+      throw new NotFoundError('Module does not exist');
+    }
+
+    return module;
+  }
+
+  public static async deleteOne(id: ModuleSelect['id']): Promise<ModuleSelect> {
+    const [module] = await db
+      .delete(ModuleSchema)
+      .where(eq(ModuleSchema.id, id))
+      .returning();
+
+    if (!module) {
+      throw new NotFoundError('Module does not exist');
     }
 
     return module;

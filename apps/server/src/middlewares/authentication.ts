@@ -32,39 +32,42 @@ export const isAuthenticated = (
   }
 };
 
-export const isRoleAllowed = () => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    if (req.isAuthenticated()) {
-      const {
-        user: { role_id },
-        module_id,
-        action_id
-      } = req;
+export const isRoleAllowed = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    const {
+      user: { role },
+      module,
+      action
+    } = req;
 
-      if (!role_id) {
-        throw new UnauthenticatedError(
-          'You are not allowed to do anything, please get a role assigned to yourself'
-        );
-      }
-
-      if (module_id && action_id) {
-        const { id: permission_id } = await PermissionService.findOne({
-          module_id,
-          role_id
-        });
-
-        const permissionAction = await PermissionActionService.findOne({
-          permission_id,
-          action_id
-        });
-
-        if (permissionAction) next();
-      } else {
-        throw new BadRequestError('Invalid url, no module or action found!');
-      }
+    if (!role) {
+      throw new UnauthenticatedError(
+        'You are not allowed to do anything, please get a role assigned to yourself'
+      );
     }
-    throw new UnauthenticatedError('You are not logged in!');
-  };
+
+    if (module && action) {
+      const { permission } = role;
+
+      const allowed = permission.find(
+        ({ permissionAction, module: { name } }) =>
+          permissionAction.find(({ action: { name } }) => name === action) &&
+          name === module
+      );
+
+      if (allowed) next();
+      throw new UnauthenticatedError(
+        'You are not allowed to perform this action'
+      );
+    } else {
+      throw new BadRequestError('Invalid url, no module or action found!');
+    }
+  }
+  throw new UnauthenticatedError('You are not authenticated');
 };
 
 export const isAdmin = async (

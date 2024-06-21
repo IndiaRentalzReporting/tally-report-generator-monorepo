@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   ActionSelect,
+  DetailedRole,
   ModuleSelect,
   PermissionSelect,
   RoleInsert,
@@ -18,6 +19,20 @@ export const readAll = async (
     res.json({ roles });
   } catch (e) {
     console.error("Couldn't fetch all Roles");
+    next(e);
+  }
+};
+
+export const readOne = async (
+  req: Request<Pick<RoleSelect, 'id'>>,
+  res: Response<{ role: DetailedRole }>,
+  next: NextFunction
+) => {
+  try {
+    const role = await RoleService.findOne({ id: req.params.id });
+    res.json({ role });
+  } catch (e) {
+    console.error("Couldn't fetch a Role");
     next(e);
   }
 };
@@ -50,6 +65,22 @@ export const updateOne = async (
     });
   } catch (e) {
     console.error("Couldn't update the Role");
+    next(e);
+  }
+};
+
+export const deleteOne = async (
+  req: Request<Pick<RoleSelect, 'id'>>,
+  res: Response<{ role: RoleSelect }>,
+  next: NextFunction
+) => {
+  try {
+    const role = await RoleService.deleteOne(req.params.id);
+    res.json({
+      role
+    });
+  } catch (e) {
+    console.error("Couldn't delete the Role");
     next(e);
   }
 };

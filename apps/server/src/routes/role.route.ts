@@ -1,13 +1,28 @@
 import { Router } from 'express';
-import { createOne, readAll, updateOne } from '../controller/role.controller';
+import {
+  createOne,
+  readAll,
+  updateOne,
+  readOne,
+  deleteOne
+} from '../controller/role.controller';
 import { validateSchema } from '../middlewares';
 import { RoleInsertSchema } from '../models/schema';
 
 const roleRouter = Router();
 
-roleRouter.get('/read/all', readAll);
+roleRouter.get('/read', readAll);
+roleRouter.get(
+  '/read/:id',
+  validateSchema({
+    params: RoleInsertSchema.pick({
+      id: true
+    })
+  }),
+  readOne
+);
 roleRouter.post(
-  '/create/one',
+  '/create',
   validateSchema({
     body: RoleInsertSchema.pick({
       name: true
@@ -16,7 +31,7 @@ roleRouter.post(
   createOne
 );
 roleRouter.patch(
-  '/update/one/:id',
+  '/update/:id',
   validateSchema({
     body: RoleInsertSchema.pick({
       name: true
@@ -26,6 +41,15 @@ roleRouter.patch(
     })
   }),
   updateOne
+);
+roleRouter.delete(
+  '/delete/:id',
+  validateSchema({
+    params: RoleInsertSchema.pick({
+      id: true
+    })
+  }),
+  deleteOne
 );
 
 export default roleRouter;

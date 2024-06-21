@@ -35,7 +35,22 @@ export const updateRole = async (
 
     res.json({ userIds });
   } catch (e) {
-    console.error("Couldn't assign UserRoleRelation to a role");
+    console.error("Couldn't assign a role to users");
+    next(e);
+  }
+};
+
+export const deleteOne = async (
+  req: Request<Pick<UserSelect, 'id'>>,
+  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserService.deleteUser(req.params.id);
+
+    res.json({ user });
+  } catch (e) {
+    console.error("Couldn't delete a user");
     next(e);
   }
 };

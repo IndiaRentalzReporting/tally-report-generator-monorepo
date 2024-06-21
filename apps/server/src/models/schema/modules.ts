@@ -26,10 +26,12 @@ export const ModuleSchema = pgTable('modules', {
 export type ModuleInsert = typeof ModuleSchema.$inferInsert;
 export const ModuleInsertSchema = createInsertSchema(ModuleSchema).merge(
   z.object({
-    icon: z
-      .string()
-      .startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
-      .endsWith('</svg>')
+    icon: z.optional(
+      z
+        .string()
+        .startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
+        .endsWith('</svg>')
+    )
   })
 );
 export type ModuleSelect = typeof ModuleSchema.$inferSelect;

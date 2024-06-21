@@ -1,23 +1,63 @@
 import { and, eq } from 'drizzle-orm';
-import { CustomError } from '../errors';
+import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
-import { RoleInsert, RoleSchema, RoleSelect } from '../models/schema';
+import {
+  DetailedRole,
+  RoleInsert,
+  RoleSchema,
+  RoleSelect
+} from '../models/schema';
 
 class RoleService {
   public static async readAll(): Promise<RoleSelect[]> {
     return db.query.RoleSchema.findMany({});
   }
 
-  public static async findOne(data: Partial<RoleSelect>): Promise<RoleSelect> {
+  public static async findOne(
+    data: Partial<RoleSelect>
+  ): Promise<DetailedRole> {
     const keys = Object.keys(data) as Array<keyof Partial<RoleSelect>>;
     const values = Object.values(data) as Array<any>;
     const role = await db.query.RoleSchema.findFirst({
       where: and(
         ...keys.map((key, index) => eq(RoleSchema[key], values[index]))
-      )
+      ),
+      with: {
+        permission: {
+          columns: {
+            module_id: false,
+            updatedAt: false,
+            role_id: false,
+            createdAt: false,
+            id: false
+          },
+          with: {
+            permissionAction: {
+              columns: {
+                permission_id: false,
+                action_id: false
+              },
+              with: {
+                action: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            },
+            module: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        }
+      }
     });
 
-    if (!role) throw new CustomError('Role does not exist', 500);
+    if (!role) throw new NotFoundError('Role does not exist');
 
     return role;
   }
@@ -45,7 +85,18 @@ class RoleService {
       .where(eq(RoleSchema.id, roleId))
       .returning();
 
-    if (!role) throw new CustomError('Role does not exist', 500);
+    if (!role) throw new NotFoundError('Role does not exist');
+
+    return role;
+  }
+
+  public static async deleteOne(roleId: RoleSelect['id']): Promise<RoleSelect> {
+    const [role] = await db
+      .delete(RoleSchema)
+      .where(eq(RoleSchema.id, roleId))
+      .returning();
+
+    if (!role) throw new NotFoundError('Role does not exist');
 
     return role;
   }

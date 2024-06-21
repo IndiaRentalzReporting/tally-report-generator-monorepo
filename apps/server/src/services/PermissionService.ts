@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { CustomError } from '../errors';
+import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
   ActionSelect,
@@ -38,10 +38,6 @@ class PermissionService {
     const keys = Object.keys(data) as Array<keyof Partial<PermissionSelect>>;
     const values = Object.values(data) as Array<any>;
 
-    console.log({
-      keys,
-      values
-    });
     const permission = await db.query.PermissionSchema.findMany({
       where: and(
         ...keys.map((key, index) => eq(PermissionSchema[key], values[index]))
@@ -64,7 +60,7 @@ class PermissionService {
     });
 
     if (!permission) {
-      throw new CustomError('Permission does not exists', 500);
+      throw new NotFoundError('Permission does not exists');
     }
 
     return permission;

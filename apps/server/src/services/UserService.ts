@@ -6,29 +6,21 @@ import {
   UserSelect,
   DetailedUser
 } from '../models/schema';
-import { CustomError } from '../errors';
+import { CustomError, NotFoundError } from '../errors';
 
 class UserService {
   public static async createOne(
     data: UserInsert
   ): Promise<Omit<UserSelect, 'password'>> {
-    try {
-      const [user] = await db
-        .insert(UserSchema)
-        .values({ ...data, email: data.email.toLowerCase() })
-        .returning();
-      if (!user) {
-        throw new CustomError(
-          'Database error: User returned as undefined',
-          500
-        );
-      }
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
-    } catch (err) {
-      console.error('Could not create a new User!');
-      throw err;
+    const [user] = await db
+      .insert(UserSchema)
+      .values({ ...data, email: data.email.toLowerCase() })
+      .returning();
+    if (!user) {
+      throw new CustomError('Database error: User returned as undefined', 500);
     }
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   public static async findOne(
@@ -142,7 +134,24 @@ class UserService {
       .returning();
 
     if (!user) {
-      throw new CustomError('Database error: User does not exist', 500);
+      throw new NotFoundError('User does not exist');
+    }
+
+    const { password, ...userWithoutPassword } = user;
+
+    return userWithoutPassword;
+  }
+
+  public static async deleteUser(
+    userId: UserSelect['id']
+  ): Promise<Omit<UserSelect, 'password'>> {
+    const [user] = await db
+      .delete(UserSchema)
+      .where(eq(UserSchema.id, userId))
+      .returning();
+
+    if (!user) {
+      throw new NotFoundError('User does not exist');
     }
 
     const { password, ...userWithoutPassword } = user;

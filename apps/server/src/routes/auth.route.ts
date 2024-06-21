@@ -31,8 +31,8 @@ authRouter.post(
   handleSignUp
 );
 
-authRouter.get('/status', handleStatusCheck);
-
 authRouter.post('/sign-out', handleLogout);
+
+authRouter.get('/status', handleStatusCheck);
 
 export default authRouter;

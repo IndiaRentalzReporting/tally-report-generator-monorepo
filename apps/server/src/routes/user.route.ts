@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { updateRole, readAll } from '../controller/user.controller';
+import { updateRole, readAll, deleteOne } from '../controller/user.controller';
 
 const userRouter = Router();
 
-userRouter.get('/read/all', readAll);
-userRouter.post('/update/role', updateRole);
+userRouter.get('/read', readAll);
+userRouter.patch('/update/role', updateRole);
+userRouter.delete('/delete/:id', deleteOne);
 
 export default userRouter;

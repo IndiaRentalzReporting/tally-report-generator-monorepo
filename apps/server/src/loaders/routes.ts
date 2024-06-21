@@ -10,11 +10,11 @@ import { isAdmin, attachModuleActionData } from '../middlewares';
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
   // app.use(attachModuleActionData);
-  app.use('/role', isAdmin, roleRouter);
-  app.use('/user', isAdmin, userRouter);
-  app.use('/module', isAdmin, moduleRouter);
-  app.use('/action', isAdmin, actionRouter);
-  app.use('/permission', isAdmin, permissionRouter);
+  app.use('/roles', roleRouter);
+  app.use('/users', isAdmin, userRouter);
+  app.use('/modules', isAdmin, moduleRouter);
+  app.use('/actions', isAdmin, actionRouter);
+  app.use('/permissions', isAdmin, permissionRouter);
 };
 
 export default routesLoader;
