@@ -74,8 +74,13 @@ const services = {
     createOne: async (data: Partial<Module>): AxiosPromise<Module> => {
       return axios.post('/modules/create', data);
     },
-    deleteOne: async (id: Module['id']): AxiosPromise<Module> => {
+    deleteOne: async (id: Module['id']): AxiosPromise<{ module: Module }> => {
       return axios.delete(`/modules/delete/${id}`);
+    },
+    readOne: async (
+      id: Module['id'] | undefined
+    ): AxiosPromise<{ module: Module }> => {
+      return axios.get(`/modules/read/${id}`);
     }
   },
   action: {

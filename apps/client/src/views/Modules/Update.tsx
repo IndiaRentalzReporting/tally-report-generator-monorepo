@@ -1,18 +1,17 @@
-import React from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { Module } from '@/models';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  Button,
-  Switch,
-  Label
+  Button
 } from '@/components/ui';
-import services from '@/services';
-import { Module } from '@/models';
 import Fields from './Fields';
+import services from '@/services';
 
 type State = Pick<Module, 'name' | 'isPrivate' | 'icon'>;
 
@@ -22,36 +21,33 @@ const initialState: State = {
   icon: ''
 };
 
-const CreateModule: React.FC = () => {
+const Edit: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
+  const { id } = useParams<{ id: string }>();
 
-  const queryClient = useQueryClient();
-  const { mutateAsync: createModule, isPending: loadingCreateModule } =
-    useMutation({
-      mutationFn: () => services.module.createOne(moduleDetails),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-      },
-      onSettled: () => {
-        setModuleDetails(initialState);
-      }
-    });
+  const { data: moduleData, isFetching: loadingCreateModule } = useQuery({
+    queryFn: () => services.module.readOne(id),
+    select: (data) => data.data.module,
+    queryKey: ['getOne', 'modules', id]
+  });
+
+  useEffect(() => {
+    if (!moduleData) return;
+    setModuleDetails(moduleData);
+  }, [moduleData]);
 
   return (
     <Card className="w-full relative">
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
-          Create Module
+          Edit Module
         </CardTitle>
-        <CardDescription>
-          Create Modules for storing your company data
-        </CardDescription>
+        <CardDescription>Edit details related to this Module</CardDescription>
       </CardHeader>
       <CardContent>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            createModule();
           }}
           className="flex flex-col gap-4"
         >
@@ -72,4 +68,4 @@ const CreateModule: React.FC = () => {
   );
 };
 
-export default CreateModule;
+export default Edit;

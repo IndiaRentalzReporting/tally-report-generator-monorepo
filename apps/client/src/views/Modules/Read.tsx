@@ -12,6 +12,7 @@ import {
 import { Module } from '@/models';
 import services from '@/services';
 import { columns } from './columns';
+import Edit from './Update';
 
 const ReadModule: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
@@ -30,7 +31,7 @@ const ReadModule: React.FC = () => {
           Read, Update or Edit modules based on yout permissions
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-6">
         <Skeleton isLoading={fetchingModules} className="w-full h-20">
           <DataTable columns={columns} data={modules} />
         </Skeleton>
