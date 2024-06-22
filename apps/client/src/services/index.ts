@@ -33,7 +33,7 @@ const services = {
     getAll: async (): AxiosPromise<{
       roles: Role[];
     }> => {
-      return axios.get('/role/read/all');
+      return axios.get('/roles/read');
     },
     createOne: async (data: {
       roleName: string;
@@ -43,10 +43,10 @@ const services = {
       }[];
     }): AxiosPromise<{ permissions: Permission[] }> => {
       const { role } = (
-        await axios.post(`/role/create/one`, { name: data.roleName })
+        await axios.post(`/roles/create`, { name: data.roleName })
       ).data;
 
-      return axios.post('/permission/create/many', {
+      return axios.post('/permissions/create/many', {
         permissions: data.rolePermissions,
         role_id: role.id
       });
@@ -56,30 +56,30 @@ const services = {
     getAll: async (): AxiosPromise<{
       users: DetailedUser[];
     }> => {
-      return axios.get('/user/read/all');
+      return axios.get('/users/read');
     },
     assignRole: async (
       userIds: string[],
       roleId: string
     ): AxiosPromise<string[]> => {
-      return axios.post('/user/update/role', { userIds, roleId });
+      return axios.post('/users/update', { userIds, roleId });
     }
   },
   module: {
     getAll: async (): AxiosPromise<{
       modules: Module[];
     }> => {
-      return axios.get('/module/read/all');
+      return axios.get('/modules/read');
     },
     createOne: async (data: Partial<Module>): AxiosPromise => {
-      return axios.post('/module/create/one', data);
+      return axios.post('/modules/create', data);
     }
   },
   action: {
     getAll: async (): AxiosPromise<{
       actions: Action[];
     }> => {
-      return axios.get('/action/read/all');
+      return axios.get('/actions/read');
     }
   }
 };
