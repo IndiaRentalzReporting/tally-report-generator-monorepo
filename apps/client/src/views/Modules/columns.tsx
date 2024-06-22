@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, Edit, Minus, X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Module } from '@/models';
 import DeleteEntity from '@/components/composite/DeleteEntity';
 import services from '@/services';
@@ -48,11 +49,27 @@ export const columns: ColumnDef<Module>[] = [
   {
     id: 'Actions',
     header: 'Actions',
-    cell: ({ row }) => (
-      <span className="flex gap-4 items-center">
-        <DeleteEntity deleteRoute={services.user.getAll} />
-        <Edit size={20} className="text-green-500" />
-      </span>
-    )
+    cell: ({ row }) => {
+      const module = row.original;
+      const queryClient = useQueryClient();
+      return (
+        <span className="flex gap-4 items-center">
+          <DeleteEntity
+            options={{
+              mutation: {
+                mutationFn: () => services.module.deleteOne(module.id),
+                onSuccess: () =>
+                  queryClient.invalidateQueries({
+                    queryKey: ['modules', 'getAll']
+                  })
+              },
+              name: module.name,
+              module: 'Module'
+            }}
+          />
+          <Edit size={20} className="text-green-500" />
+        </span>
+      );
+    }
   }
 ];

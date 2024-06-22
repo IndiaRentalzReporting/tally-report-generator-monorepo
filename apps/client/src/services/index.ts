@@ -71,8 +71,11 @@ const services = {
     }> => {
       return axios.get('/modules/read');
     },
-    createOne: async (data: Partial<Module>): AxiosPromise => {
+    createOne: async (data: Partial<Module>): AxiosPromise<Module> => {
       return axios.post('/modules/create', data);
+    },
+    deleteOne: async (id: Module['id']): AxiosPromise<Module> => {
+      return axios.delete(`/modules/delete/${id}`);
     }
   },
   action: {
