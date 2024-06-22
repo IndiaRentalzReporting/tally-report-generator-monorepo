@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject, ZodError as ZE } from 'zod';
+import { AnyZodObject, SomeZodObject, ZodError as ZE } from 'zod';
 import { ZodError } from '../errors';
 
 interface IValidator {
@@ -20,7 +20,7 @@ export function validateSchema(validator: IValidator) {
         console.log(req.query);
         req.query = await validator.query.parseAsync(req.query);
       }
-      next();
+      return next();
     } catch (err) {
       let error = err;
       if (err instanceof ZE) {

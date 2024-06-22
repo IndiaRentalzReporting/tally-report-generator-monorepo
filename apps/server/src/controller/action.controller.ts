@@ -9,10 +9,10 @@ export const readAll = async (
 ) => {
   try {
     const actions = await ActionService.readAll();
-    res.json({ actions });
+    return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');
-    next(e);
+    return next(e);
   }
 };
 
@@ -23,10 +23,10 @@ export const readOne = async (
 ) => {
   try {
     const action = await ActionService.findOne({ id: req.params.id });
-    res.json({ action });
+    return res.json({ action });
   } catch (e) {
     console.error('Action does not exist!');
-    next(e);
+    return next(e);
   }
 };
 
@@ -37,10 +37,10 @@ export const updateOne = async (
 ) => {
   try {
     const action = await ActionService.updateOne(req.body, req.params.id);
-    res.json({ action });
+    return res.json({ action });
   } catch (e) {
     console.error('Could not update action');
-    next(e);
+    return next(e);
   }
 };
 
@@ -51,10 +51,10 @@ export const deleteOne = async (
 ) => {
   try {
     const action = await ActionService.deleteOne(req.params.id);
-    res.json({ action });
+    return res.json({ action });
   } catch (e) {
     console.error('Could not delete action');
-    next(e);
+    return next(e);
   }
 };
 
@@ -69,9 +69,9 @@ export const createOne = async (
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
-    res.json({ action });
+    return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');
-    next(e);
+    return next(e);
   }
 };

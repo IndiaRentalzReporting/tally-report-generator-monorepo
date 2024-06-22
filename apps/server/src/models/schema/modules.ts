@@ -29,7 +29,7 @@ export const ModuleInsertSchema = createInsertSchema(ModuleSchema).merge(
     icon: z.optional(
       z
         .string()
-        .startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
+        .startsWith("<svg xmlns='http://www.w3.org/2000/svg'")
         .endsWith('</svg>')
     )
   })

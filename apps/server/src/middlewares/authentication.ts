@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 import { BadRequestError, UnauthenticatedError } from '../errors';
 import UserService from '../services/UserService';
-import PermissionService from '../services/PermissionService';
-import PermissionActionService from '../services/PermissionActionService';
 import config from '../config';
 
 export const authenticate = passport.authenticate('local');
@@ -14,10 +12,9 @@ export const isUnauthenticated = (
   next: NextFunction
 ) => {
   if (req.isUnauthenticated()) {
-    next();
-  } else {
-    throw new BadRequestError('You are already authenticated!');
+    return next();
   }
+  throw new BadRequestError('You are already authenticated!');
 };
 
 export const isAuthenticated = (
@@ -26,10 +23,9 @@ export const isAuthenticated = (
   next: NextFunction
 ) => {
   if (req.isAuthenticated()) {
-    next();
-  } else {
-    throw new BadRequestError('You are not authenticated!');
+    return next();
   }
+  throw new BadRequestError('You are not authenticated!');
 };
 
 export const isRoleAllowed = async (
@@ -59,7 +55,7 @@ export const isRoleAllowed = async (
           name === module
       );
 
-      if (allowed) next();
+      if (allowed) return next();
       throw new UnauthenticatedError(
         'You are not allowed to perform this action'
       );

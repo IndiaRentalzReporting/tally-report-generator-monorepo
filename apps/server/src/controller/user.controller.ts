@@ -9,12 +9,12 @@ export const readAll = async (
 ) => {
   try {
     const users = await UserService.readAll(req.user?.id ?? '');
-    res.json({
+    return res.json({
       users
     });
   } catch (e) {
     console.error("Couldn't fetch all Users!");
-    next(e);
+    return next(e);
   }
 };
 
@@ -33,10 +33,10 @@ export const updateRole = async (
       req.body.roleId
     );
 
-    res.json({ userIds });
+    return res.json({ userIds });
   } catch (e) {
     console.error("Couldn't assign a role to users");
-    next(e);
+    return next(e);
   }
 };
 
@@ -48,9 +48,9 @@ export const deleteOne = async (
   try {
     const user = await UserService.deleteUser(req.params.id);
 
-    res.json({ user });
+    return res.json({ user });
   } catch (e) {
     console.error("Couldn't delete a user");
-    next(e);
+    return next(e);
   }
 };

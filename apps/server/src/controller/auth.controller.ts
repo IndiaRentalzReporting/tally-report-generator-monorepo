@@ -10,27 +10,27 @@ export const handleSignUp = async (
 ) => {
   try {
     const user = await AuthService.signUp(req.body);
-    res.json(user);
+    return res.json(user);
   } catch (err) {
     console.error(`Could not sign up the User`);
-    next(err);
+    return next(err);
   }
 };
 
 export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
-  res: Response<Omit<DetailedUser, 'password'>>,
+  res: Response<{ user: Omit<DetailedUser, 'password'> }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
       const { password, ...user } = req.user;
-      return res.send(user);
+      return res.json({ user });
     }
     throw new UnauthenticatedError('Not logged in');
   } catch (err) {
     console.error(`Could not sign in the User`);
-    next(err);
+    return next(err);
   }
 };
 
@@ -64,18 +64,18 @@ export const handleStatusCheck = (
         user: { password, ...userWithoutPassword }
       } = req;
       console.log({ userWithoutPassword });
-      res.json({
+      return res.json({
         user: userWithoutPassword,
         isAuthenticated: true
       });
       return;
     }
-    res.json({
+    return res.json({
       user: null,
       isAuthenticated: false
     });
   } catch (e) {
     console.error(`Couldn't check the status`);
-    next(e);
+    return next(e);
   }
 };

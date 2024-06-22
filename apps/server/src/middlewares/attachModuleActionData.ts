@@ -30,5 +30,5 @@ export const attachModuleActionData = async (
   req.action = action?.toUpperCase();
   req.module = module?.toUpperCase();
 
-  next();
+  return next();
 };

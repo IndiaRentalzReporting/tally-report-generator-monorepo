@@ -41,12 +41,12 @@ export const createMany = async (
       });
       return permission;
     });
-    res.json({
+    return res.json({
       permissions: await Promise.all(promises)
     });
   } catch (e) {
     console.error("Couldn't assign permissions to a role");
-    next(e);
+    return next(e);
   }
 };
 
@@ -87,11 +87,11 @@ export const updateMany = async (
         return permission;
       }
     );
-    res.json({
+    return res.json({
       permissions: await Promise.all(promises)
     });
   } catch (e) {
     console.error("Couldn't update permissions for a role");
-    next(e);
+    return next(e);
   }
 };
