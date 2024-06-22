@@ -1,60 +1,50 @@
+import config from '../../config';
 import ActionService from '../../services/ActionService';
 import AuthService from '../../services/AuthService';
 import ModuleService from '../../services/ModuleService';
 import RoleService from '../../services/RoleService';
 import UserService from '../../services/UserService';
-import { ActionSelect, RoleSelect } from '../schema';
 
 const createActions = async () => {
-  const actions = (
-    ['CREATE', 'READ', 'UPDATE', 'DELETE'] as ActionSelect['name'][]
-  ).map(async (name) => {
+  const actions = ['CREATE', 'READ', 'UPDATE', 'DELETE'].map(async (name) => {
     await ActionService.createOne({ name });
   });
 
   await Promise.all(actions);
 };
 
-const createUsers = async (role: RoleSelect) => {
-  const actions = [
-    {
-      first_name: 'Admin',
-      last_name: 'Admin',
-      email: 'admin@admin.com',
-      password: 'administrator'
-    },
-    {
-      first_name: 'Dev',
-      last_name: 'Dev',
-      email: 'dev@dev.com',
-      password: 'developer'
-    }
-  ].map(async (user) => {
-    const { id } = await AuthService.signUp(user);
-    return id;
-  });
-
-  const users = await Promise.all(actions);
-
-  await UserService.updateRole(users, role.id);
-};
-
-const createRoles = async () => {
-  const name = 'superuser';
-  return RoleService.createOne({ name });
-};
-
 const createModules = async () => {
-  const modules = ['roles', 'users'].map((module) =>
+  const modules = ['ROLES', 'USERS', 'MODULES'].map((module) =>
     ModuleService.createOne({ name: module })
   );
   await Promise.all(modules);
 };
 
+const createRoles = async () => {
+  const name = config.app.SUPER_USER_NAME;
+  return RoleService.createOne({ name });
+};
+
 const seed = async () => {
+  const {
+    DEVELOPER_FIRST_NAME: first_name,
+    DEVELOPER_LAST_NAME: last_name,
+    DEVELOPER_EMAIL: email,
+    DEVELOPER_PASSWORD: password
+  } = config.app;
+
+  if (!first_name || !last_name || !email || !password)
+    throw Error('Invalid user credentials');
+
+  const user = await AuthService.signUp({
+    first_name,
+    last_name,
+    email,
+    password
+  });
+  const role = await createRoles();
+  await UserService.updateRole([user.id], role.id);
   await createActions();
-  const roles = await createRoles();
-  await createUsers(roles);
   await createModules();
   process.exit();
 };

@@ -5,16 +5,17 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
-import { isAdmin, attachModuleActionData } from '../middlewares';
+import { attachModuleActionData, isRoleAllowed } from '../middlewares';
 
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
-  // app.use(attachModuleActionData);
-  app.use('/role', isAdmin, roleRouter);
-  app.use('/user', isAdmin, userRouter);
-  app.use('/module', isAdmin, moduleRouter);
-  app.use('/action', isAdmin, actionRouter);
-  app.use('/permission', isAdmin, permissionRouter);
+  app.use(attachModuleActionData);
+  app.use(isRoleAllowed);
+  app.use('/roles', roleRouter);
+  app.use('/users', userRouter);
+  app.use('/modules', moduleRouter);
+  app.use('/actions', actionRouter);
+  app.use('/permissions', permissionRouter);
 };
 
 export default routesLoader;

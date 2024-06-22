@@ -11,10 +11,16 @@ export const PermissionActionSchema = pgTable(
   {
     permission_id: uuid('permission_id')
       .notNull()
-      .references(() => PermissionSchema.id),
+      .references(() => PermissionSchema.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
+      }),
     action_id: uuid('action_id')
       .notNull()
-      .references(() => ActionSchema.id)
+      .references(() => ActionSchema.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade'
+      })
   },
   (table) => ({
     primaryKey: primaryKey({
@@ -37,7 +43,7 @@ export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
 
 export const permissionSchemaRelation = relations(
   PermissionSchema,
-  ({ one }) => ({
+  ({ one, many }) => ({
     role: one(RoleSchema, {
       fields: [PermissionSchema.role_id],
       references: [RoleSchema.id]
@@ -45,7 +51,8 @@ export const permissionSchemaRelation = relations(
     module: one(ModuleSchema, {
       fields: [PermissionSchema.module_id],
       references: [ModuleSchema.id]
-    })
+    }),
+    permissionAction: many(PermissionActionSchema)
   })
 );
 
@@ -66,6 +73,10 @@ export const permissionActionSchemaRelation = relations(
     })
   })
 );
+
+export const actionSchemaRelation = relations(ActionSchema, ({ many }) => ({
+  permissionAction: many(PermissionActionSchema)
+}));
 
 export type PermissionActionInsert = typeof PermissionActionSchema.$inferInsert;
 export type PermissionActionSelect = typeof PermissionActionSchema.$inferSelect;

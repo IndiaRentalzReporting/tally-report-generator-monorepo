@@ -6,8 +6,8 @@ import { ActionSelect } from '../models/schema';
 declare global {
   namespace Express {
     interface Request {
-      module_id?: string;
-      action_id?: string;
+      module?: string;
+      action?: string;
     }
   }
 }
@@ -20,15 +20,15 @@ export const attachModuleActionData = async (
   const { url } = req;
   const [_, module, action] = url.split('/');
 
-  const { id: action_id } = await ActionService.findOne({
+  const Y = await ActionService.findOne({
     name: action?.toUpperCase() as ActionSelect['name']
   });
-  req.action_id = action_id;
-
-  const { id: module_id } = await ModuleService.findOne({
+  const X = await ModuleService.findOne({
     name: module?.toUpperCase()
   });
-  req.module_id = module_id;
 
-  next();
+  req.action = action?.toUpperCase();
+  req.module = module?.toUpperCase();
+
+  return next();
 };

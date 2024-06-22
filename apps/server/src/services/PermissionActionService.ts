@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { CustomError } from '../errors';
+import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
   ActionSelect,
@@ -43,7 +43,7 @@ class PermissionActionService {
     });
 
     if (!permission) {
-      throw new CustomError('No Permission Action combination!', 500);
+      throw new NotFoundError('No Permission Action combination!');
     }
 
     return permission;

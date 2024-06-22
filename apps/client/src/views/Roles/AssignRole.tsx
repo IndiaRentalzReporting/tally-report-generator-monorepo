@@ -18,7 +18,7 @@ import {
   CardDescription
 } from '@/components/ui';
 import services from '@/services';
-import { columns as userColumns } from './UserColumn';
+import { columns } from './columns';
 import { DetailedUser, Role } from '@/models';
 
 const AssignRole: React.FC = () => {
@@ -86,8 +86,10 @@ const AssignRole: React.FC = () => {
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
                 <Skeleton isLoading={fetchingRoles} className="w-full h-10">
-                  {roles.map((role) => (
-                    <SelectItem value={role.id}>{role.name}</SelectItem>
+                  {roles.map((role, index) => (
+                    <SelectItem key={index} value={role.id}>
+                      {role.name}
+                    </SelectItem>
                   ))}
                 </Skeleton>
               </SelectGroup>
@@ -95,7 +97,7 @@ const AssignRole: React.FC = () => {
           </Select>
           <Skeleton isLoading={fetchingRoles} className="w-full h-20">
             <DataTable
-              columns={userColumns}
+              columns={columns}
               data={users}
               selection={{
                 rowSelection,

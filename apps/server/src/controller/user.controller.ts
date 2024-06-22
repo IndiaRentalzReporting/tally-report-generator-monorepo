@@ -9,12 +9,12 @@ export const readAll = async (
 ) => {
   try {
     const users = await UserService.readAll(req.user?.id ?? '');
-    res.json({
+    return res.json({
       users
     });
   } catch (e) {
     console.error("Couldn't fetch all Users!");
-    next(e);
+    return next(e);
   }
 };
 
@@ -33,9 +33,24 @@ export const updateRole = async (
       req.body.roleId
     );
 
-    res.json({ userIds });
+    return res.json({ userIds });
   } catch (e) {
-    console.error("Couldn't assign UserRoleRelation to a role");
-    next(e);
+    console.error("Couldn't assign a role to users");
+    return next(e);
+  }
+};
+
+export const deleteOne = async (
+  req: Request<Pick<UserSelect, 'id'>>,
+  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserService.deleteUser(req.params.id);
+
+    return res.json({ user });
+  } catch (e) {
+    console.error("Couldn't delete a user");
+    return next(e);
   }
 };

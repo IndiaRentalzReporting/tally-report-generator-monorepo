@@ -3,6 +3,7 @@ export * from './Typography';
 export * from './label';
 export * from './input';
 export * from './card';
+export * from './checkbox';
 export * from './badge';
 export * from './form';
 export * from './sheet';

@@ -41,11 +41,57 @@ export const createMany = async (
       });
       return permission;
     });
-    res.json({
+    return res.json({
       permissions: await Promise.all(promises)
     });
   } catch (e) {
     console.error("Couldn't assign permissions to a role");
-    next(e);
+    return next(e);
+  }
+};
+
+export const updateMany = async (
+  req: Request<
+    object,
+    object,
+    {
+      permissions: {
+        permission_id: PermissionSelect['id'];
+        module_id: ModuleSelect['id'];
+        action_ids: ActionSelect['id'][];
+      }[];
+      role_id: RoleSelect['id'];
+    }
+  >,
+  res: Response<{ permissions: PermissionSelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const { role_id, permissions } = req.body;
+    const promises = permissions.map(
+      async ({ permission_id, module_id, action_ids }) => {
+        await PermissionService.deleteOne(permission_id);
+        const permission = await PermissionService.createOne({
+          module_id,
+          role_id
+        });
+        action_ids.forEach(async (action_id) => {
+          const _ = await ActionService.findOne({
+            id: action_id
+          });
+          await PermissionService.assignAction({
+            permission_id: permission.id,
+            action_id
+          });
+        });
+        return permission;
+      }
+    );
+    return res.json({
+      permissions: await Promise.all(promises)
+    });
+  } catch (e) {
+    console.error("Couldn't update permissions for a role");
+    return next(e);
   }
 };
