@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { DetailedUser } from '@/models';
 import DeleteEntity from '@/components/composite/DeleteEntity';
 import services from '@/services';
@@ -48,7 +49,9 @@ export const columns: ColumnDef<DetailedUser>[] = [
               module: 'User'
             }}
           />
-          <Edit size={20} className="text-green-500" />
+          <Link to={`/dashboard/Users/Update/${user.id}`}>
+            <Edit size={20} className="text-green-500" />
+          </Link>
         </span>
       );
     }

@@ -64,11 +64,12 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
             }
             return child;
           });
-        } else if (location.pathname === navItem.to) navItem.isActive = true;
+        } else if (location.pathname.includes(navItem.to))
+          navItem.isActive = true;
         return navItem;
       })
     );
-  }, [location]);
+  }, [location, permissions]);
 
   return (
     <NavigationContext.Provider value={navState}>

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
 import { DetailedUser } from '@/models';
+import { toTitleCase } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
@@ -44,13 +45,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     queryKey: ['auth', 'statusCheck'],
     staleTime: 1000 * 60 * 15
   });
-
-  const toTitleCase = (str: string): string => {
-    return str.replace(
-      /\w\S*/g,
-      (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    );
-  };
 
   useEffect(() => {
     if (!authData) return;

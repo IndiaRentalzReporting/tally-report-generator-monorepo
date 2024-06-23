@@ -58,6 +58,15 @@ const services = {
     }> => {
       return axios.get('/users/read');
     },
+    getOne: async (
+      id: User['id'] | undefined
+    ): AxiosPromise<{
+      user: DetailedUser & {
+        password: string;
+      };
+    }> => {
+      return axios.get(`/users/read/${id}`);
+    },
     assignRole: async (
       userIds: string[],
       roleId: string
@@ -74,13 +83,19 @@ const services = {
     createOne: async (data: Partial<Module>): AxiosPromise<Module> => {
       return axios.post('/modules/create', data);
     },
-    deleteOne: async (id: Module['id']): AxiosPromise<{ module: Module }> => {
-      return axios.delete(`/modules/delete/${id}`);
-    },
     readOne: async (
       id: Module['id'] | undefined
     ): AxiosPromise<{ module: Module }> => {
       return axios.get(`/modules/read/${id}`);
+    },
+    updateOne: async (
+      id: Module['id'] | undefined,
+      data: Partial<Module>
+    ): AxiosPromise<Module> => {
+      return axios.patch(`/modules/update/${id}`, data);
+    },
+    deleteOne: async (id: Module['id']): AxiosPromise<{ module: Module }> => {
+      return axios.delete(`/modules/delete/${id}`);
     }
   },
   action: {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Module } from '@/models';
 import {
@@ -25,7 +25,7 @@ const Edit: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
   const { id } = useParams<{ id: string }>();
 
-  const { data: moduleData, isFetching: loadingCreateModule } = useQuery({
+  const { data: moduleData, isFetching: loadingReadModule } = useQuery({
     queryFn: () => services.module.readOne(id),
     select: (data) => data.data.module,
     queryKey: ['getOne', 'modules', id]
@@ -35,6 +35,18 @@ const Edit: React.FC = () => {
     if (!moduleData) return;
     setModuleDetails(moduleData);
   }, [moduleData]);
+
+  const queryClient = useQueryClient();
+  const { mutateAsync: createModule, isPending: loadingUpdateModule } =
+    useMutation({
+      mutationFn: () => services.module.updateOne(id, moduleDetails),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
+      },
+      onSettled: () => {
+        setModuleDetails(initialState);
+      }
+    });
 
   return (
     <Card className="w-full relative">
@@ -58,7 +70,7 @@ const Edit: React.FC = () => {
           <Button
             type="submit"
             className="w-min mt-2"
-            isLoading={loadingCreateModule}
+            isLoading={loadingUpdateModule}
           >
             Create Module
           </Button>
