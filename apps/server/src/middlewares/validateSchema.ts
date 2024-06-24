@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject, SomeZodObject, ZodError as ZE } from 'zod';
+import { AnyZodObject, ZodError as ZE } from 'zod';
 import { ZodError } from '../errors';
 
 interface IValidator {

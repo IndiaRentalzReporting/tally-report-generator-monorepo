@@ -7,6 +7,7 @@ import {
   DetailedUser
 } from '../models/schema';
 import { CustomError, NotFoundError } from '../errors';
+import { toTitleCase } from '../utils';
 
 class UserService {
   public static async createOne(
@@ -28,7 +29,7 @@ class UserService {
   ): Promise<DetailedUser | undefined> {
     const keys = Object.keys(data) as Array<keyof Partial<UserSelect>>;
     const values = Object.values(data) as Array<any>;
-    return db.query.UserSchema.findFirst({
+    const user = await db.query.UserSchema.findFirst({
       where: and(
         ...keys.map((key, index) => eq(UserSchema[key], values[index]))
       ),
@@ -72,6 +73,15 @@ class UserService {
         }
       }
     });
+    user?.role?.permission.map((permission) => {
+      permission.module.name = toTitleCase(permission.module.name);
+      permission.permissionAction.map((action) => {
+        action.action.name = toTitleCase(action.action.name);
+        return action;
+      });
+      return permission;
+    });
+    return user;
   }
 
   public static async readAll(

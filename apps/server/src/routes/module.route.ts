@@ -35,7 +35,11 @@ moduleRouter.get(
 moduleRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ModuleInsertSchema.pick({
+    body: ModuleInsertSchema.extend({
+      name: ModuleInsertSchema.shape.name.optional(),
+      isPrivate: ModuleInsertSchema.shape.isPrivate.optional(),
+      icon: ModuleInsertSchema.shape.icon.optional()
+    }).pick({
       name: true,
       isPrivate: true,
       icon: true
