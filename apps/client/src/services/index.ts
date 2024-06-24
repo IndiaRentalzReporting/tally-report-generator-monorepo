@@ -12,7 +12,7 @@ import {
 } from '@/models';
 
 const services = {
-  auth: {
+  Authentication: {
     signUp: (data: RegisterUser): AxiosPromise<Omit<User, 'password'>> => {
       return axios.post(`/auth/sign-up`, data);
     },
@@ -29,7 +29,7 @@ const services = {
       return axios.get(`/auth/status`);
     }
   },
-  role: {
+  Roles: {
     createOne: async (data: {
       role: Partial<Role>;
       permissions: {
@@ -84,7 +84,7 @@ const services = {
       return axios.delete(`/roles/delete/${id}`);
     }
   },
-  user: {
+  Users: {
     getAll: async (): AxiosPromise<{
       users: DetailedUser[];
     }> => {
@@ -96,6 +96,9 @@ const services = {
       user: DetailedUser;
     }> => {
       return axios.get(`/users/read/${id}`);
+    },
+    createOne: (data: RegisterUser): AxiosPromise<Omit<User, 'password'>> => {
+      return axios.post(`/auth/sign-up`, data);
     },
     updateOne: async (
       id: User['id'] | undefined,
@@ -113,7 +116,7 @@ const services = {
       return axios.delete(`/users/delete/${id}`);
     }
   },
-  module: {
+  Modules: {
     getAll: async (): AxiosPromise<{
       modules: Module[];
     }> => {
@@ -139,7 +142,7 @@ const services = {
       return axios.delete(`/modules/delete/${id}`);
     }
   },
-  action: {
+  Actions: {
     getAll: async (): AxiosPromise<{
       actions: Action[];
     }> => {

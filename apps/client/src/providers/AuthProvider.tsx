@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { DetailedUser } from '@/models';
+import { DetailedUser, Modules } from '@/models';
 import { toTitleCase } from '@/lib/utils';
 
 interface AuthProviderState {
@@ -12,7 +12,7 @@ interface AuthProviderState {
   loading: boolean;
   permissions: {
     module: {
-      name: string;
+      name: Modules;
       icon: string;
     };
     actions: string[];
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<AuthProviderState>(initialState);
 
   const { data: authData, fetchStatus } = useQuery({
-    queryFn: () => services.auth.status(),
+    queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'statusCheck'],
     staleTime: 1000 * 60 * 15

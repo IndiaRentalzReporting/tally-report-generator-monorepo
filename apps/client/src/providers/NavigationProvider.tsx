@@ -1,17 +1,18 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
+import { Modules } from '@/models';
 
 const NavigationContext = createContext<NavigationProviderState[]>([]);
 
-interface NavigationProviderProps {
+export interface NavigationProviderProps {
   children: React.ReactNode;
 }
 
 interface NavItem {
   to: string;
   icon?: string;
-  name: string;
+  name: Modules;
   isActive: boolean;
 }
 export interface NavigationProviderState extends NavItem {

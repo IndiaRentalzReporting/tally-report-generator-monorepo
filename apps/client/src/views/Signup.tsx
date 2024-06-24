@@ -27,7 +27,7 @@ export const SignupForm = () => {
   });
 
   const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.auth.signUp(data),
+    mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       setLoading(false);

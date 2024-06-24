@@ -10,9 +10,9 @@ interface IFieldsProps {
 
 const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="grid gap-2">
+    <div className="flex flex-col gap-4">
+      <div className="flex w-full gap-4">
+        <div className="flex-grow">
           <Label htmlFor="first-name">First name</Label>
           <Input
             id="first-name"
@@ -25,7 +25,7 @@ const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
             required
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex-grow">
           <Label htmlFor="last-name">Last name</Label>
           <Input
             id="last-name"
@@ -39,35 +39,31 @@ const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
           />
         </div>
       </div>
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          name="email"
-          value={userData.email}
-          onChange={(e) =>
-            setUserData((prev) => ({ ...prev, email: e.target.value }))
-          }
-          placeholder="m@example.com"
-          required
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="last-name">Password</Label>
-        <Input
-          type="password"
-          id="password"
-          name="password"
-          value={userData.password}
-          onChange={(e) =>
-            setUserData((prev) => ({ ...prev, password: e.target.value }))
-          }
-          placeholder="********"
-          required
-        />
-      </div>
-    </>
+      <Label htmlFor="email">Email</Label>
+      <Input
+        id="email"
+        type="email"
+        name="email"
+        value={userData.email}
+        onChange={(e) =>
+          setUserData((prev) => ({ ...prev, email: e.target.value }))
+        }
+        placeholder="m@example.com"
+        required
+      />
+      <Label htmlFor="last-name">Password</Label>
+      <Input
+        type="password"
+        id="password"
+        name="password"
+        value={userData.password}
+        onChange={(e) =>
+          setUserData((prev) => ({ ...prev, password: e.target.value }))
+        }
+        placeholder="********"
+        required
+      />
+    </div>
   );
 };
 

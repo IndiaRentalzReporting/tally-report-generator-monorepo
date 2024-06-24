@@ -29,7 +29,7 @@ const Update: React.FC = () => {
   });
 
   const { data: userData } = useQuery({
-    queryFn: () => services.user.getOne(id),
+    queryFn: () => services.Users.getOne(id),
     select: (data) => data.data.user,
     queryKey: ['getOne', 'users', id]
   });

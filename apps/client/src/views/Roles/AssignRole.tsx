@@ -27,14 +27,14 @@ const AssignRole: React.FC = () => {
 
   const [users, setUsers] = React.useState<DetailedUser[]>([]);
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
-    queryFn: () => services.user.getAll(),
+    queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
   });
 
   const [roles, setRoles] = React.useState<Role[]>([]);
   const { data: allRoles, isFetching: fetchingRoles } = useQuery({
-    queryFn: async () => services.role.getAll(),
+    queryFn: async () => services.Roles.getAll(),
     select: (data) => data.data.roles,
     queryKey: ['role', 'getAll']
   });
@@ -53,7 +53,7 @@ const AssignRole: React.FC = () => {
         role: string;
       }) => {
         const promises = selectedUsers.map(async (id) =>
-          services.user.updateOne(id, { role_id: role })
+          services.Users.updateOne(id, { role_id: role })
         );
         return Promise.all(promises);
       },

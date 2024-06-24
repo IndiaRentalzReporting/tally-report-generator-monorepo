@@ -1,11 +1,11 @@
 import React from 'react';
-import CreateRole from './CreateRole';
+import Create from './Create';
 import AssignRole from './AssignRole';
 
 const index: React.FC = () => {
   return (
     <>
-      <CreateRole />
+      <Create />
       <AssignRole />
     </>
   );

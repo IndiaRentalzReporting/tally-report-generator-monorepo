@@ -12,12 +12,11 @@ import {
 import { Module } from '@/models';
 import services from '@/services';
 import { columns } from './columns';
-import Edit from './Update';
 
 const ReadModule: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const { data: allModules, isFetching: fetchingModules } = useQuery({
-    queryFn: async () => services.module.getAll(),
+    queryFn: async () => services.Modules.getAll(),
     select: (data) => data.data.modules,
     queryKey: ['modules', 'getAll']
   });

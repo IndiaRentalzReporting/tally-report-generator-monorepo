@@ -1,3 +1,6 @@
+import services from '@/services';
+
+export type Modules = Exclude<keyof typeof services, 'Authentication'>;
 export interface User {
   id: string;
   first_name: string;
@@ -24,7 +27,7 @@ export interface DetailedUser extends Omit<User, 'password'> {
       }>;
       module: {
         id: Module['id'];
-        name: Module['name'];
+        name: Modules;
         icon: Module['icon'];
       };
     }>;

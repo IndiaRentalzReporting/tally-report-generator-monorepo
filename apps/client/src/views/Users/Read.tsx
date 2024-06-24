@@ -17,7 +17,7 @@ const Create: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [users, setUsers] = React.useState<DetailedUser[]>([]);
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
-    queryFn: () => services.user.getAll(),
+    queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users,
     queryKey: ['users', 'getAll']
   });

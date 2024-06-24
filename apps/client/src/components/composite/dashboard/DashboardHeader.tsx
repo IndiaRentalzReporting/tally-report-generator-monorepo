@@ -31,7 +31,7 @@ const DashboardHeader: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.auth.signOut(),
+    mutationFn: () => services.Authentication.signOut(),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       navigate('/sign-in');

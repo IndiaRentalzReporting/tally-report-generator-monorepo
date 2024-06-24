@@ -28,7 +28,7 @@ const CreateModule: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } =
     useMutation({
-      mutationFn: () => services.module.createOne(moduleDetails),
+      mutationFn: () => services.Modules.createOne(moduleDetails),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
       },
@@ -37,38 +37,25 @@ const CreateModule: React.FC = () => {
       }
     });
 
+  const handleCreateModule: React.FormEventHandler = (e) => {
+    e.preventDefault();
+    createModule();
+  };
+
   return (
-    <Card className="w-full relative">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          Create Module
-        </CardTitle>
-        <CardDescription>
-          Create Modules for storing your company data
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            createModule();
-          }}
-          className="flex flex-col gap-4"
-        >
-          <Fields
-            moduleDetails={moduleDetails}
-            setModuleDetails={setModuleDetails}
-          />
-          <Button
-            type="submit"
-            className="w-min mt-2"
-            isLoading={loadingCreateModule}
-          >
-            Create Module
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form onSubmit={handleCreateModule} className="flex flex-col gap-4 h-full">
+      <Fields
+        moduleDetails={moduleDetails}
+        setModuleDetails={setModuleDetails}
+      />
+      <Button
+        type="submit"
+        className="w-full mt-auto"
+        isLoading={loadingCreateModule}
+      >
+        Create Module
+      </Button>
+    </form>
   );
 };
 

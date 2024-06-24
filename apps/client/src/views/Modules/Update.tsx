@@ -26,7 +26,7 @@ const Edit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data: moduleData, isFetching: loadingReadModule } = useQuery({
-    queryFn: () => services.module.getOne(id),
+    queryFn: () => services.Modules.getOne(id),
     select: (data) => data.data.module,
     queryKey: ['getOne', 'modules', id]
   });
@@ -40,7 +40,7 @@ const Edit: React.FC = () => {
   const navigate = useNavigate();
   const { mutateAsync: updateModule, isPending: loadingUpdateModule } =
     useMutation({
-      mutationFn: () => services.module.updateOne(id, moduleDetails),
+      mutationFn: () => services.Modules.updateOne(id, moduleDetails),
       onSuccess: () => {
         navigate('/dashboard/Modules');
         queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
