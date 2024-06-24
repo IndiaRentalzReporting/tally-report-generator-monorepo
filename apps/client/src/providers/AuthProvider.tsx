@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { DetailedUser, Modules } from '@/models';
+import { Action, DetailedUser, Modules } from '@/models';
 import { toTitleCase } from '@/lib/utils';
 
 interface AuthProviderState {
@@ -15,7 +15,7 @@ interface AuthProviderState {
       name: Modules;
       icon: string;
     };
-    actions: string[];
+    actions: Action['name'][];
   }[];
 }
 
@@ -50,10 +50,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       authData.user?.role?.permission.map(({ module, permissionAction }) => {
         const { name, icon } = module;
         return {
-          module: { name: toTitleCase(name), icon },
-          actions: permissionAction.map(({ action }) =>
-            toTitleCase(action.name)
-          )
+          module: { name, icon },
+          actions: permissionAction.map(({ action }) => action.name)
         };
       }) ?? [];
     localStorage.setItem('permissions', JSON.stringify(permissions));

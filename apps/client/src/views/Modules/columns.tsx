@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { Module } from '@/models';
 import DeleteEntity from '@/components/composite/DeleteEntity';
 import services from '@/services';
-import { Else, If, Then } from '@/components/utility';
+import { Else, If, Then, When } from '@/components/utility';
+import useIsAllowed from '@/lib/hooks/useIsAllowed';
 
 export const columns: ColumnDef<Module>[] = [
   {
@@ -53,24 +54,36 @@ export const columns: ColumnDef<Module>[] = [
     cell: ({ row }) => {
       const module = row.original;
       const queryClient = useQueryClient();
+      const isEditAllowed = useIsAllowed({
+        module: 'Modules',
+        action: 'Update'
+      });
+      const isDeleteAllowed = useIsAllowed({
+        module: 'Modules',
+        action: 'Delete'
+      });
       return (
         <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.module.deleteOne(module.id),
-                onSuccess: () =>
-                  queryClient.invalidateQueries({
-                    queryKey: ['modules', 'getAll']
-                  })
-              },
-              name: module.name,
-              module: 'Module'
-            }}
-          />
-          <Link to={`/dashboard/Modules/Update/${module.id}`}>
-            <Edit size={20} className="text-green-500" />
-          </Link>
+          <When condition={!!isDeleteAllowed}>
+            <DeleteEntity
+              options={{
+                mutation: {
+                  mutationFn: () => services.Modules.deleteOne(module.id),
+                  onSuccess: () =>
+                    queryClient.invalidateQueries({
+                      queryKey: ['modules', 'getAll']
+                    })
+                },
+                name: module.name,
+                module: 'Module'
+              }}
+            />
+          </When>
+          <When condition={!!isEditAllowed}>
+            <Link to={`/dashboard/Modules/Update/${module.id}`}>
+              <Edit size={20} className="text-green-500" />
+            </Link>
+          </When>
         </span>
       );
     }

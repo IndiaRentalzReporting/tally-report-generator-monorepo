@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { DetailedUser } from '@/models';
 import DeleteEntity from '@/components/composite/DeleteEntity';
 import services from '@/services';
+import { When } from '@/components/utility';
+import useIsAllowed from '@/lib/hooks/useIsAllowed';
 
 export const columns: ColumnDef<DetailedUser>[] = [
   {
@@ -34,24 +36,36 @@ export const columns: ColumnDef<DetailedUser>[] = [
     cell: ({ row }) => {
       const user = row.original;
       const queryClient = useQueryClient();
+      const isEditAllowed = useIsAllowed({
+        module: 'Users',
+        action: 'Update'
+      });
+      const isDeleteAllowed = useIsAllowed({
+        module: 'Users',
+        action: 'Delete'
+      });
       return (
         <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.user.deleteOne(user.id),
-                onSuccess: () =>
-                  queryClient.invalidateQueries({
-                    queryKey: ['users', 'getAll']
-                  })
-              },
-              name: user.first_name,
-              module: 'User'
-            }}
-          />
-          <Link to={`/dashboard/Users/Update/${user.id}`}>
-            <Edit size={20} className="text-green-500" />
-          </Link>
+          <When condition={!!isDeleteAllowed}>
+            <DeleteEntity
+              options={{
+                mutation: {
+                  mutationFn: () => services.Users.deleteOne(user.id),
+                  onSuccess: () =>
+                    queryClient.invalidateQueries({
+                      queryKey: ['users', 'getAll']
+                    })
+                },
+                name: user.first_name,
+                module: 'User'
+              }}
+            />
+          </When>
+          <When condition={!!isEditAllowed}>
+            <Link to={`/dashboard/Users/Update/${user.id}`}>
+              <Edit size={20} className="text-green-500" />
+            </Link>
+          </When>
         </span>
       );
     }

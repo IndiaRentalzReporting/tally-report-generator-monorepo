@@ -31,17 +31,8 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
     setNavState(
       permissions.map((permission) => {
         const {
-          module: { name, icon },
-          actions
+          module: { name, icon }
         } = permission;
-        /* const childrenLinks: NavItem[] = actions.map((actionName) => {
-          return {
-            to: `/dashboard/${name.toLowerCase()}/${actionName.toLowerCase()}`,
-            isActive: false,
-            name: actionName
-            // icon: Create
-          };
-        }); */
         return {
           to: `/dashboard/${name.toLowerCase()}`,
           name,
