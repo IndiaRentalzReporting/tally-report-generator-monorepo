@@ -39,7 +39,7 @@ export const columns: ColumnDef<DetailedUser>[] = [
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.module.deleteOne(user.id),
+                mutationFn: () => services.user.deleteOne(user.id),
                 onSuccess: () =>
                   queryClient.invalidateQueries({
                     queryKey: ['users', 'getAll']

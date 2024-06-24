@@ -18,7 +18,9 @@ const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
             id="first-name"
             name="first_name"
             value={userData.first_name}
-            // onChange={handleFormChange}
+            onChange={(e) =>
+              setUserData((prev) => ({ ...prev, first_name: e.target.value }))
+            }
             placeholder="Max"
             required
           />
@@ -29,22 +31,13 @@ const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
             id="last-name"
             name="last_name"
             value={userData.last_name}
-            // onChange={handleFormChange}
+            onChange={(e) =>
+              setUserData((prev) => ({ ...prev, last_name: e.target.value }))
+            }
             placeholder="Robinson"
             required
           />
         </div>
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="last-name">Password</Label>
-        <Input
-          id="last-name"
-          name="last_name"
-          value={userData.password}
-          // onChange={handleFormChange}
-          placeholder="Robinson"
-          required
-        />
       </div>
       <div className="grid gap-2">
         <Label htmlFor="email">Email</Label>
@@ -53,8 +46,24 @@ const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
           type="email"
           name="email"
           value={userData.email}
-          // onChange={handleFormChange}
+          onChange={(e) =>
+            setUserData((prev) => ({ ...prev, email: e.target.value }))
+          }
           placeholder="m@example.com"
+          required
+        />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="last-name">Password</Label>
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          value={userData.password}
+          onChange={(e) =>
+            setUserData((prev) => ({ ...prev, password: e.target.value }))
+          }
+          placeholder="********"
           required
         />
       </div>

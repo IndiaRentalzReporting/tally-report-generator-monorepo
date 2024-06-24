@@ -122,8 +122,10 @@ const CreateRole: React.FC = () => {
           permissions.push(p);
         }
         return services.role.createOne({
-          roleName,
-          rolePermissions: permissions
+          role: {
+            name: roleName
+          },
+          permissions
         });
       },
       onSuccess: () => {

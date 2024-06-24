@@ -10,15 +10,13 @@ interface AuthProviderState {
   isAuthenticated: boolean;
   user: DetailedUser | null;
   loading: boolean;
-  permissions:
-    | {
-        module: {
-          name: string;
-          icon: string;
-        };
-        actions: string[];
-      }[]
-    | undefined;
+  permissions: {
+    module: {
+      name: string;
+      icon: string;
+    };
+    actions: string[];
+  }[];
 }
 
 const initialState: AuthProviderState = {

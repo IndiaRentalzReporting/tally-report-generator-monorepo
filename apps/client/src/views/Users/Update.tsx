@@ -36,7 +36,7 @@ const Update: React.FC = () => {
 
   useEffect(() => {
     if (!userData) return;
-    setRegisterData(userData);
+    setRegisterData((prev) => ({ ...userData, password: '' }));
   }, [userData]);
 
   return (

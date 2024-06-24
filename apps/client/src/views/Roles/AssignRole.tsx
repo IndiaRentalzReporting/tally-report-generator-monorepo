@@ -51,7 +51,12 @@ const AssignRole: React.FC = () => {
       }: {
         selectedUsers: string[];
         role: string;
-      }) => services.user.assignRole(selectedUsers, role),
+      }) => {
+        const promises = selectedUsers.map(async (id) =>
+          services.user.updateOne(id, { role_id: role })
+        );
+        return Promise.all(promises);
+      },
       onSettled() {
         setSelectedRole('');
         queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });

@@ -35,16 +35,17 @@ const App = () => {
             {permissions?.map(({ module: { name }, actions }, i1) => (
               <Route path={name.toLowerCase()} key={name}>
                 <Route index element={<ModuleMapper module={name} />} />
-                {actions.map<React.ReactElement>((action) => {
-                  const needsId = action === 'Update' ? '/:id' : '';
-                  return (
-                    <Route
-                      path={`${action.toLowerCase()}${needsId}`}
-                      key={action}
-                      element={<ModuleMapper module={name} action={action} />}
-                    />
-                  );
-                })}
+                {actions
+                  .filter((action) => action === 'Update')
+                  .map<React.ReactElement>((action) => {
+                    return (
+                      <Route
+                        path={`${action.toLowerCase()}/:id`}
+                        key={action}
+                        element={<ModuleMapper module={name} action={action} />}
+                      />
+                    );
+                  })}
               </Route>
             ))}
           </Route>

@@ -10,7 +10,6 @@ export const ModuleMapper: React.FC<IModuleMapperProps> = ({
   module,
   action
 }) => {
-  console.log(`./${module}${action ? `/${action}` : ''}`);
   const Component = lazy(
     () => import(`./${module}${action ? `/${action}` : ''}`)
   );

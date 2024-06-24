@@ -39,15 +39,27 @@ const Fields: React.FC<IFieldsProps> = ({
   };
   return (
     <>
-      <Input
-        required
-        minLength={3}
-        placeholder="Module Name"
-        value={moduleDetails.name}
-        onChange={(e) =>
-          setModuleDetails((prev) => ({ ...prev, name: e.target.value }))
-        }
-      />
+      <div className="flex gap-4 items-center">
+        <Input
+          required
+          minLength={3}
+          placeholder="Module Name"
+          value={moduleDetails.name}
+          onChange={(e) =>
+            setModuleDetails((prev) => ({ ...prev, name: e.target.value }))
+          }
+        />
+        <span className="flex gap-4 items-center">
+          <Label htmlFor="isPrivate">Private</Label>
+          <Switch
+            checked={moduleDetails.isPrivate}
+            name="isPrivate"
+            onCheckedChange={(checked) =>
+              setModuleDetails((prev) => ({ ...prev, isPrivate: checked }))
+            }
+          />
+        </span>
+      </div>
       <div className="flex gap-4 items-center">
         <Input
           minLength={3}
@@ -79,16 +91,6 @@ const Fields: React.FC<IFieldsProps> = ({
           <Button type="button">Browse Icons</Button>
         </Link>
       </div>
-      <span className="flex gap-4 items-center absolute top-6 right-6">
-        <Label htmlFor="isPrivate">Private</Label>
-        <Switch
-          checked={moduleDetails.isPrivate}
-          name="isPrivate"
-          onCheckedChange={(checked) =>
-            setModuleDetails((prev) => ({ ...prev, isPrivate: checked }))
-          }
-        />
-      </span>
     </>
   );
 };

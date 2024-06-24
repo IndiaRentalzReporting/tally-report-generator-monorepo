@@ -14,7 +14,7 @@ interface NavItem {
   name: string;
   isActive: boolean;
 }
-interface NavigationProviderState extends NavItem {
+export interface NavigationProviderState extends NavItem {
   children?: NavItem[];
 }
 
@@ -35,14 +35,14 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
         } = permission;
         /* const childrenLinks: NavItem[] = actions.map((actionName) => {
           return {
-            to: `/dashboard/${moduleName.toLowerCase()}/${actionName.toLowerCase()}`,
+            to: `/dashboard/${name.toLowerCase()}/${actionName.toLowerCase()}`,
             isActive: false,
-            name: actionName,
-            icon: Create
+            name: actionName
+            // icon: Create
           };
         }); */
         return {
-          to: `/dashboard/${name}`,
+          to: `/dashboard/${name.toLowerCase()}`,
           name,
           isActive: false,
           icon

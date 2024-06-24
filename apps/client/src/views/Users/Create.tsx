@@ -30,7 +30,12 @@ const Create: React.FC = () => {
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
       setLoading(false);
-      navigate('/sign-in');
+      setRegisterData({
+        first_name: '',
+        last_name: '',
+        email: '',
+        password: ''
+      });
     }
   });
 
