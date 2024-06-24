@@ -1,3 +1,8 @@
+import services from '@/services';
+
+export type Modules = Exclude<keyof typeof services, 'Authentication'>;
+
+export type TitleCase<T extends string> = T[0];
 export interface User {
   id: string;
   first_name: string;
@@ -24,7 +29,7 @@ export interface DetailedUser extends Omit<User, 'password'> {
       }>;
       module: {
         id: Module['id'];
-        name: Module['name'];
+        name: Modules;
         icon: Module['icon'];
       };
     }>;
@@ -35,7 +40,7 @@ export interface Action {
   id: string;
   createdAt: string;
   updatedAt: string;
-  name: 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
+  name: 'Create' | 'Read' | 'Update' | 'Delete';
 }
 
 export interface Module {

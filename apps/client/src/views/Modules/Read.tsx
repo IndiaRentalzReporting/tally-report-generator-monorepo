@@ -16,7 +16,7 @@ import { columns } from './columns';
 const ReadModule: React.FC = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const { data: allModules, isFetching: fetchingModules } = useQuery({
-    queryFn: async () => services.module.getAll(),
+    queryFn: async () => services.Modules.getAll(),
     select: (data) => data.data.modules,
     queryKey: ['modules', 'getAll']
   });
@@ -30,7 +30,7 @@ const ReadModule: React.FC = () => {
           Read, Update or Edit modules based on yout permissions
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col gap-6">
         <Skeleton isLoading={fetchingModules} className="w-full h-20">
           <DataTable columns={columns} data={modules} />
         </Skeleton>

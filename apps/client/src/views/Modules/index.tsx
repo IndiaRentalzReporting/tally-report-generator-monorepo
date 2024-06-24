@@ -1,14 +1,18 @@
 import React from 'react';
-import CreateModule from './Create';
 import ReadModule from './Read';
+import useIsAllowed from '@/lib/hooks/useIsAllowed';
+import { When } from '@/components/utility';
 
-const index: React.FC = () => {
+const Modules: React.FC = () => {
+  const isReadAllowed = useIsAllowed({
+    module: 'Modules',
+    action: 'Read'
+  });
   return (
-    <>
-      <CreateModule />
+    <When condition={isReadAllowed}>
       <ReadModule />
-    </>
+    </When>
   );
 };
 
-export default index;
+export default Modules;

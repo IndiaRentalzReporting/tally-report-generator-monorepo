@@ -1,2 +1,2 @@
-export * from './toastEmitter';
 export * from './cn';
+export * from './toTitleCase';

@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { DetailedUser } from '@/models';
+import { Action, DetailedUser, Modules } from '@/models';
+import { toTitleCase } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
   user: DetailedUser | null;
   loading: boolean;
-  permissions:
-    | {
-        module: {
-          name: string;
-          icon: string;
-        };
-        actions: string[];
-      }[]
-    | undefined;
+  permissions: {
+    module: {
+      name: Modules;
+      icon: string;
+    };
+    actions: Action['name'][];
+  }[];
 }
 
 const initialState: AuthProviderState = {
@@ -39,18 +38,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<AuthProviderState>(initialState);
 
   const { data: authData, fetchStatus } = useQuery({
-    queryFn: () => services.auth.status(),
+    queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'statusCheck'],
     staleTime: 1000 * 60 * 15
   });
-
-  const toTitleCase = (str: string): string => {
-    return str.replace(
-      /\w\S*/g,
-      (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    );
-  };
 
   useEffect(() => {
     if (!authData) return;
@@ -58,10 +50,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       authData.user?.role?.permission.map(({ module, permissionAction }) => {
         const { name, icon } = module;
         return {
-          module: { name: toTitleCase(name), icon },
-          actions: permissionAction.map(({ action }) =>
-            toTitleCase(action.name)
-          )
+          module: { name, icon },
+          actions: permissionAction.map(({ action }) => action.name)
         };
       }) ?? [];
     localStorage.setItem('permissions', JSON.stringify(permissions));

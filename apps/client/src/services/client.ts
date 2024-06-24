@@ -1,5 +1,4 @@
 import Axios, { AxiosError } from 'axios';
-import { showErrorAlert } from '@/lib/utils';
 
 const axios = Axios.create();
 
@@ -29,7 +28,7 @@ axios.interceptors.response.use(
     } catch (_) {
       errors.push(e.response?.data.error || `Couldn't sign you in!`);
     }
-    errors.forEach((e) => showErrorAlert(e));
+    // errors.forEach((e) => showErrorAlert(e));
     return Promise.reject(errors);
   }
 );

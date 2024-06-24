@@ -1,20 +1,21 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
+import { Modules } from '@/models';
 
 const NavigationContext = createContext<NavigationProviderState[]>([]);
 
-interface NavigationProviderProps {
+export interface NavigationProviderProps {
   children: React.ReactNode;
 }
 
 interface NavItem {
   to: string;
   icon?: string;
-  name: string;
+  name: Modules;
   isActive: boolean;
 }
-interface NavigationProviderState extends NavItem {
+export interface NavigationProviderState extends NavItem {
   children?: NavItem[];
 }
 
@@ -30,19 +31,10 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
     setNavState(
       permissions.map((permission) => {
         const {
-          module: { name, icon },
-          actions
+          module: { name, icon }
         } = permission;
-        /* const childrenLinks: NavItem[] = actions.map((actionName) => {
-          return {
-            to: `/dashboard/${moduleName.toLowerCase()}/${actionName.toLowerCase()}`,
-            isActive: false,
-            name: actionName,
-            icon: Create
-          };
-        }); */
         return {
-          to: `/dashboard/${name}`,
+          to: `/dashboard/${name.toLowerCase()}`,
           name,
           isActive: false,
           icon
@@ -64,11 +56,12 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
             }
             return child;
           });
-        } else if (location.pathname === navItem.to) navItem.isActive = true;
+        } else if (location.pathname.includes(navItem.to))
+          navItem.isActive = true;
         return navItem;
       })
     );
-  }, [location]);
+  }, [location, permissions]);
 
   return (
     <NavigationContext.Provider value={navState}>
