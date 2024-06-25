@@ -1,15 +1,13 @@
-import { Label } from '@radix-ui/react-label';
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  Button,
-  Input
+  Button
 } from '@/components/ui';
 import { RegisterUser } from '@/models';
 import services from '@/services';
@@ -18,8 +16,6 @@ import Fields from './Fields';
 const Update: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(false);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
@@ -36,7 +32,7 @@ const Update: React.FC = () => {
 
   useEffect(() => {
     if (!userData) return;
-    setRegisterData((prev) => ({ ...userData, password: '' }));
+    setRegisterData({ ...userData, password: '' });
   }, [userData]);
 
   return (

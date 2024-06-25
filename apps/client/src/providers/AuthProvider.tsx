@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
 import { Action, DetailedUser, Modules } from '@/models';
-import { toTitleCase } from '@/lib/utils';
 
 interface AuthProviderState {
   isAuthenticated: boolean;

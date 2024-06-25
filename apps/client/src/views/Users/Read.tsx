@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React from 'react';
 import services from '@/services';
-import { DetailedUser } from '@/models';
 import {
   Card,
   CardContent,
@@ -15,14 +14,14 @@ import { columns } from './columns';
 
 const Create: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [users, setUsers] = React.useState<DetailedUser[]>([]);
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users,
     queryKey: ['users', 'getAll']
   });
 
-  useEffect(() => setUsers(allUsers ?? []), [allUsers]);
+  if (!allUsers) return null;
+
   return (
     <Card>
       <CardHeader>
@@ -35,7 +34,7 @@ const Create: React.FC = () => {
         <Skeleton isLoading={fetchingUsers} className="w-full h-20">
           <DataTable
             columns={columns}
-            data={users}
+            data={allUsers}
             selection={{
               rowSelection,
               setRowSelection

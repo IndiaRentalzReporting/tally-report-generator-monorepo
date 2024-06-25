@@ -1,7 +1,7 @@
 import { Action, Modules } from '@/models';
 import { useAuth } from '@/providers/AuthProvider';
 
-const useIsAllowed = (data: {
+export const useIsAllowed = (data: {
   module: Modules;
   action: Action['name'];
 }): boolean => {
@@ -16,5 +16,3 @@ const useIsAllowed = (data: {
   if (isAllowed) return true;
   return false;
 };
-
-export default useIsAllowed;

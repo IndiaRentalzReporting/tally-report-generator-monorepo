@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
 import { RegisterUser } from '@/models';
@@ -7,9 +6,7 @@ import services from '@/services';
 import Fields from './Fields';
 
 const Create: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
@@ -22,7 +19,6 @@ const Create: React.FC = () => {
     mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
-      setLoading(false);
       setRegisterData({
         first_name: '',
         last_name: '',
@@ -41,7 +37,6 @@ const Create: React.FC = () => {
   };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
     signUpMutation(registerData);
   };

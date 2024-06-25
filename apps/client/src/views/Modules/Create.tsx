@@ -1,15 +1,6 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  Button,
-  Switch,
-  Label
-} from '@/components/ui';
+import { Button } from '@/components/ui';
 import services from '@/services';
 import { Module } from '@/models';
 import Fields from './Fields';
