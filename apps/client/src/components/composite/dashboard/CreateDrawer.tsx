@@ -10,10 +10,10 @@ import {
   DrawerClose,
   SkeletonOverlay
 } from '@/components/ui';
-import { Modules } from '@/models';
+import { Module } from '@/models';
 
 interface ICreateDrawerProps {
-  module: Modules | undefined;
+  module: Module['name'] | undefined;
 }
 const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
   if (!module) return null;
@@ -31,9 +31,7 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
         </DrawerHeader>
         <div className="px-6 h-full">
           <Suspense
-            fallback={
-              <SkeletonOverlay className="w-full h-full absolute z-10" />
-            }
+            fallback={<SkeletonOverlay className="w-full h-full z-10" />}
           >
             <Component />
           </Suspense>

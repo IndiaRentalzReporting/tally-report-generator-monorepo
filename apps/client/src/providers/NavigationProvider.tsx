@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { Modules } from '@/models';
+import { Module, Permissions } from '@/models';
 
 const NavigationContext = createContext<NavigationProviderState[]>([]);
 
@@ -12,42 +12,45 @@ export interface NavigationProviderProps {
 interface NavItem {
   to: string;
   icon?: string;
-  name: Modules;
+  name: Module['name'];
   isActive: boolean;
 }
 export interface NavigationProviderState extends NavItem {
   children?: NavItem[];
 }
 
-export const NavigationProvider: React.FC<NavigationProviderProps> = ({
-  children
-}) => {
+export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const location = useLocation();
   const [navState, setNavState] = useState<NavigationProviderState[]>([]);
   const { permissions } = useAuth();
 
+  const createNavLinksUsingPermissions = (
+    permissions: Permissions[]
+  ): NavItem[] => {
+    return permissions.map((permission) => {
+      const {
+        module: { name, icon }
+      } = permission;
+      return {
+        to: `/dashboard/${name.toLowerCase()}`,
+        name,
+        isActive: false,
+        icon
+      };
+    });
+  };
+
   useEffect(() => {
     if (!permissions) return;
-    setNavState(
-      permissions.map((permission) => {
-        const {
-          module: { name, icon }
-        } = permission;
-        return {
-          to: `/dashboard/${name.toLowerCase()}`,
-          name,
-          isActive: false,
-          icon
-        };
-      })
-    );
+    const links = createNavLinksUsingPermissions(permissions);
+    setNavState(links);
   }, [permissions]);
 
   useEffect(() => {
     setNavState((prev) =>
       prev.map((navItem) => {
         navItem.isActive = false;
-        if (navItem.children) {
+        /* if (navItem.children) {
           navItem.children.map((child) => {
             child.isActive = false;
             if (location.pathname === child.to) {
@@ -56,8 +59,8 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
             }
             return child;
           });
-        } else if (location.pathname.includes(navItem.to))
-          navItem.isActive = true;
+        } else if (location.pathname.includes(navItem.to)) navItem.isActive = true */
+        if (location.pathname.includes(navItem.to)) navItem.isActive = true;
         return navItem;
       })
     );
@@ -74,7 +77,7 @@ export const useNav = () => {
   const navState = useContext(NavigationContext);
 
   if (!navState) {
-    throw new Error('useNav should be used inside NavigationProvider');
+    throw new Error('useNav must be used within a NavigationProvider');
   }
 
   return navState;

@@ -1,8 +1,8 @@
-import { Action, Modules } from '@/models';
+import { Action, Module } from '@/models';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const useIsAllowed = (data: {
-  module: Modules;
+  module: Module['name'];
   action: Action['name'];
 }): boolean => {
   const { permissions } = useAuth();

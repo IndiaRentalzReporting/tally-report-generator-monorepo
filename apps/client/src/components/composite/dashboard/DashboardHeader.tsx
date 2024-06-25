@@ -38,7 +38,7 @@ const DashboardHeader: React.FC = () => {
     }
   });
 
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const userName = useMemo(
     () => `${user?.first_name} ${user?.last_name}`,
     [user]

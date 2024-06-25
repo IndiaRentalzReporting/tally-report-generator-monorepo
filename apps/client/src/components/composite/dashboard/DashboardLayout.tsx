@@ -6,10 +6,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { When } from '../../utility';
 import DashboardHeader from './DashboardHeader';
 import DashboardSidebar from './DashboardSidebar';
-import {
-  NavigationProviderState,
-  useNav
-} from '@/providers/NavigationProvider';
+import { useNav } from '@/providers/NavigationProvider';
 import CreateDrawer from './CreateDrawer';
 
 export const DashboardLayout = () => {

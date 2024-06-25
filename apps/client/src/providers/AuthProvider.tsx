@@ -3,23 +3,17 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { Action, DetailedUser, Modules } from '@/models';
+import { DetailedUser, Permissions } from '@/models';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
   user: DetailedUser | null;
   loading: boolean;
-  permissions: {
-    module: {
-      name: Modules;
-      icon: string;
-    };
-    actions: Action['name'][];
-  }[];
+  permissions: Permissions[];
 }
 
 const initialState: AuthProviderState = {
-  isAuthenticated: true,
+  isAuthenticated: false,
   loading: true,
   user: null,
   permissions: JSON.parse(
@@ -36,17 +30,26 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<AuthProviderState>(initialState);
 
-  const { data: authData, fetchStatus } = useQuery({
+  const { data: authData, isFetching } = useQuery({
     queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
-    queryKey: ['auth', 'statusCheck'],
-    staleTime: 1000 * 60 * 15
+    queryKey: ['auth', 'statusCheck']
+    // staleTime: 1000 * 60 * 15
   });
 
   useEffect(() => {
-    if (!authData) return;
+    if (!authData || !authData.user || !authData.isAuthenticated) {
+      setState({
+        ...initialState,
+        permissions: []
+      });
+      return;
+    }
+
+    const { user, isAuthenticated } = authData;
+
     const permissions =
-      authData.user?.role?.permission.map(({ module, permissionAction }) => {
+      user.role?.permission.map(({ module, permissionAction }) => {
         const { name, icon } = module;
         return {
           module: { name, icon },
@@ -54,9 +57,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         };
       }) ?? [];
     localStorage.setItem('permissions', JSON.stringify(permissions));
+
     setState({
-      user: authData.user,
-      isAuthenticated: authData.isAuthenticated,
+      user,
+      isAuthenticated,
       loading: false,
       permissions
     });
@@ -65,9 +69,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      loading: fetchStatus === 'fetching'
+      loading: isFetching
     }));
-  }, [fetchStatus]);
+  }, [isFetching]);
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
@@ -77,7 +81,7 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuth must be used within a AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
 
   return context;
