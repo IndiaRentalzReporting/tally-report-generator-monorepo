@@ -1,13 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
-import { Module, Permissions } from '@/models';
-
-const NavigationContext = createContext<NavigationProviderState[]>([]);
-
-export interface NavigationProviderProps {
-  children: React.ReactNode;
-}
+import { Action, Module, Permissions } from '@/models';
 
 interface NavItem {
   to: string;
@@ -15,25 +9,55 @@ interface NavItem {
   name: Module['name'];
   isActive: boolean;
 }
-export interface NavigationProviderState extends NavItem {
+export interface NavItemWithChildren extends NavItem {
   children?: NavItem[];
 }
 
+export interface NavigationProviderState {
+  navigation: NavItemWithChildren[];
+  currentModule: string;
+}
+
+const initialState: NavigationProviderState = {
+  navigation: [],
+  currentModule: ''
+};
+
+export interface NavigationProviderProps {
+  children: React.ReactNode;
+}
+
+const NavigationContext = createContext<NavigationProviderState>(initialState);
+
 export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const location = useLocation();
-  const [navState, setNavState] = useState<NavigationProviderState[]>([]);
+  const [navState, setNavState] =
+    useState<NavigationProviderState>(initialState);
   const { permissions } = useAuth();
 
   const createNavLinksUsingPermissions = (
     permissions: Permissions[]
-  ): NavItem[] => {
+  ): NavItemWithChildren[] => {
     return permissions.map((permission) => {
       const {
-        module: { name, icon }
+        module: { name, icon },
+        actions
       } = permission;
+      const nameLowercase = name.toLowerCase();
+      const children: NavItem[] = actions.map((action) => {
+        const actionLowercase = action.toLowerCase() as Lowercase<
+          Action['name']
+        >;
+        return {
+          to: `/dashboard/${nameLowercase}/${actionLowercase}`,
+          name: action,
+          isActive: false
+        };
+      });
       return {
-        to: `/dashboard/${name.toLowerCase()}`,
+        to: `/dashboard/${nameLowercase}`,
         name,
+        children: [],
         isActive: false,
         icon
       };
@@ -42,28 +66,43 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
 
   useEffect(() => {
     if (!permissions) return;
-    const links = createNavLinksUsingPermissions(permissions);
-    setNavState(links);
+    const navigation = createNavLinksUsingPermissions(permissions);
+    setNavState((prev) => ({ navigation, currentModule: prev.currentModule }));
   }, [permissions]);
 
+  const findActiveNavItem = (
+    prev: NavItemWithChildren[]
+  ): NavigationProviderState => {
+    let currentModule = 'Dashboard';
+    const navigation = prev.map((navItem) => {
+      const newNavItem = navItem;
+      newNavItem.isActive = false;
+      if (newNavItem.children?.length) {
+        newNavItem.children.map((child) => {
+          const newChild = child;
+          newChild.isActive = false;
+          if (location.pathname === newChild.to) {
+            newChild.isActive = true;
+            newNavItem.isActive = true;
+            currentModule = newNavItem.name;
+          }
+          return newChild;
+        });
+      } else if (location.pathname.includes(newNavItem.to)) {
+        newNavItem.isActive = true;
+        currentModule = newNavItem.name;
+      }
+      return newNavItem;
+    });
+
+    return {
+      navigation,
+      currentModule
+    };
+  };
+
   useEffect(() => {
-    setNavState((prev) =>
-      prev.map((navItem) => {
-        navItem.isActive = false;
-        /* if (navItem.children) {
-          navItem.children.map((child) => {
-            child.isActive = false;
-            if (location.pathname === child.to) {
-              child.isActive = true;
-              navItem.isActive = true;
-            }
-            return child;
-          });
-        } else if (location.pathname.includes(navItem.to)) navItem.isActive = true */
-        if (location.pathname.includes(navItem.to)) navItem.isActive = true;
-        return navItem;
-      })
-    );
+    setNavState((prev) => findActiveNavItem(prev.navigation));
   }, [location, permissions]);
 
   return (

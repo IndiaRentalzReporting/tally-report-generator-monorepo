@@ -10,24 +10,9 @@ import { useNav } from '@/providers/NavigationProvider';
 import CreateDrawer from './CreateDrawer';
 
 export const DashboardLayout = () => {
-  const { loading, permissions } = useAuth();
-  const navState = useNav();
+  const { loading } = useAuth();
+  const { currentModule } = useNav();
   const location = useLocation();
-
-  const currentModule = useMemo(
-    () => navState.find((nav) => !!nav.isActive),
-    [navState]
-  );
-
-  const isCreateAllowed = useMemo(
-    () =>
-      permissions.find(
-        (permission) =>
-          permission.module.name === currentModule?.name &&
-          permission.actions.includes('Create')
-      ),
-    [permissions, currentModule]
-  );
 
   return (
     <div className="grid relative min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -40,11 +25,9 @@ export const DashboardLayout = () => {
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           <div className="flex items-center w-full justify-between">
             <h1 className="text-lg font-semibold md:text-2xl">
-              {currentModule?.name}
+              {currentModule}
             </h1>
-            <When condition={!!isCreateAllowed}>
-              <CreateDrawer module={currentModule?.name} />
-            </When>
+            <CreateDrawer module={currentModule} />
           </div>
           <div
             className="flex flex-col gap-6  rounded-lg shadow-sm w-full h-full relative"
