@@ -13,8 +13,7 @@ import { RegisterUser } from '@/models';
 import services from '@/services';
 import Fields from './Fields';
 
-const Update: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const Update: React.FC<{ id: string }> = ({ id }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const [registerData, setRegisterData] = useState<RegisterUser>({
@@ -36,23 +35,15 @@ const Update: React.FC = () => {
   }, [userData]);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Update User</CardTitle>
-        <CardDescription>Update user details</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          // onSubmit={handleSignUp}
-          className="grid gap-4"
-        >
-          <Fields userData={registerData} setUserData={setRegisterData} />
-          <Button type="submit" className="w-min" isLoading={loading}>
-            Update
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form
+      // onSubmit={handleSignUp}
+      className="grid gap-4"
+    >
+      <Fields userData={registerData} setUserData={setRegisterData} />
+      <Button type="submit" isLoading={loading}>
+        Update
+      </Button>
+    </form>
   );
 };
 

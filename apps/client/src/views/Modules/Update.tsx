@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Module } from '@/models';
 import {
   Card,
@@ -21,9 +21,8 @@ const initialState: State = {
   icon: ''
 };
 
-const Edit: React.FC = () => {
+const Edit: React.FC<{ id: string }> = ({ id }) => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
-  const { id } = useParams<{ id: string }>();
 
   const { data: moduleData, isFetching: loadingReadModule } = useQuery({
     queryFn: () => services.Modules.getOne(id),
@@ -51,35 +50,21 @@ const Edit: React.FC = () => {
     });
 
   return (
-    <Card className="w-full relative">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          Edit Module
-        </CardTitle>
-        <CardDescription>Edit details related to this Module</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            updateModule();
-          }}
-          className="flex flex-col gap-4"
-        >
-          <Fields
-            moduleDetails={moduleDetails}
-            setModuleDetails={setModuleDetails}
-          />
-          <Button
-            type="submit"
-            className="w-min mt-2"
-            isLoading={loadingUpdateModule}
-          >
-            Update Module
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        updateModule();
+      }}
+      className="flex flex-col gap-6"
+    >
+      <Fields
+        moduleDetails={moduleDetails}
+        setModuleDetails={setModuleDetails}
+      />
+      <Button type="submit" isLoading={loadingUpdateModule}>
+        Update Module
+      </Button>
+    </form>
   );
 };
 

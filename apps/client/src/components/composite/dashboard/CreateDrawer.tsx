@@ -8,7 +8,12 @@ import {
   DrawerTitle,
   DrawerFooter,
   DrawerClose,
-  SkeletonOverlay
+  SkeletonOverlay,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from '@/components/ui';
 import { Module } from '@/models';
 import { When } from '@/components/utility';
@@ -31,19 +36,21 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
         <DrawerTrigger asChild>
           <Button>Create {module}</Button>
         </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
+        <DrawerContent className="px-6">
+          <DrawerHeader className="px-0">
             <DrawerTitle>Create {module}</DrawerTitle>
           </DrawerHeader>
-          <div className="px-6 h-full">
-            <Suspense
-              fallback={<SkeletonOverlay className="w-full h-full z-10" />}
-            >
-              <Component />
-            </Suspense>
-          </div>
+          <Card className="w-full relative">
+            <CardContent className="pt-6">
+              <Suspense
+                fallback={<SkeletonOverlay className="w-full h-full z-10" />}
+              >
+                <Component />
+              </Suspense>
+            </CardContent>
+          </Card>
 
-          <DrawerFooter>
+          <DrawerFooter className="px-0">
             <DrawerClose>
               <Button variant="outline" className="w-full">
                 Cancel
