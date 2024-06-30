@@ -30,11 +30,6 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
     action: 'Update'
   });
 
-  console.log({
-    module,
-    id
-  });
-
   const Component = lazy(() => import(`../../views/${module}/Update`));
 
   return (

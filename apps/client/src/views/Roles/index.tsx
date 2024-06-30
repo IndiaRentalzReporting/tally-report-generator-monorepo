@@ -1,8 +1,7 @@
 import React from 'react';
-import Create from './Create';
-import AssignRole from './AssignRole';
 import { When } from '@/components/utility';
 import { useIsAllowed } from '@/lib/hooks';
+import Read from './Read';
 
 const Roles: React.FC = () => {
   const isReadAllowed = useIsAllowed({
@@ -11,8 +10,7 @@ const Roles: React.FC = () => {
   });
   return (
     <When condition={isReadAllowed}>
-      <Create />
-      <AssignRole />
+      <Read />
     </When>
   );
 };

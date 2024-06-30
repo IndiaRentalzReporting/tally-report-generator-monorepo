@@ -44,6 +44,11 @@ const services = {
         role_id: role.id
       });
     },
+    createOneX: async (
+      data: Partial<Role>
+    ): AxiosPromise<{ permissions: Permission[] }> => {
+      return axios.post(`/roles/create`, data);
+    },
     getAll: async (): AxiosPromise<{
       roles: Role[];
     }> => {

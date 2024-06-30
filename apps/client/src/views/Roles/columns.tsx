@@ -1,42 +1,45 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Checkbox } from '@/components/ui/checkbox';
-import { DetailedUser } from '@/models';
+import { ArrowUpDown } from 'lucide-react';
+import { DetailedUser, Role } from '@/models';
+import { Button } from '@/components/ui';
+import { DeleteEntity, UpdateEntity } from '@/components/composite';
+import services from '@/services';
 
-export const columns: ColumnDef<DetailedUser>[] = [
+export const columns: ColumnDef<Role>[] = [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    )
+    accessorKey: 'name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="translate-x-[-10px]"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    }
   },
   {
-    accessorKey: 'first_name',
-    header: 'First Name'
-  },
-  {
-    accessorKey: 'last_name',
-    header: 'Last Name'
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email'
-  },
-  {
-    accessorKey: 'role.name',
-    header: 'Roles'
+    id: 'Actions',
+    header: 'Actions',
+    cell: ({ row }) => {
+      const role = row.original;
+      return (
+        <span className="flex gap-4 items-center">
+          <DeleteEntity
+            options={{
+              mutation: {
+                mutationFn: () => services.Roles.deleteOne(role.id)
+              },
+              name: role.name,
+              module: 'Roles'
+            }}
+          />
+          <UpdateEntity module="Roles" id={role.id} />
+        </span>
+      );
+    }
   }
 ];

@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
 import { Role } from '@/models';
 import services from '@/services';
 import Fields from './Fields';
@@ -11,10 +11,21 @@ const initialState: State = {
   name: ''
 };
 
-const Create: React.FC = () => {
+const Update: React.FC<{ id: string }> = ({ id }) => {
   const [roleData, setRoleData] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();
+  const { data: roleDataX, isFetching } = useQuery({
+    queryFn: () => services.Roles.getOne(id),
+    select: (data) => data.data.role,
+    queryKey: ['roles', 'getOne', id]
+  });
+
+  useEffect(() => {
+    if (!roleDataX) return;
+    setRoleData(roleDataX);
+  }, [roleDataX]);
+
   const { mutateAsync: createRole, isPending: loadingCreateRole } = useMutation(
     {
       mutationFn: () => services.Roles.createOneX(roleData),
@@ -35,15 +46,11 @@ const Create: React.FC = () => {
   return (
     <form className="h-full flex flex-col gap-4" onSubmit={handleCreateRole}>
       <Fields roleData={roleData} setRoleData={setRoleData} />
-      <Button
-        type="submit"
-        isLoading={loadingCreateRole}
-        className="w-full mt-auto"
-      >
+      <Button type="submit" className="w-full mt-auto">
         Create
       </Button>
     </form>
   );
 };
 
-export default Create;
+export default Update;

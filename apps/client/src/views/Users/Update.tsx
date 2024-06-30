@@ -14,8 +14,6 @@ import services from '@/services';
 import Fields from './Fields';
 
 const Update: React.FC<{ id: string }> = ({ id }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const [registerData, setRegisterData] = useState<RegisterUser>({
     email: '',
     password: '',
@@ -40,9 +38,7 @@ const Update: React.FC<{ id: string }> = ({ id }) => {
       className="grid gap-4"
     >
       <Fields userData={registerData} setUserData={setRegisterData} />
-      <Button type="submit" isLoading={loading}>
-        Update
-      </Button>
+      <Button type="submit">Update</Button>
     </form>
   );
 };
