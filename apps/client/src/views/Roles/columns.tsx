@@ -1,11 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { DetailedUser, Role } from '@/models';
 import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import services from '@/services';
+import { State } from './interface';
 
-export const columns: ColumnDef<Role>[] = [
+export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

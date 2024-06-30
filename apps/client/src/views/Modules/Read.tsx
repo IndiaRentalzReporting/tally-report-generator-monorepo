@@ -13,13 +13,11 @@ import services from '@/services';
 import { columns } from './columns';
 
 const ReadModule: React.FC = () => {
-  const { data: allModules, isFetching: fetchingModules } = useQuery({
+  const { data: allModules = [], isFetching: fetchingModules } = useQuery({
     queryFn: async () => services.Modules.getAll(),
     select: (data) => data.data.modules,
     queryKey: ['modules', 'getAll']
   });
-
-  if (!allModules) return null;
 
   return (
     <Card>
@@ -30,7 +28,7 @@ const ReadModule: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        <Skeleton isLoading={fetchingModules} className="w-full h-20">
+        <Skeleton isLoading={fetchingModules}>
           <DataTable columns={columns} data={allModules} />
         </Skeleton>
       </CardContent>

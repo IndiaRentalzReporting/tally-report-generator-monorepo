@@ -13,13 +13,11 @@ import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from './columns';
 
 const Create: React.FC = () => {
-  const { data: allUsers, isFetching: fetchingUsers } = useQuery({
+  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users,
     queryKey: ['users', 'getAll']
   });
-
-  if (!allUsers) return null;
 
   return (
     <Card>
@@ -30,7 +28,7 @@ const Create: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Skeleton isLoading={fetchingUsers} className="w-full h-20">
+        <Skeleton isLoading={fetchingUsers}>
           <DataTable columns={columns} data={allUsers} />
         </Skeleton>
       </CardContent>

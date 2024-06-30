@@ -1,21 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import { Role } from '@/models';
 import services from '@/services';
 import Fields from './Fields';
-import { Button } from '@/components/ui';
+import { Button, Skeleton } from '@/components/ui';
+import { State, initialState } from './interface';
 
-type State = Pick<Role, 'name'>;
-
-const initialState: State = {
-  name: ''
-};
-
-const Update: React.FC<{ id: string }> = ({ id }) => {
+const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [roleData, setRoleData] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();
-  const { data: roleDataX, isFetching } = useQuery({
+  const { data: roleDataX, isFetching: loadingRole } = useQuery({
     queryFn: () => services.Roles.getOne(id),
     select: (data) => data.data.role,
     queryKey: ['roles', 'getOne', id]
@@ -26,17 +20,15 @@ const Update: React.FC<{ id: string }> = ({ id }) => {
     setRoleData(roleDataX);
   }, [roleDataX]);
 
-  const { mutateAsync: createRole, isPending: loadingCreateRole } = useMutation(
-    {
-      mutationFn: () => services.Roles.createOneX(roleData),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
-      },
-      onSettled: () => {
-        setRoleData(initialState);
-      }
+  const { mutateAsync: createRole, isPending: updatingRole } = useMutation({
+    mutationFn: () => services.Roles.createOneX(roleData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
+    },
+    onSettled: () => {
+      setRoleData(initialState);
     }
-  );
+  });
 
   const handleCreateRole: React.FormEventHandler = (e) => {
     e.preventDefault();
@@ -45,8 +37,10 @@ const Update: React.FC<{ id: string }> = ({ id }) => {
 
   return (
     <form className="h-full flex flex-col gap-4" onSubmit={handleCreateRole}>
-      <Fields roleData={roleData} setRoleData={setRoleData} />
-      <Button type="submit" className="w-full mt-auto">
+      <Skeleton isLoading={loadingRole}>
+        <Fields roleData={roleData} setRoleData={setRoleData} />
+      </Skeleton>
+      <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
         Create
       </Button>
     </form>

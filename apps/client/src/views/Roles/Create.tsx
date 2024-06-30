@@ -4,12 +4,7 @@ import { Role } from '@/models';
 import services from '@/services';
 import Fields from './Fields';
 import { Button } from '@/components/ui';
-
-type State = Pick<Role, 'name'>;
-
-const initialState: State = {
-  name: ''
-};
+import { State, initialState } from './interface';
 
 const Create: React.FC = () => {
   const [roleData, setRoleData] = React.useState<State>(initialState);

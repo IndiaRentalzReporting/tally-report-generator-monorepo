@@ -13,13 +13,11 @@ import services from '@/services';
 import { columns } from './columns';
 
 const Read: React.FC = () => {
-  const { data: allRoles, isFetching: fetchingRoles } = useQuery({
+  const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: () => services.Roles.getAll(),
     select: (data) => data.data.roles,
     queryKey: ['roles', 'getAll']
   });
-
-  if (!allRoles) return null;
 
   return (
     <Card>
@@ -30,7 +28,7 @@ const Read: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Skeleton isLoading={fetchingRoles} className="w-full h-20">
+        <Skeleton isLoading={fetchingRoles}>
           <DataTable columns={columns} data={allRoles} />
         </Skeleton>
       </CardContent>

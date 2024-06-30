@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { SkeletonOverlay } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';

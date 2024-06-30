@@ -4,27 +4,18 @@ import { Button } from '@/components/ui';
 import { RegisterUser } from '@/models';
 import services from '@/services';
 import Fields from './Fields';
+import { State, initialState } from './interface';
 
 const Create: React.FC = () => {
   const queryClient = useQueryClient();
 
-  const [registerData, setRegisterData] = useState<RegisterUser>({
-    email: '',
-    password: '',
-    first_name: '',
-    last_name: ''
-  });
+  const [registerData, setRegisterData] = useState<State>(initialState);
 
   const { mutateAsync: signUpMutation } = useMutation({
     mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
-      setRegisterData({
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: ''
-      });
+      setRegisterData(initialState);
     }
   });
 

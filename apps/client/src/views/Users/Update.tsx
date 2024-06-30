@@ -1,27 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  Button
-} from '@/components/ui';
-import { RegisterUser } from '@/models';
+import { Button, Skeleton } from '@/components/ui';
 import services from '@/services';
 import Fields from './Fields';
+import { State, initialState } from './interface';
 
-const Update: React.FC<{ id: string }> = ({ id }) => {
-  const [registerData, setRegisterData] = useState<RegisterUser>({
-    email: '',
-    password: '',
-    first_name: '',
-    last_name: ''
-  });
+const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
+  const [registerData, setRegisterData] = useState<State>(initialState);
 
-  const { data: userData } = useQuery({
+  const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.Users.getOne(id),
     select: (data) => data.data.user,
     queryKey: ['getOne', 'users', id]
@@ -37,7 +24,9 @@ const Update: React.FC<{ id: string }> = ({ id }) => {
       // onSubmit={handleSignUp}
       className="grid gap-4"
     >
-      <Fields userData={registerData} setUserData={setRegisterData} />
+      <Skeleton isLoading={loadingUser}>
+        <Fields userData={registerData} setUserData={setRegisterData} />
+      </Skeleton>
       <Button type="submit">Update</Button>
     </form>
   );

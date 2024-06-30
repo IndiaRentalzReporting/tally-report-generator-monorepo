@@ -1,13 +1,8 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Role } from '@/models';
-import { Input, Label } from '@/components/ui';
+import React from 'react';
+import { Input } from '@/components/ui';
+import { StateAsProps } from './interface';
 
-interface IFieldsProps {
-  roleData: Pick<Role, 'name'>;
-  setRoleData: Dispatch<SetStateAction<Pick<Role, 'name'>>>;
-}
-
-const Fields: React.FC<IFieldsProps> = ({ roleData, setRoleData }) => {
+const Fields: React.FC<StateAsProps> = ({ roleData, setRoleData }) => {
   return (
     <div className="flex flex-col gap-4">
       <Input

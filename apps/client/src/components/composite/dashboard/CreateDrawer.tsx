@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useMemo } from 'react';
+import React, { Suspense, lazy } from 'react';
 import {
   Drawer,
   DrawerTrigger,
@@ -8,12 +8,9 @@ import {
   DrawerTitle,
   DrawerFooter,
   DrawerClose,
-  SkeletonOverlay,
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
+  Skeleton
 } from '@/components/ui';
 import { Module } from '@/models';
 import { When } from '@/components/utility';
@@ -42,9 +39,7 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
           </DrawerHeader>
           <Card className="w-full relative">
             <CardContent className="pt-6">
-              <Suspense
-                fallback={<SkeletonOverlay className="w-full h-full z-10" />}
-              >
+              <Suspense fallback={<Skeleton isLoading />}>
                 <Component />
               </Suspense>
             </CardContent>

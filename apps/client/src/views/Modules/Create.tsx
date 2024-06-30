@@ -2,16 +2,8 @@ import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
 import services from '@/services';
-import { Module } from '@/models';
 import Fields from './Fields';
-
-type State = Pick<Module, 'name' | 'isPrivate' | 'icon'>;
-
-const initialState: State = {
-  name: '',
-  isPrivate: false,
-  icon: ''
-};
+import { State, initialState } from './interface';
 
 const CreateModule: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
@@ -35,10 +27,7 @@ const CreateModule: React.FC = () => {
 
   return (
     <form onSubmit={handleCreateModule} className="flex flex-col gap-4 h-full">
-      <Fields
-        moduleDetails={moduleDetails}
-        setModuleDetails={setModuleDetails}
-      />
+      <Fields moduleData={moduleDetails} setModuleData={setModuleDetails} />
       <Button
         type="submit"
         className="w-full mt-auto"

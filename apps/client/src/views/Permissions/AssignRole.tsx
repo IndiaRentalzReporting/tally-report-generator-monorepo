@@ -87,7 +87,7 @@ const AssignRole: React.FC = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
-                <Skeleton isLoading={fetchingRoles} className="w-full h-10">
+                <Skeleton isLoading={fetchingRoles}>
                   {allRoles?.map((role, index) => (
                     <SelectItem key={index} value={role.id}>
                       {role.name}
@@ -97,7 +97,7 @@ const AssignRole: React.FC = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Skeleton isLoading={fetchingRoles} className="w-full h-20">
+          <Skeleton isLoading={fetchingRoles}>
             <DataTable
               columns={columns}
               data={allUsers}

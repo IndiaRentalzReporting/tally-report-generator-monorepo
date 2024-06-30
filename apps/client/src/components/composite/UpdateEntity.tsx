@@ -9,14 +9,11 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  SkeletonOverlay,
   DrawerFooter,
   DrawerClose,
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
+  Skeleton
 } from '../ui';
 
 interface IUpdateEntityProps {
@@ -45,9 +42,7 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
             </DrawerHeader>
             <Card className="w-full relative">
               <CardContent className="pt-6">
-                <Suspense
-                  fallback={<SkeletonOverlay className="w-full h-full z-10" />}
-                >
+                <Suspense fallback={<Skeleton isLoading />}>
                   <Component id={id} />
                 </Suspense>
               </CardContent>

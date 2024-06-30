@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
-import { Module } from '@/models';
 import services from '@/services';
 import { Else, If, Then } from '@/components/utility';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { Button } from '@/components/ui';
+import { State } from './interface';
 
-export const columns: ColumnDef<Module>[] = [
+export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -23,6 +23,7 @@ export const columns: ColumnDef<Module>[] = [
     }
   },
   {
+    accessorKey: 'isPrivate',
     header: ({ column }) => {
       return (
         <Button
@@ -35,7 +36,6 @@ export const columns: ColumnDef<Module>[] = [
         </Button>
       );
     },
-    accessorKey: 'isPrivate',
     cell: ({ cell }) => (
       <If condition={!!cell.getValue() as boolean}>
         <Then>
@@ -48,20 +48,22 @@ export const columns: ColumnDef<Module>[] = [
     )
   },
   {
-    header: 'Icon',
     accessorKey: 'icon',
-    cell: ({ cell }) => (
-      <If condition={!!cell.getValue() as boolean}>
-        <Then>
-          <div
-            dangerouslySetInnerHTML={{ __html: cell.getValue() as string }}
-          />
-        </Then>
-        <Else>
-          <Minus />
-        </Else>
-      </If>
-    )
+    header: 'Icon',
+    cell: ({ cell }) => {
+      return (
+        <If condition={!!cell.getValue() as boolean}>
+          <Then>
+            <div
+              dangerouslySetInnerHTML={{ __html: cell.getValue() as string }}
+            />
+          </Then>
+          <Else>
+            <Minus />
+          </Else>
+        </If>
+      );
+    }
   },
   {
     id: 'Actions',
