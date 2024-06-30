@@ -1,22 +1,40 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, Minus, X } from 'lucide-react';
+import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
 import { Module } from '@/models';
 import services from '@/services';
 import { Else, If, Then } from '@/components/utility';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
+import { Button } from '@/components/ui';
 
 export const columns: ColumnDef<Module>[] = [
   {
-    id: 'Sr. No.',
-    header: 'Sr. No.',
-    cell: ({ row }) => <span>{row.index + 1}</span>
+    accessorKey: 'name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="translate-x-[-10px]"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    }
   },
   {
-    header: 'Name',
-    accessorKey: 'name'
-  },
-  {
-    header: 'Private',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="translate-x-[-10px]"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Private
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     accessorKey: 'isPrivate',
     cell: ({ cell }) => (
       <If condition={!!cell.getValue() as boolean}>

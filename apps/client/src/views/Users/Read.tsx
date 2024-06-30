@@ -13,7 +13,6 @@ import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from './columns';
 
 const Create: React.FC = () => {
-  const [rowSelection, setRowSelection] = React.useState({});
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users,
@@ -27,19 +26,12 @@ const Create: React.FC = () => {
       <CardHeader>
         <CardTitle>All Users</CardTitle>
         <CardDescription>
-          Read, Update or Edit users based on yout permissions
+          Read, Update or Edit users based on your permissions
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Skeleton isLoading={fetchingUsers} className="w-full h-20">
-          <DataTable
-            columns={columns}
-            data={allUsers}
-            selection={{
-              rowSelection,
-              setRowSelection
-            }}
-          />
+          <DataTable columns={columns} data={allUsers} />
         </Skeleton>
       </CardContent>
     </Card>

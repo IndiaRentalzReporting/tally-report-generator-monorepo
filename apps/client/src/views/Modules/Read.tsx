@@ -26,7 +26,7 @@ const ReadModule: React.FC = () => {
       <CardHeader>
         <CardTitle>All Modules</CardTitle>
         <CardDescription>
-          Read, Update or Edit modules based on yout permissions
+          Read, Update or Edit modules based on your permissions
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
