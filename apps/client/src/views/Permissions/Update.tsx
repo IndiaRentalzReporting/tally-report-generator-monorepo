@@ -20,7 +20,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     setRoleData(roleDataX);
   }, [roleDataX]);
 
-  const { mutateAsync: updateRole, isPending: updatingRole } = useMutation({
+  const { mutateAsync: createRole, isPending: updatingRole } = useMutation({
     mutationFn: () => services.Roles.updateOneX(id, roleData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
@@ -30,18 +30,18 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     }
   });
 
-  const handleUpdateRole: React.FormEventHandler = (e) => {
+  const handleCreateRole: React.FormEventHandler = (e) => {
     e.preventDefault();
-    updateRole();
+    createRole();
   };
 
   return (
-    <form className="h-full flex flex-col gap-4" onSubmit={handleUpdateRole}>
+    <form className="h-full flex flex-col gap-4" onSubmit={handleCreateRole}>
       <Skeleton isLoading={loadingRole}>
         <Fields roleData={roleData} setRoleData={setRoleData} />
       </Skeleton>
       <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
-        Update
+        Create
       </Button>
     </form>
   );

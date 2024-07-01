@@ -4,21 +4,17 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { table } from 'console';
 import services from '@/services';
 import {
+  Card,
   CardHeader,
+  CardTitle,
+  CardContent,
   Button,
+  Input,
   Switch,
   Skeleton,
-  CardDescription,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
+  CardDescription
 } from '@/components/ui';
 import { DataTable } from '@/components/composite/table/data-table';
 import { Action, Module } from '@/models';
@@ -34,9 +30,9 @@ interface ModuleAction {
 }
 
 const Create: React.FC = () => {
-  const [selectedRole, setSelectedRole] = React.useState<string>('');
+  const [roleName, setRoleName] = React.useState<string>('');
   const [columns, setColumns] = React.useState<ColumnDef<ColumnData>[]>([]);
-  const [tableData, setTableData] = React.useState<Array<any>>([]);
+  const [data, setData] = React.useState<Array<any>>([]);
   const [modulePermissions, setModulePermission] = React.useState<{
     [module_id: string]: {
       [action_id: string]: boolean;
@@ -58,14 +54,6 @@ const Create: React.FC = () => {
     },
     queryKey: ['actions', 'getAll']
   });
-
-  const { data: allRolesWithNoPermission, isFetching: fetchingRoles } =
-    useQuery({
-      queryFn: async () => services.Roles.getAll(),
-      select: (data) =>
-        data.data.roles.filter((role) => role.permission.length === 0),
-      queryKey: ['roles', 'getAll']
-    });
 
   const handlePermissionChange = (
     checked: boolean,
@@ -114,12 +102,12 @@ const Create: React.FC = () => {
       module_id
     }));
 
-    setTableData(columnData);
+    setData(columnData);
   }, [modules]);
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createPermission, isPending: createPermissionLoading } =
-    useMutation({
+  const { mutateAsync: createRole, isPending: createRoleLoading } = useMutation(
+    {
       mutationFn: () => {
         const permissions: Array<ModuleAction> = [];
         for (const module_id in modulePermissions) {
@@ -133,60 +121,64 @@ const Create: React.FC = () => {
               if (module[action_id]) p.action_ids.push(action_id);
           permissions.push(p);
         }
-        return services.Permissions.createOne({
-          role_id: selectedRole,
+        return services.Roles.createOne({
+          role: {
+            name: roleName
+          },
           permissions
         });
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['permission', 'getAll'] });
+        queryClient.invalidateQueries({ queryKey: ['role', 'getAll'] });
         queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
         setModulePermission({});
+        setRoleName('');
       }
-    });
+    }
+  );
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        createPermission();
-      }}
-      className="flex flex-col gap-4"
-    >
-      <Select onValueChange={setSelectedRole} required>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a Role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Roles</SelectLabel>
-            <Skeleton isLoading={fetchingRoles}>
-              {allRolesWithNoPermission?.map((role, index) => (
-                <SelectItem key={index} value={role.id}>
-                  {role.name}
-                </SelectItem>
-              ))}
-            </Skeleton>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <CardHeader className="px-0 py-2">
-        <CardDescription>Assign permissions to your permission</CardDescription>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Create Role</CardTitle>
+        <CardDescription>
+          Create roles for Role Based Access Control
+        </CardDescription>
       </CardHeader>
-      <Skeleton
-        isLoading={fetchingActions || fetchingModules}
-        className="w-full h-20"
-      >
-        <DataTable columns={columns} data={tableData} />
-      </Skeleton>
-      <Button
-        type="submit"
-        className="w-min mt-2"
-        isLoading={createPermissionLoading}
-      >
-        Create Permission
-      </Button>
-    </form>
+      <CardContent>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            createRole();
+          }}
+          className="flex flex-col gap-4"
+        >
+          <Input
+            required
+            minLength={3}
+            placeholder="Role Name"
+            value={roleName}
+            onChange={(e) => setRoleName(e.target.value)}
+          />
+          <CardHeader className="px-0 py-2">
+            <CardDescription>Assign permissions to your role</CardDescription>
+          </CardHeader>
+          <Skeleton
+            isLoading={fetchingActions || fetchingModules}
+            className="w-full h-20"
+          >
+            <DataTable columns={columns} data={data} />
+          </Skeleton>
+          <Button
+            type="submit"
+            className="w-min mt-2"
+            isLoading={createRoleLoading}
+          >
+            Create Role
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 

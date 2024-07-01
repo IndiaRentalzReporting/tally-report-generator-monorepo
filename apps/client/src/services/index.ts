@@ -2,12 +2,14 @@ import { AxiosPromise } from 'axios';
 import axios from './client';
 import {
   Action,
+  DetailedPermission,
   DetailedUser,
   LoginUser,
   Module,
   Permission,
   RegisterUser,
   Role,
+  RoleWithPermission,
   User
 } from '@/models';
 
@@ -50,7 +52,7 @@ const services = {
       return axios.post(`/roles/create`, data);
     },
     getAll: async (): AxiosPromise<{
-      roles: Role[];
+      roles: RoleWithPermission[];
     }> => {
       return axios.get('/roles/read');
     },
@@ -60,6 +62,16 @@ const services = {
       role: Role;
     }> => {
       return axios.get(`/roles/read/${id}`);
+    },
+    updateOneX: async (
+      id: string,
+      data: Partial<Role>
+    ): AxiosPromise<{ permissions: Permission[] }> => {
+      console.log({
+        id,
+        data
+      });
+      return axios.patch(`/roles/update/${id}`, data);
     },
     updateOne: async (data: {
       id: string;
@@ -181,6 +193,50 @@ const services = {
       action: Action;
     }> => {
       return axios.delete(`/actions/delete/${id}`);
+    }
+  },
+  Permissions: {
+    getAll: async (): AxiosPromise<{
+      permissions: DetailedPermission[];
+    }> => {
+      return axios.get('/permissions/read');
+    },
+    getOne: async (
+      id: Permission['id']
+    ): AxiosPromise<{
+      permission: Permission;
+    }> => {
+      return axios.get(`/permissions/read/${id}`);
+    },
+    createOne: async (data: {
+      role_id: Role['id'];
+      permissions: {
+        module_id: Module['id'];
+        action_ids: Action['id'][];
+      }[];
+    }): AxiosPromise<{
+      permission: Permission;
+    }> => {
+      return axios.post('/permissions/create/many', {
+        permissions: data.permissions,
+        role_id: data.role_id
+      });
+    },
+
+    updateOne: async (
+      id: Permission['id'],
+      data: Partial<Permission>
+    ): AxiosPromise<{
+      permission: Permission;
+    }> => {
+      return axios.patch(`/permissions/update/${id}`, data);
+    },
+    deleteOne: async (
+      id: Permission['id']
+    ): AxiosPromise<{
+      permission: Permission;
+    }> => {
+      return axios.delete(`/permissions/delete/${id}`);
     }
   }
 };
