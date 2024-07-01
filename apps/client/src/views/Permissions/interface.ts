@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { DetailedPermission } from '@/models';
+import { State as RoleState } from '../Roles/interface';
 
 export interface State
   extends Pick<
@@ -10,15 +11,27 @@ export interface State
 export const initialState: State = {
   id: '',
   module: {
-    name: ''
+    name: '',
+    id: ''
   },
   permissionAction: [],
   role: {
-    name: ''
+    name: '',
+    id: ''
   }
 };
 
+export interface ModulePermissions {
+  [module_id: string]: {
+    [action_id: string]: boolean;
+  };
+}
+
 export interface StateAsProps {
-  permissionsPermissionsData: State;
-  setPermissionsData: Dispatch<SetStateAction<State>>;
+  // permissionsData: State;
+  // setPermissionsData: Dispatch<SetStateAction<State>>;
+  role?: RoleState['name'];
+  setRole?: Dispatch<SetStateAction<RoleState['name']>>;
+  modulePermissions: ModulePermissions;
+  setModulePermissions: Dispatch<SetStateAction<ModulePermissions>>;
 }

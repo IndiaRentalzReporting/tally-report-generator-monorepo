@@ -201,10 +201,10 @@ const services = {
     }> => {
       return axios.get('/permissions/read');
     },
-    getOne: async (
+    getAllOfRole: async (
       id: Permission['id']
     ): AxiosPromise<{
-      permission: Permission;
+      permissions: DetailedPermission[];
     }> => {
       return axios.get(`/permissions/read/${id}`);
     },

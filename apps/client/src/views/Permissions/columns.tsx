@@ -75,10 +75,10 @@ export const columns: ColumnDef<State>[] = [
                 mutationFn: () => services.Roles.deleteOne(role.id)
               },
               name: role.role.name,
-              module: 'Roles'
+              module: 'Permissions'
             }}
           />
-          <UpdateEntity module="Roles" id={role.id} />
+          <UpdateEntity module="Permissions" id={role.role.id} />
         </span>
       );
     }

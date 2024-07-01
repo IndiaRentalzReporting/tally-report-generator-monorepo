@@ -1,32 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { table } from 'console';
 import services from '@/services';
-import {
-  CardHeader,
-  Button,
-  Switch,
-  Skeleton,
-  CardDescription,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui';
-import { DataTable } from '@/components/composite/table/data-table';
+import { Button } from '@/components/ui';
 import { Action, Module } from '@/models';
-
-interface ColumnData {
-  module_name: Module['name'];
-  module_id: Module['id'];
-}
+import { ModulePermissions } from './interface';
+import Fields from './Fields';
 
 interface ModuleAction {
   module_id: Module['id'];
@@ -35,87 +16,11 @@ interface ModuleAction {
 
 const Create: React.FC = () => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
-  const [columns, setColumns] = React.useState<ColumnDef<ColumnData>[]>([]);
-  const [tableData, setTableData] = React.useState<Array<any>>([]);
-  const [modulePermissions, setModulePermission] = React.useState<{
-    [module_id: string]: {
-      [action_id: string]: boolean;
-    };
-  }>({});
+  const [modulePermissions, setModulePermission] =
+    React.useState<ModulePermissions>({});
 
-  const { data: modules, isFetching: fetchingModules } = useQuery({
-    queryFn: () => services.Modules.getAll(),
-    select(data) {
-      return data.data.modules;
-    },
-    queryKey: ['modules', 'getAll']
-  });
-
-  const { data: actions, isFetching: fetchingActions } = useQuery({
-    queryFn: () => services.Actions.getAll(),
-    select(data) {
-      return data.data.actions;
-    },
-    queryKey: ['actions', 'getAll']
-  });
-
-  const { data: allRolesWithNoPermission, isFetching: fetchingRoles } =
-    useQuery({
-      queryFn: async () => services.Roles.getAll(),
-      select: (data) =>
-        data.data.roles.filter((role) => role.permission.length === 0),
-      queryKey: ['roles', 'getAll']
-    });
-
-  const handlePermissionChange = (
-    checked: boolean,
-    module_id: string,
-    action_id: string
-  ) => {
-    setModulePermission((prev) => ({
-      ...prev,
-      [module_id]: {
-        ...prev[module_id],
-        [action_id]: checked
-      }
-    }));
-  };
-
-  useEffect(() => {
-    if (!actions) return;
-    const actionColumns = actions.map<ColumnDef<ColumnData>>((action) => ({
-      header: action.name.toUpperCase(),
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: ({
-        row: {
-          original: { module_id }
-        }
-      }) => (
-        <Switch
-          onCheckedChange={(checked) =>
-            handlePermissionChange(checked, module_id, action.id)
-          }
-        />
-      )
-    }));
-    setColumns([
-      {
-        accessorKey: 'module_name',
-        header: 'Module Name'
-      },
-      ...actionColumns
-    ]);
-  }, [actions]);
-
-  useEffect(() => {
-    if (!modules) return;
-    const columnData = modules.map(({ name: module_name, id: module_id }) => ({
-      module_name,
-      module_id
-    }));
-
-    setTableData(columnData);
-  }, [modules]);
+  useEffect(() => console.log({ selectedRole }), [selectedRole]);
+  useEffect(() => console.log({ modulePermissions }), [modulePermissions]);
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
@@ -153,32 +58,12 @@ const Create: React.FC = () => {
       }}
       className="flex flex-col gap-4"
     >
-      <Select onValueChange={setSelectedRole} required>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a Role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Roles</SelectLabel>
-            <Skeleton isLoading={fetchingRoles}>
-              {allRolesWithNoPermission?.map((role, index) => (
-                <SelectItem key={index} value={role.id}>
-                  {role.name}
-                </SelectItem>
-              ))}
-            </Skeleton>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <CardHeader className="px-0 py-2">
-        <CardDescription>Assign permissions to your permission</CardDescription>
-      </CardHeader>
-      <Skeleton
-        isLoading={fetchingActions || fetchingModules}
-        className="w-full h-20"
-      >
-        <DataTable columns={columns} data={tableData} />
-      </Skeleton>
+      <Fields
+        modulePermissions={modulePermissions}
+        setModulePermissions={setModulePermission}
+        role={selectedRole}
+        setRole={setSelectedRole}
+      />
       <Button
         type="submit"
         className="w-min mt-2"
