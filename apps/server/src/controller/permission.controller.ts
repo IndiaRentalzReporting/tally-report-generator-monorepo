@@ -3,10 +3,41 @@ import {
   ModuleSelect,
   ActionSelect,
   RoleSelect,
-  PermissionSelect
+  PermissionSelect,
+  DetailedPermission
 } from '../models/schema';
 import PermissionService from '../services/PermissionService';
 import ActionService from '../services/ActionService';
+
+export const readAll = async (
+  req: Request,
+  res: Response<{ permissions: DetailedPermission[] }>,
+  next: NextFunction
+) => {
+  try {
+    const permissions = await PermissionService.findAll();
+    res.json({ permissions });
+  } catch (e) {
+    console.error("Couldn't fetch permissions");
+    return next(e);
+  }
+};
+
+export const readOne = async (
+  req: Request<{ id: string }>,
+  res: Response<{ permissions: DetailedPermission[] }>,
+  next: NextFunction
+) => {
+  try {
+    const permissions = await PermissionService.findMany({
+      role_id: req.params.id
+    });
+    res.json({ permissions });
+  } catch (e) {
+    console.error("Couldn't fetch permissions");
+    return next(e);
+  }
+};
 
 export const createMany = async (
   req: Request<

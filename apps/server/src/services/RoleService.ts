@@ -10,7 +10,15 @@ import {
 
 class RoleService {
   public static async readAll(): Promise<RoleSelect[]> {
-    return db.query.RoleSchema.findMany({});
+    return db.query.RoleSchema.findMany({
+      with: {
+        permission: {
+          columns: {
+            id: true
+          }
+        }
+      }
+    });
   }
 
   public static async findOne(
