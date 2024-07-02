@@ -3,7 +3,7 @@ import z from 'zod';
 import {
   createMany,
   readAll,
-  readOne,
+  readAllOfRole,
   updateMany
 } from '../controller/permission.controller';
 import { validateSchema } from '../middlewares';
@@ -19,13 +19,13 @@ const permissionRouter = Router();
 permissionRouter.get('/read', readAll);
 
 permissionRouter.get(
-  '/read/:id',
+  '/read/:role_id',
   validateSchema({
     params: PermissionSelectSchema.pick({
-      id: true
+      role_id: true
     })
   }),
-  readOne
+  readAllOfRole
 );
 
 permissionRouter.post(
