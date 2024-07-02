@@ -1,40 +1,64 @@
-import { UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { Trash } from 'lucide-react';
+import {
+  UseMutationOptions,
+  useMutation,
+  useQueryClient
+} from '@tanstack/react-query';
+import { Minus, Trash } from 'lucide-react';
 import React from 'react';
 import { useToast } from '@/lib/hooks/useToast';
 import { ToastAction } from '../ui/toast';
+import { If, Then, Else } from '../utility';
+import { useIsAllowed } from '@/lib/hooks';
 
 interface IDeleteEntityProps {
   options: { mutation: UseMutationOptions; name: string; module: string };
 }
 
-const DeleteEntity: React.FC<IDeleteEntityProps> = ({
+export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
   options: { module, mutation, name }
 }) => {
-  const { mutateAsync } = useMutation(mutation);
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    ...mutation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [module.toLowerCase(), 'getAll']
+      });
+    }
+  });
   const { toast } = useToast();
 
+  const isDeleteAllowed = useIsAllowed({
+    module: 'Users',
+    action: 'Delete'
+  });
+
   return (
-    <Trash
-      className="text-red-500 cursor-pointer"
-      size={20}
-      onClick={() => {
-        toast({
-          variant: 'destructive',
-          title: `Delete ${module}`,
-          description: `Are you sure you want to delete ${name} ${module}`,
-          action: (
-            <ToastAction
-              altText={`Delete ${module}`}
-              onClick={() => mutateAsync()}
-            >
-              Delete
-            </ToastAction>
-          )
-        });
-      }}
-    />
+    <If condition={!!isDeleteAllowed}>
+      <Then>
+        <Trash
+          className="text-red-500 cursor-pointer"
+          size={20}
+          onClick={() => {
+            toast({
+              variant: 'destructive',
+              title: `Delete ${module}`,
+              description: `Are you sure you want to delete ${name} from ${module}`,
+              action: (
+                <ToastAction
+                  altText={`Delete from ${module}`}
+                  onClick={() => mutateAsync()}
+                >
+                  Delete
+                </ToastAction>
+              )
+            });
+          }}
+        />
+      </Then>
+      <Else>
+        <Minus />
+      </Else>
+    </If>
   );
 };
-
-export default DeleteEntity;

@@ -18,7 +18,7 @@ const Skeleton = ({ className, children, isLoading, ...props }: Props) => {
   return (
     <If condition={isLoading}>
       <Then>
-        <SkeletonOverlay className={className} />
+        <SkeletonOverlay className={cn('h-20 w-full', className)} />
       </Then>
       <Else>{children}</Else>
     </If>

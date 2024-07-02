@@ -1,9 +1,9 @@
 import React from 'react';
 import Read from './Read';
-import useIsAllowed from '@/lib/hooks/useIsAllowed';
 import { When } from '@/components/utility';
+import { useIsAllowed } from '@/lib/hooks';
 
-const index: React.FC = () => {
+const Users: React.FC = () => {
   const isReadAllowed = useIsAllowed({
     module: 'Users',
     action: 'Read'
@@ -15,4 +15,4 @@ const index: React.FC = () => {
   );
 };
 
-export default index;
+export default Users;

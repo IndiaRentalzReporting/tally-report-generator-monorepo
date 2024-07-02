@@ -1,26 +1,41 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Check, Edit, Minus, X } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
-import { Module } from '@/models';
-import DeleteEntity from '@/components/composite/DeleteEntity';
+import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
 import services from '@/services';
-import { Else, If, Then, When } from '@/components/utility';
-import useIsAllowed from '@/lib/hooks/useIsAllowed';
+import { Else, If, Then } from '@/components/utility';
+import { DeleteEntity, UpdateEntity } from '@/components/composite';
+import { Button } from '@/components/ui';
+import { State } from './interface';
 
-export const columns: ColumnDef<Module>[] = [
+export const columns: ColumnDef<State>[] = [
   {
-    id: 'Sr. No.',
-    header: 'Sr. No.',
-    cell: ({ row }) => <span>{row.index + 1}</span>
+    accessorKey: 'name',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="translate-x-[-10px]"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    }
   },
   {
-    header: 'Name',
-    accessorKey: 'name'
-  },
-  {
-    header: 'Private',
     accessorKey: 'isPrivate',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="translate-x-[-10px]"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Private
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ cell }) => (
       <If condition={!!cell.getValue() as boolean}>
         <Then>
@@ -33,57 +48,40 @@ export const columns: ColumnDef<Module>[] = [
     )
   },
   {
-    header: 'Icon',
     accessorKey: 'icon',
-    cell: ({ cell }) => (
-      <If condition={!!cell.getValue() as boolean}>
-        <Then>
-          <div
-            dangerouslySetInnerHTML={{ __html: cell.getValue() as string }}
-          />
-        </Then>
-        <Else>
-          <Minus />
-        </Else>
-      </If>
-    )
+    header: 'Icon',
+    cell: ({ cell }) => {
+      return (
+        <If condition={!!cell.getValue() as boolean}>
+          <Then>
+            <div
+              dangerouslySetInnerHTML={{ __html: cell.getValue() as string }}
+            />
+          </Then>
+          <Else>
+            <Minus />
+          </Else>
+        </If>
+      );
+    }
   },
   {
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const module = row.original;
-      const queryClient = useQueryClient();
-      const isEditAllowed = useIsAllowed({
-        module: 'Modules',
-        action: 'Update'
-      });
-      const isDeleteAllowed = useIsAllowed({
-        module: 'Modules',
-        action: 'Delete'
-      });
       return (
         <span className="flex gap-4 items-center">
-          <When condition={!!isDeleteAllowed}>
-            <DeleteEntity
-              options={{
-                mutation: {
-                  mutationFn: () => services.Modules.deleteOne(module.id),
-                  onSuccess: () =>
-                    queryClient.invalidateQueries({
-                      queryKey: ['modules', 'getAll']
-                    })
-                },
-                name: module.name,
-                module: 'Module'
-              }}
-            />
-          </When>
-          <When condition={!!isEditAllowed}>
-            <Link to={`/dashboard/Modules/Update/${module.id}`}>
-              <Edit size={20} className="text-green-500" />
-            </Link>
-          </When>
+          <DeleteEntity
+            options={{
+              mutation: {
+                mutationFn: () => services.Modules.deleteOne(module.id)
+              },
+              name: module.name,
+              module: 'Modules'
+            }}
+          />
+          <UpdateEntity module="Modules" id={module.id} />
         </span>
       );
     }

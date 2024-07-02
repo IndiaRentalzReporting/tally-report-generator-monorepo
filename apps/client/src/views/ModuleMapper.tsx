@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { SkeletonOverlay } from '@/components/ui';
+import { Skeleton } from '@/components/ui';
 
 interface IModuleMapperProps {
   module: string;
@@ -15,9 +15,7 @@ export const ModuleMapper: React.FC<IModuleMapperProps> = ({
   );
 
   return (
-    <Suspense
-      fallback={<SkeletonOverlay className="w-full h-full absolute z-10" />}
-    >
+    <Suspense fallback={<Skeleton isLoading className="h-full" />}>
       <Component />
     </Suspense>
   );

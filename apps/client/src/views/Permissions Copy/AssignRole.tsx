@@ -19,28 +19,22 @@ import {
 } from '@/components/ui';
 import services from '@/services';
 import { columns } from './columns';
-import { DetailedUser, Role } from '@/models';
 
 const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
-  const [users, setUsers] = React.useState<DetailedUser[]>([]);
   const { data: allUsers, isFetching: fetchingUsers } = useQuery({
     queryFn: () => services.Users.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
   });
 
-  const [roles, setRoles] = React.useState<Role[]>([]);
   const { data: allRoles, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => services.Roles.getAll(),
     select: (data) => data.data.roles,
     queryKey: ['role', 'getAll']
   });
-
-  React.useEffect(() => setUsers(allUsers ?? []), [allUsers]);
-  React.useEffect(() => setRoles(allRoles ?? []), [allRoles]);
 
   const queryClient = useQueryClient();
   const { mutateAsync: assignRoleMutation, isPending: assignRoleLoading } =
@@ -65,15 +59,18 @@ const AssignRole: React.FC = () => {
 
   const handleRoleAssignment = async () => {
     const keys = Object.keys(rowSelection);
-    const selectedUsers = users
-      .map((user, index) => (keys.includes(String(index)) ? user.id : ''))
-      .filter((id) => !!id);
+    const selectedUsers =
+      allUsers
+        ?.map((user, index) => (keys.includes(String(index)) ? user.id : ''))
+        .filter((id) => !!id) ?? [];
     if (selectedUsers.length > 0) {
       await assignRoleMutation({ selectedUsers, role: selectedRole });
     } else {
       // throw weeoe
     }
   };
+
+  if (!allUsers) return null;
 
   return (
     <Card className="w-full">
@@ -90,8 +87,8 @@ const AssignRole: React.FC = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Roles</SelectLabel>
-                <Skeleton isLoading={fetchingRoles} className="w-full h-10">
-                  {roles.map((role, index) => (
+                <Skeleton isLoading={fetchingRoles}>
+                  {allRoles?.map((role, index) => (
                     <SelectItem key={index} value={role.id}>
                       {role.name}
                     </SelectItem>
@@ -100,10 +97,10 @@ const AssignRole: React.FC = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Skeleton isLoading={fetchingRoles} className="w-full h-20">
+          <Skeleton isLoading={fetchingRoles}>
             <DataTable
               columns={columns}
-              data={users}
+              data={allUsers}
               selection={{
                 rowSelection,
                 setRowSelection

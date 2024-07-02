@@ -32,20 +32,18 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            {permissions?.map(({ module: { name }, actions }, i1) => (
+            {permissions?.map(({ module: { name }, actions }) => (
               <Route path={name.toLowerCase()} key={name}>
                 <Route index element={<ModuleMapper module={name} />} />
-                {actions
-                  .filter((action) => action === 'Update')
-                  .map<React.ReactElement>((action) => {
-                    return (
-                      <Route
-                        path={`${action.toLowerCase()}/:id`}
-                        key={action}
-                        element={<ModuleMapper module={name} action={action} />}
-                      />
-                    );
-                  })}
+                {actions.map<React.ReactElement>((action) => {
+                  return (
+                    <Route
+                      path={`${action.toLowerCase()}`}
+                      key={action}
+                      element={<ModuleMapper module={name} action={action} />}
+                    />
+                  );
+                })}
               </Route>
             ))}
           </Route>

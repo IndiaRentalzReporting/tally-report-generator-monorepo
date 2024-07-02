@@ -1,14 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { Label } from '@radix-ui/react-label';
-import { RegisterUser } from '@/models';
 import { Input } from '@/components/ui';
+import { StateAsProps } from './interface';
 
-interface IFieldsProps {
-  userData: RegisterUser;
-  setUserData: Dispatch<SetStateAction<RegisterUser>>;
-}
-
-const Fields: React.FC<IFieldsProps> = ({ userData, setUserData }) => {
+const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex w-full gap-4">

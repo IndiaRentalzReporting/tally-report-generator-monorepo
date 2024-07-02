@@ -27,7 +27,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { useNav } from '@/providers/NavigationProvider';
 
 const DashboardHeader: React.FC = () => {
-  const navState = useNav();
+  const { navigation } = useNav();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutateAsync: signOutMutation } = useMutation({
@@ -38,7 +38,7 @@ const DashboardHeader: React.FC = () => {
     }
   });
 
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const userName = useMemo(
     () => `${user?.first_name} ${user?.last_name}`,
     [user]
@@ -63,53 +63,57 @@ const DashboardHeader: React.FC = () => {
           </Link>
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
-              {navState.map(({ isActive, to, name, children, icon }, index) => (
-                <AccordionItem value={`item-${index}`} key={index}>
-                  <Link
-                    to={!children ? to : '#'}
-                    className={clsx(
-                      'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
-                      isActive && !children && 'bg-muted text-primary',
-                      children || 'hover:text-primary'
-                    )}
-                  >
-                    <AccordionTrigger
+              {navigation.map(
+                ({ isActive, to, name, children, icon }, index) => (
+                  <AccordionItem value={`item-${index}`} key={index}>
+                    <Link
+                      to={!children ? to : '#'}
                       className={clsx(
-                        'pt-0 rounded-lg px-3 py-2 w-full',
-                        isActive && 'bg-muted text-primary'
+                        'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
+                        isActive && !children && 'bg-muted text-primary',
+                        children || 'hover:text-primary'
                       )}
                     >
-                      <span className="flex gap-3 items-center w-full">
-                        <When condition={!!icon}>
-                          <div
-                            dangerouslySetInnerHTML={{ __html: icon as string }}
-                          />
+                      <AccordionTrigger
+                        className={clsx(
+                          'pt-0 rounded-lg px-3 py-2 w-full',
+                          isActive && 'bg-muted text-primary'
+                        )}
+                      >
+                        <span className="flex gap-3 items-center w-full">
+                          <When condition={!!icon}>
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html: icon as string
+                              }}
+                            />
+                          </When>
+                          {name}
+                        </span>
+                        <When condition={!!children}>
+                          <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
                         </When>
-                        {name}
-                      </span>
-                      <When condition={!!children}>
-                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                      </When>
-                    </AccordionTrigger>
-                  </Link>
-                  <When condition={!!children}>
-                    <AccordionContent className="flex flex-col gap-2 float-right pt-3">
-                      {children?.map((child, index) => (
-                        <Link
-                          to={child.to}
-                          key={index}
-                          className={clsx(
-                            'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
-                            child.isActive && 'text-primary'
-                          )}
-                        >
-                          {child.name}
-                        </Link>
-                      ))}
-                    </AccordionContent>
-                  </When>
-                </AccordionItem>
-              ))}
+                      </AccordionTrigger>
+                    </Link>
+                    <When condition={!!children}>
+                      <AccordionContent className="flex flex-col gap-2 float-right pt-3">
+                        {children?.map((child, index) => (
+                          <Link
+                            to={child.to}
+                            key={index}
+                            className={clsx(
+                              'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
+                              child.isActive && 'text-primary'
+                            )}
+                          >
+                            {child.name}
+                          </Link>
+                        ))}
+                      </AccordionContent>
+                    </When>
+                  </AccordionItem>
+                )
+              )}
             </Accordion>
           </nav>
         </SheetContent>

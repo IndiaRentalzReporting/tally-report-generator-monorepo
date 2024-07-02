@@ -1,37 +1,29 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
 import { Module } from '@/models';
 import { Button, Input, Label, Switch } from '@/components/ui';
-
-interface State extends Pick<Module, 'name' | 'icon' | 'isPrivate'> {}
-interface IFieldsProps {
-  moduleDetails: State;
-  setModuleDetails: Dispatch<SetStateAction<State>>;
-}
+import { StateAsProps } from './interface';
 
 const iconSchema = z
   .string()
   .startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
   .endsWith('</svg>');
 
-const Fields: React.FC<IFieldsProps> = ({
-  moduleDetails,
-  setModuleDetails
-}) => {
+const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
   const [moduleIcon, setModuleIcon] = React.useState<Module['icon']>(
-    moduleDetails.icon
+    moduleData.icon
   );
   const iconRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => setModuleIcon(moduleDetails.icon), [moduleDetails]);
+  useEffect(() => setModuleIcon(moduleData.icon), [moduleData]);
 
   const renderIcon = async () => {
     const icon = iconRef.current;
     if (!icon) return;
     try {
       const parsedIcon = await iconSchema.parseAsync(moduleIcon);
-      setModuleDetails((prev) => ({ ...prev, icon: parsedIcon }));
+      setModuleData((prev) => ({ ...prev, icon: parsedIcon }));
       icon.innerHTML = parsedIcon;
     } catch (e) {
       // SHOW TOAST
@@ -44,18 +36,18 @@ const Fields: React.FC<IFieldsProps> = ({
           required
           minLength={3}
           placeholder="Module Name"
-          value={moduleDetails.name}
+          value={moduleData.name}
           onChange={(e) =>
-            setModuleDetails((prev) => ({ ...prev, name: e.target.value }))
+            setModuleData((prev) => ({ ...prev, name: e.target.value }))
           }
         />
         <span className="flex gap-4 items-center">
           <Label htmlFor="isPrivate">Private</Label>
           <Switch
-            checked={moduleDetails.isPrivate}
+            checked={moduleData.isPrivate}
             name="isPrivate"
             onCheckedChange={(checked) =>
-              setModuleDetails((prev) => ({ ...prev, isPrivate: checked }))
+              setModuleData((prev) => ({ ...prev, isPrivate: checked }))
             }
           />
         </span>
@@ -70,7 +62,7 @@ const Fields: React.FC<IFieldsProps> = ({
         <div
           ref={iconRef}
           dangerouslySetInnerHTML={{
-            __html: moduleDetails.icon
+            __html: moduleData.icon
           }}
           className="border border-border rounded-md p-2"
         />

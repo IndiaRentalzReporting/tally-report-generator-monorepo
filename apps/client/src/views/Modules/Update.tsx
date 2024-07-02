@@ -1,31 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { Module } from '@/models';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  Button
-} from '@/components/ui';
+import { Button, Skeleton } from '@/components/ui';
 import Fields from './Fields';
 import services from '@/services';
+import { State, initialState } from './interface';
 
-type State = Pick<Module, 'name' | 'isPrivate' | 'icon'>;
-
-const initialState: State = {
-  name: '',
-  isPrivate: false,
-  icon: ''
-};
-
-const Edit: React.FC = () => {
+const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
-  const { id } = useParams<{ id: string }>();
+  const [dataChanged, setDataChanged] = React.useState<boolean>(false);
 
-  const { data: moduleData, isFetching: loadingReadModule } = useQuery({
+  const { data: moduleData, isFetching: loadingModule } = useQuery({
     queryFn: () => services.Modules.getOne(id),
     select: (data) => data.data.module,
     queryKey: ['getOne', 'modules', id]
@@ -37,49 +21,41 @@ const Edit: React.FC = () => {
   }, [moduleData]);
 
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { mutateAsync: updateModule, isPending: loadingUpdateModule } =
-    useMutation({
-      mutationFn: () => services.Modules.updateOne(id, moduleDetails),
-      onSuccess: () => {
-        navigate('/dashboard/Modules');
-        queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-      },
-      onSettled: () => {
-        setModuleDetails(initialState);
-      }
-    });
+  const { mutateAsync: updateModule, isPending: updatingModule } = useMutation({
+    mutationFn: () => services.Modules.updateOne(id, moduleDetails),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
+    },
+    onSettled: () => {
+      setModuleDetails(initialState);
+    }
+  });
+
+  const handleModuleDataChange: Dispatch<SetStateAction<State>> = (
+    newState
+  ) => {
+    if (!dataChanged) setDataChanged(true);
+    setModuleDetails(newState);
+  };
 
   return (
-    <Card className="w-full relative">
-      <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          Edit Module
-        </CardTitle>
-        <CardDescription>Edit details related to this Module</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            updateModule();
-          }}
-          className="flex flex-col gap-4"
-        >
-          <Fields
-            moduleDetails={moduleDetails}
-            setModuleDetails={setModuleDetails}
-          />
-          <Button
-            type="submit"
-            className="w-min mt-2"
-            isLoading={loadingUpdateModule}
-          >
-            Update Module
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        updateModule();
+      }}
+      className="flex flex-col gap-6"
+    >
+      <Skeleton isLoading={loadingModule}>
+        <Fields
+          moduleData={moduleDetails}
+          setModuleData={handleModuleDataChange}
+        />
+      </Skeleton>
+      <Button disabled={!dataChanged} type="submit" isLoading={updatingModule}>
+        Update Module
+      </Button>
+    </form>
   );
 };
 
