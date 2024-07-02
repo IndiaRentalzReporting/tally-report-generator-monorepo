@@ -7,7 +7,8 @@ import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [
   {
-    accessorKey: 'role.name',
+    id: 'Role Name',
+    accessorFn: (row) => row.role.name,
     header: ({ column }) => {
       return (
         <Button
@@ -19,10 +20,12 @@ export const columns: ColumnDef<State>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
-    }
+    },
+    getGroupingValue: (row) => `${row.role.name}}`
   },
   {
-    accessorKey: 'module.name',
+    id: 'Module Name',
+    accessorFn: (row) => row.module.name,
     header: ({ column }) => {
       return (
         <Button
@@ -65,14 +68,14 @@ export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'Actions',
     header: 'Actions',
-    cell: ({ row }) => {
+    aggregatedCell: ({ row }) => {
       const role = row.original;
       return (
         <span className="flex gap-4 items-center">
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.Roles.deleteOne(role.id)
+                mutationFn: () => services.Roles.deleteOne(role.role.id)
               },
               name: role.role.name,
               module: 'Permissions'

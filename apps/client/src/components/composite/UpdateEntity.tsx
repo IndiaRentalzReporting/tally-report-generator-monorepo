@@ -23,12 +23,12 @@ interface IUpdateEntityProps {
 
 export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
   const isEditAllowed = useIsAllowed({
-    module: 'Users',
+    module,
     action: 'Update'
   });
 
   const Component = lazy(() => import(`../../views/${module}/Update`));
-
+  console.log(Component);
   return (
     <If condition={!!isEditAllowed}>
       <Then>
