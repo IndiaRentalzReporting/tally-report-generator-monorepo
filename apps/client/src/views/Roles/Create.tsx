@@ -5,6 +5,7 @@ import services from '@/services';
 import Fields from './Fields';
 import { Button } from '@/components/ui';
 import { State, initialState } from './interface';
+import AssignRole from './AssignRole';
 
 const Create: React.FC = () => {
   const [roleData, setRoleData] = React.useState<State>(initialState);
@@ -37,6 +38,7 @@ const Create: React.FC = () => {
       >
         Create
       </Button>
+      <AssignRole />
     </form>
   );
 };

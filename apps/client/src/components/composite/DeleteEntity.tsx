@@ -29,7 +29,7 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
   const { toast } = useToast();
 
   const isDeleteAllowed = useIsAllowed({
-    module: 'Users',
+    module,
     action: 'Delete'
   });
 
