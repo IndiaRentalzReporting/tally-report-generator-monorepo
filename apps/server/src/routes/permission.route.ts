@@ -1,6 +1,11 @@
 import { Router } from 'express';
 import z from 'zod';
-import { createMany, updateMany } from '../controller/permission.controller';
+import {
+  createMany,
+  readAll,
+  readOne,
+  updateMany
+} from '../controller/permission.controller';
 import { validateSchema } from '../middlewares';
 import {
   ModuleSelectSchema,
@@ -10,6 +15,18 @@ import {
 } from '../models/schema';
 
 const permissionRouter = Router();
+
+permissionRouter.get('/read', readAll);
+
+permissionRouter.get(
+  '/read/:id',
+  validateSchema({
+    params: PermissionSelectSchema.pick({
+      id: true
+    })
+  }),
+  readOne
+);
 
 permissionRouter.post(
   '/create/many',

@@ -3,6 +3,7 @@ import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
   ActionSelect,
+  DetailedPermission,
   ModuleSelect,
   PermissionActionSelect,
   PermissionInsert,
@@ -32,16 +33,77 @@ class PermissionService {
     return permission;
   }
 
+  public static async findAll(): Promise<DetailedPermission[]> {
+    return db.query.PermissionSchema.findMany({
+      with: {
+        module: {
+          columns: {
+            name: true,
+            id: true
+          }
+        },
+        permissionAction: {
+          columns: {
+            action_id: false,
+            permission_id: false
+          },
+          with: {
+            action: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        role: {
+          columns: {
+            name: true,
+            id: true
+          }
+        }
+      }
+    });
+  }
+
   public static async findMany(
     data: Partial<PermissionSelect>
-  ): Promise<PermissionSelect[]> {
+  ): Promise<DetailedPermission[]> {
     const keys = Object.keys(data) as Array<keyof Partial<PermissionSelect>>;
     const values = Object.values(data) as Array<any>;
 
     const permission = await db.query.PermissionSchema.findMany({
       where: and(
         ...keys.map((key, index) => eq(PermissionSchema[key], values[index]))
-      )
+      ),
+      with: {
+        module: {
+          columns: {
+            name: true,
+            id: true
+          }
+        },
+        permissionAction: {
+          columns: {
+            action_id: false,
+            permission_id: false
+          },
+          with: {
+            action: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        role: {
+          columns: {
+            name: true,
+            id: true
+          }
+        }
+      }
     });
 
     return permission;
@@ -49,14 +111,42 @@ class PermissionService {
 
   public static async findOne(
     data: Partial<PermissionSelect>
-  ): Promise<PermissionSelect> {
+  ): Promise<DetailedPermission> {
     const keys = Object.keys(data) as Array<keyof Partial<PermissionSelect>>;
     const values = Object.values(data) as Array<any>;
 
     const permission = await db.query.PermissionSchema.findFirst({
       where: and(
         ...keys.map((key, index) => eq(PermissionSchema[key], values[index]))
-      )
+      ),
+      with: {
+        module: {
+          columns: {
+            name: true,
+            id: true
+          }
+        },
+        permissionAction: {
+          columns: {
+            action_id: false,
+            permission_id: false
+          },
+          with: {
+            action: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        role: {
+          columns: {
+            name: true,
+            id: true
+          }
+        }
+      }
     });
 
     if (!permission) {
