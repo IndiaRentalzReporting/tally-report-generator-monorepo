@@ -11,7 +11,11 @@ import { If, Then, Else } from '../utility';
 import { useIsAllowed } from '@/lib/hooks';
 
 interface IDeleteEntityProps {
-  options: { mutation: UseMutationOptions; name: string; module: string };
+  options: {
+    mutation: UseMutationOptions;
+    name: string;
+    module: string;
+  };
 }
 
 export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
