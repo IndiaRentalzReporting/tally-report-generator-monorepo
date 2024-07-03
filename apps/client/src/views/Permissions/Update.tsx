@@ -1,33 +1,24 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React, { FormEventHandler, useEffect } from 'react';
 import services from '@/services';
-import { Button } from '@/components/ui';
-import { Action, Module, Permission } from '@/models';
+import { Button, Skeleton } from '@/components/ui';
+import { Permission } from '@/models';
 import Fields from './Fields';
-import { ModulePermissions } from './interface';
+import { ModuleAction, ModulePermissions } from './interface';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
-
-interface ModuleAction {
-  module_id: Module['id'];
-  action_ids: Action['id'][];
-}
 
 const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
   const [modulePermissions, setModulePermission] =
     React.useState<ModulePermissions>({});
 
-  const { data: permissions, isFetching: loadingPermissions } = useQuery({
+  const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
     queryFn: () => services.Permissions.getAllOfRole(id),
     select: (data) => data.data.permissions,
     queryKey: ['roles', 'getOne', id]
   });
 
   useEffect(() => {
-    if (!permissions) return;
     const result: ModulePermissions = {};
 
     permissions.forEach((item) => {
@@ -47,15 +38,36 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
     setModulePermission(result);
   }, [permissions]);
 
+  const addPermissionId = (
+    arr: Array<ModuleAction>
+  ): Array<ModuleAction & { permission_id: string }> => {
+    return arr.map((pP) => {
+      const permissionWithSameModuleId = permissions.find(
+        (permission) => permission.module_id === pP.module_id
+      );
+      if (!permissionWithSameModuleId) {
+        throw new Error();
+      }
+      return {
+        ...pP,
+        permission_id: permissionWithSameModuleId.id
+      };
+    });
+  };
+
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
     useMutation({
       mutationFn: () => {
-        const permissions =
-          createPermissionsUsingModulePermissions(modulePermissions);
-        return services.Permissions.createOne({
+        const prettyPermissions: Array<
+          ModuleAction & { permission_id: string }
+        > = addPermissionId(
+          createPermissionsUsingModulePermissions(modulePermissions)
+        );
+
+        return services.Permissions.updateMany({
           role_id: selectedRole,
-          permissions
+          permissions: prettyPermissions
         });
       },
       onSuccess: () => {
@@ -65,20 +77,21 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
       }
     });
 
+  const handleUpdatePermission: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    createPermission();
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        createPermission();
-      }}
-      className="flex flex-col gap-4"
-    >
-      <Fields
-        modulePermissions={modulePermissions}
-        setModulePermissions={setModulePermission}
-        role={id}
-        setRole={setSelectedRole}
-      />
+    <form onSubmit={handleUpdatePermission} className="flex flex-col gap-4">
+      <Skeleton isLoading={loadingPermissions}>
+        <Fields
+          modulePermissions={modulePermissions}
+          setModulePermissions={setModulePermission}
+          role={id}
+          setRole={setSelectedRole}
+        />
+      </Skeleton>
       <Button
         type="submit"
         className="w-min mt-2"

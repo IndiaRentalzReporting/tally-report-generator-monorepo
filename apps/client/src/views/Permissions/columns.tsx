@@ -41,7 +41,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
-    id: 'Permission Actions',
+    id: 'Actions on Modules',
     accessorKey: 'permissionActions',
     header: ({ column }) => {
       return (
@@ -61,14 +61,16 @@ export const columns: ColumnDef<State>[] = [
       return (
         <div className="flex items-center gap-2">
           {actions.map((action) => (
-            <span className="border rounded-full py-2 px-4">{action}</span>
+            <span className="border rounded-full py-2 px-4" key={action}>
+              {action}
+            </span>
           ))}
         </div>
       );
     }
   },
   {
-    id: 'Actions',
+    id: 'Permission Actions',
     accessorKey: 'Actions',
     header: 'Actions',
     aggregatedCell: ({ row }) => {

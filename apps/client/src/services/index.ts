@@ -67,10 +67,6 @@ const services = {
       id: string,
       data: Partial<Role>
     ): AxiosPromise<{ permissions: Permission[] }> => {
-      console.log({
-        id,
-        data
-      });
       return axios.patch(`/roles/update/${id}`, data);
     },
     updateOne: async (data: {
@@ -208,7 +204,7 @@ const services = {
     }> => {
       return axios.get(`/permissions/read/${id}`);
     },
-    createOne: async (data: {
+    createMany: async (data: {
       role_id: Role['id'];
       permissions: {
         module_id: Module['id'];
@@ -222,14 +218,17 @@ const services = {
         role_id: data.role_id
       });
     },
-
-    updateOne: async (
-      id: Permission['id'],
-      data: Partial<Permission>
-    ): AxiosPromise<{
+    updateMany: async (data: {
+      role_id: Role['id'];
+      permissions: {
+        permission_id: Permission['id'];
+        module_id: Module['id'];
+        action_ids: Action['id'][];
+      }[];
+    }): AxiosPromise<{
       permission: Permission;
     }> => {
-      return axios.patch(`/permissions/update/${id}`, data);
+      return axios.patch(`/permissions/update/many`, data);
     },
     deleteOne: async (
       id: Permission['id']

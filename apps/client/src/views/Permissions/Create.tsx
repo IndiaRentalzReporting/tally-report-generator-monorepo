@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import React from 'react';
+import React, { FormEventHandler } from 'react';
 import services from '@/services';
 import { Button } from '@/components/ui';
 import { ModulePermissions } from './interface';
@@ -20,7 +20,7 @@ const Create: React.FC = () => {
       mutationFn: () => {
         const permissions =
           createPermissionsUsingModulePermissions(modulePermissions);
-        return services.Permissions.createOne({
+        return services.Permissions.createMany({
           role_id: selectedRole,
           permissions
         });
@@ -34,14 +34,13 @@ const Create: React.FC = () => {
       }
     });
 
+  const handleCreatePermission: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    createPermission();
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        createPermission();
-      }}
-      className="flex flex-col gap-4"
-    >
+    <form onSubmit={handleCreatePermission} className="flex flex-col gap-4">
       <Fields
         modulePermissions={modulePermissions}
         setModulePermissions={setModulePermission}

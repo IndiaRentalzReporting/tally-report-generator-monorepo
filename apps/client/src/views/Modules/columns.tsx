@@ -69,7 +69,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
-    id: 'Actions',
+    id: 'Module Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const module = row.original;

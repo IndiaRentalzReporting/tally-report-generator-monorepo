@@ -33,8 +33,6 @@ export interface ModuleAction {
 }
 
 export interface StateAsProps {
-  // permissionsData: State;
-  // setPermissionsData: Dispatch<SetStateAction<State>>;
   role?: RoleState['name'];
   setRole?: Dispatch<SetStateAction<RoleState['name']>>;
   modulePermissions: ModulePermissions;

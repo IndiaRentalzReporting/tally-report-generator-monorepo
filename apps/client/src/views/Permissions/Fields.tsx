@@ -41,6 +41,16 @@ const Fields: React.FC<StateAsProps> = ({
     queryKey: ['modules', 'getAll']
   });
 
+  useEffect(() => {
+    if (!modules) return;
+    const columnData = modules.map(({ name: module_name, id: module_id }) => ({
+      module_name,
+      module_id
+    }));
+
+    setTableData(columnData);
+  }, [modules]);
+
   const { data: allRolesWithNoPermission, isFetching: fetchingRoles } =
     useQuery({
       queryFn: async () => services.Roles.getAll(),
@@ -50,14 +60,6 @@ const Fields: React.FC<StateAsProps> = ({
         ),
       queryKey: ['roles', 'getAll']
     });
-
-  const { data: actions, isFetching: fetchingActions } = useQuery({
-    queryFn: () => services.Actions.getAll(),
-    select(data) {
-      return data.data.actions;
-    },
-    queryKey: ['actions', 'getAll']
-  });
 
   const handlePermissionChange = (
     checked: boolean,
@@ -73,10 +75,18 @@ const Fields: React.FC<StateAsProps> = ({
     }));
   };
 
+  const { data: actions, isFetching: fetchingActions } = useQuery({
+    queryFn: () => services.Actions.getAll(),
+    select(data) {
+      return data.data.actions;
+    },
+    queryKey: ['actions', 'getAll']
+  });
+
   useEffect(() => {
     if (!actions) return;
     const actionColumns = actions.map<ColumnDef<ColumnData>>((action) => ({
-      id: 'Action',
+      id: `Action${action.id}`,
       header: action.name.toUpperCase(),
       // eslint-disable-next-line react/no-unstable-nested-components
       cell: ({
@@ -89,10 +99,6 @@ const Fields: React.FC<StateAsProps> = ({
         if (module) {
           isCheckedByDefault = module[action.id] ?? false;
         }
-        console.log({
-          modulePermissions,
-          isCheckedByDefault
-        });
         return (
           <Switch
             checked={!!isCheckedByDefault}
@@ -111,16 +117,6 @@ const Fields: React.FC<StateAsProps> = ({
       ...actionColumns
     ]);
   }, [actions, modulePermissions]);
-
-  useEffect(() => {
-    if (!modules) return;
-    const columnData = modules.map(({ name: module_name, id: module_id }) => ({
-      module_name,
-      module_id
-    }));
-
-    setTableData(columnData);
-  }, [modules]);
 
   return (
     <>

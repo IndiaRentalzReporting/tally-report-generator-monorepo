@@ -1,4 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React, {
+  Dispatch,
+  FormEventHandler,
+  SetStateAction,
+  useEffect
+} from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Skeleton } from '@/components/ui';
 import Fields from './Fields';
@@ -25,8 +30,6 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
     mutationFn: () => services.Modules.updateOne(id, moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-    },
-    onSettled: () => {
       setModuleDetails(initialState);
     }
   });
@@ -38,14 +41,13 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
     setModuleDetails(newState);
   };
 
+  const handleUpdateModule: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    updateModule();
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        updateModule();
-      }}
-      className="flex flex-col gap-6"
-    >
+    <form onSubmit={handleUpdateModule} className="flex flex-col gap-6">
       <Skeleton isLoading={loadingModule}>
         <Fields
           moduleData={moduleDetails}
