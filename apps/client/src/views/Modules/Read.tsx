@@ -19,10 +19,6 @@ const ReadModule: React.FC = () => {
     queryKey: ['modules', 'getAll']
   });
 
-  console.log({
-    columns,
-    allModules
-  });
   return (
     <Card>
       <CardHeader>

@@ -19,12 +19,12 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
-    ...mutation,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [module.toLowerCase(), 'getAll']
       });
-    }
+    },
+    ...mutation
   });
   const { toast } = useToast();
 

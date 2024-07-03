@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { ChangeEventHandler, FormEventHandler } from 'react';
+import React from 'react';
 import { DataTable } from '@/components/composite/table/data-table';
 import {
-  Card,
   CardHeader,
   CardTitle,
   CardContent,
@@ -16,10 +15,11 @@ import {
   SelectLabel,
   SelectItem,
   CardDescription,
+  Card,
   Checkbox
 } from '@/components/ui';
 import services from '@/services';
-import { userColumnsWithSelection } from './columns';
+import { columnsWithSelection as columns } from './columns';
 
 const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
@@ -60,12 +60,12 @@ const AssignRole: React.FC = () => {
     });
 
   return (
-    <div className="w-full">
-      <CardHeader className="px-0">
+    <Card>
+      <CardHeader>
         <CardTitle>Assign Role</CardTitle>
         <CardDescription>Select a Role to assign to users</CardDescription>
       </CardHeader>
-      <CardContent className="p-0">
+      <CardContent>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -92,7 +92,7 @@ const AssignRole: React.FC = () => {
           </Select>
           <Skeleton isLoading={fetchingRoles}>
             <DataTable
-              columns={userColumnsWithSelection}
+              columns={columns}
               data={allUsers}
               selection={{
                 rowSelection,
@@ -109,7 +109,7 @@ const AssignRole: React.FC = () => {
           </Button>
         </form>
       </CardContent>
-    </div>
+    </Card>
   );
 };
 

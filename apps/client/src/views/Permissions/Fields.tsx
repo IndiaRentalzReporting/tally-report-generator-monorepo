@@ -124,7 +124,7 @@ const Fields: React.FC<StateAsProps> = ({
 
   return (
     <>
-      <Select onValueChange={setRole} defaultValue={role ?? ''} required>
+      <Select onValueChange={setRole} value={role} required>
         <SelectTrigger>
           <SelectValue placeholder="Select a Role" />
         </SelectTrigger>

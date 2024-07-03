@@ -8,6 +8,7 @@ import { Button } from '@/components/ui';
 import { Action, Module, Permission } from '@/models';
 import Fields from './Fields';
 import { ModulePermissions } from './interface';
+import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
 
 interface ModuleAction {
   module_id: Module['id'];
@@ -50,18 +51,8 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
     useMutation({
       mutationFn: () => {
-        const permissions: Array<ModuleAction> = [];
-        for (const module_id in modulePermissions) {
-          const module = modulePermissions[module_id];
-          const p: ModuleAction = {
-            module_id,
-            action_ids: []
-          };
-          if (module)
-            for (const action_id in module)
-              if (module[action_id]) p.action_ids.push(action_id);
-          permissions.push(p);
-        }
+        const permissions =
+          createPermissionsUsingModulePermissions(modulePermissions);
         return services.Permissions.createOne({
           role_id: selectedRole,
           permissions

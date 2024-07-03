@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import services from '@/services';
@@ -40,6 +41,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
+    id: 'Permission Actions',
     accessorKey: 'permissionActions',
     header: ({ column }) => {
       return (
@@ -66,6 +68,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
+    id: 'Actions',
     accessorKey: 'Actions',
     header: 'Actions',
     aggregatedCell: ({ row }) => {

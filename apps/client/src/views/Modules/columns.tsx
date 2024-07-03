@@ -8,6 +8,7 @@ import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [
   {
+    id: 'Module Name',
     accessorKey: 'name',
     header: ({ column }) => {
       return (
@@ -23,6 +24,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
+    id: 'Module Privacy',
     accessorKey: 'isPrivate',
     header: ({ column }) => {
       return (
@@ -48,6 +50,7 @@ export const columns: ColumnDef<State>[] = [
     )
   },
   {
+    id: 'Module Icon',
     accessorKey: 'icon',
     header: 'Icon',
     cell: ({ cell }) => {
@@ -66,7 +69,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
-    id: 'Module Actions',
+    id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const module = row.original;
