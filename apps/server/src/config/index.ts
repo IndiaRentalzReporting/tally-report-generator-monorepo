@@ -19,7 +19,12 @@ const {
   DEVELOPER_FIRST_NAME,
   DEVELOPER_LAST_NAME,
   DEVELOPER_EMAIL,
-  DEVELOPER_PASSWORD
+  DEVELOPER_PASSWORD,
+  SMTP_SECRET = '',
+  SMTP_PASS = '',
+  SMTP_HOST = '',
+  SMTP_PORT = '',
+  SMTP_USER = ''
 } = process.env;
 const config = {
   app: {
@@ -43,6 +48,13 @@ const config = {
   },
   session: {
     SESSION_SECRET
+  },
+  emailing: {
+    SMTP_HOST,
+    SMTP_PASS,
+    SMTP_PORT,
+    SMTP_SECRET,
+    SMTP_USER
   }
 };
 

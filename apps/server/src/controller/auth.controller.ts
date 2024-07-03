@@ -1,20 +1,54 @@
 import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 import AuthService from '../services/AuthService';
 import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import { UnauthenticatedError } from '../errors';
+import config from '../config';
+import { sendMail, transporter } from '../mailing';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
-  res: Response<Omit<UserSelect, 'password'>>,
+  res: Response,
   next: NextFunction
 ) => {
   try {
-    const user = await AuthService.signUp(req.body);
-    return res.json(user);
+    await AuthService.signUp(req.body);
+    next();
   } catch (err) {
     console.error(`Could not sign up the User`);
     return next(err);
   }
+};
+
+export const sendEmailConfirmation = (
+  req: Request<object, object, UserInsert>,
+  res: Response<{ user: Omit<UserSelect, 'password'> | undefined }>,
+  next: NextFunction
+) => {
+  if (req.isUnauthenticated() || !req.user) {
+    const err = new UnauthenticatedError('You are not authenticated');
+    return next(err);
+  }
+
+  const { SMTP_SECRET, SMTP_USER } = config.emailing;
+  jwt.sign(
+    {
+      user: req.user.id
+    },
+    SMTP_SECRET,
+    { expiresIn: '1d' },
+    (err, emailToken) => {
+      const mailOptions = {
+        from: `"Nodemailer Contact" <${SMTP_USER}>`,
+        to: 'oiq77375@ilebi.com',
+        subject: 'Node Contact Request',
+        text: 'Hello world?',
+        html: `https://localhost:4000/auth/confirmation/${emailToken}`
+      };
+
+      sendMail(mailOptions, res.json({ user: req.user }));
+    }
+  );
 };
 
 export const handleSignIn = async (
@@ -68,7 +102,6 @@ export const handleStatusCheck = (
         user: userWithoutPassword,
         isAuthenticated: true
       });
-      return;
     }
     return res.json({
       user: null,
