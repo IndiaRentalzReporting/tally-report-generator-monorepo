@@ -1,33 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Button, Skeleton } from '@/components/ui';
+import React, {
+  Dispatch,
+  FormEventHandler,
+  SetStateAction,
+  useEffect,
+  useState
+} from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { TrashIcon } from 'lucide-react';
+import { Button, Input, Label, Skeleton } from '@/components/ui';
 import services from '@/services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const [registerData, setRegisterData] = useState<State>(initialState);
+  const queryClient = useQueryClient();
+  const [updatedUser, setUpdatedUser] = useState<State>(initialState);
+  const [dataUpdated, setDataUpdated] = useState<boolean>(false);
 
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.Users.getOne(id),
     select: (data) => data.data.user,
-    queryKey: ['getOne', 'users', id]
+    queryKey: ['users', 'getOne', id]
+  });
+
+  const { mutateAsync: deleteRole } = useMutation({
+    mutationFn: () =>
+      services.Users.updateOne(id, {
+        ...userData,
+        role_id: null
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+    }
+  });
+
+  const { mutateAsync: updateUser } = useMutation({
+    mutationFn: () => services.Users.updateOne(id, updatedUser),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
+      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+    }
   });
 
   useEffect(() => {
     if (!userData) return;
-    setRegisterData({ ...userData, password: '' });
+    setUpdatedUser({ ...userData, password: '' });
   }, [userData]);
 
+  const handleUserUpdate: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    updateUser();
+  };
+
+  const handleUserDataChange: Dispatch<SetStateAction<State>> = (newState) => {
+    if (!dataUpdated) setDataUpdated(true);
+    setUpdatedUser(newState);
+  };
+
   return (
-    <form
-      // onSubmit={handleSignUp}
-      className="grid gap-4"
-    >
+    <form onSubmit={handleUserUpdate} className="grid gap-4">
       <Skeleton isLoading={loadingUser}>
-        <Fields userData={registerData} setUserData={setRegisterData} />
+        <Fields userData={updatedUser} setUserData={handleUserDataChange} />
       </Skeleton>
-      <Button type="submit">Update</Button>
+      <div className="flex items-center gap-2">
+        <Label htmlFor="role">Role</Label>
+        <Input
+          disabled
+          id="role"
+          name="role"
+          value={userData?.role?.name}
+          placeholder="--"
+          required
+        />
+        <TrashIcon
+          className="text-red-500 cursor-pointer"
+          onClick={() => deleteRole()}
+        />
+      </div>
+      <Button
+        type="submit"
+        disabled={!dataUpdated}
+        onClick={() => updateUser()}
+      >
+        Update
+      </Button>
     </form>
   );
 };

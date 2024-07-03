@@ -1,5 +1,4 @@
 import React from 'react';
-import { Label } from '@radix-ui/react-label';
 import { Input } from '@/components/ui';
 import { StateAsProps } from './interface';
 
@@ -8,7 +7,6 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => {
     <div className="flex flex-col gap-4">
       <div className="flex w-full gap-4">
         <div className="flex-grow">
-          <Label htmlFor="first-name">First name</Label>
           <Input
             id="first-name"
             name="first_name"
@@ -21,7 +19,6 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => {
           />
         </div>
         <div className="flex-grow">
-          <Label htmlFor="last-name">Last name</Label>
           <Input
             id="last-name"
             name="last_name"
@@ -34,7 +31,6 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => {
           />
         </div>
       </div>
-      <Label htmlFor="email">Email</Label>
       <Input
         id="email"
         type="email"
@@ -46,7 +42,6 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => {
         placeholder="m@example.com"
         required
       />
-      <Label htmlFor="last-name">Password</Label>
       <Input
         type="password"
         id="password"

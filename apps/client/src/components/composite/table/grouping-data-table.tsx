@@ -8,11 +8,16 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  useReactTable
+  useReactTable,
+  getExpandedRowModel,
+  getGroupedRowModel,
+  GroupingState
 } from '@tanstack/react-table';
 
 import React from 'react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -29,14 +34,22 @@ interface DataTableProps<TData, TValue> {
     rowSelection: RowSelectionState | null;
     setRowSelection: OnChangeFn<RowSelectionState>;
   };
+  grouping?: {
+    grouping: GroupingState | null;
+    setGrouping: OnChangeFn<GroupingState>;
+  };
 }
 
-export const DataTable = <TData, TValue>({
+export const GroupingDataTable = <TData, TValue>({
   columns,
   data,
   selection = {
     rowSelection: null,
     setRowSelection: () => null
+  },
+  grouping = {
+    grouping: null,
+    setGrouping: () => null
   }
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -47,8 +60,12 @@ export const DataTable = <TData, TValue>({
     onRowSelectionChange: selection.setRowSelection,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onGroupingChange: grouping.setGrouping,
+    getGroupedRowModel: getGroupedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     state: {
       sorting,
+      grouping: grouping.grouping ?? [],
       rowSelection: selection.rowSelection ?? {}
     }
   });
@@ -63,12 +80,10 @@ export const DataTable = <TData, TValue>({
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                     </TableHead>
                   );
                 })}
@@ -82,17 +97,39 @@ export const DataTable = <TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => {
-                    console.log(cell);
-                    return (
-                      <TableCell key={cell.id}>
-                        {flexRender(
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {cell.getIsGrouped() ? (
+                        // If it's a grouped cell, add an expander and row count
+                        <Button
+                          variant="ghost"
+                          onClick={row.getToggleExpandedHandler()}
+                          className="gap-2"
+                        >
+                          {row.getIsExpanded() ? <ArrowDown /> : <ArrowRight />}{' '}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}{' '}
+                          ({row.subRows.length})
+                        </Button>
+                      ) : cell.getIsAggregated() ? (
+                        // If the cell is aggregated, use the Aggregated
+                        // renderer for cell
+                        flexRender(
+                          cell.column.columnDef.aggregatedCell ??
+                            cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
+                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                        // Otherwise, just render the regular cell
+                        flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
-                        )}
-                      </TableCell>
-                    );
-                  })}
+                        )
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (

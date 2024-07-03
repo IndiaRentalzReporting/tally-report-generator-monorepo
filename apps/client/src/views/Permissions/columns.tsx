@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import services from '@/services';
@@ -7,7 +8,8 @@ import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [
   {
-    accessorKey: 'role.name',
+    id: 'Role Name',
+    accessorFn: (row) => row.role.name,
     header: ({ column }) => {
       return (
         <Button
@@ -19,10 +21,12 @@ export const columns: ColumnDef<State>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
-    }
+    },
+    getGroupingValue: (row) => `${row.role.name}}`
   },
   {
-    accessorKey: 'module.name',
+    id: 'Module Name',
+    accessorFn: (row) => row.module.name,
     header: ({ column }) => {
       return (
         <Button
@@ -37,6 +41,7 @@ export const columns: ColumnDef<State>[] = [
     }
   },
   {
+    id: 'Actions on Modules',
     accessorKey: 'permissionActions',
     header: ({ column }) => {
       return (
@@ -56,23 +61,26 @@ export const columns: ColumnDef<State>[] = [
       return (
         <div className="flex items-center gap-2">
           {actions.map((action) => (
-            <span className="border rounded-full py-2 px-4">{action}</span>
+            <span className="border rounded-full py-2 px-4" key={action}>
+              {action}
+            </span>
           ))}
         </div>
       );
     }
   },
   {
+    id: 'Permission Actions',
     accessorKey: 'Actions',
     header: 'Actions',
-    cell: ({ row }) => {
+    aggregatedCell: ({ row }) => {
       const role = row.original;
       return (
         <span className="flex gap-4 items-center">
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.Roles.deleteOne(role.id)
+                mutationFn: () => services.Roles.deleteOne(role.role.id)
               },
               name: role.role.name,
               module: 'Permissions'

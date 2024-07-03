@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
-import { User } from '@/models';
+import { DetailedUser, User } from '@/models';
 
 export interface State
-  extends Pick<User, 'id' | 'first_name' | 'last_name' | 'email'> {
+  extends Pick<
+    DetailedUser,
+    'id' | 'first_name' | 'last_name' | 'email' | 'role'
+  > {
   password: string;
 }
 
@@ -11,7 +14,8 @@ export const initialState: State = {
   email: '',
   password: '',
   first_name: '',
-  last_name: ''
+  last_name: '',
+  role: null
 };
 
 export interface StateAsProps {

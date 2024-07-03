@@ -1,13 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Checkbox } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import services from '@/services';
 import { State } from './interface';
-
-import { DetailedUser } from '@/models';
-import { When } from '@/components/utility';
 
 export const columns: ColumnDef<State>[] = [
   {
@@ -29,19 +25,19 @@ export const columns: ColumnDef<State>[] = [
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
-      const role = row.original;
+      const action = row.original;
       return (
         <span className="flex gap-4 items-center">
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.Roles.deleteOne(role.id)
+                mutationFn: () => services.Actions.deleteOne(action.id)
               },
-              name: role.name,
-              module: 'Roles'
+              name: action.name,
+              module: 'Actions'
             }}
           />
-          <UpdateEntity module="Roles" id={role.id} />
+          <UpdateEntity module="Actions" id={action.id} />
         </span>
       );
     }

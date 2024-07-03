@@ -1,4 +1,4 @@
-import services from '@/services';
+import { Action } from '..';
 
 export interface Module {
   name: string;

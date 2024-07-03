@@ -11,7 +11,11 @@ import { If, Then, Else } from '../utility';
 import { useIsAllowed } from '@/lib/hooks';
 
 interface IDeleteEntityProps {
-  options: { mutation: UseMutationOptions; name: string; module: string };
+  options: {
+    mutation: UseMutationOptions;
+    name: string;
+    module: string;
+  };
 }
 
 export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
@@ -19,17 +23,17 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
-    ...mutation,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [module.toLowerCase(), 'getAll']
       });
-    }
+    },
+    ...mutation
   });
   const { toast } = useToast();
 
   const isDeleteAllowed = useIsAllowed({
-    module: 'Users',
+    module,
     action: 'Delete'
   });
 

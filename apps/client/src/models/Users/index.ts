@@ -8,7 +8,7 @@ export interface User {
   first_name: string;
   last_name: string;
   email: string;
-  role_id: string;
+  role_id: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

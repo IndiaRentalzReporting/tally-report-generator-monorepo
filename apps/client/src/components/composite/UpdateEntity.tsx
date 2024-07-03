@@ -23,12 +23,11 @@ interface IUpdateEntityProps {
 
 export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
   const isEditAllowed = useIsAllowed({
-    module: 'Users',
+    module,
     action: 'Update'
   });
 
   const Component = lazy(() => import(`../../views/${module}/Update`));
-
   return (
     <If condition={!!isEditAllowed}>
       <Then>
@@ -50,9 +49,9 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
 
             <DrawerFooter className="px-0">
               <DrawerClose>
-                <Button variant="outline" className="w-full">
-                  Cancel
-                </Button>
+                {/* <Button variant="outline" className="w-full"> */}
+                Cancel
+                {/* </Button> */}
               </DrawerClose>
             </DrawerFooter>
           </DrawerContent>

@@ -23,14 +23,14 @@ export const readAll = async (
   }
 };
 
-export const readOne = async (
-  req: Request<{ id: string }>,
+export const readAllOfRole = async (
+  req: Request<{ role_id: string }>,
   res: Response<{ permissions: DetailedPermission[] }>,
   next: NextFunction
 ) => {
   try {
     const permissions = await PermissionService.findMany({
-      role_id: req.params.id
+      role_id: req.params.role_id
     });
     res.json({ permissions });
   } catch (e) {

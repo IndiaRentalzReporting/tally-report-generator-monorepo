@@ -14,8 +14,6 @@ const CreateModule: React.FC = () => {
       mutationFn: () => services.Modules.createOne(moduleDetails),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-      },
-      onSettled: () => {
         setModuleDetails(initialState);
       }
     });

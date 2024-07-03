@@ -47,9 +47,9 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
 
           <DrawerFooter className="px-0">
             <DrawerClose>
-              <Button variant="outline" className="w-full">
-                Cancel
-              </Button>
+              {/* <Button variant="outline" className="w-full"> */}
+              Cancel
+              {/* </Button> */}
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
