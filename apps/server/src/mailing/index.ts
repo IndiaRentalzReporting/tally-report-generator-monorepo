@@ -1,28 +1,23 @@
 import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import Mail from 'nodemailer/lib/mailer';
 import config from '../config';
 
-const { SMTP_SECRET, SMTP_USER, SMTP_HOST, SMTP_PASS, SMTP_PORT } =
-  config.emailing;
+const { SMTP_USER, SMTP_HOST, SMTP_PASS, SMTP_PORT } = config.emailing;
 
-export const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
+const transporter = nodemailer.createTransport({
+  host: SMTP_HOST,
+  port: SMTP_PORT,
+  secure: false,
   auth: {
-    user: 'connor.kuvalis64@ethereal.email',
-    pass: 'Fak9WprCUvZ2BeFbeH'
+    user: SMTP_USER,
+    pass: SMTP_PASS
   },
-  tls: {
-    rejectUnauthorized: false
-  }
+  debug: true,
+  logger: true
 });
 
-export const sendMail = (mailOptions: Object, callback: any) =>
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      return console.log(error);
-    }
-    console.log('Message sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-
-    callback();
-  });
+export const sendMail = (
+  mailOptions: Mail.Options,
+  callback: (err: Error | null, info: SMTPTransport.SentMessageInfo) => void
+) => transporter.sendMail(mailOptions, callback);

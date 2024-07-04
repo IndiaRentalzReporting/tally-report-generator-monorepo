@@ -4,7 +4,7 @@ import AuthService from '../services/AuthService';
 import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import { UnauthenticatedError } from '../errors';
 import config from '../config';
-import { sendMail, transporter } from '../mailing';
+import { sendMail } from '../mailing';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
@@ -22,31 +22,33 @@ export const handleSignUp = async (
 
 export const sendEmailConfirmation = (
   req: Request<object, object, UserInsert>,
-  res: Response<{ user: Omit<UserSelect, 'password'> | undefined }>,
+  res: Response<{ msg: string }>,
   next: NextFunction
 ) => {
-  if (req.isUnauthenticated() || !req.user) {
-    const err = new UnauthenticatedError('You are not authenticated');
-    return next(err);
-  }
-
-  const { SMTP_SECRET, SMTP_USER } = config.emailing;
+  const { SMTP_SECRET } = config.emailing;
   jwt.sign(
     {
-      user: req.user.id
+      user: req.body.id
     },
     SMTP_SECRET,
     { expiresIn: '1d' },
     (err, emailToken) => {
       const mailOptions = {
-        from: `"Nodemailer Contact" <${SMTP_USER}>`,
-        to: 'oiq77375@ilebi.com',
+        from: `info@demomailtrap.com`,
+        to: req.body.email,
         subject: 'Node Contact Request',
-        text: 'Hello world?',
-        html: `https://localhost:4000/auth/confirmation/${emailToken}`
+        text: `https://localhost:4000/auth/confirmation/${emailToken}`
       };
 
-      sendMail(mailOptions, res.json({ user: req.user }));
+      sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error(`Error: ${error}`);
+          next(error);
+        } else {
+          console.log('Mail sent!');
+          res.json({ msg: 'email sent' });
+        }
+      });
     }
   );
 };

@@ -4,7 +4,8 @@ import {
   handleSignUp,
   handleSignIn,
   handleStatusCheck,
-  handleLogout
+  handleLogout,
+  sendEmailConfirmation
 } from '../controller/auth.controller';
 import { authenticate, validateSchema } from '../middlewares';
 
@@ -25,10 +26,12 @@ authRouter.post(
     body: UserInsertSchema.omit({
       id: true,
       createdAt: true,
-      updatedAt: true
+      updatedAt: true,
+      role_id: true
     })
   }),
-  handleSignUp
+  // handleSignUp,
+  sendEmailConfirmation
 );
 
 authRouter.post('/sign-out', handleLogout);

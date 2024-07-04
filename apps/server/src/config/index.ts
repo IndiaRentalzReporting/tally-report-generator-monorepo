@@ -43,7 +43,7 @@ const config = {
     PG_URL: `postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_DATABASE}${NODE_ENV !== 'development' ? '?sslmode=require' : ''}`
   },
   server: {
-    PORT,
+    PORT: Number(PORT),
     NODE_ENV: NODE_ENV as env
   },
   session: {
@@ -52,7 +52,7 @@ const config = {
   emailing: {
     SMTP_HOST,
     SMTP_PASS,
-    SMTP_PORT,
+    SMTP_PORT: Number(SMTP_PORT),
     SMTP_SECRET,
     SMTP_USER
   }
