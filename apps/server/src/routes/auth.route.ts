@@ -6,7 +6,6 @@ import {
   handleSignIn,
   handleStatusCheck,
   handleLogout,
-  sendEmailConfirmation,
   createNewPassword
 } from '../controller/auth.controller';
 import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
@@ -33,14 +32,18 @@ authRouter.post(
       password: true
     })
   }),
-  // isAuthenticated,
-  // handleSignUp,
-  sendEmailConfirmation
+  isAuthenticated,
+  handleSignUp
 );
 
 authRouter.post(
   '/create-password/:token',
   validateSchema({
+    body: UserInsertSchema.pick({
+      password: true
+    }).extend({
+      confirm_password: z.string()
+    }),
     params: z
       .object({
         token: z.string()

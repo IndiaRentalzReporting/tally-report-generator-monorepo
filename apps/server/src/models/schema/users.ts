@@ -34,7 +34,8 @@ export const UserSchema = pgTable('users', {
   updatedAt: timestamp('updatedAt', { mode: 'date', precision: 3 })
     .defaultNow()
     .notNull()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => new Date()),
+  is_confirmed: boolean('is_confirmed').default(false)
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;
