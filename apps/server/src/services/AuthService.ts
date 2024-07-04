@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 import { BadRequestError, CustomError, NotFoundError } from '../errors';
 import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
@@ -11,14 +12,13 @@ class AuthService {
       email: data.email
     });
 
-    console.log(doesUserAlreadyExists);
-
     if (doesUserAlreadyExists != null) {
       throw new CustomError('User Already Exists', 409);
     }
+
     return UserService.createOne({
       ...data,
-      password: await this.hashPassword(data.password)
+      password: await this.generateTempHashedPassword(8)
     });
   }
 
@@ -52,6 +52,11 @@ class AuthService {
   ): Promise<boolean> {
     const doesPasswordMatch = await bcrypt.compare(password, hash);
     return doesPasswordMatch;
+  }
+
+  static async generateTempHashedPassword(length: number): Promise<string> {
+    const randomPassword = randomBytes(length).toString('hex').slice(0, length);
+    return this.hashPassword(randomPassword);
   }
 }
 

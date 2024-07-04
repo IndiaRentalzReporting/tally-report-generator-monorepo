@@ -1,13 +1,15 @@
 import { Router } from 'express';
+import * as z from 'zod';
 import { UserInsertSchema } from '../models/schema';
 import {
   handleSignUp,
   handleSignIn,
   handleStatusCheck,
   handleLogout,
-  sendEmailConfirmation
+  sendEmailConfirmation,
+  createNewPassword
 } from '../controller/auth.controller';
-import { authenticate, validateSchema } from '../middlewares';
+import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
 
 const authRouter = Router();
 
@@ -27,11 +29,27 @@ authRouter.post(
       id: true,
       createdAt: true,
       updatedAt: true,
-      role_id: true
+      role_id: true,
+      password: true
     })
   }),
+  // isAuthenticated,
   // handleSignUp,
   sendEmailConfirmation
+);
+
+authRouter.post(
+  '/create-password/:token',
+  validateSchema({
+    params: z
+      .object({
+        token: z.string()
+      })
+      .pick({
+        token: true
+      })
+  }),
+  createNewPassword
 );
 
 authRouter.post('/sign-out', handleLogout);

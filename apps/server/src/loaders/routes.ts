@@ -5,10 +5,15 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
-import { attachModuleActionData, isRoleAllowed } from '../middlewares';
+import {
+  attachModuleActionData,
+  isAuthenticated,
+  isRoleAllowed
+} from '../middlewares';
 
 const routesLoader = (app: Express) => {
   app.use('/auth', authRouter);
+  app.use(isAuthenticated);
   app.use(attachModuleActionData);
   app.use(isRoleAllowed);
   app.use('/roles', roleRouter);

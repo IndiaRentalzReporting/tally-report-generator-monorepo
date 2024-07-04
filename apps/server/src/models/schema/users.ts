@@ -1,4 +1,11 @@
-import { timestamp, varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
+import {
+  timestamp,
+  varchar,
+  uuid,
+  pgTable,
+  pgEnum,
+  boolean
+} from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSelect } from './permissions';

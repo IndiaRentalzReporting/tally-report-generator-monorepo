@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { decode } from 'punycode';
 import AuthService from '../services/AuthService';
-import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
+import { UserInsert, DetailedUser } from '../models/schema';
 import { UnauthenticatedError } from '../errors';
 import config from '../config';
 import { sendMail } from '../mailing';
+
+interface IToken extends jwt.JwtPayload {
+  email: string;
+}
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
@@ -28,7 +33,7 @@ export const sendEmailConfirmation = (
   const { SMTP_SECRET } = config.emailing;
   jwt.sign(
     {
-      user: req.body.id
+      email: req.body.email
     },
     SMTP_SECRET,
     { expiresIn: '1d' },
@@ -37,7 +42,7 @@ export const sendEmailConfirmation = (
         from: `info@demomailtrap.com`,
         to: req.body.email,
         subject: 'Node Contact Request',
-        text: `https://localhost:4000/auth/confirmation/${emailToken}`
+        text: `https://localhost:4000/auth/create-password/${emailToken}`
       };
 
       sendMail(mailOptions, (error, info) => {
@@ -51,6 +56,16 @@ export const sendEmailConfirmation = (
       });
     }
   );
+};
+
+export const createNewPassword = (
+  req: Request<{ token: string }, object, UserInsert>,
+  res: Response<{ email: string | jwt.JwtPayload }>,
+  next: NextFunction
+) => {
+  const { SMTP_SECRET } = config.emailing;
+  const { email } = jwt.verify(req.params.token, SMTP_SECRET) as IToken;
+  return res.json({ email });
 };
 
 export const handleSignIn = async (
