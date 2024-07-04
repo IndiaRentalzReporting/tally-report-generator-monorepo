@@ -18,33 +18,23 @@ export const handleSignUp = async (
 ) => {
   try {
     const user = await AuthService.signUp(req.body);
-    const { SMTP_SECRET } = config.emailing;
-    jwt.sign(
-      { id: user.id },
-      SMTP_SECRET,
-      { expiresIn: '1d' },
-      (err, idToken) => {
-        if (err) {
-          throw new CustomError(err.message, 500);
-        }
-        const mailOptions = {
-          from: `info@demomailtrap.com`,
-          to: user.email,
-          subject: 'Node Contact Request',
-          html: `<div>https://localhost:4000/auth/create-password/${idToken} <p>${user.password}</p></div>`
-        };
 
-        sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.error(`Error: ${error}`);
-            next(error);
-          } else {
-            console.log('Mail sent!');
-            res.json({ msg: 'email sent' });
-          }
-        });
+    const mailOptions = {
+      from: `info@demomailtrap.com`,
+      to: user.email,
+      subject: 'Node Contact Request',
+      html: `<div><p>${user.password}</p></div>`
+    };
+
+    sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(`Error: ${error}`);
+        next(error);
+      } else {
+        console.log('Mail sent!');
+        res.json({ msg: 'email sent' });
       }
-    );
+    });
   } catch (err) {
     console.error(`Could not sign up the User`);
     return next(err);
