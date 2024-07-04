@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import AuthService from '../services/AuthService';
 import { UserInsert, DetailedUser, UserSelect } from '../models/schema';
-import { UnauthenticatedError } from '../errors';
+import { CustomError, NotFoundError, UnauthenticatedError } from '../errors';
 import config from '../config';
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
@@ -20,12 +20,13 @@ export const handleSignUp = async (
     const user = await AuthService.signUp(req.body);
     const { SMTP_SECRET } = config.emailing;
     jwt.sign(
-      {
-        id: user.id
-      },
+      { id: user.id },
       SMTP_SECRET,
       { expiresIn: '1d' },
       (err, idToken) => {
+        if (err) {
+          throw new CustomError(err.message, 500);
+        }
         const mailOptions = {
           from: `info@demomailtrap.com`,
           to: user.email,
@@ -50,25 +51,90 @@ export const handleSignUp = async (
   }
 };
 
-export const createNewPassword = async (
+export const forgotPassword = async (
   req: Request<
     { token: string },
     object,
-    Pick<UserInsert, 'password'> & { confirm_password: string }
+    {
+      email: UserSelect['email'];
+    }
   >,
-  res: Response<{ msg: string; user: Omit<UserSelect, 'password'> }>,
+  res: Response<{ message: string }>,
   next: NextFunction
 ) => {
   try {
+    const { email } = req.body;
+    const user = await UserService.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundError('User does not exists');
+    }
+
     const { SMTP_SECRET } = config.emailing;
-    const { id } = jwt.verify(req.params.token, SMTP_SECRET) as IToken;
-    const password = await AuthService.hashPassword(req.body.password);
-    const user = await UserService.updateUser(id, {
-      password
-    });
-    return res.json({ msg: 'password changed succesfully', user });
-  } catch (err) {
-    next(err);
+    jwt.sign(
+      { id: user.id },
+      SMTP_SECRET,
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) {
+          throw new CustomError(err.message, 500);
+        }
+        const resetLink = `https://yourfrontend.com/reset-password/${token}`;
+        const mailOptions = {
+          from: `info@demomailtrap.com`,
+          to: user.email,
+          subject: 'Password Reset Request',
+          text: `Click the following link to reset your password: ${resetLink}`
+        };
+
+        return sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error('Email send error:', error);
+            return next(error);
+          }
+          return res.json({
+            message: 'Password reset link sent to your email'
+          });
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Error in forgot-password route:', error);
+    return next(error);
+  }
+};
+
+export const resetPassword = async (
+  req: Request<
+    { token: string },
+    object,
+    {
+      password: UserSelect['password'];
+      confirm_password: UserSelect['password'];
+    }
+  >,
+  res: Response<{ message: string }>,
+  next: NextFunction
+) => {
+  const { token } = req.params;
+  const { password, confirm_password } = req.body;
+  const { SMTP_SECRET } = config.emailing;
+
+  try {
+    const { id } = jwt.verify(token, SMTP_SECRET) as IToken;
+
+    try {
+      const hashedPassword = await AuthService.hashPassword(password);
+
+      await UserService.updateUser(id, { password: hashedPassword });
+
+      return res.status(200).json({ message: 'Password has been updated' });
+    } catch (error) {
+      console.error('Password update error:', error);
+      return next(error);
+    }
+  } catch (error) {
+    console.error('Token verification error:', error);
   }
 };
 

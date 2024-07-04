@@ -6,7 +6,8 @@ import {
   handleSignIn,
   handleStatusCheck,
   handleLogout,
-  createNewPassword
+  forgotPassword,
+  resetPassword
 } from '../controller/auth.controller';
 import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
 
@@ -37,7 +38,17 @@ authRouter.post(
 );
 
 authRouter.post(
-  '/create-password/:token',
+  '/forgot-password',
+  validateSchema({
+    body: UserInsertSchema.pick({
+      email: true
+    })
+  }),
+  forgotPassword
+);
+
+authRouter.post(
+  '/reset-password/:token',
   validateSchema({
     body: UserInsertSchema.pick({
       password: true
@@ -52,7 +63,7 @@ authRouter.post(
         token: true
       })
   }),
-  createNewPassword
+  resetPassword
 );
 
 authRouter.post('/sign-out', handleLogout);
