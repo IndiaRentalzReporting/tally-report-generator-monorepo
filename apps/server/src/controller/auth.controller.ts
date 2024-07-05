@@ -61,6 +61,7 @@ export const forgotPassword = async (
     }
 
     const { SMTP_SECRET } = config.emailing;
+    const { FRONTEND_URL } = config.server;
     jwt.sign(
       { id: user.id },
       SMTP_SECRET,
@@ -69,7 +70,7 @@ export const forgotPassword = async (
         if (err) {
           throw new CustomError(err.message, 500);
         }
-        const resetLink = `https://yourfrontend.com/reset-password/${token}`;
+        const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
         const mailOptions = {
           from: `info@demomailtrap.com`,
           to: user.email,
