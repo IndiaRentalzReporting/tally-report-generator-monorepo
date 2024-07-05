@@ -14,11 +14,17 @@ import {
   Then,
   Else
 } from './components/utility';
-import { SignupForm, SigninForm, Dashboard, ModuleMapper } from './views';
+import {
+  SignupForm,
+  SigninForm,
+  Dashboard,
+  ModuleMapper,
+  ForgotPassword,
+  ResetPassword
+} from './views';
 import { DashboardLayout, RootLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './providers/AuthProvider';
-import ForgotPassword from './views/ForgotPassword';
 
 const App = () => {
   const { permissions } = useAuth();
@@ -30,6 +36,7 @@ const App = () => {
           <Route path="sign-up" element={<SignupForm />} />
           <Route path="sign-in" element={<SigninForm />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
         </Route>
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>

@@ -35,10 +35,13 @@ const services = {
     }): AxiosPromise<{ message: string }> => {
       return axios.post('/auth/forgot-password', data);
     },
+    check_reset_password: (token: string): AxiosPromise<{ token: string }> => {
+      return axios.post(`/auth/check-reset-password/${token}`);
+    },
     reset_password: (data: {
       token: string;
       password: string;
-      confirm_password: string;
+      confirmPassword: string;
     }): AxiosPromise<{ message: string }> => {
       const { token, ...rest } = data;
       return axios.post(`/auth/reset-password/${token}`, { rest });

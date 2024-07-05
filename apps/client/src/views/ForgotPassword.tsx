@@ -14,7 +14,7 @@ import {
 import services from '@/services';
 import { useToast } from '@/lib/hooks';
 
-const ForgotPassword: FC = () => {
+export const ForgotPassword: FC = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState<string>('');
 
@@ -74,5 +74,3 @@ const ForgotPassword: FC = () => {
     </div>
   );
 };
-
-export default ForgotPassword;
