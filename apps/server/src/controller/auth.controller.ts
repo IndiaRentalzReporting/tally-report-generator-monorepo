@@ -2,7 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import AuthService from '../services/AuthService';
 import { UserInsert, DetailedUser, UserSelect } from '../models/schema';
-import { CustomError, NotFoundError, UnauthenticatedError } from '../errors';
+import {
+  BadRequestError,
+  CustomError,
+  NotFoundError,
+  UnauthenticatedError
+} from '../errors';
 import config from '../config';
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
@@ -65,7 +70,7 @@ export const forgotPassword = async (
     jwt.sign(
       { id: user.id },
       SMTP_SECRET,
-      { expiresIn: '1h' },
+      { expiresIn: '15m' },
       (err, token) => {
         if (err) {
           throw new CustomError(err.message, 500);
@@ -95,20 +100,44 @@ export const forgotPassword = async (
   }
 };
 
+export const checkPasswordResetToken = async (
+  req: Request<{ token: string }>,
+  res: Response<{ token: string | null }>,
+  next: NextFunction
+) => {
+  const { token } = req.params;
+  const { SMTP_SECRET } = config.emailing;
+
+  try {
+    jwt.verify(token, SMTP_SECRET) as IToken;
+    res.json({
+      token
+    });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const resetPassword = async (
   req: Request<
     { token: string },
     object,
     {
       password: UserSelect['password'];
-      confirm_password: UserSelect['password'];
+      confirmPassword: UserSelect['password'];
     }
   >,
   res: Response<{ message: string }>,
   next: NextFunction
 ) => {
   const { token } = req.params;
-  const { password, confirm_password } = req.body;
+  const { password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    throw new BadRequestError('Password does not match');
+  }
+
   const { SMTP_SECRET } = config.emailing;
 
   try {
@@ -126,6 +155,7 @@ export const resetPassword = async (
     }
   } catch (error) {
     console.error('Token verification error:', error);
+    next(error);
   }
 };
 

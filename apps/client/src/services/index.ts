@@ -44,7 +44,7 @@ const services = {
       confirmPassword: string;
     }): AxiosPromise<{ message: string }> => {
       const { token, ...rest } = data;
-      return axios.post(`/auth/reset-password/${token}`, { rest });
+      return axios.post(`/auth/reset-password/${token}`, rest);
     }
   },
   Roles: {

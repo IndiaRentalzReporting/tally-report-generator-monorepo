@@ -83,6 +83,7 @@ export const SigninForm = () => {
                 name="password"
                 type="password"
                 value={loginData.password}
+                placeholder="********"
                 onChange={handleFormChange}
                 required
               />
