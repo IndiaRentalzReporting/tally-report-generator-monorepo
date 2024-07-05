@@ -29,6 +29,19 @@ const services = {
       isAuthenticated: boolean;
     }> => {
       return axios.get(`/auth/status`);
+    },
+    forgot_password: (data: {
+      email: User['email'];
+    }): AxiosPromise<{ message: string }> => {
+      return axios.post('/auth/forgot-password', data);
+    },
+    reset_password: (data: {
+      token: string;
+      password: string;
+      confirm_password: string;
+    }): AxiosPromise<{ message: string }> => {
+      const { token, ...rest } = data;
+      return axios.post(`/auth/reset-password/${token}`, { rest });
     }
   },
   Roles: {
