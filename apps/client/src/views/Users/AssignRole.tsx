@@ -55,6 +55,7 @@ const AssignRole: React.FC = () => {
       },
       onSettled() {
         setSelectedRole('');
+        setRowSelection({});
         queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
       }
     });
