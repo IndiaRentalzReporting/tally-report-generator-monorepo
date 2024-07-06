@@ -18,7 +18,12 @@ const services = {
     signUp: (data: RegisterUser): AxiosPromise<Omit<User, 'password'>> => {
       return axios.post(`/auth/sign-up`, data);
     },
-    signIn: (data: LoginUser): AxiosPromise<Omit<User, 'password'>> => {
+    signIn: (
+      data: LoginUser
+    ): AxiosPromise<{
+      user: Omit<User, 'password'>;
+      resetPasswordLink?: string;
+    }> => {
       return axios.post(`/auth/sign-in`, data);
     },
     signOut: (): AxiosPromise<{ message: string }> => {

@@ -1,20 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
 import AuthService from '../services/AuthService';
 import { UserInsert, DetailedUser, UserSelect } from '../models/schema';
 import {
   BadRequestError,
-  CustomError,
   NotFoundError,
   UnauthenticatedError
 } from '../errors';
-import config from '../config';
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
-
-interface IToken extends jwt.JwtPayload {
-  id: string;
-}
+import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
@@ -31,7 +25,7 @@ export const handleSignUp = async (
       html: `<div><p>${user.password}</p></div>`
     };
 
-    sendMail(mailOptions, (error, info) => {
+    sendMail(mailOptions, (error) => {
       if (error) {
         console.error(`Error: ${error}`);
         next(error);
@@ -46,128 +40,22 @@ export const handleSignUp = async (
   }
 };
 
-export const forgotPassword = async (
-  req: Request<
-    { token: string },
-    object,
-    {
-      email: UserSelect['email'];
-    }
-  >,
-  res: Response<{ message: string }>,
-  next: NextFunction
-) => {
-  try {
-    const { email } = req.body;
-    const user = await UserService.findOne({ email });
-
-    if (!user) {
-      throw new NotFoundError('User does not exists');
-    }
-
-    const { SMTP_SECRET } = config.emailing;
-    const { FRONTEND_URL } = config.server;
-    jwt.sign(
-      { id: user.id },
-      SMTP_SECRET,
-      { expiresIn: '15m' },
-      (err, token) => {
-        if (err) {
-          throw new CustomError(err.message, 500);
-        }
-        const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
-        const mailOptions = {
-          from: `info@demomailtrap.com`,
-          to: user.email,
-          subject: 'Password Reset Request',
-          text: `Click the following link to reset your password: ${resetLink}`
-        };
-
-        return sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.error('Email send error:', error);
-            return next(error);
-          }
-          return res.json({
-            message: 'Password reset link sent to your email'
-          });
-        });
-      }
-    );
-  } catch (error) {
-    console.error('Error in forgot-password route:', error);
-    return next(error);
-  }
-};
-
-export const checkPasswordResetToken = async (
-  req: Request<{ token: string }>,
-  res: Response<{ token: string | null }>,
-  next: NextFunction
-) => {
-  const { token } = req.params;
-  const { SMTP_SECRET } = config.emailing;
-
-  try {
-    jwt.verify(token, SMTP_SECRET) as IToken;
-    res.json({
-      token
-    });
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
-
-export const resetPassword = async (
-  req: Request<
-    { token: string },
-    object,
-    {
-      password: UserSelect['password'];
-      confirmPassword: UserSelect['password'];
-    }
-  >,
-  res: Response<{ message: string }>,
-  next: NextFunction
-) => {
-  const { token } = req.params;
-  const { password, confirmPassword } = req.body;
-
-  if (password !== confirmPassword) {
-    throw new BadRequestError('Password does not match');
-  }
-
-  const { SMTP_SECRET } = config.emailing;
-
-  try {
-    const { id } = jwt.verify(token, SMTP_SECRET) as IToken;
-
-    try {
-      const hashedPassword = await AuthService.hashPassword(password);
-
-      await UserService.updateUser(id, { password: hashedPassword });
-
-      return res.status(200).json({ message: 'Password has been updated' });
-    } catch (error) {
-      console.error('Password update error:', error);
-      return next(error);
-    }
-  } catch (error) {
-    console.error('Token verification error:', error);
-    next(error);
-  }
-};
-
 export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
-  res: Response<{ user: Omit<DetailedUser, 'password'> }>,
+  res: Response<{
+    user: Omit<DetailedUser, 'password'>;
+    resetPasswordLink?: string;
+  }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
       const { password, ...user } = req.user;
-      return res.json({ user });
+      let resetPasswordLink;
+      if (!req.user.is_confirmed) {
+        resetPasswordLink = createResetPasswordLink(req.user);
+      }
+      return res.json({ user, resetPasswordLink });
     }
     throw new UnauthenticatedError('Not logged in');
   } catch (err) {
@@ -201,11 +89,10 @@ export const handleStatusCheck = (
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() && req.user.is_confirmed) {
       const {
         user: { password, ...userWithoutPassword }
       } = req;
-      console.log({ userWithoutPassword });
       return res.json({
         user: userWithoutPassword,
         isAuthenticated: true
@@ -218,5 +105,98 @@ export const handleStatusCheck = (
   } catch (e) {
     console.error(`Couldn't check the status`);
     return next(e);
+  }
+};
+
+export const forgotPassword = async (
+  req: Request<
+    { token: string },
+    object,
+    {
+      email: UserSelect['email'];
+    }
+  >,
+  res: Response<{ message: string }>,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+    const user = await UserService.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundError('User does not exists');
+    }
+    const resetLink = createResetPasswordLink(user, true);
+    const mailOptions = {
+      from: `info@demomailtrap.com`,
+      to: user.email,
+      subject: 'Password Reset Request',
+      text: `Click the following link to reset your password: ${resetLink}`
+    };
+
+    return sendMail(mailOptions, (error) => {
+      if (error) {
+        console.error('Email send error:', error);
+        return next(error);
+      }
+      return res.json({
+        message: 'Password reset link sent to your email'
+      });
+    });
+  } catch (error) {
+    console.error('Error in forgot-password route:', error);
+    return next(error);
+  }
+};
+
+export const checkPasswordResetToken = async (
+  req: Request<{ token: string }>,
+  res: Response<{ token: string | null }>,
+  next: NextFunction
+) => {
+  const { token } = req.params;
+
+  try {
+    const id = await verifyUserJWTToken(token);
+    res.json({
+      token
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetPassword = async (
+  req: Request<
+    { token: string },
+    object,
+    {
+      password: UserSelect['password'];
+      confirmPassword: UserSelect['password'];
+    }
+  >,
+  res: Response<{ message: string }>,
+  next: NextFunction
+) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+    const userId = await verifyUserJWTToken(token);
+
+    if (password !== confirmPassword) {
+      throw new BadRequestError('Password does not match');
+    }
+
+    const hashedPassword = await AuthService.hashPassword(password);
+
+    await UserService.updateUser(userId, {
+      password: hashedPassword,
+      is_confirmed: true
+    });
+
+    return res.status(200).json({ message: 'Password has been updated' });
+  } catch (error) {
+    console.error('Password update error:', error);
+    return next(error);
   }
 };

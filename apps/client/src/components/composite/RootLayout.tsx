@@ -8,7 +8,9 @@ export const RootLayout = () => {
   return (
     <NavigationProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Outlet />
+        <div className="flex flex-col h-screen">
+          <Outlet />
+        </div>
         <Toaster />
       </ThemeProvider>
     </NavigationProvider>

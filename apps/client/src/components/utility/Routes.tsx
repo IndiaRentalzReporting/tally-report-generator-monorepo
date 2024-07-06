@@ -19,16 +19,13 @@ export const PrivateRoutes: React.FC = () => {
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
-
   return (
     <If condition={isAuthenticated ?? false}>
       <Then>
         <Navigate to="/dashboard" />
       </Then>
       <Else>
-        <div className="flex flex-col h-screen">
-          <Outlet />
-        </div>
+        <Outlet />
       </Else>
     </If>
   );

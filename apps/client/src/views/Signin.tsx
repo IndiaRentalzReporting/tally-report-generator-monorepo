@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -15,6 +15,7 @@ import services from '@/services';
 import { LoginUser } from '@/models';
 
 export const SigninForm = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,6 +26,11 @@ export const SigninForm = () => {
 
   const { mutateAsync: signInMutation } = useMutation({
     mutationFn: (data: LoginUser) => services.Authentication.signIn(data),
+    onSuccess: (data) => {
+      if (data.data.resetPasswordLink) {
+        navigate(data.data.resetPasswordLink);
+      }
+    },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       setLoading(false);
