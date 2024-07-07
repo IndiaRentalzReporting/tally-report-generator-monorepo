@@ -25,6 +25,7 @@ const {
   DEVELOPER_EMAIL,
   DEVELOPER_PASSWORD,
 
+  MAIL_FROM = '',
   SMTP_SECRET = '',
   SMTP_PASS = '',
   SMTP_HOST = '',
@@ -61,6 +62,7 @@ const config = {
     SESSION_SECRET
   },
   emailing: {
+    MAIL_FROM,
     SMTP_HOST,
     SMTP_PASS,
     SMTP_PORT: Number(SMTP_PORT),

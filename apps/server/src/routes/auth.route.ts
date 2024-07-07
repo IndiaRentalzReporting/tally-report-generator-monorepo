@@ -25,6 +25,7 @@ authRouter.post(
 
 authRouter.post(
   '/sign-up',
+  isAuthenticated,
   validateSchema({
     body: UserInsertSchema.omit({
       id: true,
@@ -34,7 +35,6 @@ authRouter.post(
       password: true
     })
   }),
-  isAuthenticated,
   handleSignUp
 );
 

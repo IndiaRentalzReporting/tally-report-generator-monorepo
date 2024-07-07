@@ -5,30 +5,18 @@ import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
-  public static async signUp(data: UserInsert): Promise<UserSelect> {
-    // const doesUserAlreadyExists = await UserService.findOne({
-    //   email: data.email
-    // });
-
-    // if (doesUserAlreadyExists != null) {
-    //   throw new CustomError('User Already Exists', 409);
-    // }
-    let password = '';
-    if (!data.password) {
-      password = await this.hashPassword(await this.generateTempPassword(8));
-    } else {
-      password = data.password;
-    }
-
-    const user = await UserService.createOne({
-      ...data,
-      password
+  public static async signUp(
+    data: UserInsert
+  ): Promise<Omit<UserSelect, 'password'>> {
+    const doesUserAlreadyExists = await UserService.findOne({
+      email: data.email
     });
 
-    return {
-      ...user,
-      password
-    };
+    if (doesUserAlreadyExists != null) {
+      throw new BadRequestError('User Already Exists');
+    }
+
+    return UserService.createOne(data);
   }
 
   public static async signIn(

@@ -9,33 +9,38 @@ import {
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
 import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
+import config from '../config';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
-  res: Response,
+  res: Response<{ message: string }>,
   next: NextFunction
 ) => {
   try {
-    const user = await AuthService.signUp(req.body);
+    const tempPassword = await AuthService.generateTempPassword(8);
+    const user = await AuthService.signUp({
+      ...req.body,
+      password: tempPassword
+    });
+
+    const { MAIL_FROM } = config.emailing;
 
     const mailOptions = {
-      from: `info@demomailtrap.com`,
+      from: `info${MAIL_FROM}`,
       to: user.email,
       subject: 'Node Contact Request',
-      html: `<div><p>${user.password}</p></div>`
+      html: `<div><p>${tempPassword}</p></div>`
     };
 
-    sendMail(mailOptions, (error) => {
+    return sendMail(mailOptions, (error) => {
       if (error) {
-        console.error(`Error: ${error}`);
-        next(error);
-      } else {
-        console.log('Mail sent!');
-        res.json({ msg: 'email sent' });
+        console.error(`Error while sending sign up Email: ${error}`);
+        return next(error);
       }
+      return res.json({ message: 'Email Sent!' });
     });
   } catch (err) {
-    console.error(`Could not sign up the User`);
+    console.error(`Could not sign up the User: `, err);
     return next(err);
   }
 };
@@ -109,13 +114,7 @@ export const handleStatusCheck = (
 };
 
 export const forgotPassword = async (
-  req: Request<
-    { token: string },
-    object,
-    {
-      email: UserSelect['email'];
-    }
-  >,
+  req: Request<{ token: string }, object, { email: UserSelect['email'] }>,
   res: Response<{ message: string }>,
   next: NextFunction
 ) => {
@@ -126,19 +125,23 @@ export const forgotPassword = async (
     if (!user) {
       throw new NotFoundError('User does not exists');
     }
+
     const resetLink = createResetPasswordLink(user, true);
+    const { MAIL_FROM } = config.emailing;
+
     const mailOptions = {
-      from: `info@demomailtrap.com`,
+      from: `info${MAIL_FROM}`,
       to: user.email,
       subject: 'Password Reset Request',
       text: `Click the following link to reset your password: ${resetLink}`
     };
 
-    return sendMail(mailOptions, (error) => {
+    return sendMail(mailOptions, async (error) => {
       if (error) {
         console.error('Email send error:', error);
         return next(error);
       }
+      await UserService.updateUser(user?.id, { is_confirmed: false });
       return res.json({
         message: 'Password reset link sent to your email'
       });
@@ -157,7 +160,7 @@ export const checkPasswordResetToken = async (
   const { token } = req.params;
 
   try {
-    const id = await verifyUserJWTToken(token);
+    await verifyUserJWTToken(token);
     res.json({
       token
     });
