@@ -40,7 +40,7 @@ export const UserSchema = pgTable('users', {
     .defaultNow()
     .notNull()
     .$onUpdate(() => new Date()),
-  is_confirmed: isConfirmed('is_confirmed')
+  is_confirmed: isConfirmed('is_confirmed').default('onboarded')
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;
