@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"password" varchar(128) NOT NULL,
 	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
 	"updatedAt" timestamp (3) DEFAULT now() NOT NULL,
-	"is_confirmed" boolean DEFAULT false,
+	"is_confirmed" "is_confirmed",
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

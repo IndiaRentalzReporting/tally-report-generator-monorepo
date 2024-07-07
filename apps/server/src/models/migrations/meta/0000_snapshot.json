@@ -1,5 +1,5 @@
 {
-  "id": "8baaa79e-1a73-4b63-a2b6-484e1e624b90",
+  "id": "4e571ffa-0467-438a-9616-6a3cc390072a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -106,10 +106,10 @@
         },
         "is_confirmed": {
           "name": "is_confirmed",
-          "type": "boolean",
+          "type": "is_confirmed",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false,
-          "default": false
+          "notNull": false
         }
       },
       "indexes": {},

@@ -18,6 +18,11 @@ declare global {
   }
 }
 
+const isConfirmed = pgEnum('is_confirmed', [
+  'onboarded',
+  'authenticated',
+  'unauthenticated'
+]);
 export const UserSchema = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey().notNull(),
   role_id: uuid('role_id').references(() => RoleSchema.id, {
@@ -35,7 +40,7 @@ export const UserSchema = pgTable('users', {
     .defaultNow()
     .notNull()
     .$onUpdate(() => new Date()),
-  is_confirmed: boolean('is_confirmed').default(false)
+  is_confirmed: isConfirmed('is_confirmed')
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;

@@ -57,7 +57,7 @@ export const handleSignIn = async (
     if (req.isAuthenticated()) {
       const { password, ...user } = req.user;
       let resetPasswordLink;
-      if (!req.user.is_confirmed) {
+      if (req.user.is_confirmed === 'onboarded') {
         resetPasswordLink = createResetPasswordLink(req.user);
       }
       return res.json({ user, resetPasswordLink });
@@ -94,7 +94,7 @@ export const handleStatusCheck = (
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated() && req.user.is_confirmed) {
+    if (req.isAuthenticated() && req.user.is_confirmed !== 'onboarded') {
       const {
         user: { password, ...userWithoutPassword }
       } = req;
@@ -141,7 +141,9 @@ export const forgotPassword = async (
         console.error('Email send error:', error);
         return next(error);
       }
-      await UserService.updateUser(user?.id, { is_confirmed: false });
+      await UserService.updateUser(user?.id, {
+        is_confirmed: 'unauthenticated'
+      });
       return res.json({
         message: 'Password reset link sent to your email'
       });
@@ -194,7 +196,7 @@ export const resetPassword = async (
 
     await UserService.updateUser(userId, {
       password: hashedPassword,
-      is_confirmed: true
+      is_confirmed: 'authenticated'
     });
 
     return res.status(200).json({ message: 'Password has been updated' });
