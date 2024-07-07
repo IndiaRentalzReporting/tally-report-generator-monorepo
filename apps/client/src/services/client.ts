@@ -1,5 +1,7 @@
 import Axios, { AxiosError } from 'axios';
 
+import { toast } from '@/lib/hooks';
+
 const axios = Axios.create();
 
 axios.interceptors.request.use(
@@ -16,20 +18,32 @@ axios.interceptors.response.use(
   (response) => {
     return response;
   },
-  (e: AxiosError<any>) => {
+  (error: AxiosError<any>) => {
     // add logger
-    let errorMapped: Array<{ message: string }> = [];
-    let errors: Array<string> = [];
-    try {
-      errorMapped = JSON.parse(e.response?.data?.error || '') as Array<{
+    if (error.response?.status === 422) {
+      const errors = JSON.parse(error.response?.data.error) as Array<{
+        code: string;
+        expected: string;
         message: string;
+        path: Array<string>;
+        recieved: string;
       }>;
-      errors = errorMapped.map((er) => er.message);
-    } catch (_) {
-      errors.push(e.response?.data.error || `Couldn't sign you in!`);
+
+      errors.forEach((error) =>
+        toast({
+          variant: 'destructive',
+          title: `Type Error in ${error.path}`,
+          description: error.message
+        })
+      );
+    } else {
+      toast({
+        variant: 'destructive',
+        title: error.message,
+        description: error.response?.data.error.toUpperCase()
+      });
     }
-    // errors.forEach((e) => showErrorAlert(e));
-    return Promise.reject(errors);
+    return Promise.reject(error);
   }
 );
 

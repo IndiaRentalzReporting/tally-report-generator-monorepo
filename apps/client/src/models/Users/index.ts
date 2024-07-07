@@ -9,6 +9,7 @@ export interface User {
   last_name: string;
   email: string;
   role_id: string | null;
+  is_confirmed: 'onboarded' | 'authenticated' | 'unauthenticated';
   createdAt: Date;
   updatedAt: Date;
 }

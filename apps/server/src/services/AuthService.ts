@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-import { BadRequestError, CustomError, NotFoundError } from '../errors';
+import { randomBytes } from 'crypto';
+import { BadRequestError, NotFoundError } from '../errors';
 import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
 
@@ -11,15 +12,11 @@ class AuthService {
       email: data.email
     });
 
-    console.log(doesUserAlreadyExists);
-
     if (doesUserAlreadyExists != null) {
-      throw new CustomError('User Already Exists', 409);
+      throw new BadRequestError('User Already Exists');
     }
-    return UserService.createOne({
-      ...data,
-      password: await this.hashPassword(data.password)
-    });
+
+    return UserService.createOne(data);
   }
 
   public static async signIn(
@@ -40,7 +37,22 @@ class AuthService {
     return user;
   }
 
-  static async hashPassword(password: string): Promise<string> {
+  public static async changePassword(
+    data: Pick<UserInsert, 'email'> & {
+      password: string;
+    }
+  ): Promise<Omit<UserSelect, 'password'>> {
+    const { email, password } = data;
+    const user = await UserService.updateUser(email, { password });
+
+    if (user === undefined) {
+      throw new NotFoundError('User does not exist');
+    }
+
+    return user;
+  }
+
+  public static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
     return passwordHash;
@@ -52,6 +64,10 @@ class AuthService {
   ): Promise<boolean> {
     const doesPasswordMatch = await bcrypt.compare(password, hash);
     return doesPasswordMatch;
+  }
+
+  static async generateTempPassword(length: number): Promise<string> {
+    return randomBytes(length).toString('hex').slice(0, length);
   }
 }
 

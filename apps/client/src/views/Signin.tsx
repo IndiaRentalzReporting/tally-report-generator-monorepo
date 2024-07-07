@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -15,6 +15,7 @@ import services from '@/services';
 import { LoginUser } from '@/models';
 
 export const SigninForm = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -25,6 +26,11 @@ export const SigninForm = () => {
 
   const { mutateAsync: signInMutation } = useMutation({
     mutationFn: (data: LoginUser) => services.Authentication.signIn(data),
+    onSuccess: (data) => {
+      if (data.data.resetPasswordLink) {
+        navigate(data.data.resetPasswordLink);
+      }
+    },
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       setLoading(false);
@@ -71,7 +77,10 @@ export const SigninForm = () => {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
-                <Link to="#" className="ml-auto inline-block text-sm underline">
+                <Link
+                  to="/forgot-password"
+                  className="ml-auto inline-block text-sm underline"
+                >
                   Forgot your password?
                 </Link>
               </div>
@@ -80,6 +89,7 @@ export const SigninForm = () => {
                 name="password"
                 type="password"
                 value={loginData.password}
+                placeholder="********"
                 onChange={handleFormChange}
                 required
               />

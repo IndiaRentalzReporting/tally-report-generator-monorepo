@@ -17,9 +17,11 @@ class UserService {
       .insert(UserSchema)
       .values({ ...data, email: data.email.toLowerCase() })
       .returning();
+
     if (!user) {
       throw new CustomError('Database error: User returned as undefined', 500);
     }
+
     const { password, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }

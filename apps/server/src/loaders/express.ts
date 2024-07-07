@@ -8,16 +8,18 @@ import { errorHandler, notFound } from '../middlewares';
 import sessionsLoader from './sessions';
 import passportLoader from './passport';
 import routesLoader from './routes';
+import config from '../config';
 
 dotenv.config();
 
 const expressLoader = (): Express => {
   const app = express();
+  const { FRONTEND_URL } = config.server;
 
   app.use(
     cors({
-      origin: 'http://localhost:3000', // Your frontend URL
-      credentials: true // Allow credentials (cookies, authorization headers, TLS client certificates)
+      origin: FRONTEND_URL,
+      credentials: true
     })
   );
   app.use(morgan('dev'));
