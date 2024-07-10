@@ -15,10 +15,10 @@ import {
   SelectLabel,
   SelectItem,
   CardDescription,
-  Card,
-  Checkbox
+  Card
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
+import { services as roleServices } from '../Roles/services';
 import { columnsWithSelection as columns } from './columns';
 
 const AssignRole: React.FC = () => {
@@ -26,13 +26,13 @@ const AssignRole: React.FC = () => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => services.Users.getAll(),
+    queryFn: () => services.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
   });
 
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
-    queryFn: async () => services.Roles.getAll(),
+    queryFn: async () => roleServices.getAll(),
     select: (data) => data.data.roles,
     queryKey: ['roles', 'getAll']
   });
@@ -49,7 +49,7 @@ const AssignRole: React.FC = () => {
             )
             .filter((id) => !!id) ?? [];
         const promises = selectedUsers.map(async (id) =>
-          services.Users.updateOne(id, { role_id: selectedRole })
+          services.updateOne(id, { role_id: selectedRole })
         );
         return Promise.all(promises);
       },

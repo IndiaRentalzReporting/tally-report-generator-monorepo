@@ -7,7 +7,7 @@ import React, {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Skeleton } from '@/components/ui';
 import Fields from './Fields';
-import services from '@/services';
+import { services } from './services';
 import { State, initialState } from './interface';
 
 const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
@@ -15,7 +15,7 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [dataChanged, setDataChanged] = React.useState<boolean>(false);
 
   const { data: moduleData, isFetching: loadingModule } = useQuery({
-    queryFn: () => services.Modules.getOne(id),
+    queryFn: () => services.getOne(id),
     select: (data) => data.data.module,
     queryKey: ['getOne', 'modules', id]
   });
@@ -27,7 +27,7 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: updateModule, isPending: updatingModule } = useMutation({
-    mutationFn: () => services.Modules.updateOne(id, moduleDetails),
+    mutationFn: () => services.updateOne(id, moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
       setModuleDetails(initialState);

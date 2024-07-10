@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { Role } from '@/models';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { Button } from '@/components/ui';
 import { State, initialState } from './interface';
-import AssignRole from '../Users/AssignRole';
 
 const Create: React.FC = () => {
   const [roleData, setRoleData] = React.useState<State>(initialState);
@@ -13,7 +11,7 @@ const Create: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createRole, isPending: loadingCreateRole } = useMutation(
     {
-      mutationFn: () => services.Roles.createOneX(roleData),
+      mutationFn: () => services.createOneX(roleData),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
       },

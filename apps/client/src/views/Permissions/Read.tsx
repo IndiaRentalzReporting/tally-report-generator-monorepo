@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { GroupingState } from '@tanstack/react-table';
-import { DataTable } from '@/components/composite';
 import {
   Card,
   CardHeader,
@@ -10,7 +9,7 @@ import {
   CardContent,
   Skeleton
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { columns } from './columns';
 import { GroupingDataTable } from '@/components/composite/table/grouping-data-table';
 
@@ -18,7 +17,7 @@ const Read: React.FC = () => {
   const [grouping, setGrouping] = React.useState<GroupingState>(['Role Name']);
   const { data: allPermissions = [], isFetching: fetchingPermissions } =
     useQuery({
-      queryFn: () => services.Permissions.getAll(),
+      queryFn: () => services.getAll(),
       select: (data) => data.data.permissions,
       queryKey: ['permissions', 'getAll']
     });

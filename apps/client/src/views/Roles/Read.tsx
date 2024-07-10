@@ -9,12 +9,12 @@ import {
   CardContent,
   Skeleton
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { columns } from './columns';
 
 const Read: React.FC = () => {
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
-    queryFn: () => services.Roles.getAll(),
+    queryFn: () => services.getAll(),
     select: (data) => data.data.roles,
     queryKey: ['roles', 'getAll']
   });

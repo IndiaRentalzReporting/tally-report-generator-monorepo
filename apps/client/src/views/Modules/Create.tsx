@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 
@@ -11,7 +11,7 @@ const CreateModule: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } =
     useMutation({
-      mutationFn: () => services.Modules.createOne(moduleDetails),
+      mutationFn: () => services.createOne(moduleDetails),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
         setModuleDetails(initialState);

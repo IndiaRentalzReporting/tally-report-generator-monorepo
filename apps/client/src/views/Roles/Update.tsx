@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { Button, Skeleton } from '@/components/ui';
 import { State, initialState } from './interface';
@@ -10,7 +10,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { data: roleDataX, isFetching: loadingRole } = useQuery({
-    queryFn: () => services.Roles.getOne(id),
+    queryFn: () => services.getOne(id),
     select: (data) => data.data.role,
     queryKey: ['roles', 'getOne', id]
   });
@@ -21,7 +21,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   }, [roleDataX]);
 
   const { mutateAsync: updateRole, isPending: updatingRole } = useMutation({
-    mutationFn: () => services.Roles.updateOneX(id, roleData),
+    mutationFn: () => services.updateOneX(id, roleData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
     },

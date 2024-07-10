@@ -12,7 +12,7 @@ import {
   Input,
   ToastAction
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { useToast } from '@/lib/hooks';
 import { Else, If, Then } from '@/components/utility';
 
@@ -24,8 +24,7 @@ export const ResetPassword: FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const { data: token, isError } = useQuery({
-    queryFn: () =>
-      services.Authentication.check_reset_password(unvalidatedToken ?? ''),
+    queryFn: () => services.check_reset_password(unvalidatedToken ?? ''),
     select: (data) => data.data,
     queryKey: ['reset token', 'validation']
   });
@@ -33,7 +32,7 @@ export const ResetPassword: FC = () => {
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
     useMutation({
       mutationFn: () =>
-        services.Authentication.reset_password({
+        services.reset_password({
           token: token?.token ?? '',
           password,
           confirmPassword

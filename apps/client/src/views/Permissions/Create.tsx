@@ -3,7 +3,7 @@
 /* eslint-disable no-restricted-syntax */
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler } from 'react';
-import services from '@/services';
+import { services } from './services';
 import { Button } from '@/components/ui';
 import { ModulePermissions } from './interface';
 import Fields from './Fields';
@@ -20,7 +20,7 @@ const Create: React.FC = () => {
       mutationFn: () => {
         const permissions =
           createPermissionsUsingModulePermissions(modulePermissions);
-        return services.Permissions.createMany({
+        return services.createMany({
           role_id: selectedRole,
           permissions
         });
