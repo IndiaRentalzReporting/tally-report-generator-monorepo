@@ -2,12 +2,12 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import { Action, Module, Permissions } from '@/models';
+import { toTitleCase } from '@/lib/utils';
 
 interface NavItem {
   to: string;
   icon?: string;
   name: Module['name'];
-  isActive: boolean;
 }
 export interface NavItemWithChildren extends NavItem {
   children?: NavItem[];
@@ -43,22 +43,18 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
         module: { name, icon },
         actions
       } = permission;
-      const nameLowercase = name.toLowerCase();
+      const moduleName = name.toLowerCase();
       const children: NavItem[] = actions.map((action) => {
-        const actionLowercase = action.toLowerCase() as Lowercase<
-          Action['name']
-        >;
+        const moduleAction = action.toLowerCase() as Lowercase<Action['name']>;
         return {
-          to: `/dashboard/${nameLowercase}/${actionLowercase}`,
-          name: action,
-          isActive: false
+          to: `/dashboard/${moduleName}/${moduleAction}`,
+          name: action
         };
       });
       return {
-        to: `/dashboard/${nameLowercase}`,
+        to: `/dashboard/${moduleName}`,
         name,
-        children: [],
-        isActive: false,
+        children: [] ?? children,
         icon
       };
     });
@@ -70,39 +66,11 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
     setNavState((prev) => ({ navigation, currentModule: prev.currentModule }));
   }, [permissions]);
 
-  const findActiveNavItem = (
-    prev: NavItemWithChildren[]
-  ): NavigationProviderState => {
-    let currentModule = 'Dashboard';
-    const navigation = prev.map((navItem) => {
-      const newNavItem = navItem;
-      newNavItem.isActive = false;
-      if (newNavItem.children?.length) {
-        newNavItem.children.map((child) => {
-          const newChild = child;
-          newChild.isActive = false;
-          if (location.pathname === newChild.to) {
-            newChild.isActive = true;
-            newNavItem.isActive = true;
-            currentModule = newNavItem.name;
-          }
-          return newChild;
-        });
-      } else if (location.pathname.includes(newNavItem.to)) {
-        newNavItem.isActive = true;
-        currentModule = newNavItem.name;
-      }
-      return newNavItem;
-    });
-
-    return {
-      navigation,
-      currentModule
-    };
-  };
-
   useEffect(() => {
-    setNavState((prev) => findActiveNavItem(prev.navigation));
+    setNavState((prev) => ({
+      ...prev,
+      currentModule: toTitleCase(location.pathname.split('/')[2] ?? '')
+    }));
   }, [location, permissions]);
 
   return (

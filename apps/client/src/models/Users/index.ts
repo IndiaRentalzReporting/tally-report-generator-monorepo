@@ -21,14 +21,16 @@ export type RegisterUser = Pick<User, 'first_name' | 'last_name' | 'email'> & {
 };
 
 export interface DetailedUser extends Omit<User, 'password'> {
-  role: {
-    name: Role['name'];
-    permission: Array<{
-      id: Permission['id'];
-      permissionAction: Array<{
-        action: Pick<Action, 'name'>;
-      }>;
-      module: Pick<Module, 'id' | 'icon' | 'name'>;
+  role: UserRole | null;
+}
+
+export interface UserRole {
+  name: Role['name'];
+  permission: Array<{
+    id: Permission['id'];
+    permissionAction: Array<{
+      action: Pick<Action, 'name'>;
     }>;
-  } | null;
+    module: Pick<Module, 'id' | 'icon' | 'name'>;
+  }>;
 }

@@ -5,15 +5,7 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
-import {
-  PublicRoutes,
-  PrivateRoutes,
-  Switch,
-  Case,
-  If,
-  Then,
-  Else
-} from './components/utility';
+import { PublicRoutes, PrivateRoutes } from './components/utility';
 import {
   SignupForm,
   SigninForm,
@@ -22,15 +14,16 @@ import {
   ForgotPassword,
   ResetPassword
 } from './views';
-import { DashboardLayout, RootLayout } from './components/composite';
+import { DashboardLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './providers/AuthProvider';
 
 const App = () => {
   const { permissions } = useAuth();
+
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route path="/" element={<RootLayout />}>
+      <Route path="/">
         <Route index element={<Navigate to="/dashboard" />} />
         <Route element={<PublicRoutes />}>
           <Route path="sign-up" element={<SignupForm />} />
@@ -44,7 +37,7 @@ const App = () => {
             {permissions?.map(({ module: { name }, actions }) => (
               <Route path={name.toLowerCase()} key={name}>
                 <Route index element={<ModuleMapper module={name} />} />
-                {actions.map<React.ReactElement>((action) => {
+                {actions.map<React.ReactNode>((action) => {
                   return (
                     <Route
                       path={`${action.toLowerCase()}`}
