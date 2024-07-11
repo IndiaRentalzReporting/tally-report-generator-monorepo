@@ -1,5 +1,3 @@
-import { Action } from '..';
-
 export interface Module {
   name: string;
   icon: string;

@@ -1,10 +1,9 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
-import services from '@/services';
+import { services } from './services';
 import { Button, Skeleton } from '@/components/ui';
-import { Permission } from '@/models';
+import { Permission, ModuleAction, ModulePermissions } from '@/models';
 import Fields from './Fields';
-import { ModuleAction, ModulePermissions } from './interface';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
 
 const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
@@ -13,7 +12,7 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
     React.useState<ModulePermissions>({});
 
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
-    queryFn: () => services.Permissions.getAllOfRole(id),
+    queryFn: () => services.getAllOfRole(id),
     select: (data) => data.data.permissions,
     queryKey: ['roles', 'getOne', id]
   });
@@ -65,7 +64,7 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
           createPermissionsUsingModulePermissions(modulePermissions)
         );
 
-        return services.Permissions.updateMany({
+        return services.updateMany({
           role_id: selectedRole,
           permissions: prettyPermissions
         });

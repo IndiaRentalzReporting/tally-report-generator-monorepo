@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { Button, Skeleton } from '@/components/ui';
 import { State, initialState } from './interface';
@@ -10,7 +10,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { data: actionDataX, isFetching: loadingAction } = useQuery({
-    queryFn: () => services.Actions.getOne(id),
+    queryFn: () => services.getOne(id),
     select: (data) => data.data.action,
     queryKey: ['actions', 'getOne', id]
   });
@@ -21,7 +21,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   }, [actionDataX]);
 
   const { mutateAsync: updateAction, isPending: updatingAction } = useMutation({
-    mutationFn: () => services.Actions.updateOne(id, actionData),
+    mutationFn: () => services.updateOne(id, actionData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });

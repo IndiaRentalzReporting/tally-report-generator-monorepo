@@ -9,12 +9,12 @@ import {
   CardTitle,
   Skeleton
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { columns } from './columns';
 
 const ReadModule: React.FC = () => {
   const { data: allModules = [], isFetching: fetchingModules } = useQuery({
-    queryFn: async () => services.Modules.getAll(),
+    queryFn: async () => services.getAll(),
     select: (data) => data.data.modules,
     queryKey: ['modules', 'getAll']
   });

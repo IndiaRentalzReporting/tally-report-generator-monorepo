@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { DetailedUser, Permissions } from '@/models';
+import { DetailedUser, Permissions, UserRole } from '@/models';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
@@ -37,6 +35,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     staleTime: 1000 * 60 * 15
   });
 
+  const createPermissions = (
+    permissions: UserRole['permission'] | undefined
+  ): Permissions[] => {
+    const p =
+      permissions?.map(({ module, permissionAction }) => {
+        const { name, icon } = module;
+        return {
+          module: { name, icon },
+          actions: permissionAction.map(({ action }) => action.name)
+        };
+      }) ?? [];
+    localStorage.setItem('permissions', JSON.stringify(p));
+    return p;
+  };
+
   useEffect(() => {
     if (!authData || !authData.user || !authData.isAuthenticated) {
       setState({
@@ -47,16 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     const { user, isAuthenticated } = authData;
-
-    const permissions =
-      user.role?.permission.map(({ module, permissionAction }) => {
-        const { name, icon } = module;
-        return {
-          module: { name, icon },
-          actions: permissionAction.map(({ action }) => action.name)
-        };
-      }) ?? [];
-    localStorage.setItem('permissions', JSON.stringify(permissions));
+    const permissions = createPermissions(user.role?.permission);
 
     setState({
       user,
@@ -76,7 +80,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
 

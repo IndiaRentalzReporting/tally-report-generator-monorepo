@@ -11,7 +11,7 @@ import {
   Input,
   Label
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { RegisterUser } from '@/models';
 
 export const SignupForm = () => {
@@ -27,7 +27,7 @@ export const SignupForm = () => {
   });
 
   const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
+    mutationFn: (data: RegisterUser) => services.signUp(data),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       setLoading(false);

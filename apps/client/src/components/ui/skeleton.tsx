@@ -8,7 +8,10 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 const SkeletonOverlay = ({ className, ...props }: Omit<Props, 'isLoading'>) => {
   return (
     <div
-      className={cn('animate-pulse rounded-md bg-muted', className)}
+      className={cn(
+        'animate-pulse rounded-md bg-muted pointer-events-none',
+        className
+      )}
       {...props}
     />
   );

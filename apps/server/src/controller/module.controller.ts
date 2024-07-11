@@ -50,8 +50,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    let modules = await ModuleService.readAll();
-    modules = modules.filter((module) => !module.isPrivate);
+    const modules = await ModuleService.readAll();
     return res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");

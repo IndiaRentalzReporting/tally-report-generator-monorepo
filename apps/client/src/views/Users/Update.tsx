@@ -8,7 +8,7 @@ import React, {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
 import { Button, Input, Label, Skeleton } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 
@@ -18,14 +18,14 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [dataUpdated, setDataUpdated] = useState<boolean>(false);
 
   const { data: userData, isFetching: loadingUser } = useQuery({
-    queryFn: () => services.Users.getOne(id),
+    queryFn: () => services.getOne(id),
     select: (data) => data.data.user,
     queryKey: ['users', 'getOne', id]
   });
 
   const { mutateAsync: deleteRole } = useMutation({
     mutationFn: () =>
-      services.Users.updateOne(id, {
+      services.updateOne(id, {
         ...userData,
         role_id: null
       }),
@@ -36,7 +36,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   });
 
   const { mutateAsync: updateUser } = useMutation({
-    mutationFn: () => services.Users.updateOne(id, updatedUser),
+    mutationFn: () => services.updateOne(id, updatedUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });

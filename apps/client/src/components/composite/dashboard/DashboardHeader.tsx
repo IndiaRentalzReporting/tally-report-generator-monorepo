@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Menu, Package2, CircleUser, Search, ChevronDown } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { When } from '@/components/utility';
 import {
@@ -54,66 +54,65 @@ const DashboardHeader: React.FC = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <Link
+          <NavLink
             to="#"
             className="flex items-center gap-2 text-lg font-semibold"
           >
             <Package2 className="h-6 w-6" />
             <span className="sr-only">Acme Inc</span>
-          </Link>
+          </NavLink>
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
-              {navigation.map(
-                ({ isActive, to, name, children, icon }, index) => (
-                  <AccordionItem value={`item-${index}`} key={index}>
-                    <Link
-                      to={!children ? to : '#'}
-                      className={clsx(
+              {navigation.map(({ to, name, children, icon }, index) => (
+                <AccordionItem value={`item-${index}`} key={to}>
+                  <NavLink
+                    to={!children ? to : '#'}
+                    className={({ isActive }) =>
+                      clsx(
                         'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
                         isActive && !children && 'bg-muted text-primary',
                         children || 'hover:text-primary'
-                      )}
+                      )
+                    }
+                  >
+                    <AccordionTrigger
+                      className={clsx('pt-0 rounded-lg px-3 py-2 w-full')}
                     >
-                      <AccordionTrigger
-                        className={clsx(
-                          'pt-0 rounded-lg px-3 py-2 w-full',
-                          isActive && 'bg-muted text-primary'
-                        )}
-                      >
-                        <span className="flex gap-3 items-center w-full">
-                          <When condition={!!icon}>
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: icon as string
-                              }}
-                            />
-                          </When>
-                          {name}
-                        </span>
-                        <When condition={!!children}>
-                          <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                      <span className="flex gap-3 items-center w-full">
+                        <When condition={!!icon}>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: icon as string
+                            }}
+                          />
                         </When>
-                      </AccordionTrigger>
-                    </Link>
-                    <When condition={!!children}>
-                      <AccordionContent className="flex flex-col gap-2 float-right pt-3">
-                        {children?.map((child, index) => (
-                          <Link
-                            to={child.to}
-                            key={index}
-                            className={clsx(
+                        {name}
+                      </span>
+                      <When condition={!!children}>
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                      </When>
+                    </AccordionTrigger>
+                  </NavLink>
+                  <When condition={!!children}>
+                    <AccordionContent className="flex flex-col gap-2 float-right pt-3">
+                      {children?.map((child) => (
+                        <NavLink
+                          to={child.to}
+                          key={child.to}
+                          className={({ isActive }) =>
+                            clsx(
                               'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
-                              child.isActive && 'text-primary'
-                            )}
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
-                      </AccordionContent>
-                    </When>
-                  </AccordionItem>
-                )
-              )}
+                              isActive && 'text-primary'
+                            )
+                          }
+                        >
+                          {child.name}
+                        </NavLink>
+                      ))}
+                    </AccordionContent>
+                  </When>
+                </AccordionItem>
+              ))}
             </Accordion>
           </nav>
         </SheetContent>

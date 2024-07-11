@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { DetailedUser, User } from '@/models';
+import { DetailedUser } from '@/models';
 
 export interface State
   extends Pick<

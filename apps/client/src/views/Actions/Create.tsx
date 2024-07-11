@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { Button } from '@/components/ui';
 import { State, initialState } from './interface';
@@ -11,7 +11,7 @@ const Create: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createAction, isPending: loadingCreateAction } =
     useMutation({
-      mutationFn: () => services.Actions.createOne(actionData),
+      mutationFn: () => services.createOne(actionData),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
         queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });

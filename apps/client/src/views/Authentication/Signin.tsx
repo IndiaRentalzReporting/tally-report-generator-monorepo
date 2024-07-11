@@ -11,7 +11,7 @@ import {
   Input,
   Label
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { LoginUser } from '@/models';
 
 export const SigninForm = () => {
@@ -25,7 +25,7 @@ export const SigninForm = () => {
   });
 
   const { mutateAsync: signInMutation } = useMutation({
-    mutationFn: (data: LoginUser) => services.Authentication.signIn(data),
+    mutationFn: (data: LoginUser) => services.signIn(data),
     onSuccess: (data) => {
       if (data.data.resetPasswordLink) {
         navigate(data.data.resetPasswordLink);

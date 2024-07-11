@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
-import services from '@/services';
+import { services } from './services';
 import { Else, If, Then } from '@/components/utility';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { Button } from '@/components/ui';
@@ -78,7 +78,7 @@ export const columns: ColumnDef<State>[] = [
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.Modules.deleteOne(module.id)
+                mutationFn: () => services.deleteOne(module.id)
               },
               name: module.name,
               module: 'Modules'

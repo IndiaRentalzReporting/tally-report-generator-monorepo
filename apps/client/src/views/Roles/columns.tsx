@@ -1,13 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Checkbox } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import services from '@/services';
+import { services } from './services';
 import { State } from './interface';
-
-import { DetailedUser } from '@/models';
-import { When } from '@/components/utility';
 
 export const columns: ColumnDef<State>[] = [
   {
@@ -35,7 +31,7 @@ export const columns: ColumnDef<State>[] = [
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.Roles.deleteOne(role.id)
+                mutationFn: () => services.deleteOne(role.id)
               },
               name: role.name,
               module: 'Roles'

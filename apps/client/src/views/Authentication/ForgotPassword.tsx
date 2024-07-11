@@ -11,7 +11,7 @@ import {
   Input,
   ToastAction
 } from '@/components/ui';
-import services from '@/services';
+import { services } from './services';
 import { useToast } from '@/lib/hooks';
 
 export const ForgotPassword: FC = () => {
@@ -20,7 +20,7 @@ export const ForgotPassword: FC = () => {
 
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
     useMutation({
-      mutationFn: () => services.Authentication.forgot_password({ email }),
+      mutationFn: () => services.forgot_password({ email }),
       onSuccess: (data) => {
         setEmail('');
         toast({

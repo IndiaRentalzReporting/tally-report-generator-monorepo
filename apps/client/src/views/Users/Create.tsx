@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
 import { RegisterUser } from '@/models';
-import services from '@/services';
+import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 
@@ -11,7 +11,7 @@ const Create: React.FC = () => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
+    mutationFn: (data: RegisterUser) => services.createOne(data),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
       setUserData(initialState);

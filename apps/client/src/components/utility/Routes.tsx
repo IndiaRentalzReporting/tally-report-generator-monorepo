@@ -6,7 +6,7 @@ import { Else, If, Then } from './Conditionals';
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
   return (
-    <If condition={isAuthenticated ?? false}>
+    <If condition={isAuthenticated}>
       <Then>
         <Outlet />
       </Then>
@@ -20,7 +20,7 @@ export const PrivateRoutes: React.FC = () => {
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
   return (
-    <If condition={isAuthenticated ?? false}>
+    <If condition={isAuthenticated}>
       <Then>
         <Navigate to="/dashboard" />
       </Then>
