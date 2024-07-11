@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Action, DetailedPermission, Module } from '@/models';
+import { DetailedPermission, ModulePermissions } from '@/models';
 import { State as RoleState } from '../Roles/interface';
 
 export interface State
@@ -20,17 +20,6 @@ export const initialState: State = {
     id: ''
   }
 };
-
-export interface ModulePermissions {
-  [module_id: string]: {
-    [action_id: string]: boolean;
-  };
-}
-
-export interface ModuleAction {
-  module_id: Module['id'];
-  action_ids: Action['id'][];
-}
 
 export interface StateAsProps {
   role?: RoleState['name'];

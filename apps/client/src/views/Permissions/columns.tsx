@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { services } from '../Roles/services';
+import { services as roleServices } from '../Roles/services';
 import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [
@@ -79,7 +79,7 @@ export const columns: ColumnDef<State>[] = [
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.deleteOne(role.role.id)
+                mutationFn: () => roleServices.deleteOne(role.role.id)
               },
               name: role.role.name,
               module: 'Permissions'

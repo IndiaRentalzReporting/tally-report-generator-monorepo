@@ -10,11 +10,6 @@ export interface Permission {
   module_id: string;
 }
 
-export interface PermissionAction {
-  permission_id: string;
-  action_id: string;
-}
-
 export interface Permissions {
   module: Pick<Module, 'icon' | 'name'>;
   actions: Action['name'][];
@@ -26,4 +21,15 @@ export interface DetailedPermission extends Permission {
   permissionAction: Array<{
     action: Pick<Action, 'name' | 'id'>;
   }>;
+}
+
+export interface ModulePermissions {
+  [module_id: string]: {
+    [action_id: string]: boolean;
+  };
+}
+
+export interface ModuleAction {
+  module_id: Module['id'];
+  action_ids: Action['id'][];
 }

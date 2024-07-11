@@ -2,9 +2,8 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
 import { services } from './services';
 import { Button, Skeleton } from '@/components/ui';
-import { Permission } from '@/models';
+import { Permission, ModuleAction, ModulePermissions } from '@/models';
 import Fields from './Fields';
-import { ModuleAction, ModulePermissions } from './interface';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
 
 const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {

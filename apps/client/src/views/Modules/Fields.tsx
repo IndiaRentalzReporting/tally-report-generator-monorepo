@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
-import { Module } from '@/models';
+import { State, StateAsProps } from './interface';
 import { Button, Input, Label, Switch } from '@/components/ui';
-import { StateAsProps } from './interface';
 
 const iconSchema = z
   .string()
@@ -11,7 +10,7 @@ const iconSchema = z
   .endsWith('</svg>');
 
 const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
-  const [moduleIcon, setModuleIcon] = React.useState<Module['icon']>(
+  const [moduleIcon, setModuleIcon] = React.useState<State['icon']>(
     moduleData.icon
   );
   const iconRef = useRef<HTMLDivElement | null>(null);
