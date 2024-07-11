@@ -14,9 +14,6 @@ export const services = {
   }> => {
     return axios.post(`/auth/sign-in`, data);
   },
-  signOut: (): AxiosPromise<{ message: string }> => {
-    return axios.post(`/auth/sign-out`);
-  },
   forgot_password: (data: {
     email: User['email'];
   }): AxiosPromise<{ message: string }> => {

@@ -1,13 +1,18 @@
 import { AxiosPromise } from 'axios';
 import axios from './client';
-import { DetailedUser } from '@/models';
+import { DetailedUser, User } from '@/models';
 
 const services = {
-  status: (): AxiosPromise<{
-    user: DetailedUser | null;
-    isAuthenticated: boolean;
-  }> => {
-    return axios.get(`/auth/status`);
+  Authentication: {
+    status: (): AxiosPromise<{
+      user: DetailedUser | null;
+      isAuthenticated: boolean;
+    }> => {
+      return axios.get(`/auth/status`);
+    },
+    signOut: (): AxiosPromise<{ message: string }> => {
+      return axios.post(`/auth/sign-out`);
+    }
   }
 };
 

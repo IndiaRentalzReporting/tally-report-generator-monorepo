@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<AuthProviderState>(initialState);
 
   const { data: authData, isFetching } = useQuery({
-    queryFn: () => services.status(),
+    queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'statusCheck'],
     staleTime: 1000 * 60 * 15
