@@ -14,11 +14,11 @@ import { ActionSelect } from './actions';
 
 declare global {
   namespace Express {
-    interface User extends DetailedUser {}
+    interface User extends DetailedUser { }
   }
 }
 
-const isConfirmed = pgEnum('is_confirmed', [
+export const isConfirmed = pgEnum('is_confirmed', [
   'onboarded',
   'authenticated',
   'unauthenticated'

@@ -1,5 +1,5 @@
 {
-  "id": "4e571ffa-0467-438a-9616-6a3cc390072a",
+  "id": "b23bfa92-d21f-4e4a-bfef-a9f52854381e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -109,7 +109,8 @@
           "type": "is_confirmed",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'onboarded'"
         }
       },
       "indexes": {},
@@ -370,7 +371,17 @@
       }
     }
   },
-  "enums": {},
+  "enums": {
+    "public.is_confirmed": {
+      "name": "is_confirmed",
+      "schema": "public",
+      "values": [
+        "onboarded",
+        "authenticated",
+        "unauthenticated"
+      ]
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},
