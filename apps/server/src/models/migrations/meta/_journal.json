@@ -8,6 +8,13 @@
       "when": 1720852178021,
       "tag": "0000_bitter_agent_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1721042215934,
+      "tag": "0001_slim_jamie_braddock",
+      "breakpoints": true
     }
   ]
 }
