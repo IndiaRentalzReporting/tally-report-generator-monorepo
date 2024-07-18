@@ -1,3 +1,3 @@
 export * from './User';
 export * from './Permissions';
-export * from './Postgres Column Types';
+export * from './PG_Column_Types';

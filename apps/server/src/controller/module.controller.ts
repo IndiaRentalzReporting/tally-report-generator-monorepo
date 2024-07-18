@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import {
-  ModuleColumns,
-  ModuleInsert,
-  ModuleSelect
-} from '../models/schema/modules';
+import { ModuleColumns } from '@fullstack_package/interfaces';
+import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
 export const createOne = async (

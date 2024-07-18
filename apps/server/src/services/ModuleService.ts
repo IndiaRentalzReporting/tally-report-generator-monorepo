@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
+import { ModuleColumns } from '@fullstack_package/interfaces';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
-  ModuleColumns,
   ModuleInsert,
   ModuleSchema,
   ModuleSelect

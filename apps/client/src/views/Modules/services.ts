@@ -1,4 +1,5 @@
 import { AxiosPromise } from 'axios';
+import { ModuleColumns } from '@fullstack_package/interfaces';
 import { Module } from '@/models';
 import axios from '@/services/client';
 
@@ -13,9 +14,10 @@ export const services = {
   ): AxiosPromise<{ module: Module }> => {
     return axios.get(`/modules/read/${id}`);
   },
-  createOne: async (
-    data: Partial<Module>
-  ): AxiosPromise<{ module: Module }> => {
+  createOne: async (data: {
+    moduleDetails: Partial<Module>;
+    columnDetails: Array<{ name: string; type: ModuleColumns }>;
+  }): AxiosPromise<{ module: Module }> => {
     return axios.post('/modules/create', data);
   },
   updateOne: async (

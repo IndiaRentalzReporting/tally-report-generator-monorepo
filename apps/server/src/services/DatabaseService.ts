@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
+import { ModuleColumns } from '@fullstack_package/interfaces';
 import db from '../models';
-import { ModuleColumns, ModuleInsert } from '../models/schema';
+import { ModuleInsert } from '../models/schema';
 
 class DatabaseService {
   public static async createNewTable(
