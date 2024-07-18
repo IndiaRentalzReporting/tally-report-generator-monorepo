@@ -1,4 +1,3 @@
-import { ColumnType } from '@fullstack_package/interfaces';
 import { sql } from 'drizzle-orm';
 import db from '../models';
 import { ModuleColumns, ModuleInsert } from '../models/schema';
@@ -10,12 +9,19 @@ class DatabaseService {
       name: ModuleInsert['name'];
       type: ModuleColumns;
     }>
-  ): Promise<any> {
-    const columnsDefinition = columns.map(
-      (column) => `${column.name} ${column.type}`
+  ) {
+    const columnsDefinition = columns
+      .map((column) => `"${column.name}" ${column.type}`)
+      .join(', ');
+
+    return db.execute(
+      sql`CREATE TABLE ${sql.identifier(name)} (${sql.raw(columnsDefinition)});`
     );
-    console.log(`CREATE TABLE ${name} (${columnsDefinition});`);
-    // return db.execute(sql`CREATE TABLE ${name} (${columnsDefinition})}`);
+  }
+
+  public static async dropTable(name: string) {
+    const query = db.execute(sql`DROP TABLE ${sql.identifier(name)};`);
+    return query;
   }
 }
 

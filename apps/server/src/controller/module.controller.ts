@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { ColumnType } from '@fullstack_package/interfaces';
 import {
   ModuleColumns,
   ModuleInsert,

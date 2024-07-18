@@ -1,5 +1,4 @@
 import { and, eq } from 'drizzle-orm';
-import { ColumnType } from '@fullstack_package/interfaces';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
@@ -20,23 +19,23 @@ class ModuleService {
       type: ModuleColumns;
     }>
   ): Promise<ModuleSelect | null> {
-    // const [module] = await db
-    //   .insert(ModuleSchema)
-    //   .values({
-    //     ...data,
-    //     name: data.name.toUpperCase(),
-    //     icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
-    //   })
-    //   .returning();
+    const [module] = await db
+      .insert(ModuleSchema)
+      .values({
+        ...data,
+        name: data.name.toUpperCase(),
+        icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
+      })
+      .returning();
 
-    // if (!module) {
-    //   throw new CustomError(
-    //     'Database error: Module returned as undefined',
-    //     500
-    //   );
-    // }
+    if (!module) {
+      throw new CustomError(
+        'Database error: Module returned as undefined',
+        500
+      );
+    }
 
-    await DatabaseService.createNewTable(data.name, columnDetails);
+    await DatabaseService.createNewTable(module.name, columnDetails);
 
     await PermissionService.extendSuperuserModules(module.id);
 
@@ -95,6 +94,8 @@ class ModuleService {
     if (!module) {
       throw new NotFoundError('Module does not exist');
     }
+
+    await DatabaseService.dropTable(module.name);
 
     return module;
   }
