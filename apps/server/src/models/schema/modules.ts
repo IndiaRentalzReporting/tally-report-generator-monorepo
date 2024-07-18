@@ -1,3 +1,4 @@
+import { ColumnType } from '@fullstack_package/interfaces';
 import {
   text,
   boolean,
@@ -34,5 +35,8 @@ export const ModuleInsertSchema = createInsertSchema(ModuleSchema).merge(
     )
   })
 );
+export type ModuleColumns = ReturnType<
+  (typeof ColumnType)[keyof typeof ColumnType]
+>;
 export type ModuleSelect = typeof ModuleSchema.$inferSelect;
 export const ModuleSelectSchema = createSelectSchema(ModuleSchema);

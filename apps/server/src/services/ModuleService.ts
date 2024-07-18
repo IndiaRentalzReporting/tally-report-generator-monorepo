@@ -1,35 +1,46 @@
 import { and, eq } from 'drizzle-orm';
+import { ColumnType } from '@fullstack_package/interfaces';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
+  ModuleColumns,
   ModuleInsert,
   ModuleSchema,
   ModuleSelect
 } from '../models/schema/modules';
 import PermissionService from './PermissionService';
 import { modifySvgDimensions } from '../utils';
+import DatabaseService from './DatabaseService';
 
 class ModuleService {
-  public static async createOne(data: ModuleInsert): Promise<ModuleSelect> {
-    const [module] = await db
-      .insert(ModuleSchema)
-      .values({
-        ...data,
-        name: data.name.toUpperCase(),
-        icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
-      })
-      .returning();
+  public static async createOne(
+    data: ModuleInsert,
+    columnDetails: Array<{
+      name: ModuleInsert['name'];
+      type: ModuleColumns;
+    }>
+  ): Promise<ModuleSelect | null> {
+    // const [module] = await db
+    //   .insert(ModuleSchema)
+    //   .values({
+    //     ...data,
+    //     name: data.name.toUpperCase(),
+    //     icon: data.icon ? modifySvgDimensions(data.icon, 20, 20) : null
+    //   })
+    //   .returning();
 
-    if (!module) {
-      throw new CustomError(
-        'Database error: Module returned as undefined',
-        500
-      );
-    }
+    // if (!module) {
+    //   throw new CustomError(
+    //     'Database error: Module returned as undefined',
+    //     500
+    //   );
+    // }
+
+    await DatabaseService.createNewTable(data.name, columnDetails);
 
     await PermissionService.extendSuperuserModules(module.id);
 
-    return module;
+    return null;
   }
 
   public static async findOne(

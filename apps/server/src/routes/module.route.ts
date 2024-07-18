@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import * as z from 'zod';
+import { ColumnType } from '@fullstack_package/interfaces';
 import {
   createOne,
   readAll,
@@ -14,10 +16,18 @@ const moduleRouter = Router();
 moduleRouter.post(
   '/create',
   validateSchema({
-    body: ModuleInsertSchema.pick({
-      name: true,
-      isPrivate: true,
-      icon: true
+    body: z.object({
+      moduleDetails: ModuleInsertSchema.pick({
+        name: true,
+        isPrivate: true,
+        icon: true
+      }),
+      columnDetails: z.array(
+        z.object({
+          name: z.string(),
+          type: z.custom((val) => val in ColumnType)
+        })
+      )
     })
   }),
   createOne

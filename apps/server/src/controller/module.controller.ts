@@ -1,14 +1,32 @@
 import { NextFunction, Request, Response } from 'express';
-import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
+import { ColumnType } from '@fullstack_package/interfaces';
+import {
+  ModuleColumns,
+  ModuleInsert,
+  ModuleSelect
+} from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
 export const createOne = async (
-  req: Request<object, object, ModuleInsert>,
-  res: Response<{ module: ModuleSelect }>,
+  req: Request<
+    object,
+    object,
+    {
+      moduleDetails: ModuleInsert;
+      columnDetails: Array<{
+        name: ModuleInsert['name'];
+        type: ModuleColumns;
+      }>;
+    }
+  >,
+  res: Response<{ module: ModuleSelect | null }>,
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.createOne(req.body);
+    const module = await ModuleService.createOne(
+      req.body.moduleDetails,
+      req.body.columnDetails
+    );
     return res.json({ module });
   } catch (e) {
     console.error('Could not create a new Module');
