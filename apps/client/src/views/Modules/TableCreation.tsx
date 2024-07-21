@@ -70,10 +70,8 @@ const TableCreation: React.FC<ITableCreation> = ({
 
   const handleAddColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
-    if (columnDetails.some((col) => col.name === columnData.name)) {
-      // show toast error
-      return;
-    }
+    if (columnDetails.some((col) => col.name === columnData.name)) return;
+
     const { type, ...rest } = columnParameters;
     const parameterValues = Object.values(rest);
     setColumnDetails((prev) => [

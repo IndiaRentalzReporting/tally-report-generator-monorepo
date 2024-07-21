@@ -63,7 +63,6 @@ class ModuleService {
     }
 
     const columns = await DatabaseService.findColumns(module.name);
-    console.log({ columns });
 
     return { module, columns };
   }
