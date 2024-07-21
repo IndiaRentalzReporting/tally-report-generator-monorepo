@@ -19,6 +19,10 @@ const Read: React.FC = () => {
     queryKey: ['roles', 'getAll']
   });
 
+  console.log({
+    allRoles
+  });
+
   return (
     <Card>
       <CardHeader>

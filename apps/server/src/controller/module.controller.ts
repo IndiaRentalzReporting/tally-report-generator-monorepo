@@ -1,14 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
+import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
 import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
 export const createOne = async (
-  req: Request<object, object, ModuleInsert>,
-  res: Response<{ module: ModuleSelect }>,
+  req: Request<
+    object,
+    object,
+    {
+      moduleDetails: ModuleInsert;
+      columnDetails: Array<{
+        name: ModuleInsert['name'];
+        type: PGColumnDataTypeValue;
+      }>;
+    }
+  >,
+  res: Response<{ module: ModuleSelect | null }>,
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.createOne(req.body);
+    const module = await ModuleService.createOne(
+      req.body.moduleDetails,
+      req.body.columnDetails
+    );
     return res.json({ module });
   } catch (e) {
     console.error('Could not create a new Module');
@@ -60,12 +74,14 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ModuleSelect, 'id'>>,
-  res: Response<{ module: ModuleSelect }>,
+  res: Response<{ module: ModuleSelect; columns?: Object }>,
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.findOne({ id: req.params.id });
-    return res.json({ module });
+    const { module, columns } = await ModuleService.findOne({
+      id: req.params.id
+    });
+    return res.json({ module, columns });
   } catch (e) {
     console.error("Couldn't fetch Module");
     return next(e);

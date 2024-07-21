@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import * as z from 'zod';
+import { PGColumnDataType } from '@fullstack_package/pg-orm';
 import {
   createOne,
   readAll,
@@ -14,15 +16,22 @@ const moduleRouter = Router();
 moduleRouter.post(
   '/create',
   validateSchema({
-    body: ModuleInsertSchema.pick({
-      name: true,
-      isPrivate: true,
-      icon: true
+    body: z.object({
+      moduleDetails: ModuleInsertSchema.pick({
+        name: true,
+        isPrivate: true,
+        icon: true
+      }),
+      columnDetails: z.array(
+        z.object({
+          name: z.string(),
+          type: z.custom((val) => val in PGColumnDataType)
+        })
+      )
     })
   }),
   createOne
 );
-moduleRouter.get('/read', readAll);
 moduleRouter.get(
   '/read/:id',
   validateSchema({
@@ -32,6 +41,7 @@ moduleRouter.get(
   }),
   readOne
 );
+moduleRouter.get('/read', readAll);
 moduleRouter.patch(
   '/update/:id',
   validateSchema({

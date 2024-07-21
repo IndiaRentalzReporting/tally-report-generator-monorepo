@@ -31,7 +31,7 @@ interface DataTableProps<TData, TValue> {
   };
 }
 
-export const DataTable = <TData, TValue>({
+export const DataTableUnmemoized = <TData, TValue>({
   columns,
   data,
   selection = {
@@ -83,7 +83,6 @@ export const DataTable = <TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => {
-                    console.log(cell);
                     return (
                       <TableCell key={cell.id}>
                         {flexRender(
@@ -117,3 +116,7 @@ export const DataTable = <TData, TValue>({
     </>
   );
 };
+
+export const DataTable = React.memo(
+  DataTableUnmemoized
+) as typeof DataTableUnmemoized;

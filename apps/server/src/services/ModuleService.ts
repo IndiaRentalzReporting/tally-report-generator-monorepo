@@ -1,4 +1,5 @@
 import { and, eq } from 'drizzle-orm';
+import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
@@ -8,9 +9,16 @@ import {
 } from '../models/schema/modules';
 import PermissionService from './PermissionService';
 import { modifySvgDimensions } from '../utils';
+import DatabaseService from './DatabaseService';
 
 class ModuleService {
-  public static async createOne(data: ModuleInsert): Promise<ModuleSelect> {
+  public static async createOne(
+    data: ModuleInsert,
+    columnDetails: Array<{
+      name: ModuleInsert['name'];
+      type: PGColumnDataTypeValue;
+    }>
+  ): Promise<ModuleSelect | null> {
     const [module] = await db
       .insert(ModuleSchema)
       .values({
@@ -27,14 +35,21 @@ class ModuleService {
       );
     }
 
+    try {
+      await DatabaseService.createNewTable(module.name, columnDetails);
+    } catch (e) {
+      await this.deleteOne(module.id);
+      throw e;
+    }
+
     await PermissionService.extendSuperuserModules(module.id);
 
-    return module;
+    return null;
   }
 
   public static async findOne(
     data: Partial<ModuleSelect>
-  ): Promise<ModuleSelect> {
+  ): Promise<{ module: ModuleSelect; columns?: Object }> {
     const keys = Object.keys(data) as Array<keyof Partial<ModuleSelect>>;
     const values = Object.values(data) as Array<any>;
     const module = await db.query.ModuleSchema.findFirst({
@@ -47,7 +62,9 @@ class ModuleService {
       throw new NotFoundError(`Module does not exist`);
     }
 
-    return module;
+    const columns = await DatabaseService.findColumns(module.name);
+
+    return { module, columns };
   }
 
   public static async readAll(): Promise<ModuleSelect[]> {
@@ -84,6 +101,8 @@ class ModuleService {
     if (!module) {
       throw new NotFoundError('Module does not exist');
     }
+
+    await DatabaseService.dropTable(module.name);
 
     return module;
   }

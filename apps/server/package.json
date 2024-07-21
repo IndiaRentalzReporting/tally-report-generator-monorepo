@@ -20,6 +20,7 @@
   "devDependencies": {
     "@fullstack_package/eslint-config": "*",
     "@fullstack_package/typescript-config": "*",
+    "@fullstack_package/pg-orm": "*",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
@@ -46,7 +47,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@fullstack_package/interfaces": "*",
     "@neondatabase/serverless": "^0.9.3",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",

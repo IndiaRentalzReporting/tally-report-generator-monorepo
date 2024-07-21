@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/interfaces": "*",
+    "@fullstack_package/pg-orm": "*",
     "@fullstack_package/typescript-config": "*",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",

@@ -29,7 +29,7 @@ const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
     }
   };
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="flex gap-4 items-center">
         <Input
           required
@@ -82,7 +82,7 @@ const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
           <Button type="button">Browse Icons</Button>
         </Link>
       </div>
-    </>
+    </div>
   );
 };
 

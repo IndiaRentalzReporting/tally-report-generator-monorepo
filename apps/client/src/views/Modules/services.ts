@@ -1,6 +1,7 @@
 import { AxiosPromise } from 'axios';
 import { Module } from '@/models';
 import axios from '@/services/client';
+import { IColumnDetails } from './TableCreation';
 
 export const services = {
   getAll: async (): AxiosPromise<{
@@ -13,9 +14,10 @@ export const services = {
   ): AxiosPromise<{ module: Module }> => {
     return axios.get(`/modules/read/${id}`);
   },
-  createOne: async (
-    data: Partial<Module>
-  ): AxiosPromise<{ module: Module }> => {
+  createOne: async (data: {
+    moduleDetails: Partial<Module>;
+    columnDetails: Array<IColumnDetails>;
+  }): AxiosPromise<{ module: Module }> => {
     return axios.post('/modules/create', data);
   },
   updateOne: async (
