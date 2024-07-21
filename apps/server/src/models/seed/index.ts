@@ -1,4 +1,4 @@
-import { ModuleColumnsValue } from '@fullstack_package/interfaces';
+import { PGColumnDataTypeValue } from '@fullstack_package/interfaces';
 import config from '../../config';
 import ActionService from '../../services/ActionService';
 import AuthService from '../../services/AuthService';
@@ -20,7 +20,7 @@ const createModules = async () => {
     moduleDetails: ModuleInsert;
     columnDetails: Array<{
       name: ModuleInsert['name'];
-      type: ModuleColumnsValue;
+      type: PGColumnDataTypeValue;
     }>;
   }> = [
     {

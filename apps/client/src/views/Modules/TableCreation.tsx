@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unstable-nested-components */
 import {
-  ColumnType,
-  ModuleColumnsValue,
-  ModuleColumnsExample,
-  ModuleColumnValueFunction,
-  ModuleColumn
+  PGColumnDataType,
+  PGColumnDataTypeValue,
+  PGColumnDataTypeExample,
+  PGColumnDataTypeValueFunction,
+  PGColumnDataType
 } from '@fullstack_package/interfaces';
 import React, { useMemo, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -28,23 +28,23 @@ export interface ColumnData {
 }
 export interface IColumnDetails {
   name: string;
-  type: ModuleColumn;
-  value: ModuleColumnsValue;
-  example: ModuleColumnsExample;
+  type: PGColumnDataType;
+  value: PGColumnDataTypeValue;
+  example: PGColumnDataTypeExample;
 }
-const defaultColumnType: ModuleColumn = 'TEXT';
+const defaultColumnType: PGColumnDataType = 'TEXT';
 const defaultColumnData: IColumnDetails = {
   name: '',
   type: defaultColumnType,
-  value: ColumnType[defaultColumnType].value(),
-  example: ColumnType[defaultColumnType].example
+  value: PGColumnDataType[defaultColumnType].value(),
+  example: PGColumnDataType[defaultColumnType].example
 };
 export interface IColumnParameter {
-  type: ModuleColumnValueFunction;
+  type: PGColumnDataTypeValueFunction;
   [x: number]: number;
 }
-const defaultColumnParameter: { type: ModuleColumnValueFunction } = {
-  type: ColumnType[defaultColumnType].value
+const defaultColumnParameter: { type: PGColumnDataTypeValueFunction } = {
+  type: PGColumnDataType[defaultColumnType].value
 };
 
 interface ITableCreation {
@@ -92,8 +92,8 @@ const TableCreation: React.FC<ITableCreation> = ({
     setColumnDetails((prev) => prev.filter((el) => el.name !== id));
   };
 
-  const handleSelectChange = (type: keyof typeof ColumnType): void => {
-    const columnType = ColumnType[type].value;
+  const handleSelectChange = (type: keyof typeof PGColumnDataType): void => {
+    const columnType = PGColumnDataType[type].value;
     const hasParameters = columnType.length;
     let parameter = {};
     for (let i = 0; i < hasParameters; i++) {
@@ -103,7 +103,7 @@ const TableCreation: React.FC<ITableCreation> = ({
       ...prev,
       type,
       value: columnType(),
-      example: ColumnType[type].example
+      example: PGColumnDataType[type].example
     }));
     setColumnParameters({ type: columnType, ...parameter });
   };
@@ -181,7 +181,7 @@ const TableCreation: React.FC<ITableCreation> = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Roles</SelectLabel>
-              {Object.keys(ColumnType).map((type) => {
+              {Object.keys(PGColumnDataType).map((type) => {
                 const columnType = type;
                 return (
                   <SelectItem key={type} value={columnType}>

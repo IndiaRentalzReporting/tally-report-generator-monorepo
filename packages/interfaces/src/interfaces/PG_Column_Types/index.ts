@@ -1,4 +1,4 @@
-export const ColumnType = {
+export const PGColumnDataType = {
   SMALLINT: {
     value: () => 'SMALLINT' as const,
     example: '1',
@@ -188,9 +188,9 @@ export const ColumnType = {
   }
 } as const;
 
-export type ModuleColumnsExample =
-  (typeof ColumnType)[keyof typeof ColumnType]['example'];
-export type ModuleColumnValueFunction =
-  (typeof ColumnType)[keyof typeof ColumnType]['value'];
-export type ModuleColumnsValue = ReturnType<ModuleColumnValueFunction>;
-export type ModuleColumn = keyof typeof ColumnType;
+export type PGColumnDataTypeExample =
+  (typeof PGColumnDataType)[keyof typeof PGColumnDataType]['example'];
+export type PGColumnDataTypeValueFunction =
+  (typeof PGColumnDataType)[keyof typeof PGColumnDataType]['value'];
+export type PGColumnDataTypeValue = ReturnType<PGColumnDataTypeValueFunction>;
+export type PGColumnDataType = keyof typeof PGColumnDataType;

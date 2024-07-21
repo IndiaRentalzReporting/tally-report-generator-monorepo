@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { ModuleColumnsValue } from '@fullstack_package/interfaces';
+import { PGColumnDataTypeValue } from '@fullstack_package/interfaces';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
@@ -16,7 +16,7 @@ class ModuleService {
     data: ModuleInsert,
     columnDetails: Array<{
       name: ModuleInsert['name'];
-      type: ModuleColumnsValue;
+      type: PGColumnDataTypeValue;
     }>
   ): Promise<ModuleSelect | null> {
     const [module] = await db

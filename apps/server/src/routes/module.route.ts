@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as z from 'zod';
-import { ColumnType } from '@fullstack_package/interfaces';
+import { PGColumnDataType } from '@fullstack_package/interfaces';
 import {
   createOne,
   readAll,
@@ -25,7 +25,7 @@ moduleRouter.post(
       columnDetails: z.array(
         z.object({
           name: z.string(),
-          type: z.custom((val) => val in ColumnType)
+          type: z.custom((val) => val in PGColumnDataType)
         })
       )
     })

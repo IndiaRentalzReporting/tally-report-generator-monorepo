@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ModuleColumnsValue } from '@fullstack_package/interfaces';
+import { PGColumnDataTypeValue } from '@fullstack_package/interfaces';
 import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
@@ -11,7 +11,7 @@ export const createOne = async (
       moduleDetails: ModuleInsert;
       columnDetails: Array<{
         name: ModuleInsert['name'];
-        type: ModuleColumnsValue;
+        type: PGColumnDataTypeValue;
       }>;
     }
   >,
