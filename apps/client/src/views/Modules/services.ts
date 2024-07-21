@@ -1,7 +1,7 @@
 import { AxiosPromise } from 'axios';
-import { ModuleColumns } from '@fullstack_package/interfaces';
 import { Module } from '@/models';
 import axios from '@/services/client';
+import { IColumnDetails } from './TableCreation';
 
 export const services = {
   getAll: async (): AxiosPromise<{
@@ -16,7 +16,7 @@ export const services = {
   },
   createOne: async (data: {
     moduleDetails: Partial<Module>;
-    columnDetails: Array<{ name: string; type: ModuleColumns }>;
+    columnDetails: Array<IColumnDetails>;
   }): AxiosPromise<{ module: Module }> => {
     return axios.post('/modules/create', data);
   },

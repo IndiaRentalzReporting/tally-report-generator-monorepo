@@ -1,4 +1,11 @@
-import { ColumnType, ModuleColumns } from '@fullstack_package/interfaces';
+/* eslint-disable react/no-unstable-nested-components */
+import {
+  ColumnType,
+  ModuleColumnsValue,
+  ModuleColumnsExample,
+  ModuleColumnValueFunction,
+  ModuleColumn
+} from '@fullstack_package/interfaces';
 import React, { useMemo, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
@@ -14,14 +21,31 @@ import {
   SelectValue
 } from '@/components/ui';
 import { DataTable } from '@/components/composite';
+import { When } from '@/components/utility';
 
 export interface ColumnData {
   [key: string]: string;
 }
 export interface IColumnDetails {
   name: string;
-  type: ModuleColumns;
+  type: ModuleColumn;
+  value: ModuleColumnsValue;
+  example: ModuleColumnsExample;
 }
+const defaultColumnType: ModuleColumn = 'TEXT';
+const defaultColumnData: IColumnDetails = {
+  name: '',
+  type: defaultColumnType,
+  value: ColumnType[defaultColumnType].value(),
+  example: ColumnType[defaultColumnType].example
+};
+export interface IColumnParameter {
+  type: ModuleColumnValueFunction;
+  [x: number]: number;
+}
+const defaultColumnParameter: { type: ModuleColumnValueFunction } = {
+  type: ColumnType[defaultColumnType].value
+};
 
 interface ITableCreation {
   columnDetails: Array<IColumnDetails>;
@@ -32,21 +56,76 @@ const TableCreation: React.FC<ITableCreation> = ({
   columnDetails,
   setColumnDetails
 }) => {
-  const [columnData, setColumnData] = useState<{
-    name: string;
-    type: ModuleColumns;
-  }>({
-    name: '',
-    type: 'TEXT'
-  });
+  const [columnData, setColumnData] =
+    useState<IColumnDetails>(defaultColumnData);
+
+  const [columnParameters, setColumnParameters] = useState<IColumnParameter>(
+    defaultColumnParameter
+  );
+
+  const parameters = useMemo(() => {
+    const { type, ...rest } = columnParameters;
+    return rest;
+  }, [columnParameters]);
+
+  const handleAddColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    if (columnDetails.some((col) => col.name === columnData.name)) {
+      // show toast error
+      return;
+    }
+    const { type, ...rest } = columnParameters;
+    const parameterValues = Object.values(rest);
+    setColumnDetails((prev) => [
+      ...prev,
+      {
+        ...columnData,
+        value: type(...parameterValues)
+      }
+    ]);
+    setColumnParameters(defaultColumnParameter);
+    setColumnData(defaultColumnData);
+  };
+
+  const handleRemoveColumn: React.MouseEventHandler<HTMLButtonElement> = ({
+    currentTarget
+  }) => {
+    const { id } = currentTarget;
+    setColumnDetails((prev) => prev.filter((el) => el.name !== id));
+  };
+
+  const handleSelectChange = (type: keyof typeof ColumnType): void => {
+    const columnType = ColumnType[type].value;
+    const hasParameters = columnType.length;
+    let parameter = {};
+    for (let i = 0; i < hasParameters; i++) {
+      parameter = { ...parameter, [i]: null };
+    }
+    setColumnData((prev) => ({
+      ...prev,
+      type,
+      value: columnType(),
+      example: ColumnType[type].example
+    }));
+    setColumnParameters({ type: columnType, ...parameter });
+  };
+
+  const handleParameterChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: string
+  ) => {
+    setColumnParameters((prev) => ({
+      ...prev,
+      [Number(key)]: Number(e.target.value)
+    }));
+  };
 
   const tableData: ColumnData[] = useMemo(
     () => [
       columnDetails.reduce(
-        (agg, column) => ({
+        (agg, { name, example }) => ({
           ...agg,
-          [column.name]:
-            ColumnType[column.type as keyof typeof ColumnType]?.example || 'N/A'
+          [name]: example || 'N/A'
         }),
         {} as ColumnData
       )
@@ -80,30 +159,10 @@ const TableCreation: React.FC<ITableCreation> = ({
     [columnDetails]
   );
 
-  const handleAddColumn: React.MouseEventHandler<HTMLButtonElement> = () => {
-    if (columnDetails.some((col) => col.name === columnData.name)) {
-      // show toast error
-      return;
-    }
-    setColumnDetails((prev) => [...prev, columnData]);
-    setColumnData({
-      name: '',
-      type: 'TEXT'
-    });
-  };
-
-  const handleRemoveColumn: React.MouseEventHandler<HTMLButtonElement> = ({
-    currentTarget
-  }) => {
-    const { id } = currentTarget;
-    setColumnDetails((prev) => prev.filter((el) => el.name !== id));
-  };
-
   return (
     <div className="flex flex-col gap-6">
-      <form className="flex gap-4">
+      <div className="flex gap-4">
         <Input
-          required
           minLength={2}
           placeholder="Column Name"
           value={columnData.name}
@@ -115,9 +174,7 @@ const TableCreation: React.FC<ITableCreation> = ({
         <Select
           required
           name="type"
-          onValueChange={(type: ModuleColumns) =>
-            setColumnData((prev) => ({ ...prev, type }))
-          }
+          onValueChange={handleSelectChange}
           value={columnData.type}
         >
           <SelectTrigger>
@@ -126,22 +183,34 @@ const TableCreation: React.FC<ITableCreation> = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Roles</SelectLabel>
-              {Object.keys(ColumnType).map((type, index) => (
-                <SelectItem key={index} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
+              {Object.keys(ColumnType).map((type) => {
+                const columnType = type;
+                return (
+                  <SelectItem key={type} value={columnType}>
+                    {type}
+                  </SelectItem>
+                );
+              })}
             </SelectGroup>
           </SelectContent>
         </Select>
+        <When condition={!!Object.keys(parameters).length}>
+          {Object.keys(Object.keys(parameters)).map((key) => (
+            <Input
+              placeholder="Data Type Parameter"
+              name={`${key}-parameter`}
+              onChange={(e) => handleParameterChange(e, key)}
+            />
+          ))}
+        </When>
         <Button
-          type="submit"
-          disabled={!columnData.name || !columnData.type}
+          type="button"
           onClick={handleAddColumn}
+          disabled={!columnData.name || !columnData.type}
         >
           Add Column
         </Button>
-      </form>
+      </div>
       <DataTable columns={tableColumn} data={tableData} />
     </div>
   );

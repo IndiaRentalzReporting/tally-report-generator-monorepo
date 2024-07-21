@@ -32,7 +32,6 @@ moduleRouter.post(
   }),
   createOne
 );
-moduleRouter.get('/read', readAll);
 moduleRouter.get(
   '/read/:id',
   validateSchema({
@@ -42,6 +41,7 @@ moduleRouter.get(
   }),
   readOne
 );
+moduleRouter.get('/read', readAll);
 moduleRouter.patch(
   '/update/:id',
   validateSchema({

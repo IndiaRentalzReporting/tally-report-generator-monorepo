@@ -82,6 +82,9 @@ export const ColumnType = {
   TSQUERY: { value: () => 'TSQUERY' as const, example: 'fat & cat' }
 } as const;
 
-export type ModuleColumns = ReturnType<
-  (typeof ColumnType)[keyof typeof ColumnType]['value']
->;
+export type ModuleColumnsExample =
+  (typeof ColumnType)[keyof typeof ColumnType]['example'];
+export type ModuleColumnValueFunction =
+  (typeof ColumnType)[keyof typeof ColumnType]['value'];
+export type ModuleColumnsValue = ReturnType<ModuleColumnValueFunction>;
+export type ModuleColumn = keyof typeof ColumnType;

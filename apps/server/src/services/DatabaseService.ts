@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { ModuleColumns } from '@fullstack_package/interfaces';
+import { ModuleColumnsValue } from '@fullstack_package/interfaces';
 import db from '../models';
 import { ModuleInsert } from '../models/schema';
 
@@ -8,7 +8,7 @@ class DatabaseService {
     name: string,
     columns: Array<{
       name: ModuleInsert['name'];
-      type: ModuleColumns;
+      type: ModuleColumnsValue;
     }>
   ) {
     const columnsDefinition = columns
@@ -22,6 +22,14 @@ class DatabaseService {
 
   public static async dropTable(name: string) {
     const query = db.execute(sql`DROP TABLE ${sql.identifier(name)};`);
+    return query;
+  }
+
+  public static async findColumns(name: string) {
+    console.log({ name });
+    const query = await db.execute(
+      sql`SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '${sql.raw(name)}';`
+    );
     return query;
   }
 }

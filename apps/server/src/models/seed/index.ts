@@ -14,8 +14,8 @@ const createActions = async () => {
 };
 
 const createModules = async () => {
-  const modules = ['ROLES', 'USERS', 'MODULES'].map((module) =>
-    ModuleService.createOne({ name: module })
+  const modules = [{ name: 'ROLES', columns: [{}] }, 'USERS', 'MODULES'].map(
+    (module) => ModuleService.createOne({ name: module })
   );
   await Promise.all(modules);
 };

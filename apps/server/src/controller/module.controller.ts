@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ModuleColumns } from '@fullstack_package/interfaces';
+import { ModuleColumnsValue } from '@fullstack_package/interfaces';
 import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import ModuleService from '../services/ModuleService';
 
@@ -11,7 +11,7 @@ export const createOne = async (
       moduleDetails: ModuleInsert;
       columnDetails: Array<{
         name: ModuleInsert['name'];
-        type: ModuleColumns;
+        type: ModuleColumnsValue;
       }>;
     }
   >,
@@ -74,12 +74,14 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ModuleSelect, 'id'>>,
-  res: Response<{ module: ModuleSelect }>,
+  res: Response<{ module: ModuleSelect; columns?: Object }>,
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.findOne({ id: req.params.id });
-    return res.json({ module });
+    const { module, columns } = await ModuleService.findOne({
+      id: req.params.id
+    });
+    return res.json({ module, columns });
   } catch (e) {
     console.error("Couldn't fetch Module");
     return next(e);

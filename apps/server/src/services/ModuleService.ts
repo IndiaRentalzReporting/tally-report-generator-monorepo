@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { ModuleColumns } from '@fullstack_package/interfaces';
+import { ModuleColumnsValue } from '@fullstack_package/interfaces';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
@@ -16,7 +16,7 @@ class ModuleService {
     data: ModuleInsert,
     columnDetails: Array<{
       name: ModuleInsert['name'];
-      type: ModuleColumns;
+      type: ModuleColumnsValue;
     }>
   ): Promise<ModuleSelect | null> {
     const [module] = await db
@@ -49,7 +49,7 @@ class ModuleService {
 
   public static async findOne(
     data: Partial<ModuleSelect>
-  ): Promise<ModuleSelect> {
+  ): Promise<{ module: ModuleSelect; columns?: Object }> {
     const keys = Object.keys(data) as Array<keyof Partial<ModuleSelect>>;
     const values = Object.values(data) as Array<any>;
     const module = await db.query.ModuleSchema.findFirst({
@@ -62,7 +62,10 @@ class ModuleService {
       throw new NotFoundError(`Module does not exist`);
     }
 
-    return module;
+    const columns = await DatabaseService.findColumns(module.name);
+    console.log({ columns });
+
+    return { module, columns };
   }
 
   public static async readAll(): Promise<ModuleSelect[]> {
