@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_package/interfaces",
+  "name": "@fullstack_package/pg-orm",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

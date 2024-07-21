@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { PGColumnDataTypeValue } from '@fullstack_package/interfaces';
+import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {

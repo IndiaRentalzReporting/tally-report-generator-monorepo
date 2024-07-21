@@ -1,4 +1,4 @@
-import { PGColumnDataTypeValue } from '@fullstack_package/interfaces';
+import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
 import config from '../../config';
 import ActionService from '../../services/ActionService';
 import AuthService from '../../services/AuthService';

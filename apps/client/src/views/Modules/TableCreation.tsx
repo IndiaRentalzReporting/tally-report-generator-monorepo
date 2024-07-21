@@ -3,9 +3,8 @@ import {
   PGColumnDataType,
   PGColumnDataTypeValue,
   PGColumnDataTypeExample,
-  PGColumnDataTypeValueFunction,
-  PGColumnDataType
-} from '@fullstack_package/interfaces';
+  PGColumnDataTypeValueFunction
+} from '@fullstack_package/pg-orm';
 import React, { useMemo, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';

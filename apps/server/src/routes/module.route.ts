@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as z from 'zod';
-import { PGColumnDataType } from '@fullstack_package/interfaces';
+import { PGColumnDataType } from '@fullstack_package/pg-orm';
 import {
   createOne,
   readAll,
