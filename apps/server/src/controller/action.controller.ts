@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { ActionInsert, ActionSelect } from '../models/schema';
+import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
 import ActionService from '../services/ActionService';
+import BaseService from '../services/BaseService';
+
+const actionService = new BaseService(ActionSchema);
+
+type actionSelect = typeof ActionSchema.$inferSelect;
 
 export const readAll = async (
   req: Request,
@@ -18,11 +23,11 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ActionSelect, 'id'>>,
-  res: Response<{ action: ActionSelect }>,
+  res: Response<{ action: any }>,
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.findOne({ id: req.params.id });
+    const action = await actionService.findOne({ id: req.params.id });
     return res.json({ action });
   } catch (e) {
     console.error('Action does not exist!');

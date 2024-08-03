@@ -1,11 +1,4 @@
-import {
-  timestamp,
-  varchar,
-  uuid,
-  pgTable,
-  pgEnum,
-  boolean
-} from 'drizzle-orm/pg-core';
+import { varchar, uuid, pgTable, pgEnum } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSelect } from './permissions';
@@ -19,7 +12,7 @@ declare global {
   }
 }
 
-const isConfirmed = pgEnum('is_confirmed', [
+export const IsConfirmed = pgEnum('is_confirmed', [
   'onboarded',
   'authenticated',
   'unauthenticated'
@@ -37,7 +30,7 @@ export const UserSchema = pgTable('users', {
   last_name: varchar('last_name', { length: 50 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
   password: varchar('password', { length: 128 }).notNull(),
-  is_confirmed: isConfirmed('is_confirmed').default('onboarded')
+  is_confirmed: IsConfirmed('is_confirmed').default('onboarded').notNull()
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;

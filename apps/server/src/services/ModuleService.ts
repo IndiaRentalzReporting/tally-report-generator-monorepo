@@ -39,7 +39,6 @@ class ModuleService {
       await DatabaseService.createNewTable(module.name, columnDetails);
     } catch (e) {
       await this.deleteOne(module.id);
-      throw e;
     }
 
     await PermissionService.extendSuperuserModules(module.id);
