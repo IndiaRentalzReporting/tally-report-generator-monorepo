@@ -13,17 +13,17 @@ const createActions = async () => {
   await Promise.all(actions);
 };
 
-const createModules = async () => {
-  const modules = ['ROLES', 'USERS', 'MODULES'].map((module) =>
-    ModuleService.createOne({ name: module })
-  );
-  await Promise.all(modules);
-};
+// const createModules = async () => {
+//   const modules = ['ROLES', 'USERS', 'MODULES'].map((module) =>
+//     ModuleService.createOne({ name: module })
+//   );
+//   await Promise.all(modules);
+// };
 
-const createRoles = async () => {
-  const name = config.app.SUPER_USER_NAME;
-  return RoleService.createOne({ name });
-};
+// const createRoles = async () => {
+//   const name = config.app.SUPER_USER_NAME;
+//   return RoleService.createOne({ name });
+// };
 
 const seed = async () => {
   const {
@@ -42,10 +42,10 @@ const seed = async () => {
     email,
     password
   });
-  const role = await createRoles();
+  const role = await RoleService.findOne({ 'name': 'sysadmin' });
   await UserService.updateRole([user.id], role.id);
-  await createActions();
-  await createModules();
+  // await createActions();
+  // await createModules();
   process.exit();
 };
 

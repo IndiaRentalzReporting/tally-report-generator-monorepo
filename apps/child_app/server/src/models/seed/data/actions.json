@@ -1,0 +1,18 @@
+[
+    {
+        "name": "create",
+        "isReadonly": true
+    },
+    {
+        "name": "edit",
+        "isReadonly": true
+    },
+    {
+        "name": "delete",
+        "isReadonly": true
+    },
+    {
+        "name": "approve",
+        "isReadonly": true
+    }
+]

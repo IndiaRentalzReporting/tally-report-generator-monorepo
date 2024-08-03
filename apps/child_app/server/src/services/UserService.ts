@@ -13,8 +13,6 @@ class UserService {
   public static async createOne(
     data: UserInsert
   ): Promise<Omit<UserSelect, 'password'>> {
-
-    data.password = await bcrypt 
     const [user] = await db
       .insert(UserSchema)
       .values({ ...data, email: data.email.toLowerCase() })
