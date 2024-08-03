@@ -11,6 +11,7 @@ import { RoleSchema, RoleSelect } from './roles';
 import { PermissionSelect } from './permissions';
 import { ModuleSelect } from './modules';
 import { ActionSelect } from './actions';
+import { BaseEntitySchema } from './base';
 
 declare global {
   namespace Express {
@@ -23,8 +24,11 @@ const isConfirmed = pgEnum('is_confirmed', [
   'authenticated',
   'unauthenticated'
 ]);
+
+const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
+
 export const UserSchema = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  ...BaseEntitySchemaWithoutName,
   role_id: uuid('role_id').references(() => RoleSchema.id, {
     onDelete: 'set null',
     onUpdate: 'cascade'
@@ -33,13 +37,6 @@ export const UserSchema = pgTable('users', {
   last_name: varchar('last_name', { length: 50 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
   password: varchar('password', { length: 128 }).notNull(),
-  createdAt: timestamp('createdAt', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updatedAt', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
   is_confirmed: isConfirmed('is_confirmed').default('onboarded')
 });
 
