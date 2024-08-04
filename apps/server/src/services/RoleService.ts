@@ -37,6 +37,7 @@ class RoleService {
             updatedAt: false,
             role_id: false,
             createdAt: false,
+
             id: false
           },
           with: {

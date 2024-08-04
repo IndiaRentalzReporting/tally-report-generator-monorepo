@@ -2,17 +2,10 @@ import {
   ExtractTablesWithRelations,
   and,
   eq,
-  TableRelationalConfig,
-  DBQueryConfig,
-  FindTableByDBName,
-  BuildQueryResult,
-  KnownKeysOnly
+  TableRelationalConfig
 } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
-import {
-  PgRelationalQuery,
-  RelationalQueryBuilder
-} from 'drizzle-orm/pg-core/query-builders/query';
+import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 import { NotFoundError } from '../errors';
 import db from '../models';
 import * as schemas from '../models/schema';
@@ -72,40 +65,11 @@ class BaseService<
     return entity;
   }
 
-  public async findOne<
-    TSelection extends Omit<
-      DBQueryConfig<
-        'many',
-        true,
-        ExtractTablesWithRelations<typeof schemas>,
-        ExtractTablesWithRelations<typeof schemas>['RoleSchema']
-      >,
-      'limit'
-    >
-  >(
+  public async findOne(
     data: Partial<T['$inferSelect']>,
-    extra?: KnownKeysOnly<
-      TSelection,
-      Omit<
-        DBQueryConfig<
-          'many',
-          true,
-          ExtractTablesWithRelations<typeof schemas>,
-          ExtractTablesWithRelations<typeof schemas>['RoleSchema']
-        >,
-        'limit'
-      >
-    >['with'],
-    callback?: (entity: T['$inferSelect']) => any
-  ): Promise<
-    PgRelationalQuery<
-      BuildQueryResult<
-        ExtractTablesWithRelations<typeof schemas>,
-        ExtractTablesWithRelations<typeof schemas>['RoleSchema'],
-        TSelection
-      >
-    >
-  > {
+    extra?: NonNullable<Parameters<K['findFirst']>[0]>['with'],
+    callback?: (entity: NonNullable<Awaited<ReturnType<K['findFirst']>>>) => any
+  ): Promise<NonNullable<Awaited<ReturnType<K['findFirst']>>>> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
     >;
@@ -123,10 +87,10 @@ class BaseService<
     }
 
     if (callback) {
-      await callback(entity);
+      callback(entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>);
     }
 
-    return entity;
+    return entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>;
   }
 
   public async updateOne(

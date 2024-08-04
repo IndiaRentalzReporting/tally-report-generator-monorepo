@@ -10,6 +10,10 @@ import DatabaseService from '../services/DatabaseService';
 import PermissionService from '../services/PermissionService';
 import db from '../models';
 
+type sts = NonNullable<
+  Awaited<ReturnType<(typeof db.query.ActionSchema)['findFirst']>>
+>;
+
 const ModuleService = new BaseService(ModuleSchema, db.query.ModuleSchema);
 
 export const createOne = async (
