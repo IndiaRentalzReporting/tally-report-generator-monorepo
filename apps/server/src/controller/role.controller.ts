@@ -1,6 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { DetailedRole, RoleInsert, RoleSelect } from '../models/schema';
+import {
+  DetailedRole,
+  RoleInsert,
+  RoleSchema,
+  RoleSelect
+} from '../models/schema';
 import RoleService from '../services/RoleService';
+import BaseService from '../services/BaseService';
+import db from '../models';
+
+const roleService = new BaseService(RoleSchema, db.query.RoleSchema);
 
 export const readAll = async (
   req: Request,
@@ -18,11 +27,46 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<RoleSelect, 'id'>>,
-  res: Response<{ role: DetailedRole }>,
+  res: Response<{ role: any }>,
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.findOne({ id: req.params.id });
+    const role = await roleService.findOne(
+      { id: req.params.id },
+      {
+        permission: {
+          columns: {
+            module_id: false,
+            updatedAt: false,
+            role_id: false,
+            createdAt: false,
+            id: false
+          },
+          with: {
+            permissionAction: {
+              columns: {
+                permission_id: false,
+                action_id: false
+              },
+              with: {
+                action: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            },
+            module: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        }
+      }
+    );
     return res.json({ role });
   } catch (e) {
     console.error("Couldn't fetch a Role");

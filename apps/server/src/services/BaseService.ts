@@ -2,10 +2,17 @@ import {
   ExtractTablesWithRelations,
   and,
   eq,
-  TableRelationalConfig
+  TableRelationalConfig,
+  DBQueryConfig,
+  FindTableByDBName,
+  BuildQueryResult,
+  KnownKeysOnly
 } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
-import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
+import {
+  PgRelationalQuery,
+  RelationalQueryBuilder
+} from 'drizzle-orm/pg-core/query-builders/query';
 import { NotFoundError } from '../errors';
 import db from '../models';
 import * as schemas from '../models/schema';
@@ -16,16 +23,17 @@ class BaseService<
     schema: undefined;
     columns: Record<string, any>;
     dialect: 'pg';
-  }>
+  }>,
+  K extends RelationalQueryBuilder<
+    ExtractTablesWithRelations<typeof schemas>,
+    TableRelationalConfig
+  >
 > {
   protected entityName: string;
 
   constructor(
     protected schema: T,
-    protected tableName: RelationalQueryBuilder<
-      ExtractTablesWithRelations<typeof schemas>,
-      TableRelationalConfig
-    >
+    protected tableName: K
   ) {
     const { table } = schema.name;
     // @ts-ignore
@@ -64,10 +72,40 @@ class BaseService<
     return entity;
   }
 
-  public async findOne(
+  public async findOne<
+    TSelection extends Omit<
+      DBQueryConfig<
+        'many',
+        true,
+        ExtractTablesWithRelations<typeof schemas>,
+        ExtractTablesWithRelations<typeof schemas>['RoleSchema']
+      >,
+      'limit'
+    >
+  >(
     data: Partial<T['$inferSelect']>,
+    extra?: KnownKeysOnly<
+      TSelection,
+      Omit<
+        DBQueryConfig<
+          'many',
+          true,
+          ExtractTablesWithRelations<typeof schemas>,
+          ExtractTablesWithRelations<typeof schemas>['RoleSchema']
+        >,
+        'limit'
+      >
+    >['with'],
     callback?: (entity: T['$inferSelect']) => any
-  ): Promise<T['$inferSelect']> {
+  ): Promise<
+    PgRelationalQuery<
+      BuildQueryResult<
+        ExtractTablesWithRelations<typeof schemas>,
+        ExtractTablesWithRelations<typeof schemas>['RoleSchema'],
+        TSelection
+      >
+    >
+  > {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
     >;
@@ -76,7 +114,8 @@ class BaseService<
     const entity = await this.tableName.findFirst({
       where: and(
         ...keys.map((key, index) => eq(this.schema[key], values[index]))
-      )
+      ),
+      with: extra
     });
 
     if (!entity) {

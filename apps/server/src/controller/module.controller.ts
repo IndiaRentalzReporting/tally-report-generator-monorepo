@@ -109,6 +109,7 @@ export const readOne = async (
       {
         id: req.params.id
       },
+      {},
       async (module) => {
         console.log({ module });
         const columns = await DatabaseService.findColumns(module.name);
