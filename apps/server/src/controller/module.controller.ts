@@ -8,8 +8,9 @@ import {
 import BaseService from '../services/BaseService';
 import DatabaseService from '../services/DatabaseService';
 import PermissionService from '../services/PermissionService';
+import db from '../models';
 
-const ModuleService = new BaseService(ModuleSchema);
+const ModuleService = new BaseService(ModuleSchema, db.query.ModuleSchema);
 
 export const createOne = async (
   req: Request<

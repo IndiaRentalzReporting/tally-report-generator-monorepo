@@ -9,8 +9,9 @@ import {
 } from '../models/schema';
 import PermissionService from '../services/PermissionService';
 import BaseService from '../services/BaseService';
+import db from '../models';
 
-const ActionService = new BaseService(ActionSchema);
+const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
 
 export const readAll = async (
   req: Request,

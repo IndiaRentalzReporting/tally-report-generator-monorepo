@@ -7,8 +7,9 @@ import { ActionSchema, ModuleInsert, ModuleSchema } from '../schema';
 import BaseService from '../../services/BaseService';
 import DatabaseService from '../../services/DatabaseService';
 import PermissionService from '../../services/PermissionService';
+import db from '..';
 
-const ActionService = new BaseService(ActionSchema);
+const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
 
 const createActions = async () => {
   const actions = ['CREATE', 'READ', 'UPDATE', 'DELETE'].map(async (name) => {
@@ -60,7 +61,7 @@ const createModules = async () => {
       ]
     }
   ];
-  const ModuleService = new BaseService(ModuleSchema);
+  const ModuleService = new BaseService(ModuleSchema, db.query.ModuleSchema);
   modules.map(async ({ moduleDetails, columnDetails }) =>
     ModuleService.createOne(moduleDetails, async (createdModule) => {
       try {

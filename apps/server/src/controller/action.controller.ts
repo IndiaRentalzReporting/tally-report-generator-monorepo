@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
 import BaseService from '../services/BaseService';
 import PermissionService from '../services/PermissionService';
+import db from '../models';
 
-const ActionService = new BaseService(ActionSchema);
+const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
 
 export const readAll = async (
   req: Request,

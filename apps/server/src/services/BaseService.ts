@@ -1,7 +1,14 @@
-import { and, eq } from 'drizzle-orm';
+import {
+  ExtractTablesWithRelations,
+  and,
+  eq,
+  TableRelationalConfig
+} from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
+import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 import { NotFoundError } from '../errors';
 import db from '../models';
+import * as schemas from '../models/schema';
 
 class BaseService<
   T extends PgTableWithColumns<{
@@ -11,7 +18,19 @@ class BaseService<
     dialect: 'pg';
   }>
 > {
-  constructor(protected schema: T) {}
+  protected entityName: string;
+
+  constructor(
+    protected schema: T,
+    protected tableName: RelationalQueryBuilder<
+      ExtractTablesWithRelations<typeof schemas>,
+      TableRelationalConfig
+    >
+  ) {
+    const { table } = schema.name;
+    // @ts-ignore
+    this.entityName = table[Object.getOwnPropertySymbols(table)[0]];
+  }
 
   public async createOne(
     data: T['$inferInsert'],
@@ -20,9 +39,7 @@ class BaseService<
     const [entity] = await db.insert(this.schema).values(data).returning();
 
     if (!entity)
-      throw new NotFoundError(
-        `${String(this.schema.name)} returned as undefined`
-      );
+      throw new NotFoundError(`${this.entityName} returned as undefined`);
 
     if (callback) {
       await callback(entity);
@@ -34,10 +51,10 @@ class BaseService<
   public async findAll(
     callback?: (entity: T['$inferSelect'][]) => any
   ): Promise<T['$inferSelect'][]> {
-    const entity = await db.select().from(this.schema);
+    const entity = await this.tableName.findMany();
 
     if (!entity.length) {
-      throw new NotFoundError(`${String(this.schema.name)} does not exist`);
+      throw new NotFoundError(`${this.entityName} does not exist`);
     }
 
     if (callback) {
@@ -56,16 +73,14 @@ class BaseService<
     >;
     const values = Object.values(data) as Array<any>;
 
-    const [entity] = await db
-      .select()
-      .from(this.schema)
-      .where(
-        and(...keys.map((key, index) => eq(this.schema[key], values[index])))
+    const entity = await this.tableName.findFirst({
+      where: and(
+        ...keys.map((key, index) => eq(this.schema[key], values[index]))
       )
-      .limit(1);
+    });
 
     if (!entity) {
-      throw new NotFoundError(`${String(this.schema.name)} does not exist`);
+      throw new NotFoundError(`${this.entityName} does not exist`);
     }
 
     if (callback) {
@@ -86,8 +101,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity)
-      throw new NotFoundError(`${String(this.schema.name)} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.entityName} does not exits`);
 
     if (callback) {
       await callback(entity);
@@ -105,8 +119,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity)
-      throw new NotFoundError(`${String(this.schema.name)} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.entityName} does not exits`);
 
     if (callback) {
       await callback(entity);

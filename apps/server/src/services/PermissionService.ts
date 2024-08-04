@@ -15,7 +15,7 @@ import RoleService from './RoleService';
 import config from '../config';
 import BaseService from './BaseService';
 
-const ActionService = new BaseService(ActionSchema);
+const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
 class PermissionService {
   public static async createOne(
     data: Pick<PermissionInsert, 'module_id' | 'role_id'>

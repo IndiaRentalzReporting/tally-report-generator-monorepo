@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ActionSchema, ActionSelect, ModuleSchema } from '../models/schema';
 import { toTitleCase } from '../utils';
 import BaseService from '../services/BaseService';
+import db from '../models';
 
 declare global {
   namespace Express {
@@ -19,8 +20,8 @@ export const attachModuleActionData = async (
 ) => {
   const { url } = req;
   const [_, module, action] = url.split('/');
-  const ActionService = new BaseService(ActionSchema);
-  const ModuleService = new BaseService(ModuleSchema);
+  const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
+  const ModuleService = new BaseService(ModuleSchema, db.query.ModuleSchema);
 
   const Y = await ActionService.findOne({
     name: action?.toUpperCase() as ActionSelect['name']
