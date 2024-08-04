@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
-import ActionService from '../services/ActionService';
 import BaseService from '../services/BaseService';
+import PermissionService from '../services/PermissionService';
 
-const actionService = new BaseService(ActionSchema);
-
-type actionSelect = typeof ActionSchema.$inferSelect;
+const ActionService = new BaseService(ActionSchema);
 
 export const readAll = async (
   req: Request,
@@ -13,7 +11,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await ActionService.readAll();
+    const actions = await ActionService.findAll();
     return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');
@@ -23,11 +21,11 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ActionSelect, 'id'>>,
-  res: Response<{ action: any }>,
+  res: Response<{ action: ActionSelect }>,
   next: NextFunction
 ) => {
   try {
-    const action = await actionService.findOne({ id: req.params.id });
+    const action = await ActionService.findOne({ id: req.params.id });
     return res.json({ action });
   } catch (e) {
     console.error('Action does not exist!');
@@ -41,7 +39,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.updateOne(req.body, req.params.id);
+    const action = await ActionService.updateOne(req.params.id, req.body);
     return res.json({ action });
   } catch (e) {
     console.error('Could not update action');
@@ -55,7 +53,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.deleteOne(req.params.id);
+    const action = await ActionService.deleteOneById(req.params.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not delete action');
@@ -74,6 +72,7 @@ export const createOne = async (
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
+    await PermissionService.extendSuperuserActions(action.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');

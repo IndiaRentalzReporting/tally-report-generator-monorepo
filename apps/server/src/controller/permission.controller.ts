@@ -4,10 +4,13 @@ import {
   ActionSelect,
   RoleSelect,
   PermissionSelect,
-  DetailedPermission
+  DetailedPermission,
+  ActionSchema
 } from '../models/schema';
 import PermissionService from '../services/PermissionService';
-import ActionService from '../services/ActionService';
+import BaseService from '../services/BaseService';
+
+const ActionService = new BaseService(ActionSchema);
 
 export const readAll = async (
   req: Request,

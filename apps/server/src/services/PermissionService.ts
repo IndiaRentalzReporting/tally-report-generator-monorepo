@@ -2,9 +2,9 @@ import { and, eq } from 'drizzle-orm';
 import { CustomError, NotFoundError } from '../errors';
 import db from '../models';
 import {
+  ActionSchema,
   ActionSelect,
   DetailedPermission,
-  ModuleSelect,
   PermissionActionSelect,
   PermissionInsert,
   PermissionSchema,
@@ -12,9 +12,10 @@ import {
 } from '../models/schema';
 import PermissionActionService from './PermissionActionService';
 import RoleService from './RoleService';
-import ActionService from './ActionService';
 import config from '../config';
+import BaseService from './BaseService';
 
+const ActionService = new BaseService(ActionSchema);
 class PermissionService {
   public static async createOne(
     data: Pick<PermissionInsert, 'module_id' | 'role_id'>
@@ -194,7 +195,7 @@ class PermissionService {
       role_id
     });
 
-    const actions = await ActionService.readAll();
+    const actions = await ActionService.findAll();
 
     const promises = actions.map(({ id: action_id }) =>
       this.assignAction({ permission_id, action_id })

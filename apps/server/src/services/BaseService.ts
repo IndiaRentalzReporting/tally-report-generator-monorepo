@@ -13,6 +13,27 @@ class BaseService<
 > {
   constructor(protected schema: T) {}
 
+  public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
+    const [entity] = await db.insert(this.schema).values(data).returning();
+
+    if (!entity)
+      throw new NotFoundError(
+        `${String(this.schema.name)} returned as undefined`
+      );
+
+    return entity;
+  }
+
+  public async findAll(): Promise<T['$inferSelect'][]> {
+    const entity = await db.select().from(this.schema);
+
+    if (!entity) {
+      throw new NotFoundError(`${String(this.schema.name)} does not exist`);
+    }
+
+    return entity;
+  }
+
   public async findOne(
     data: Partial<T['$inferSelect']>
   ): Promise<T['$inferSelect']> {
@@ -21,7 +42,7 @@ class BaseService<
     >;
     const values = Object.values(data) as Array<any>;
 
-    const module = await db
+    const query = db
       .select()
       .from(this.schema)
       .where(
@@ -29,11 +50,43 @@ class BaseService<
       )
       .limit(1);
 
-    if (!module) {
-      throw new NotFoundError(`Module does not exist`);
+    const entity = await query.execute();
+
+    if (!entity.length) {
+      throw new NotFoundError(`${String(this.schema.name)} does not exist`);
     }
 
-    return module;
+    return entity;
+  }
+
+  public async updateOne(
+    id: T['$inferSelect']['id'],
+    data: T['$inferInsert']
+  ): Promise<T['$inferSelect']> {
+    const [entity] = await db
+      .update(this.schema)
+      .set({ ...data })
+      .where(eq(this.schema.id, id))
+      .returning();
+
+    if (!entity)
+      throw new NotFoundError(`${String(this.schema.name)} does not exits`);
+
+    return entity;
+  }
+
+  public async deleteOneById(
+    id: T['$inferSelect']['id']
+  ): Promise<T['$inferSelect']> {
+    const [entity] = await db
+      .delete(this.schema)
+      .where(eq(this.schema.id, id))
+      .returning();
+
+    if (!entity)
+      throw new NotFoundError(`${String(this.schema.name)} does not exits`);
+
+    return entity;
   }
 }
 
