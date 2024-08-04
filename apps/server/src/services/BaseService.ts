@@ -13,7 +13,10 @@ class BaseService<
 > {
   constructor(protected schema: T) {}
 
-  public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
+  public async createOne(
+    data: T['$inferInsert'],
+    callback?: (entity: T['$inferSelect']) => any
+  ): Promise<T['$inferSelect']> {
     const [entity] = await db.insert(this.schema).values(data).returning();
 
     if (!entity)
@@ -21,28 +24,39 @@ class BaseService<
         `${String(this.schema.name)} returned as undefined`
       );
 
+    if (callback) {
+      await callback(entity);
+    }
+
     return entity;
   }
 
-  public async findAll(): Promise<T['$inferSelect'][]> {
+  public async findAll(
+    callback?: (entity: T['$inferSelect'][]) => any
+  ): Promise<T['$inferSelect'][]> {
     const entity = await db.select().from(this.schema);
 
-    if (!entity) {
+    if (!entity.length) {
       throw new NotFoundError(`${String(this.schema.name)} does not exist`);
+    }
+
+    if (callback) {
+      await callback(entity);
     }
 
     return entity;
   }
 
   public async findOne(
-    data: Partial<T['$inferSelect']>
+    data: Partial<T['$inferSelect']>,
+    callback?: (entity: T['$inferSelect']) => any
   ): Promise<T['$inferSelect']> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
     >;
     const values = Object.values(data) as Array<any>;
 
-    const query = db
+    const [entity] = await db
       .select()
       .from(this.schema)
       .where(
@@ -50,10 +64,12 @@ class BaseService<
       )
       .limit(1);
 
-    const entity = await query.execute();
-
-    if (!entity.length) {
+    if (!entity) {
       throw new NotFoundError(`${String(this.schema.name)} does not exist`);
+    }
+
+    if (callback) {
+      await callback(entity);
     }
 
     return entity;
@@ -61,7 +77,8 @@ class BaseService<
 
   public async updateOne(
     id: T['$inferSelect']['id'],
-    data: T['$inferInsert']
+    data: T['$inferInsert'],
+    callback?: (entity: T['$inferSelect']) => any
   ): Promise<T['$inferSelect']> {
     const [entity] = await db
       .update(this.schema)
@@ -72,11 +89,16 @@ class BaseService<
     if (!entity)
       throw new NotFoundError(`${String(this.schema.name)} does not exits`);
 
+    if (callback) {
+      await callback(entity);
+    }
+
     return entity;
   }
 
   public async deleteOneById(
-    id: T['$inferSelect']['id']
+    id: T['$inferSelect']['id'],
+    callback?: (entity: T['$inferSelect']) => any
   ): Promise<T['$inferSelect']> {
     const [entity] = await db
       .delete(this.schema)
@@ -85,6 +107,10 @@ class BaseService<
 
     if (!entity)
       throw new NotFoundError(`${String(this.schema.name)} does not exits`);
+
+    if (callback) {
+      await callback(entity);
+    }
 
     return entity;
   }

@@ -1,11 +1,14 @@
 import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
 import config from '../../config';
-import ActionService from '../../services/ActionService';
 import AuthService from '../../services/AuthService';
-import ModuleService from '../../services/ModuleService';
 import RoleService from '../../services/RoleService';
 import UserService from '../../services/UserService';
-import { ModuleInsert } from '../schema';
+import { ActionSchema, ModuleInsert, ModuleSchema } from '../schema';
+import BaseService from '../../services/BaseService';
+import DatabaseService from '../../services/DatabaseService';
+import PermissionService from '../../services/PermissionService';
+
+const ActionService = new BaseService(ActionSchema);
 
 const createActions = async () => {
   const actions = ['CREATE', 'READ', 'UPDATE', 'DELETE'].map(async (name) => {
@@ -57,8 +60,17 @@ const createModules = async () => {
       ]
     }
   ];
-  modules.map(({ moduleDetails, columnDetails }) =>
-    ModuleService.createOne(moduleDetails, columnDetails)
+  const ModuleService = new BaseService(ModuleSchema);
+  modules.map(async ({ moduleDetails, columnDetails }) =>
+    ModuleService.createOne(moduleDetails, async (createdModule) => {
+      try {
+        await DatabaseService.createNewTable(createdModule.name, columnDetails);
+      } catch (e) {
+        await ModuleService.deleteOneById(createdModule.id);
+      }
+
+      await PermissionService.extendSuperuserModules(createdModule.id);
+    })
   );
   await Promise.all(modules);
 };

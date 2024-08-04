@@ -1,7 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
-import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
-import ModuleService from '../services/ModuleService';
+import {
+  ModuleInsert,
+  ModuleSchema,
+  ModuleSelect
+} from '../models/schema/modules';
+import BaseService from '../services/BaseService';
+import DatabaseService from '../services/DatabaseService';
+import PermissionService from '../services/PermissionService';
+
+const ModuleService = new BaseService(ModuleSchema);
 
 export const createOne = async (
   req: Request<
@@ -19,11 +27,19 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.createOne(
-      req.body.moduleDetails,
-      req.body.columnDetails
-    );
-    return res.json({ module });
+    await ModuleService.createOne(req.body.moduleDetails, async (module) => {
+      try {
+        await DatabaseService.createNewTable(
+          module.name,
+          req.body.columnDetails
+        );
+      } catch (e) {
+        await ModuleService.deleteOneById(module.id);
+      }
+
+      await PermissionService.extendSuperuserModules(module.id);
+      return res.json({ module });
+    });
   } catch (e) {
     console.error('Could not create a new Module');
     return next(e);
@@ -36,7 +52,14 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.updateOne(req.body, req.params.id);
+    const { name: oldName } = await ModuleService.findOne({
+      id: req.params.id
+    });
+    const module = await ModuleService.updateOne(
+      req.params.id,
+      req.body,
+      async (module) => DatabaseService.updateTable(oldName, module.name)
+    );
     return res.json({ module });
   } catch (e) {
     console.error('Could not update a Module');
@@ -50,7 +73,10 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.deleteOne(req.params.id);
+    const module = await ModuleService.deleteOneById(
+      req.params.id,
+      async (module) => DatabaseService.dropTable(module.name)
+    );
     return res.json({ module });
   } catch (e) {
     console.error('Could not delete a Module');
@@ -64,7 +90,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await ModuleService.readAll();
+    const modules = await ModuleService.findAll();
     return res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");
@@ -74,14 +100,20 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ModuleSelect, 'id'>>,
-  res: Response<{ module: ModuleSelect; columns?: Object }>,
+  res: Response<{ module: ModuleSelect; columns: Object }>,
   next: NextFunction
 ) => {
   try {
-    const { module, columns } = await ModuleService.findOne({
-      id: req.params.id
-    });
-    return res.json({ module, columns });
+    await ModuleService.findOne(
+      {
+        id: req.params.id
+      },
+      async (module) => {
+        console.log({ module });
+        const columns = await DatabaseService.findColumns(module.name);
+        return res.json({ module, columns });
+      }
+    );
   } catch (e) {
     console.error("Couldn't fetch Module");
     return next(e);
