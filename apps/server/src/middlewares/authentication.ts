@@ -51,10 +51,13 @@ export const isRoleAllowed = async (
       const { permission } = role;
 
       const allowed = permission.find(
-        ({ permissionAction, module: { name } }) =>
-          permissionAction.find(({ action: { name } }) => name === action) &&
-          name === module
+        ({ permissionAction, module: { name: moduleName } }) =>
+          permissionAction.find(
+            ({ action: { name: actionName } }) => actionName === action
+          ) && moduleName === module
       );
+
+      console.log(allowed);
 
       if (allowed) return next();
       throw new UnauthenticatedError(
@@ -76,7 +79,9 @@ export const isAdmin = async (
     const {
       user: { email }
     } = req;
-    const user = (await UserService.findOne({ email })) as DetailedUser;
+    const user = (await UserService.findOneDetailedUser({
+      email
+    })) as DetailedUser;
     if (user?.role?.name.toLowerCase() === config.app.SUPER_USER_NAME) {
       return next();
     }

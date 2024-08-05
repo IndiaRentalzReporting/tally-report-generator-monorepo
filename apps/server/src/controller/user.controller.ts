@@ -73,7 +73,7 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const u = (await UserService.findOne({
+    const u = (await UserService.findOneDetailedUser({
       id: req.params.id
     })) as DetailedUser;
     const user = UserService.prettifyUser(u);

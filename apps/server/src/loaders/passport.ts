@@ -36,7 +36,9 @@ const passportLoader = (app: Express) => {
 
   passport.deserializeUser(async (email: string, done) => {
     try {
-      const user = (await UserService.findOne({ email })) as DetailedUser;
+      const user = (await UserService.findOneDetailedUser({
+        email
+      })) as DetailedUser;
       if (user) done(null, user);
     } catch (e) {
       done(e);

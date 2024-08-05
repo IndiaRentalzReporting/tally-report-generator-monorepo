@@ -28,8 +28,8 @@ export const attachModuleActionData = async (
     name: module?.toUpperCase()
   });
 
-  req.action = toTitleCase(action ?? '');
-  req.module = toTitleCase(module ?? '');
+  req.action = action?.toUpperCase();
+  req.module = module?.toUpperCase();
 
   return next();
 };

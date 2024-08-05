@@ -24,47 +24,9 @@ class AuthService {
     data: Pick<UserInsert, 'email' | 'password'>
   ): Promise<DetailedUser> {
     const { email, password } = data;
-    const user = (await UserService.findOne(
-      { email },
-      {
-        role: {
-          columns: {
-            name: true
-          },
-          with: {
-            permission: {
-              columns: {
-                role_id: false,
-                createdAt: false,
-                updatedAt: false,
-                module_id: false
-              },
-              with: {
-                permissionAction: {
-                  columns: {
-                    permission_id: false,
-                    action_id: false
-                  },
-                  with: {
-                    action: {
-                      columns: {
-                        name: true
-                      }
-                    }
-                  }
-                },
-                module: {
-                  columns: {
-                    name: true,
-                    id: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    )) as DetailedUser;
+    const user = (await UserService.findOneDetailedUser({
+      email
+    })) as DetailedUser;
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');

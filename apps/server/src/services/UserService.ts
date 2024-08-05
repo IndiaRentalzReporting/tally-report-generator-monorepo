@@ -11,6 +11,49 @@ class UserService extends BaseService<
     super(UserSchema, db.query.UserSchema);
   }
 
+  public async findOneDetailedUser(
+    data: Partial<typeof this.schema.$inferSelect>
+  ): Promise<NonNullable<ReturnType<typeof this.tableName.findFirst>>> {
+    return super.findOne(data, {
+      role: {
+        columns: {
+          name: true
+        },
+        with: {
+          permission: {
+            columns: {
+              role_id: false,
+              createdAt: false,
+              updatedAt: false,
+              module_id: false
+            },
+            with: {
+              permissionAction: {
+                columns: {
+                  permission_id: false,
+                  action_id: false
+                },
+                with: {
+                  action: {
+                    columns: {
+                      name: true
+                    }
+                  }
+                }
+              },
+              module: {
+                columns: {
+                  name: true,
+                  id: true
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
   public prettifyUser(user: DetailedUser): DetailedUser {
     user?.role?.permission.map((permission) => {
       permission.module.name = toTitleCase(permission.module.name);
