@@ -1,11 +1,14 @@
-import { timestamp, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { RoleSchema, RoleSelect } from './roles';
 import { ModuleSchema, ModuleSelect } from './modules';
 import { ActionSelect } from './actions';
+import { BaseEntitySchema } from './base';
+
+const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
 
 export const PermissionSchema = pgTable('permissions', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  ...BaseEntitySchemaWithoutName,
   role_id: uuid('role_id')
     .notNull()
     .references(() => RoleSchema.id, {
@@ -17,14 +20,7 @@ export const PermissionSchema = pgTable('permissions', {
     .references(() => ModuleSchema.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade'
-    }),
-  createdAt: timestamp('createdAt', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updatedAt', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date())
+    })
 });
 
 export type PermissionInsert = typeof PermissionSchema.$inferInsert;

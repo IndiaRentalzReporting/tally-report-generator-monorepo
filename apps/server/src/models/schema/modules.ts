@@ -1,26 +1,12 @@
-import {
-  text,
-  boolean,
-  varchar,
-  timestamp,
-  uuid,
-  pgTable
-} from 'drizzle-orm/pg-core';
+import { text, boolean, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import * as z from 'zod';
+import { BaseEntitySchema } from './base';
 
 export const ModuleSchema = pgTable('modules', {
-  id: uuid('id').notNull().defaultRandom().primaryKey(),
-  name: varchar('name', { length: 50 }).unique().notNull(),
+  ...BaseEntitySchema,
   isPrivate: boolean('isPrivate').notNull().default(false),
-  icon: text('icon'),
-  createdAt: timestamp('created_at', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { mode: 'date', precision: 3 })
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date())
+  icon: text('icon')
 });
 
 export type ModuleInsert = typeof ModuleSchema.$inferInsert;

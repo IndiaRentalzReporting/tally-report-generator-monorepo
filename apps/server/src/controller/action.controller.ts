@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ActionInsert, ActionSelect } from '../models/schema';
+import PermissionService from '../services/PermissionService';
 import ActionService from '../services/ActionService';
 
 export const readAll = async (
@@ -8,7 +9,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await ActionService.readAll();
+    const actions = await ActionService.findMany({});
     return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');
@@ -36,7 +37,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.updateOne(req.body, req.params.id);
+    const action = await ActionService.updateOne(req.params.id, req.body);
     return res.json({ action });
   } catch (e) {
     console.error('Could not update action');
@@ -50,7 +51,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.deleteOne(req.params.id);
+    const action = await ActionService.deleteOneById(req.params.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not delete action');
@@ -69,6 +70,7 @@ export const createOne = async (
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
+    PermissionService.extendSuperuserActions(action.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');

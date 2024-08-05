@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import ModuleService from '../services/ModuleService';
-import ActionService from '../services/ActionService';
 import { ActionSelect } from '../models/schema';
 import { toTitleCase } from '../utils';
+import ModuleService from '../services/ModuleService';
+import ActionService from '../services/ActionService';
 
 declare global {
   namespace Express {
@@ -28,8 +28,8 @@ export const attachModuleActionData = async (
     name: module?.toUpperCase()
   });
 
-  req.action = toTitleCase(action ?? '');
-  req.module = toTitleCase(module ?? '');
+  req.action = action?.toUpperCase();
+  req.module = module?.toUpperCase();
 
   return next();
 };

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { DetailedRole, RoleInsert, RoleSelect } from '../models/schema';
+import { RoleInsert, RoleSelect } from '../models/schema';
 import RoleService from '../services/RoleService';
 
 export const readAll = async (
@@ -8,7 +8,18 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.readAll();
+    const roles = await RoleService.findMany(
+      {},
+      {
+        with: {
+          permission: {
+            columns: {
+              id: true
+            }
+          }
+        }
+      }
+    );
     return res.json({ roles });
   } catch (e) {
     console.error("Couldn't fetch all Roles");
@@ -18,11 +29,49 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<RoleSelect, 'id'>>,
-  res: Response<{ role: DetailedRole }>,
+  res: Response<{ role: any }>,
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.findOne({ id: req.params.id });
+    const role = await RoleService.findOne(
+      { id: req.params.id },
+      {
+        with: {
+          permission: {
+            columns: {
+              module_id: false,
+              updatedAt: false,
+              role_id: false,
+              createdAt: false,
+
+              id: false
+            },
+            with: {
+              permissionAction: {
+                columns: {
+                  permission_id: false,
+                  action_id: false
+                },
+                with: {
+                  action: {
+                    columns: {
+                      name: true,
+                      id: true
+                    }
+                  }
+                }
+              },
+              module: {
+                columns: {
+                  name: true,
+                  id: true
+                }
+              }
+            }
+          }
+        }
+      }
+    );
     return res.json({ role });
   } catch (e) {
     console.error("Couldn't fetch a Role");
@@ -68,7 +117,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.deleteOne(req.params.id);
+    const role = await RoleService.deleteOneById(req.params.id);
     return res.json({
       role
     });

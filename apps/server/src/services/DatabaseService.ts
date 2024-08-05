@@ -25,10 +25,18 @@ class DatabaseService {
     return query;
   }
 
+  public static async updateTable(oldName: string, newName: string) {
+    const query = db.execute(
+      sql`ALTER TABLE ${sql.identifier(oldName)} RENAME TO ${sql.identifier(newName)};`
+    );
+    return query;
+  }
+
   public static async findColumns(name: string) {
     const query = await db.execute(
       sql`SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '${sql.raw(name)}';`
     );
+    console.log({ name });
     return query;
   }
 }

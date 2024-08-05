@@ -16,14 +16,17 @@ class AuthService {
       throw new BadRequestError('User Already Exists');
     }
 
-    return UserService.createOne(data);
+    const { password, ...user } = await UserService.createOne(data);
+    return user;
   }
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
   ): Promise<DetailedUser> {
     const { email, password } = data;
-    const user = await UserService.findOne({ email });
+    const user = (await UserService.findOneDetailedUser({
+      email
+    })) as DetailedUser;
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');
@@ -42,8 +45,10 @@ class AuthService {
       password: string;
     }
   ): Promise<Omit<UserSelect, 'password'>> {
-    const { email, password } = data;
-    const user = await UserService.updateUser(email, { password });
+    const { email, password: pw } = data;
+    const { password, ...user } = await UserService.updateOne(email, {
+      password: pw
+    });
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');
