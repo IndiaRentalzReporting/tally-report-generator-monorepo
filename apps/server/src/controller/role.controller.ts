@@ -1,15 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import {
-  DetailedRole,
-  RoleInsert,
-  RoleSchema,
-  RoleSelect
-} from '../models/schema';
+import { RoleInsert, RoleSelect } from '../models/schema';
 import RoleService from '../services/RoleService';
-import BaseService from '../services/BaseService';
-import db from '../models';
-
-const roleService = new BaseService(RoleSchema, db.query.RoleSchema);
 
 export const readAll = async (
   req: Request,
@@ -17,7 +8,16 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.readAll();
+    const roles = await RoleService.findAll(
+      {},
+      {
+        permission: {
+          columns: {
+            id: true
+          }
+        }
+      }
+    );
     return res.json({ roles });
   } catch (e) {
     console.error("Couldn't fetch all Roles");
@@ -31,7 +31,7 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await roleService.findOne(
+    const role = await RoleService.findOne(
       { id: req.params.id },
       {
         permission: {
@@ -113,7 +113,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.deleteOne(req.params.id);
+    const role = await RoleService.deleteOneById(req.params.id);
     return res.json({
       role
     });

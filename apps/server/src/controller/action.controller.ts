@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { ActionInsert, ActionSchema, ActionSelect } from '../models/schema';
-import BaseService from '../services/BaseService';
+import { ActionInsert, ActionSelect } from '../models/schema';
 import PermissionService from '../services/PermissionService';
-import db from '../models';
-
-const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
+import ActionService from '../services/ActionService';
 
 export const readAll = async (
   req: Request,
@@ -12,7 +9,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await ActionService.findAll();
+    const actions = await ActionService.findAll({});
     return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');

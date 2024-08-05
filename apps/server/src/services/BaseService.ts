@@ -22,16 +22,10 @@ class BaseService<
     TableRelationalConfig
   >
 > {
-  protected entityName: string;
-
   constructor(
     protected schema: T,
     protected tableName: K
-  ) {
-    const { table } = schema.name;
-    // @ts-ignore
-    this.entityName = table[Object.getOwnPropertySymbols(table)[0]];
-  }
+  ) {}
 
   public async createOne(
     data: T['$inferInsert'],
@@ -40,7 +34,7 @@ class BaseService<
     const [entity] = await db.insert(this.schema).values(data).returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.entityName} returned as undefined`);
+      throw new NotFoundError(`${this.schema.name} returned as undefined`);
 
     if (callback) {
       await callback(entity);
@@ -50,19 +44,30 @@ class BaseService<
   }
 
   public async findAll(
-    callback?: (entity: T['$inferSelect'][]) => any
-  ): Promise<T['$inferSelect'][]> {
-    const entity = await this.tableName.findMany();
+    data: Partial<T['$inferSelect']>,
+    extra?: NonNullable<Parameters<K['findMany']>[0]>['with'],
+    callback?: (entity: NonNullable<Awaited<ReturnType<K['findMany']>>>) => any
+  ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
+    const keys = Object.keys(data) as Array<
+      keyof Partial<typeof this.schema.$inferSelect>
+    >;
+    const values = Object.values(data) as Array<any>;
+    const entity = await this.tableName.findMany({
+      where: and(
+        ...keys.map((key, index) => eq(this.schema[key], values[index]))
+      ),
+      with: extra
+    });
 
     if (!entity.length) {
-      throw new NotFoundError(`${this.entityName} does not exist`);
+      throw new NotFoundError(`${this.schema.name} does not exist`);
     }
 
     if (callback) {
-      await callback(entity);
+      await callback(entity as NonNullable<Awaited<ReturnType<K['findMany']>>>);
     }
 
-    return entity;
+    return entity as NonNullable<Awaited<ReturnType<K['findMany']>>>;
   }
 
   public async findOne(
@@ -83,7 +88,7 @@ class BaseService<
     });
 
     if (!entity) {
-      throw new NotFoundError(`${this.entityName} does not exist`);
+      throw new NotFoundError(`${this.schema.name} does not exist`);
     }
 
     if (callback) {
@@ -95,7 +100,7 @@ class BaseService<
 
   public async updateOne(
     id: T['$inferSelect']['id'],
-    data: T['$inferInsert'],
+    data: Partial<T['$inferInsert']>,
     callback?: (entity: T['$inferSelect']) => any
   ): Promise<T['$inferSelect']> {
     const [entity] = await db
@@ -104,7 +109,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`${this.entityName} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
 
     if (callback) {
       await callback(entity);
@@ -122,7 +127,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`${this.entityName} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
 
     if (callback) {
       await callback(entity);

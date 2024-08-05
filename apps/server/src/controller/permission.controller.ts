@@ -4,22 +4,55 @@ import {
   ActionSelect,
   RoleSelect,
   PermissionSelect,
-  DetailedPermission,
-  ActionSchema
+  PermissionSchema
 } from '../models/schema';
-import PermissionService from '../services/PermissionService';
 import BaseService from '../services/BaseService';
 import db from '../models';
+import PermissionService from '../services/PermissionService';
+import ActionService from '../services/ActionService';
 
-const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
+const permissionService = new BaseService(
+  PermissionSchema,
+  db.query.PermissionSchema
+);
 
 export const readAll = async (
   req: Request,
-  res: Response<{ permissions: DetailedPermission[] }>,
+  res: Response<{ permissions: PermissionSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const permissions = await PermissionService.findAll();
+    const permissions = await permissionService.findAll(
+      {},
+      {
+        module: {
+          columns: {
+            name: true,
+            id: true
+          }
+        },
+        permissionAction: {
+          columns: {
+            action_id: false,
+            permission_id: false
+          },
+          with: {
+            action: {
+              columns: {
+                name: true,
+                id: true
+              }
+            }
+          }
+        },
+        role: {
+          columns: {
+            name: true,
+            id: true
+          }
+        }
+      }
+    );
     res.json({ permissions });
   } catch (e) {
     console.error("Couldn't fetch permissions");
@@ -29,11 +62,11 @@ export const readAll = async (
 
 export const readAllOfRole = async (
   req: Request<{ role_id: string }>,
-  res: Response<{ permissions: DetailedPermission[] }>,
+  res: Response<{ permissions: PermissionSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const permissions = await PermissionService.findMany({
+    const permissions = await permissionService.findAll({
       role_id: req.params.role_id
     });
     res.json({ permissions });
@@ -61,7 +94,7 @@ export const createMany = async (
   try {
     const { role_id, permissions } = req.body;
     const promises = permissions.map(async ({ module_id, action_ids }) => {
-      const permission = await PermissionService.createOne({
+      const permission = await permissionService.createOne({
         module_id,
         role_id
       });
@@ -105,8 +138,8 @@ export const updateMany = async (
     const { role_id, permissions } = req.body;
     const promises = permissions.map(
       async ({ permission_id, module_id, action_ids }) => {
-        await PermissionService.deleteOne(permission_id);
-        const permission = await PermissionService.createOne({
+        await permissionService.deleteOneById(permission_id);
+        const permission = await permissionService.createOne({
           module_id,
           role_id
         });

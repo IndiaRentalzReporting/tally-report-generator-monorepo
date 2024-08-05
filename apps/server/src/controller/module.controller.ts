@@ -1,20 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
-import {
-  ModuleInsert,
-  ModuleSchema,
-  ModuleSelect
-} from '../models/schema/modules';
-import BaseService from '../services/BaseService';
+import { ModuleInsert, ModuleSelect } from '../models/schema/modules';
 import DatabaseService from '../services/DatabaseService';
 import PermissionService from '../services/PermissionService';
-import db from '../models';
-
-type sts = NonNullable<
-  Awaited<ReturnType<(typeof db.query.ActionSchema)['findFirst']>>
->;
-
-const ModuleService = new BaseService(ModuleSchema, db.query.ModuleSchema);
+import ModuleService from '../services/ModuleService';
 
 export const createOne = async (
   req: Request<
@@ -95,7 +84,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await ModuleService.findAll();
+    const modules = await ModuleService.findAll({});
     return res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");
