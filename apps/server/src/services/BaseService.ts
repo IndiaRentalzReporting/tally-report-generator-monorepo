@@ -38,7 +38,7 @@ class BaseService<
 
   public async findMany(
     data: Partial<T['$inferSelect']>,
-    extra?: NonNullable<Parameters<K['findMany']>[0]>['with']
+    extra?: Omit<NonNullable<Parameters<K['findFirst']>[0]>, 'where'>
   ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
@@ -48,7 +48,7 @@ class BaseService<
       where: and(
         ...keys.map((key, index) => eq(this.schema[key], values[index]))
       ),
-      with: extra
+      ...extra
     });
 
     if (!entity.length) {
@@ -60,7 +60,7 @@ class BaseService<
 
   public async findOne(
     data: Partial<T['$inferSelect']>,
-    extra?: NonNullable<Parameters<K['findFirst']>[0]>['with']
+    extra?: Omit<NonNullable<Parameters<K['findFirst']>[0]>, 'where'>
   ): Promise<NonNullable<Awaited<ReturnType<K['findFirst']>>>> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
@@ -71,7 +71,7 @@ class BaseService<
       where: and(
         ...keys.map((key, index) => eq(this.schema[key], values[index]))
       ),
-      with: extra
+      ...extra
     });
 
     if (!entity) {

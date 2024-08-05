@@ -25,30 +25,32 @@ export const readAll = async (
     const permissions = await permissionService.findMany(
       {},
       {
-        module: {
-          columns: {
-            name: true,
-            id: true
-          }
-        },
-        permissionAction: {
-          columns: {
-            action_id: false,
-            permission_id: false
+        with: {
+          module: {
+            columns: {
+              name: true,
+              id: true
+            }
           },
-          with: {
-            action: {
-              columns: {
-                name: true,
-                id: true
+          permissionAction: {
+            columns: {
+              action_id: false,
+              permission_id: false
+            },
+            with: {
+              action: {
+                columns: {
+                  name: true,
+                  id: true
+                }
               }
             }
-          }
-        },
-        role: {
-          columns: {
-            name: true,
-            id: true
+          },
+          role: {
+            columns: {
+              name: true,
+              id: true
+            }
           }
         }
       }

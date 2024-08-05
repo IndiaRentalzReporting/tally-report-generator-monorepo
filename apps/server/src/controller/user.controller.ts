@@ -17,36 +17,38 @@ export const readAll = async (
     const usersWithPassword = await UserService.findMany(
       { id: req.user?.id ?? '' },
       {
-        role: {
-          columns: {
-            name: true
-          },
-          with: {
-            permission: {
-              columns: {
-                role_id: false,
-                createdAt: false,
-                updatedAt: false,
-                module_id: false
-              },
-              with: {
-                permissionAction: {
-                  columns: {
-                    permission_id: false,
-                    action_id: false
-                  },
-                  with: {
-                    action: {
-                      columns: {
-                        name: true
+        with: {
+          role: {
+            columns: {
+              name: true
+            },
+            with: {
+              permission: {
+                columns: {
+                  role_id: false,
+                  createdAt: false,
+                  updatedAt: false,
+                  module_id: false
+                },
+                with: {
+                  permissionAction: {
+                    columns: {
+                      permission_id: false,
+                      action_id: false
+                    },
+                    with: {
+                      action: {
+                        columns: {
+                          name: true
+                        }
                       }
                     }
-                  }
-                },
-                module: {
-                  columns: {
-                    name: true,
-                    id: true
+                  },
+                  module: {
+                    columns: {
+                      name: true,
+                      id: true
+                    }
                   }
                 }
               }

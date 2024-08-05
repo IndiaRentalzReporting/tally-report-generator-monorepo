@@ -11,9 +11,11 @@ export const readAll = async (
     const roles = await RoleService.findMany(
       {},
       {
-        permission: {
-          columns: {
-            id: true
+        with: {
+          permission: {
+            columns: {
+              id: true
+            }
           }
         }
       }
@@ -34,34 +36,36 @@ export const readOne = async (
     const role = await RoleService.findOne(
       { id: req.params.id },
       {
-        permission: {
-          columns: {
-            module_id: false,
-            updatedAt: false,
-            role_id: false,
-            createdAt: false,
+        with: {
+          permission: {
+            columns: {
+              module_id: false,
+              updatedAt: false,
+              role_id: false,
+              createdAt: false,
 
-            id: false
-          },
-          with: {
-            permissionAction: {
-              columns: {
-                permission_id: false,
-                action_id: false
-              },
-              with: {
-                action: {
-                  columns: {
-                    name: true,
-                    id: true
+              id: false
+            },
+            with: {
+              permissionAction: {
+                columns: {
+                  permission_id: false,
+                  action_id: false
+                },
+                with: {
+                  action: {
+                    columns: {
+                      name: true,
+                      id: true
+                    }
                   }
                 }
-              }
-            },
-            module: {
-              columns: {
-                name: true,
-                id: true
+              },
+              module: {
+                columns: {
+                  name: true,
+                  id: true
+                }
               }
             }
           }
