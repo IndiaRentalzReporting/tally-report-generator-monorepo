@@ -27,26 +27,18 @@ class BaseService<
     protected tableName: K
   ) {}
 
-  public async createOne(
-    data: T['$inferInsert'],
-    callback?: (entity: T['$inferSelect']) => any
-  ): Promise<T['$inferSelect']> {
+  public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
     const [entity] = await db.insert(this.schema).values(data).returning();
 
     if (!entity)
       throw new NotFoundError(`${this.schema.name} returned as undefined`);
-
-    if (callback) {
-      await callback(entity);
-    }
 
     return entity;
   }
 
   public async findAll(
     data: Partial<T['$inferSelect']>,
-    extra?: NonNullable<Parameters<K['findMany']>[0]>['with'],
-    callback?: (entity: NonNullable<Awaited<ReturnType<K['findMany']>>>) => any
+    extra?: NonNullable<Parameters<K['findMany']>[0]>['with']
   ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
@@ -63,17 +55,12 @@ class BaseService<
       throw new NotFoundError(`${this.schema.name} does not exist`);
     }
 
-    if (callback) {
-      await callback(entity as NonNullable<Awaited<ReturnType<K['findMany']>>>);
-    }
-
     return entity as NonNullable<Awaited<ReturnType<K['findMany']>>>;
   }
 
   public async findOne(
     data: Partial<T['$inferSelect']>,
-    extra?: NonNullable<Parameters<K['findFirst']>[0]>['with'],
-    callback?: (entity: NonNullable<Awaited<ReturnType<K['findFirst']>>>) => any
+    extra?: NonNullable<Parameters<K['findFirst']>[0]>['with']
   ): Promise<NonNullable<Awaited<ReturnType<K['findFirst']>>>> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
@@ -91,17 +78,12 @@ class BaseService<
       throw new NotFoundError(`${this.schema.name} does not exist`);
     }
 
-    if (callback) {
-      callback(entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>);
-    }
-
     return entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>;
   }
 
   public async updateOne(
     id: T['$inferSelect']['id'],
-    data: Partial<T['$inferInsert']>,
-    callback?: (entity: T['$inferSelect']) => any
+    data: Partial<T['$inferInsert']>
   ): Promise<T['$inferSelect']> {
     const [entity] = await db
       .update(this.schema)
@@ -111,16 +93,11 @@ class BaseService<
 
     if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
 
-    if (callback) {
-      await callback(entity);
-    }
-
     return entity;
   }
 
   public async deleteOneById(
-    id: T['$inferSelect']['id'],
-    callback?: (entity: T['$inferSelect']) => any
+    id: T['$inferSelect']['id']
   ): Promise<T['$inferSelect']> {
     const [entity] = await db
       .delete(this.schema)
@@ -128,10 +105,6 @@ class BaseService<
       .returning();
 
     if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
-
-    if (callback) {
-      await callback(entity);
-    }
 
     return entity;
   }

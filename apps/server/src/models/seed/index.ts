@@ -59,17 +59,16 @@ const createModules = async () => {
       ]
     }
   ];
-  modules.map(async ({ moduleDetails, columnDetails }) =>
-    ModuleService.createOne(moduleDetails, async (createdModule) => {
-      try {
-        await DatabaseService.createNewTable(createdModule.name, columnDetails);
-      } catch (e) {
-        await ModuleService.deleteOneById(createdModule.id);
-      }
+  modules.map(async ({ moduleDetails, columnDetails }) => {
+    const createdModule = await ModuleService.createOne(moduleDetails);
+    try {
+      await DatabaseService.createNewTable(createdModule.name, columnDetails);
+    } catch (e) {
+      await ModuleService.deleteOneById(createdModule.id);
+    }
 
-      await PermissionService.extendSuperuserModules(createdModule.id);
-    })
-  );
+    await PermissionService.extendSuperuserModules(createdModule.id);
+  });
   await Promise.all(modules);
 };
 

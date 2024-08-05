@@ -66,16 +66,12 @@ export const createOne = async (
 ) => {
   try {
     const data = req.body;
-    await ActionService.createOne(
-      {
-        ...data,
-        name: data.name.toUpperCase() as ActionSelect['name']
-      },
-      (action) => {
-        PermissionService.extendSuperuserActions(action.id);
-        return res.json({ action });
-      }
-    );
+    const action = await ActionService.createOne({
+      ...data,
+      name: data.name.toUpperCase() as ActionSelect['name']
+    });
+    PermissionService.extendSuperuserActions(action.id);
+    return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');
     return next(e);

@@ -16,9 +16,8 @@ class AuthService {
       throw new BadRequestError('User Already Exists');
     }
 
-    const user = await UserService.createOne(data);
-    const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+    const { password, ...user } = await UserService.createOne(data);
+    return user;
   }
 
   public static async signIn(

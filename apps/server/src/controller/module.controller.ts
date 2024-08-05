@@ -21,19 +21,15 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    await ModuleService.createOne(req.body.moduleDetails, async (module) => {
-      try {
-        await DatabaseService.createNewTable(
-          module.name,
-          req.body.columnDetails
-        );
-      } catch (e) {
-        await ModuleService.deleteOneById(module.id);
-      }
+    const module = await ModuleService.createOne(req.body.moduleDetails);
+    try {
+      await DatabaseService.createNewTable(module.name, req.body.columnDetails);
+    } catch (e) {
+      await ModuleService.deleteOneById(module.id);
+    }
 
-      await PermissionService.extendSuperuserModules(module.id);
-      return res.json({ module });
-    });
+    await PermissionService.extendSuperuserModules(module.id);
+    return res.json({ module });
   } catch (e) {
     console.error('Could not create a new Module');
     return next(e);
@@ -49,11 +45,8 @@ export const updateOne = async (
     const { name: oldName } = await ModuleService.findOne({
       id: req.params.id
     });
-    const module = await ModuleService.updateOne(
-      req.params.id,
-      req.body,
-      async (module) => DatabaseService.updateTable(oldName, module.name)
-    );
+    const module = await ModuleService.updateOne(req.params.id, req.body);
+    await DatabaseService.updateTable(oldName, module.name);
     return res.json({ module });
   } catch (e) {
     console.error('Could not update a Module');
@@ -67,10 +60,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.deleteOneById(
-      req.params.id,
-      async (module) => DatabaseService.dropTable(module.name)
-    );
+    const module = await ModuleService.deleteOneById(req.params.id);
+    await DatabaseService.dropTable(module.name);
     return res.json({ module });
   } catch (e) {
     console.error('Could not delete a Module');
@@ -98,17 +89,11 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    await ModuleService.findOne(
-      {
-        id: req.params.id
-      },
-      {},
-      async (module) => {
-        console.log({ module });
-        const columns = await DatabaseService.findColumns(module.name);
-        return res.json({ module, columns });
-      }
-    );
+    const module = await ModuleService.findOne({
+      id: req.params.id
+    });
+    const columns = await DatabaseService.findColumns(module.name);
+    return res.json({ module, columns });
   } catch (e) {
     console.error("Couldn't fetch Module");
     return next(e);

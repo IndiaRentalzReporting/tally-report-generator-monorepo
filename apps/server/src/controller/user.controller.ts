@@ -14,7 +14,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const users = (await UserService.findAll(
+    const usersWithPassword = await UserService.findAll(
       { id: req.user?.id ?? '' },
       {
         role: {
@@ -54,7 +54,10 @@ export const readAll = async (
           }
         }
       }
-    )) as DetailedUser[];
+    );
+    const users = usersWithPassword.map(
+      ({ password, ...user }) => user
+    ) as Omit<DetailedUser, 'password'>[];
     return res.json({
       users
     });
