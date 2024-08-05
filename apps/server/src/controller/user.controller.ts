@@ -14,7 +14,47 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const users = await UserService.readAll(req.user?.id ?? '');
+    const users = (await UserService.findAll(
+      { id: req.user?.id ?? '' },
+      {
+        role: {
+          columns: {
+            name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    )) as DetailedUser[];
     return res.json({
       users
     });
@@ -30,7 +70,10 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.findOne({ id: req.params.id });
+    const u = (await UserService.findOne({
+      id: req.params.id
+    })) as DetailedUser;
+    const user = UserService.prettifyUser(u);
 
     if (!user) throw new NotFoundError('User does not exist');
 
@@ -72,7 +115,10 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.updateUser(req.params.id, req.body);
+    const { password, ...user } = await UserService.updateOne(
+      req.params.id,
+      req.body
+    );
 
     return res.json({ user });
   } catch (e) {
@@ -87,7 +133,9 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.deleteUser(req.params.id);
+    const { password, ...user } = await UserService.deleteOneById(
+      req.params.id
+    );
 
     return res.json({ user });
   } catch (e) {

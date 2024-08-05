@@ -3,6 +3,7 @@ import passport from 'passport';
 import { BadRequestError, UnauthenticatedError } from '../errors';
 import UserService from '../services/UserService';
 import config from '../config';
+import { DetailedUser } from '../models/schema';
 
 export const authenticate = passport.authenticate('local');
 
@@ -75,7 +76,7 @@ export const isAdmin = async (
     const {
       user: { email }
     } = req;
-    const user = await UserService.findOne({ email });
+    const user = (await UserService.findOne({ email })) as DetailedUser;
     if (user?.role?.name.toLowerCase() === config.app.SUPER_USER_NAME) {
       return next();
     }

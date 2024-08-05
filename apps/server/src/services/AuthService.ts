@@ -16,14 +16,56 @@ class AuthService {
       throw new BadRequestError('User Already Exists');
     }
 
-    return UserService.createOne(data);
+    const user = await UserService.createOne(data);
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
   ): Promise<DetailedUser> {
     const { email, password } = data;
-    const user = await UserService.findOne({ email });
+    const user = (await UserService.findOne(
+      { email },
+      {
+        role: {
+          columns: {
+            name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    )) as DetailedUser;
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');
@@ -42,8 +84,10 @@ class AuthService {
       password: string;
     }
   ): Promise<Omit<UserSelect, 'password'>> {
-    const { email, password } = data;
-    const user = await UserService.updateUser(email, { password });
+    const { email, password: pw } = data;
+    const { password, ...user } = await UserService.updateOne(email, {
+      password: pw
+    });
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');

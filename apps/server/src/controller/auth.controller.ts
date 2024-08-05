@@ -120,7 +120,8 @@ export const forgotPassword = async (
 ) => {
   try {
     const { email } = req.body;
-    const user = await UserService.findOne({ email });
+    const u = (await UserService.findOne({ email })) as DetailedUser;
+    const user = UserService.prettifyUser(u);
 
     if (!user) {
       throw new NotFoundError('User does not exists');
@@ -141,7 +142,7 @@ export const forgotPassword = async (
         console.error('Email send error:', error);
         return next(error);
       }
-      await UserService.updateUser(user?.id, {
+      await UserService.updateOne(user?.id, {
         is_confirmed: 'unauthenticated'
       });
       return res.json({
@@ -194,7 +195,7 @@ export const resetPassword = async (
 
     const hashedPassword = await AuthService.hashPassword(password);
 
-    await UserService.updateUser(userId, {
+    await UserService.updateOne(userId, {
       password: hashedPassword,
       is_confirmed: 'authenticated'
     });

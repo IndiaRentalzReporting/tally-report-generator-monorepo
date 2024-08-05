@@ -6,6 +6,7 @@ import LocalStrategy, {
 } from 'passport-local';
 import UserService from '../services/UserService';
 import AuthService from '../services/AuthService';
+import { DetailedUser } from '../models/schema';
 
 const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {
@@ -33,10 +34,13 @@ const passportLoader = (app: Express) => {
     done(null, user.email);
   });
 
-  passport.deserializeUser((email: string, done) => {
-    UserService.findOne({ email })
-      .then((user) => done(null, user))
-      .catch((e) => done(e));
+  passport.deserializeUser(async (email: string, done) => {
+    try {
+      const user = (await UserService.findOne({ email })) as DetailedUser;
+      if (user) done(null, user);
+    } catch (e) {
+      done(e);
+    }
   });
 
   app.use(passport.initialize());
