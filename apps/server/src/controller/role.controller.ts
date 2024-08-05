@@ -8,7 +8,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.findAll(
+    const roles = await RoleService.findMany(
       {},
       {
         permission: {

@@ -9,7 +9,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await ActionService.findAll({});
+    const actions = await ActionService.findMany({});
     return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');

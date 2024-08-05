@@ -75,7 +75,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await ModuleService.findAll({});
+    const modules = await ModuleService.findMany({});
     return res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");

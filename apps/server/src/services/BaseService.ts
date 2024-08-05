@@ -36,7 +36,7 @@ class BaseService<
     return entity;
   }
 
-  public async findAll(
+  public async findMany(
     data: Partial<T['$inferSelect']>,
     extra?: NonNullable<Parameters<K['findMany']>[0]>['with']
   ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {

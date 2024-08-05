@@ -14,7 +14,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await UserService.findAll(
+    const usersWithPassword = await UserService.findMany(
       { id: req.user?.id ?? '' },
       {
         role: {

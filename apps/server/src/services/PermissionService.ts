@@ -18,7 +18,7 @@ class PermissionService extends BaseService<
     const { id: role_id } = await RoleService.findOne({
       name: config.app.SUPER_USER_NAME
     });
-    const permissions = await this.findAll({ role_id });
+    const permissions = await this.findMany({ role_id });
 
     console.log({
       role_id,
@@ -51,7 +51,7 @@ class PermissionService extends BaseService<
       role_id
     });
 
-    const actions = await ActionService.findAll({});
+    const actions = await ActionService.findMany({});
 
     const promises = actions.map(async ({ id: action_id }) =>
       this.assignAction({ permission_id, action_id })

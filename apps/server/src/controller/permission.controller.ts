@@ -22,7 +22,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await permissionService.findAll(
+    const permissions = await permissionService.findMany(
       {},
       {
         module: {
@@ -66,7 +66,7 @@ export const readAllOfRole = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await permissionService.findAll({
+    const permissions = await permissionService.findMany({
       role_id: req.params.role_id
     });
     res.json({ permissions });
