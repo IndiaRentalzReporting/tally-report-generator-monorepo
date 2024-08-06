@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_app/client",
+  "name": "@fullstack_app/dashboard-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_app/server",
+  "name": "@fullstack_app/dashboard-server",
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
