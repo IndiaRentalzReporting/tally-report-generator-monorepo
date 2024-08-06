@@ -31,7 +31,6 @@ authRouter.post(
       id: true,
       createdAt: true,
       updatedAt: true,
-      role_id: true,
       password: true
     })
   }),

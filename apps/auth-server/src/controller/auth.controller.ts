@@ -6,10 +6,10 @@ import {
   NotFoundError,
   UnauthenticatedError
 } from '../errors';
-import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
-import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
 import config from '../config';
+import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
+import { sendMail } from '../mailing';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
@@ -120,8 +120,7 @@ export const forgotPassword = async (
 ) => {
   try {
     const { email } = req.body;
-    const u = (await UserService.findOne({ email })) as DetailedUser;
-    const user = UserService.prettifyUser(u);
+    const user = (await UserService.findOne({ email })) as DetailedUser;
 
     if (!user) {
       throw new NotFoundError('User does not exists');

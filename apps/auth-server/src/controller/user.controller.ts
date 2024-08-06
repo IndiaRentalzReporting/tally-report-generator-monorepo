@@ -1,11 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
-import {
-  RoleSelect,
-  UserSelect,
-  DetailedUser,
-  UserInsert
-} from '../models/schema';
+import { UserSelect, DetailedUser, UserInsert } from '../models/schema';
 import { NotFoundError } from '../errors';
 
 export const readAll = async (
@@ -75,10 +70,9 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const u = (await UserService.findOneDetailedUser({
+    const user = (await UserService.findOneDetailedUser({
       id: req.params.id
     })) as DetailedUser;
-    const user = UserService.prettifyUser(u);
 
     if (!user) throw new NotFoundError('User does not exist');
 
@@ -88,28 +82,6 @@ export const readOne = async (
     });
   } catch (e) {
     console.error("Couldn't fetch all Users!");
-    return next(e);
-  }
-};
-
-export const updateRole = async (
-  req: Request<
-    object,
-    object,
-    { userIds: UserSelect['id'][]; roleId: RoleSelect['id'] }
-  >,
-  res: Response<{ userIds: string[] }>,
-  next: NextFunction
-) => {
-  try {
-    const userIds = await UserService.updateRole(
-      req.body.userIds,
-      req.body.roleId
-    );
-
-    return res.json({ userIds });
-  } catch (e) {
-    console.error("Couldn't assign a role to users");
     return next(e);
   }
 };
