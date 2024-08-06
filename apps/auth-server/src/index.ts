@@ -1,24 +1,20 @@
-import express from 'express';
+import expressLoader from './loaders/express';
+import config from './config';
+import { connectAndLog } from './loaders/database';
 
-const app = express();
+const app = expressLoader();
 
-app.use((req, res) => {
-  const host = req.get('host');
-  const subdomain = host?.split('.')[0];
+const { PORT, NODE_ENV } = config.server;
 
-  console.log({ host, subdomain });
-
-  if (subdomain === 'login') {
-    res.send('Login page');
-  } else if (subdomain === 'register') {
-    res.send('Register page');
-  } else if (subdomain !== 'saasapp') {
-    res.send(`Company page for ${subdomain}`);
-  } else {
-    res.send('Main application');
+(async () => {
+  try {
+    await connectAndLog();
+    app.listen(PORT, () =>
+      console.log(
+        `${NODE_ENV?.toLocaleUpperCase()} Server Listening at PORT: ${PORT}`
+      )
+    );
+  } catch (err) {
+    console.error('Could not connect to the server');
   }
-});
-
-app.listen(3000, () => {
-  console.log('Server running on http://saasapp.test');
-});
+})();

@@ -22,6 +22,7 @@ const expressLoader = (): Express => {
       credentials: true
     })
   );
+
   app.use(morgan('dev'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
