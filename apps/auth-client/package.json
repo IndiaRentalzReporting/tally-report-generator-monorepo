@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_app/control-client",
+  "name": "@fullstack_app/auth-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
