@@ -11,7 +11,7 @@
     "@fullstack_package/eslint-config": "*",
     "@fullstack_package/typescript-config": "*",
     "dotenv-cli": "^7.4.2",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "turbo": "latest"
   },
   "engines": {
