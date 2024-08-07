@@ -16,17 +16,3 @@ export const PrivateRoutes: React.FC = () => {
     </If>
   );
 };
-
-export const PublicRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-  return (
-    <If condition={isAuthenticated}>
-      <Then>
-        <Navigate to="/dashboard" />
-      </Then>
-      <Else>
-        <Outlet />
-      </Else>
-    </If>
-  );
-};

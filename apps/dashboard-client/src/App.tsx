@@ -5,17 +5,7 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
-import {
-  PublicRoutes,
-  PrivateRoutes,
-  ModuleMapper
-} from './components/utility';
-import {
-  SignupForm,
-  SigninForm,
-  ForgotPassword,
-  ResetPassword
-} from './views/Authentication';
+import { PrivateRoutes, ModuleMapper } from './components/utility';
 import { DashboardLayout } from './components/composite';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './providers/AuthProvider';
@@ -27,12 +17,6 @@ const App = () => {
     createRoutesFromElements([
       <Route path="/">
         <Route index element={<Navigate to="/dashboard" />} />
-        <Route element={<PublicRoutes />}>
-          <Route path="sign-up" element={<SignupForm />} />
-          <Route path="sign-in" element={<SigninForm />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password/:token" element={<ResetPassword />} />
-        </Route>
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             {permissions?.map(({ module: { name }, actions }) => (
