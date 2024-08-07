@@ -5,7 +5,6 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
-import { PublicRoutes } from './components/utility';
 import {
   SignupForm,
   SigninForm,
@@ -19,12 +18,10 @@ const App = () => {
     createRoutesFromElements([
       <Route path="/">
         <Route index element={<Navigate to="/dashboard" />} />
-        <Route element={<PublicRoutes />}>
-          <Route path="sign-up" element={<SignupForm />} />
-          <Route path="sign-in" element={<SigninForm />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password/:token" element={<ResetPassword />} />
-        </Route>
+        <Route path="sign-up" element={<SignupForm />} />
+        <Route path="sign-in" element={<SigninForm />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     ])
   );
