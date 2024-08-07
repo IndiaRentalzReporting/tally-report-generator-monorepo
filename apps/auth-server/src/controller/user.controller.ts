@@ -1,60 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
-import { UserSelect, DetailedUser, UserInsert } from '../models/schema';
+import { UserSelect, UserInsert, SafeUserSelect } from '../models/schema';
 import { NotFoundError } from '../errors';
 
 export const readAll = async (
   req: Request,
-  res: Response<{ users: Omit<DetailedUser, 'password'>[] }>,
+  res: Response<{ users: SafeUserSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await UserService.findMany(
-      { id: req.user?.id ?? '' },
-      {
-        with: {
-          role: {
-            columns: {
-              name: true
-            },
-            with: {
-              permission: {
-                columns: {
-                  role_id: false,
-                  createdAt: false,
-                  updatedAt: false,
-                  module_id: false
-                },
-                with: {
-                  permissionAction: {
-                    columns: {
-                      permission_id: false,
-                      action_id: false
-                    },
-                    with: {
-                      action: {
-                        columns: {
-                          name: true
-                        }
-                      }
-                    }
-                  },
-                  module: {
-                    columns: {
-                      name: true,
-                      id: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    );
-    const users = usersWithPassword.map(
-      ({ password, ...user }) => user
-    ) as Omit<DetailedUser, 'password'>[];
+    const usersWithPassword = await UserService.findMany({
+      id: req.user?.id ?? ''
+    });
+    const users = usersWithPassword.map(({ password, ...user }) => user);
     return res.json({
       users
     });
@@ -66,13 +24,13 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<UserSelect, 'id'>>,
-  res: Response<{ user: Omit<DetailedUser, 'password'> }>,
+  res: Response<{ user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
-    const user = (await UserService.findOneDetailedUser({
+    const user = await UserService.findOne({
       id: req.params.id
-    })) as DetailedUser;
+    });
 
     if (!user) throw new NotFoundError('User does not exist');
 

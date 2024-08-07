@@ -1,13 +1,11 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '../errors';
-import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
+import { SafeUserSelect, UserInsert, UserSelect } from '../models/schema';
 import UserService from './UserService';
 
 class AuthService {
-  public static async signUp(
-    data: UserInsert
-  ): Promise<Omit<UserSelect, 'password'>> {
+  public static async signUp(data: UserInsert): Promise<SafeUserSelect> {
     const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
@@ -22,11 +20,11 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<DetailedUser> {
+  ): Promise<UserSelect> {
     const { email, password } = data;
-    const user = (await UserService.findOneDetailedUser({
+    const user = await UserService.findOne({
       email
-    })) as DetailedUser;
+    });
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');

@@ -9,7 +9,7 @@ export const errorHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  const { NODE_ENV } = config.server;
+  const { NODE_ENV } = config;
   let statusCode = 500;
   if (err instanceof CustomError) {
     statusCode = err.status;

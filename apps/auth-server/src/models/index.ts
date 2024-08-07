@@ -13,8 +13,8 @@ import postgres from 'postgres';
 import * as schema from './schema';
 import config from '../config';
 
-const { PG_URL } = config.postgres;
-const { NODE_ENV } = config.server;
+const { PG_URL } = config.db.postgres;
+const { NODE_ENV } = config;
 
 type DBType<env extends string> = env extends 'development'
   ? PostgresJsDatabase<typeof schema>

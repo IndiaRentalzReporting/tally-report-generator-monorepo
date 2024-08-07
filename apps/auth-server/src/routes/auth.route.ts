@@ -5,10 +5,7 @@ import {
   handleSignUp,
   handleSignIn,
   handleStatusCheck,
-  handleLogout,
-  forgotPassword,
-  resetPassword,
-  checkPasswordResetToken
+  handleLogout
 } from '../controller/auth.controller';
 import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
 
@@ -35,48 +32,6 @@ authRouter.post(
     })
   }),
   handleSignUp
-);
-
-authRouter.post(
-  '/forgot-password',
-  validateSchema({
-    body: UserInsertSchema.pick({
-      email: true
-    })
-  }),
-  forgotPassword
-);
-
-authRouter.post(
-  '/check-reset-password/:token',
-  validateSchema({
-    params: z
-      .object({
-        token: z.string()
-      })
-      .pick({
-        token: true
-      })
-  }),
-  checkPasswordResetToken
-);
-authRouter.post(
-  '/reset-password/:token',
-  validateSchema({
-    body: UserInsertSchema.pick({
-      password: true
-    }).extend({
-      confirmPassword: z.string()
-    }),
-    params: z
-      .object({
-        token: z.string()
-      })
-      .pick({
-        token: true
-      })
-  }),
-  resetPassword
 );
 
 authRouter.post('/sign-out', handleLogout);

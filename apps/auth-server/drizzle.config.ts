@@ -1,9 +1,8 @@
-import { defineConfig } from 'drizzle-kit';
 import config from './src/config';
+import { defineConfig } from 'drizzle-kit';
 
-const { PG_URL } = config.postgres;
+const { PG_URL } = config.db.postgres;
 
-console.log(PG_URL);
 export default defineConfig({
   dialect: 'postgresql',
   schema: './src/models/schema',

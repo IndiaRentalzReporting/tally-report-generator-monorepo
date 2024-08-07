@@ -5,9 +5,9 @@ import config from '../config';
 
 const sessionsLoader = (app: Express) => {
   try {
-    const { SESSION_SECRET } = config.session;
-    const { NODE_ENV } = config.server;
-    const { MONGO_URI } = config.mongo;
+    const { NODE_ENV } = config;
+    const { SESSION_SECRET } = config.app;
+    const { MONGO_URI } = config.db.mongo;
 
     let sessionStore;
     try {

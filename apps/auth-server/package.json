@@ -13,7 +13,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
-    "db:drop": "drizzle-kit drop",
+    "db:drop": "cross-env NODE_ENV=development drizzle-kit drop",
     "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
     "db:seed": "cross-env NODE_ENV=development tsx ./src/models/seed"
   },
@@ -54,7 +54,7 @@
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.31.1",
+    "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",

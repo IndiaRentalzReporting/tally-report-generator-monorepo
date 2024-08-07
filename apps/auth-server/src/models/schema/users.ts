@@ -4,7 +4,7 @@ import { BaseEntitySchema } from './base';
 
 declare global {
   namespace Express {
-    interface User extends DetailedUser {}
+    interface User extends UserSelect {}
   }
 }
 
@@ -29,4 +29,4 @@ export type UserInsert = typeof UserSchema.$inferInsert;
 export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
 export const UserSelectSchema = createSelectSchema(UserSchema);
-export type DetailedUser = UserSelect;
+export type SafeUserSelect = Omit<UserSelect, 'password'>;

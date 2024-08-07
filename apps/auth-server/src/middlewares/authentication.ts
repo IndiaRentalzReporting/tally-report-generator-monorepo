@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { BadRequestError, UnauthenticatedError } from '../errors';
-import UserService from '../services/UserService';
-import config from '../config';
-import { DetailedUser } from '../models/schema';
+import { BadRequestError } from '../errors';
 
 export const authenticate = passport.authenticate('local');
 
