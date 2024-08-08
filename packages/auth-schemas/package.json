@@ -1,0 +1,25 @@
+{
+  "name": "@fullstack-package/auth-schemas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.31.2",
+    "drizzle-zod": "^0.5.1"
+  },
+  "devDependencies": {
+    "typescript": "^<version>",
+    "rimraf": "^<version>"
+  }
+}
