@@ -4,25 +4,19 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-DO $$ BEGIN
- CREATE TYPE "public"."is_confirmed" AS ENUM('onboarded', 'authenticated', 'unauthenticated');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3),
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
 	"first_name" varchar(50) NOT NULL,
 	"last_name" varchar(50) NOT NULL,
 	"email" varchar(256) NOT NULL,
 	"password" varchar(128) NOT NULL,
-	"is_confirmed" "is_confirmed" DEFAULT 'onboarded' NOT NULL,
+	"tenant_id" uuid,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -31,9 +25,19 @@ CREATE TABLE IF NOT EXISTS "tenants" (
 	"name" varchar(200) NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3),
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
+	"lastSyncedAt" timestamp DEFAULT now(),
+	"db_name" varchar(128) NOT NULL,
+	"db_username" varchar(128) NOT NULL,
+	"db_password" varchar(128) NOT NULL,
 	CONSTRAINT "tenants_name_unique" UNIQUE("name")
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "users" ADD CONSTRAINT "users_tenant_id_tenants_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."tenants"("id") ON DELETE set null ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;

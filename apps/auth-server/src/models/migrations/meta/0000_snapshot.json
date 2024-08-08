@@ -1,5 +1,5 @@
 {
-  "id": "c1621320-6ade-411b-b503-b7e0b0aa3489",
+  "id": "926f3e4f-8df5-4020-9af2-cebabfdd3364",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -32,27 +32,27 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
         },
         "deletedAt": {
           "name": "deletedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
         "approvedAt": {
           "name": "approvedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -80,17 +80,29 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_confirmed": {
-          "name": "is_confirmed",
-          "type": "is_confirmed",
-          "typeSchema": "public",
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'onboarded'"
+          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "users_tenant_id_tenants_id_fk": {
+          "name": "users_tenant_id_tenants_id_fk",
+          "tableFrom": "users",
+          "tableTo": "tenants",
+          "columnsFrom": [
+            "tenant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_unique": {
@@ -136,29 +148,54 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
         },
         "deletedAt": {
           "name": "deletedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
         "approvedAt": {
           "name": "approvedAt",
-          "type": "timestamp (3)",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "lastSyncedAt": {
+          "name": "lastSyncedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "db_name": {
+          "name": "db_name",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "db_username": {
+          "name": "db_username",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "db_password": {
+          "name": "db_password",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -184,15 +221,6 @@
         "approved",
         "active",
         "inactive"
-      ]
-    },
-    "public.is_confirmed": {
-      "name": "is_confirmed",
-      "schema": "public",
-      "values": [
-        "onboarded",
-        "authenticated",
-        "unauthenticated"
       ]
     }
   },

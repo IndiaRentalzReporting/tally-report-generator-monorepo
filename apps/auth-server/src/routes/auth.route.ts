@@ -24,10 +24,10 @@ authRouter.post(
   '/sign-up',
   isAuthenticated,
   validateSchema({
-    body: UserInsertSchema.omit({
-      id: true,
-      createdAt: true,
-      updatedAt: true,
+    body: UserInsertSchema.pick({
+      first_name: true,
+      last_name: true,
+      email: true,
       password: true
     })
   }),

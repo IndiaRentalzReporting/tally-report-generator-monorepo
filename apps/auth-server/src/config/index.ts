@@ -13,6 +13,4 @@ const config = {
   NODE_ENV: NODE_ENV as env
 };
 
-console.log('config', config);
-
 export default config;

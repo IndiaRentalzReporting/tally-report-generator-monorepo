@@ -1,18 +1,13 @@
-import { varchar, uuid, pgTable, pgEnum } from 'drizzle-orm/pg-core';
+import { varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from './base';
+import { TenantSchema } from './tenant';
 
 declare global {
   namespace Express {
     interface User extends UserSelect {}
   }
 }
-
-export const IsConfirmed = pgEnum('is_confirmed', [
-  'onboarded',
-  'authenticated',
-  'unauthenticated'
-]);
 
 const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
 
@@ -22,7 +17,10 @@ export const UserSchema = pgTable('users', {
   last_name: varchar('last_name', { length: 50 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),
   password: varchar('password', { length: 128 }).notNull(),
-  is_confirmed: IsConfirmed('is_confirmed').default('onboarded').notNull()
+  tenant_id: uuid('tenant_id').references(() => TenantSchema.id, {
+    onDelete: 'set null',
+    onUpdate: 'cascade'
+  })
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;

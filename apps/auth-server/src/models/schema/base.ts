@@ -8,17 +8,12 @@ export const EntityStatus = pgEnum('status', [
 ]);
 
 export const EntityTimestamps = {
-  createdAt: timestamp('createdAt', {
-    mode: 'date',
-    precision: 3
-  })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp('updatedAt', { mode: 'date', precision: 3 })
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt')
     .defaultNow()
     .$onUpdate(() => new Date()),
-  deletedAt: timestamp('deletedAt', { mode: 'date', precision: 3 }),
-  approvedAt: timestamp('approvedAt', { mode: 'date', precision: 3 })
+  deletedAt: timestamp('deletedAt'),
+  approvedAt: timestamp('approvedAt')
 };
 
 export const BaseEntitySchema = {

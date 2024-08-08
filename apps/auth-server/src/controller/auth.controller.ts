@@ -62,7 +62,7 @@ export const handleStatusCheck = (
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated() && req.user.is_confirmed !== 'onboarded') {
+    if (req.isAuthenticated()) {
       const {
         user: { password, ...userWithoutPassword }
       } = req;
