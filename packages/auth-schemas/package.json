@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "clean": "rimraf dist"
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "npm run build -- --watch"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,6 @@
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "typescript": "^<version>",
-    "rimraf": "^<version>"
+    "typescript": "^5.4.5"
   }
 }
