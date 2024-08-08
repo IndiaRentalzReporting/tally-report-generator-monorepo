@@ -37,7 +37,7 @@ class BaseService<
   }
 
   public async findMany(
-    data: Partial<T['$inferSelect']>,
+    data: Partial<T['$inferSelect']> = {},
     extra?: Omit<NonNullable<Parameters<K['findFirst']>[0]>, 'where'>
   ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
     const keys = Object.keys(data) as Array<

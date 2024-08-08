@@ -9,9 +9,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await UserService.findMany({
-      id: req.user?.id ?? ''
-    });
+    const usersWithPassword = await UserService.findMany();
     const users = usersWithPassword.map(({ password, ...user }) => user);
     return res.json({
       users
