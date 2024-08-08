@@ -1,6 +1,6 @@
 import { pgEnum, boolean, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
 
-export const EntityStatus = pgEnum('status', [
+export const Status = pgEnum('status', [
   'deleted',
   'approved',
   'active',
@@ -24,7 +24,7 @@ export const EntityTimestamps = {
 export const BaseEntitySchema = {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: varchar('name', { length: 200 }).notNull(),
-  status: EntityStatus('status').default('active').notNull(),
+  status: Status('status').default('active').notNull(),
   isReadonly: boolean('isReadonly').notNull().default(false),
   ...EntityTimestamps
 };
