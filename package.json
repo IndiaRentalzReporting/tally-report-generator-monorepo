@@ -11,11 +11,15 @@
     "@fullstack_package/eslint-config": "*",
     "@fullstack_package/typescript-config": "*",
     "dotenv-cli": "^7.4.2",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "turbo": "latest"
   },
   "engines": {
     "node": ">=18"
+  },
+  "overrides": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "packageManager": "npm@8.19.4",
   "workspaces": [

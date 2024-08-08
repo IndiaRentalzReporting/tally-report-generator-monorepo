@@ -1,0 +1,14 @@
+http://auth.localhost {
+    reverse_proxy /api/* localhost:4000
+    reverse_proxy /* localhost:3000
+}
+
+http://dashboard.localhost {
+    reverse_proxy /api/* localhost:4001
+    reverse_proxy /* localhost:3001
+}
+
+http://master.localhost {
+    reverse_proxy /api/* localhost:4002
+    reverse_proxy /* localhost:3002
+}
