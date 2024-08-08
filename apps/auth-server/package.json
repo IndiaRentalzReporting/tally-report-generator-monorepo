@@ -11,7 +11,7 @@
     "test": "jest",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
-    "db:generate": "drizzle-kit generate",
+    "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
     "db:drop": "cross-env NODE_ENV=development drizzle-kit drop",
     "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
