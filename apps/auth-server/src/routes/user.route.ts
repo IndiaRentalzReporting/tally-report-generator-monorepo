@@ -3,26 +3,12 @@ import {
   readOne,
   readAll,
   deleteOne,
-  updateOne,
-  createOne
+  updateOne
 } from '../controller/user.controller';
 import { validateSchema } from '../middlewares';
 import { UserInsertSchema } from '../models/schema';
 
 const userRouter = Router();
-
-userRouter.post(
-  '/create',
-  validateSchema({
-    body: UserInsertSchema.pick({
-      first_name: true,
-      last_name: true,
-      email: true,
-      password: true
-    })
-  }),
-  createOne
-);
 
 userRouter.get('/read', readAll);
 

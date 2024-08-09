@@ -22,16 +22,20 @@ class BaseService<
     TableRelationalConfig
   >
 > {
+  private entity: string;
   constructor(
     protected schema: T,
     protected tableName: K
-  ) {}
+  ) {
+    //@ts-ignore
+    this.entity = this.tableName.tableConfig.dbName;
+  }
 
   public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
     const [entity] = await db.insert(this.schema).values(data).returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.schema.name} returned as undefined`);
+      throw new NotFoundError(`${this.entity} returned as undefined`);
 
     return entity;
   }
@@ -52,7 +56,7 @@ class BaseService<
     });
 
     if (!entity.length) {
-      throw new NotFoundError(`${this.schema.name} does not exist`);
+      throw new NotFoundError(`${this.entity} does not exist`);
     }
 
     return entity as NonNullable<Awaited<ReturnType<K['findMany']>>>;
@@ -74,8 +78,10 @@ class BaseService<
       ...extra
     });
 
+    console.log(Object.entries(this.tableName));
+
     if (!entity) {
-      throw new NotFoundError(`${this.schema.name} does not exist`);
+      throw new NotFoundError(`${this.entity} does not exist`);
     }
 
     return entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>;
@@ -91,7 +97,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.entity} does not exits`);
 
     return entity;
   }
@@ -104,7 +110,7 @@ class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`${this.schema.name} does not exits`);
+    if (!entity) throw new NotFoundError(`${this.entity} does not exits`);
 
     return entity;
   }

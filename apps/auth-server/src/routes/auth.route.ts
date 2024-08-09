@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import * as z from 'zod';
 import { UserInsertSchema } from '../models/schema';
 import {
   handleSignUp,
@@ -7,7 +6,7 @@ import {
   handleStatusCheck,
   handleLogout
 } from '../controller/auth.controller';
-import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
+import { authenticate, validateSchema } from '../middlewares';
 
 const authRouter = Router();
 
@@ -22,9 +21,10 @@ authRouter.post(
 
 authRouter.post(
   '/sign-up',
-  isAuthenticated,
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: UserInsertSchema.extend({
+      password: UserInsertSchema.shape.password.min(8)
+    }).pick({
       first_name: true,
       last_name: true,
       email: true,

@@ -6,20 +6,22 @@ import UserService from './UserService';
 
 class AuthService {
   public static async signUp(data: UserInsert): Promise<SafeUserSelect> {
-    const doesUserAlreadyExists = await UserService.findOne({
-      email: data.email
-    });
-
-    if (!!doesUserAlreadyExists) {
+    try {
+      await UserService.findOne({
+        email: data.email
+      });
       throw new BadRequestError('User Already Exists');
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        const { password, ...user } = await UserService.createOne({
+          ...data,
+          password: await this.hashPassword(data.password)
+        });
+
+        return user;
+      }
+      throw e;
     }
-
-    const { password, ...user } = await UserService.createOne({
-      ...data,
-      password: await this.hashPassword(data.password)
-    });
-
-    return user;
   }
 
   public static async signIn(
