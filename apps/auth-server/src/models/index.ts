@@ -1,7 +1,6 @@
 import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as auth_schema from './schema';
-import * as dashboard_schema from '@fullstack-package/dashboard-schemas';
 import config from '../config';
 
 export const createClient = <T extends Record<string, unknown>>(
@@ -20,10 +19,7 @@ export const createClient = <T extends Record<string, unknown>>(
   };
 };
 
-const { AUTH_PG_URL, DASHBOARD_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
-
-export const { db: dashboard_db, connection: dashboard_connection } =
-  createClient(DASHBOARD_PG_URL, dashboard_schema);
+const { AUTH_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
 
 export let { db: auth_db, connection: auth_connection } = createClient(
   AUTH_PG_URL,
