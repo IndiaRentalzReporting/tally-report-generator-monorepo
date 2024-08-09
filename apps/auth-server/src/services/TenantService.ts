@@ -16,8 +16,15 @@ class TenantService extends BaseService<
   }
 
   async createOne(data: TenantInsert): Promise<TenantSelect> {
-    const tenant = await super.createOne(data);
-    this.createDatabase(tenant.name);
+    const { db_name, db_username, db_password } = await this.createDatabase(
+      data.name
+    );
+    const tenant = await super.createOne({
+      ...data,
+      db_name,
+      db_username,
+      db_password
+    });
     return tenant;
   }
 
@@ -32,33 +39,45 @@ class TenantService extends BaseService<
 
   private generateTenantDBCredentials(tenantName: string) {
     const baseName = tenantName.toLowerCase();
-    const dbName = this.generateUniqueIdentifier(baseName);
-    const dbUsername = this.generateUniqueIdentifier(baseName);
-    const dbPassword = this.generateSecurePassword();
-    return { dbName, dbUsername, dbPassword };
+    const db_name = this.generateUniqueIdentifier(baseName);
+    const db_username = this.generateUniqueIdentifier(baseName);
+    const db_password = this.generateSecurePassword();
+    return { db_name, db_username, db_password };
   }
 
-  private async createDatabase(tenantName: TenantInsert['name']) {
+  private async createDatabase(tenantName: TenantInsert['name']): Promise<{
+    db_name: string;
+    db_username: string;
+    db_password: string;
+  }> {
     const { SUPERUSER_PG_URL } = config;
 
-    const client = postgres(SUPERUSER_PG_URL, {
-      max: 1
-    });
-
-    const { dbName, dbUsername, dbPassword } =
+    const { db_name, db_username, db_password } =
       this.generateTenantDBCredentials(tenantName);
 
-    const db = drizzle(client);
+    try {
+      const client = postgres(SUPERUSER_PG_URL, {
+        max: 1
+      });
 
-    await db.execute(
-      sql`CREATE USER ${dbUsername} WITH PASSWORD '${dbPassword}'`
-    );
-    await db.execute(sql`CREATE DATABASE ${dbName} OWNER ${dbUsername}`);
-    await db.execute(
-      sql`GRANT ALL PRIVILEGES ON DATABASE ${dbName} TO ${dbUsername}`
-    );
+      const db = drizzle(client);
 
-    return { dbName, dbUsername, dbPassword };
+      await db.execute(
+        sql`CREATE USER ${sql.identifier(db_username)} WITH PASSWORD ${sql.raw(`'${db_password}'`)}`
+      );
+
+      await db.execute(
+        sql`CREATE DATABASE ${sql.identifier(db_name)} OWNER ${sql.identifier(db_username)}`
+      );
+
+      await db.execute(
+        sql`GRANT ALL PRIVILEGES ON DATABASE ${sql.identifier(db_name)} TO ${sql.identifier(db_username)}`
+      );
+    } catch (e) {
+      throw new Error(`Could not create database: ${e}`);
+    }
+
+    return { db_name, db_username, db_password };
   }
 }
 

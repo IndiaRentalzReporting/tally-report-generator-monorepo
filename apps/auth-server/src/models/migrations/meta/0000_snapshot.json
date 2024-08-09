@@ -1,5 +1,5 @@
 {
-  "id": "f299970c-3f97-4a3a-afc1-9f03f3ad74ac",
+  "id": "c3c859c8-52cf-4b75-b5d5-954af1adc96d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -73,19 +73,19 @@
           "name": "db_name",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "db_username": {
           "name": "db_username",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "db_password": {
           "name": "db_password",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -97,6 +97,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "name"
+          ]
+        },
+        "tenants_db_name_unique": {
+          "name": "tenants_db_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "db_name"
           ]
         }
       }
@@ -212,18 +219,7 @@
       }
     }
   },
-  "enums": {
-    "public.status": {
-      "name": "status",
-      "schema": "public",
-      "values": [
-        "deleted",
-        "approved",
-        "active",
-        "inactive"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "columns": {},

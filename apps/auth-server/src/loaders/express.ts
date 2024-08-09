@@ -1,5 +1,4 @@
 import 'express-async-errors';
-import dotenv from 'dotenv';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -9,8 +8,6 @@ import sessionsLoader from './sessions';
 import passportLoader from './passport';
 import routesLoader from './routes';
 import config from '../config';
-
-dotenv.config();
 
 const expressLoader = (): Express => {
   const app = express();
@@ -29,7 +26,6 @@ const expressLoader = (): Express => {
 
   sessionsLoader(app);
   passportLoader(app);
-
   routesLoader(app);
 
   app.use(notFound);

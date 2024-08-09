@@ -14,7 +14,7 @@ const tenantRouter = Router();
 tenantRouter.get('/read', readAll);
 
 tenantRouter.post(
-  '/update',
+  '/create',
   validateSchema({
     body: TenantInsertSchema.pick({
       name: true
