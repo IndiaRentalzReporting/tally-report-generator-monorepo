@@ -10,11 +10,15 @@ class AuthService {
       email: data.email
     });
 
-    if (doesUserAlreadyExists != null) {
+    if (!!doesUserAlreadyExists) {
       throw new BadRequestError('User Already Exists');
     }
 
-    const { password, ...user } = await UserService.createOne(data);
+    const { password, ...user } = await UserService.createOne({
+      ...data,
+      password: await this.hashPassword(data.password)
+    });
+
     return user;
   }
 
@@ -26,14 +30,11 @@ class AuthService {
       email
     });
 
-    if (user === undefined) {
+    if (!user) {
       throw new NotFoundError('User does not exist');
     }
 
-    const passwordMatch = await this.comparePassword(password, user.password);
-    if (!passwordMatch) {
-      throw new BadRequestError('Wrong Password');
-    }
+    await this.comparePassword(password, user.password);
 
     return user;
   }
@@ -55,18 +56,17 @@ class AuthService {
     return user;
   }
 
-  public static async hashPassword(password: string): Promise<string> {
+  static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
     return passwordHash;
   }
 
-  static async comparePassword(
-    password: string,
-    hash: string
-  ): Promise<boolean> {
+  static async comparePassword(password: string, hash: string): Promise<void> {
     const doesPasswordMatch = await bcrypt.compare(password, hash);
-    return doesPasswordMatch;
+    if (!doesPasswordMatch) {
+      throw new BadRequestError('Wrong Password');
+    }
   }
 
   static async generateTempPassword(length: number): Promise<string> {

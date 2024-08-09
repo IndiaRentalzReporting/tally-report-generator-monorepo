@@ -3,7 +3,8 @@ import {
   readOne,
   readAll,
   deleteOne,
-  updateOne
+  updateOne,
+  createOne
 } from '../controller/tenant.controller';
 import { validateSchema } from '../middlewares';
 import { TenantInsertSchema } from '../models/schema';
@@ -11,6 +12,16 @@ import { TenantInsertSchema } from '../models/schema';
 const tenantRouter = Router();
 
 tenantRouter.get('/read', readAll);
+
+tenantRouter.post(
+  '/update',
+  validateSchema({
+    body: TenantInsertSchema.pick({
+      name: true
+    })
+  }),
+  createOne
+);
 
 tenantRouter.get(
   '/read/:id',
