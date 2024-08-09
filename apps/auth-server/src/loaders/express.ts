@@ -14,7 +14,7 @@ dotenv.config();
 
 const expressLoader = (): Express => {
   const app = express();
-  const { FRONTEND_URL } = config.app;
+  const { FRONTEND_URL } = config;
 
   app.use(
     cors({

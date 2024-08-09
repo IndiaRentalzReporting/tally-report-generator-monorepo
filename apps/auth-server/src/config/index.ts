@@ -1,16 +1,74 @@
-import dotenv from 'dotenv';
-const { NODE_ENV } = process.env;
-dotenv.config({ path: `.env.${NODE_ENV}` });
+import { config } from 'dotenv';
+import { expand } from 'dotenv-expand';
+import { ZodError, z } from 'zod';
 
-import { appConfig } from './app.config';
-import { dbConfig } from './db.config';
+const stringBoolean = z.coerce
+  .string()
+  .transform((val) => {
+    return val === 'true';
+  })
+  .default('false');
 
-export type env = 'production' | 'development' | 'staging';
+const EnvSchema = z.object({
+  NODE_ENV: z
+    .enum(['production', 'development', 'staging'])
+    .default('development'),
+  PORT: z.coerce.number().default(4000),
+  SESSION_SECRET: z.string(),
+  FRONTEND_URL: z.string(),
+  MONGO_USERNAME: z.string(),
+  MONGO_PASSWORD: z.string(),
+  MONGO_DB_NAME: z.string(),
+  MONGO_URI: z.string(),
 
-const config = {
-  ...appConfig,
-  ...dbConfig,
-  NODE_ENV: NODE_ENV as env
+  AUTH_PG_HOST: z.string(),
+  AUTH_PG_PORT: z.coerce.number(),
+  AUTH_PG_PASSWORD: z.string(),
+  AUTH_PG_USER: z.string(),
+  AUTH_PG_DATABASE: z.string(),
+  AUTH_PG_URL: z.string(),
+
+  DASHBOARD_PG_HOST: z.string(),
+  DASHBOARD_PG_PORT: z.coerce.number(),
+  DASHBOARD_PG_PASSWORD: z.string(),
+  DASHBOARD_PG_USER: z.string(),
+  DASHBOARD_PG_DATABASE: z.string(),
+  DASHBOARD_PG_URL: z.string(),
+
+  SUPERUSER_PG_HOST: z.string(),
+  SUPERUSER_PG_PORT: z.coerce.number(),
+  SUPERUSER_PG_PASSWORD: z.string(),
+  SUPERUSER_PG_USER: z.string(),
+  SUPERUSER_PG_DATABASE: z.string(),
+  SUPERUSER_PG_URL: z.string(),
+
+  DB_MIGRATING: stringBoolean,
+  DB_SEEDING: stringBoolean
+});
+
+expand(config());
+
+const logError = (error: ZodError) => {
+  let m = '';
+  error.issues.forEach((issue) => {
+    m += issue.path[0] + '\n';
+  });
+  return m;
 };
 
-export default config;
+try {
+  EnvSchema.parse(process.env);
+} catch (error) {
+  if (error instanceof ZodError) {
+    console.error(error);
+    let message = 'Missing required values in .env:\n';
+    message += logError(error);
+    const e = new Error(message);
+    e.stack = '';
+    throw e;
+  } else {
+    console.error(error);
+  }
+}
+
+export default EnvSchema.parse(process.env);

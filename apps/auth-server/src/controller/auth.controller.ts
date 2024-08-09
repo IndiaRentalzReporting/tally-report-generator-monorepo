@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
 import { SafeUserSelect, UserInsert } from '../models/schema';
 import { UnauthenticatedError } from '../errors';
-import { createResetPasswordLink } from '../utils';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
