@@ -3,6 +3,21 @@ import UserService from '../services/UserService';
 import { UserSelect, UserInsert, SafeUserSelect } from '../models/schema';
 import { NotFoundError } from '../errors';
 
+export const createOne = async (
+  req: Request<object, object, UserInsert>,
+  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  next: NextFunction
+) => {
+  try {
+    const { password, ...user } = await UserService.createOne(req.body);
+
+    return res.json({ user });
+  } catch (e) {
+    console.error("Couldn't create a user");
+    return next(e);
+  }
+};
+
 export const readAll = async (
   req: Request,
   res: Response<{ users: SafeUserSelect[] }>,
