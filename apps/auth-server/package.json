@@ -5,17 +5,17 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start:dev": "cross-env NODE_ENV=development node dist/src/index.js",
+    "start:dev": "node dist/src/index.js",
     "start:staging": "cross-env NODE_ENV=staging node dist/src/index.js",
     "start:production": "cross-env NODE_ENV=production node dist/src/index.js",
-    "test": "jest",
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "test": "NODE_ENV=development jest",
+    "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
-    "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
-    "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
-    "db:drop": "cross-env NODE_ENV=development drizzle-kit drop",
-    "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
-    "db:seed": "cross-env NODE_ENV=development tsx ./src/models/seed"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "cross-env DB_MIGRATING=true drizzle-kit migrate",
+    "db:drop": "drizzle-kit drop",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "cross-env DB_SEEDING=true tsx ./src/models/seed"
   },
   "devDependencies": {
     "@fullstack_package/eslint-config": "*",
