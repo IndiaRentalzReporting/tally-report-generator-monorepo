@@ -1,7 +1,16 @@
-import config from './src/config';
+import config, { DashboardPgUrlKey } from './src/config';
 import { defineConfig } from 'drizzle-kit';
 
-const { DASHBOARD_PG_URL } = config;
+let DASHBOARD_PG_URL = config[DashboardPgUrlKey];
+const { DB_MIGRATING } = config;
+
+if (!DASHBOARD_PG_URL) {
+  if (DB_MIGRATING) {
+    throw new Error('Dashboard database URL not provided');
+  } else {
+    DASHBOARD_PG_URL = '';
+  }
+}
 
 export default defineConfig({
   dialect: 'postgresql',

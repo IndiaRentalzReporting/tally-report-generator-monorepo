@@ -9,6 +9,8 @@ const stringBoolean = z.coerce
   })
   .default('false');
 
+export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
+
 const EnvSchema = z.object({
   NODE_ENV: z
     .enum(['production', 'development', 'staging'])
@@ -28,12 +30,7 @@ const EnvSchema = z.object({
   AUTH_PG_DATABASE: z.string(),
   AUTH_PG_URL: z.string(),
 
-  DASHBOARD_PG_HOST: z.string(),
-  DASHBOARD_PG_PORT: z.coerce.number(),
-  DASHBOARD_PG_PASSWORD: z.string(),
-  DASHBOARD_PG_USER: z.string(),
-  DASHBOARD_PG_DATABASE: z.string(),
-  DASHBOARD_PG_URL: z.string(),
+  [DashboardPgUrlKey]: z.string().optional(),
 
   SUPERUSER_PG_HOST: z.string(),
   SUPERUSER_PG_PORT: z.coerce.number(),
