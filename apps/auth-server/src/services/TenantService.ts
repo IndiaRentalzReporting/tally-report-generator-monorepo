@@ -26,9 +26,7 @@ class TenantService extends BaseService<
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    await DSI.migrateSchema();
-    // DSI.seedDatabase();
-    // DSI.terminateConnection();
+    await DSI.migrateAndSeed();
 
     const tenant = await super.createOne({
       ...data,

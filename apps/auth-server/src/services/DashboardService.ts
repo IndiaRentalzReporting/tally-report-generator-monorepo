@@ -15,26 +15,38 @@ class DashboardService {
 
   constructor(db_username: string, db_password: string, db_name: string) {
     this.URL = this.createUrl(db_username, db_password, db_name);
-    console.log(this.URL);
     const { db, connection } = createClient(this.URL, dashboardSchema);
     this.dashboardClient = db;
     this.dashboardConnection = connection;
   }
 
-  public createUrl(user: string, password: string, name: string) {
+  private createUrl(user: string, password: string, name: string) {
     return `postgresql://${user}:${password}@localhost:5432/${name}`;
   }
 
-  public async migrateSchema() {
-    migrateDashboardSchema(this.URL);
+  public async migrateAndSeed() {
+    migrateDashboardSchema(this.URL, async (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Migration Error: ${error.message}`);
+        throw new BadRequestError(`Could not migrate schema: ${error}`);
+      }
+      if (stderr) {
+        console.error(`Migration Stderr: ${stderr}`);
+        throw new Error(`Migration Stderr: ${stderr}`);
+      }
+      console.log(`Migration Stdout: ${stdout}`);
+      await this.seedDatabase();
+      return;
+    });
   }
 
-  public async seedDatabase() {
+  private async seedDatabase() {
     await this.seedAction();
     await this.seedModules();
+    await this.terminateConnection();
   }
 
-  public async seedRole() {
+  private async seedRole() {
     const [role] = await this.dashboardClient
       .insert(dashboardSchema.RoleSchema)
       .values({ name: roles.name })
@@ -43,7 +55,7 @@ class DashboardService {
     if (!role) throw new BadRequestError('Could not create role');
   }
 
-  public async seedAction() {
+  private async seedAction() {
     const promises = actions.map(async ({ name }) => {
       try {
         return await this.dashboardClient
@@ -57,7 +69,7 @@ class DashboardService {
     await Promise.all(promises);
   }
 
-  public async seedModules() {
+  private async seedModules() {
     const promises = modules.map(async ({ name }) => {
       try {
         return await this.dashboardClient
@@ -71,7 +83,7 @@ class DashboardService {
     await Promise.all(promises);
   }
 
-  public async seedAdmin(data: dashboardSchema.UserInsert, role_id: string) {
+  private async seedAdmin(data: dashboardSchema.UserInsert, role_id: string) {
     const [admin] = await this.dashboardClient
       .insert(dashboardSchema.UserSchema)
       .values({ ...data, role_id })
@@ -80,7 +92,7 @@ class DashboardService {
     if (!admin) throw new BadRequestError('Could not create admin');
   }
 
-  public async terminateConnection() {
+  private async terminateConnection() {
     await this.dashboardConnection.end();
   }
 }

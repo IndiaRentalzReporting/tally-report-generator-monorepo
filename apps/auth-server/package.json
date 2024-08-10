@@ -17,7 +17,7 @@
     "db-dashboard:generate": "drizzle-kit --config=drizzle.dashboard.config.ts generate",
     "db-dashboard:migrate": "drizzle-kit --config=drizzle.dashboard.config.ts migrate",
     "db-dashboard:drop": "drizzle-kit --config=drizzle.dashboard.config.ts drop",
-    "db-dashboard:studio": "drizzle-kit --config=drizzle.dashboard.config.ts studio",
+    "db-dashboard:studio": "drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893",
     "db-dashboard:seed": "cross-env DB_SEEDING=true tsx ./src/models/seed"
   },
   "devDependencies": {
