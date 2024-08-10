@@ -3,12 +3,6 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from './base';
 import { TenantSchema } from './tenant';
 
-declare global {
-  namespace Express {
-    interface User extends UserSelect {}
-  }
-}
-
 const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
 
 export const UserSchema = pgTable('users', {

@@ -1,14 +1,26 @@
 import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
-
 import postgres from 'postgres';
-import * as schema from './schema';
 import config from '../config';
 
-const { PG_URL } = config.db.postgres;
-const { NODE_ENV } = config;
+const { DB_MIGRATING, DB_SEEDING } = config;
 
-let db: PostgresJsDatabase<typeof schema>;
-const client = postgres(PG_URL);
-db = drizzle(client, { schema, logger: true });
-
-export default db;
+export const createClient = <T extends Record<string, unknown>>(
+  URL: string,
+  schema: T
+): { db: PostgresJsDatabase<T>; connection: postgres.Sql<{}> } => {
+  try {
+    const connection = postgres(URL, {
+      max: DB_MIGRATING || DB_SEEDING ? 1 : undefined
+    });
+    return {
+      db: drizzle(connection, {
+        schema,
+        logger: true
+      }),
+      connection
+    };
+  } catch (e) {
+    console.error(`Could not create Database client: ${e}`);
+    throw e;
+  }
+};

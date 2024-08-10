@@ -4,3 +4,4 @@ export * from './roles';
 export * from './relations';
 export * from './actions';
 export * from './modules';
+export * from './base';

@@ -6,12 +6,6 @@ import { ModuleSelect } from './modules';
 import { ActionSelect } from './actions';
 import { BaseEntitySchema } from './base';
 
-declare global {
-  namespace Express {
-    interface User extends DetailedUser {}
-  }
-}
-
 const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
 
 export const UserSchema = pgTable('users', {

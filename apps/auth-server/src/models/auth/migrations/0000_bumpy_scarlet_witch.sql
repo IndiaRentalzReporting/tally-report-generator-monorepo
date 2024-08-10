@@ -14,10 +14,11 @@ CREATE TABLE IF NOT EXISTS "tenants" (
 	"deletedAt" timestamp,
 	"approvedAt" timestamp,
 	"lastSyncedAt" timestamp DEFAULT now(),
-	"db_name" varchar(128) NOT NULL,
-	"db_username" varchar(128) NOT NULL,
-	"db_password" varchar(128) NOT NULL,
-	CONSTRAINT "tenants_name_unique" UNIQUE("name")
+	"db_name" varchar(128),
+	"db_username" varchar(128),
+	"db_password" varchar(128),
+	CONSTRAINT "tenants_name_unique" UNIQUE("name"),
+	CONSTRAINT "tenants_db_name_unique" UNIQUE("db_name")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (

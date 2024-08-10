@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
-import { UserSelect, UserInsert, SafeUserSelect } from '../models/schema';
+import { UserSelect, UserInsert, SafeUserSelect } from '../models/auth/schema';
 import { NotFoundError } from '../errors';
 
 export const readAll = async (

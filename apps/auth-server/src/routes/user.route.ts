@@ -6,11 +6,12 @@ import {
   updateOne
 } from '../controller/user.controller';
 import { validateSchema } from '../middlewares';
-import { UserInsertSchema } from '../models/schema';
+import { UserInsertSchema } from '../models/auth/schema';
 
 const userRouter = Router();
 
 userRouter.get('/read', readAll);
+
 userRouter.get(
   '/read/:id',
   validateSchema({
@@ -20,6 +21,7 @@ userRouter.get(
   }),
   readOne
 );
+
 userRouter.patch(
   '/update/:id',
   validateSchema({
@@ -40,6 +42,7 @@ userRouter.patch(
   }),
   updateOne
 );
+
 userRouter.delete(
   '/delete/:id',
   validateSchema({

@@ -4,8 +4,7 @@ import { connectAndLog } from './loaders/database';
 
 const app = expressLoader();
 
-const { NODE_ENV } = config;
-const { PORT } = config.app;
+const { NODE_ENV, PORT } = config;
 
 (async () => {
   try {
