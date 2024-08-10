@@ -6,12 +6,11 @@ import {
   TenantSelect
 } from '../models/auth/schema';
 import BaseService from './BaseService';
+import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';
-import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
-import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
-import actions from '../models/dashboard/seed/Actions/data.json';
 
 class TenantService extends BaseService<
   typeof TenantSchema,
@@ -25,12 +24,19 @@ class TenantService extends BaseService<
     const { db_name, db_username, db_password } = await this.createDatabase(
       data.name
     );
+
+    const DSI = new DashboardService(db_username, db_password, db_name);
+    await DSI.migrateSchema();
+    // DSI.seedDatabase();
+    // DSI.terminateConnection();
+
     const tenant = await super.createOne({
       ...data,
       db_name,
       db_username,
       db_password
     });
+
     return tenant;
   }
 

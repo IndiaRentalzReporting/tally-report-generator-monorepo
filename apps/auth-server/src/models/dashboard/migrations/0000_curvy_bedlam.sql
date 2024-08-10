@@ -1,3 +1,9 @@
+DO $$ BEGIN
+ CREATE TYPE "public"."status" AS ENUM('deleted', 'approved', 'active', 'inactive');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "actions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(200) NOT NULL,

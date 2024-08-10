@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import config, { DashboardPgUrlKey } from '../../../config';
+import { DashboardPgUrlKey } from '../../../config';
 
 export function migrateDashboardSchema(PG_URL: string) {
   const envVariable = `${DashboardPgUrlKey}=${PG_URL}`;
@@ -9,14 +9,14 @@ export function migrateDashboardSchema(PG_URL: string) {
     `cross-env DB_MIGRATING=true ${envVariable} npm run ${scriptName}`,
     (error, stdout, stderr) => {
       if (error) {
-        console.error(`Error: ${error.message}`);
-        return;
+        console.error(`Migration Error: ${error.message}`);
+        throw error;
       }
       if (stderr) {
-        console.error(`Stderr: ${stderr}`);
-        return;
+        console.error(`Migration Stderr: ${stderr}`);
+        throw error;
       }
-      console.log(`Stdout: ${stdout}`);
+      console.log(`Migration Stdout: ${stdout}`);
     }
   );
 }

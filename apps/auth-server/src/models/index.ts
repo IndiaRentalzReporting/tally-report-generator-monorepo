@@ -8,14 +8,19 @@ export const createClient = <T extends Record<string, unknown>>(
   URL: string,
   schema: T
 ): { db: PostgresJsDatabase<T>; connection: postgres.Sql<{}> } => {
-  const connection = postgres(URL, {
-    max: DB_MIGRATING || DB_SEEDING ? 1 : undefined
-  });
-  return {
-    db: drizzle(connection, {
-      schema,
-      logger: true
-    }),
-    connection
-  };
+  try {
+    const connection = postgres(URL, {
+      max: DB_MIGRATING || DB_SEEDING ? 1 : undefined
+    });
+    return {
+      db: drizzle(connection, {
+        schema,
+        logger: true
+      }),
+      connection
+    };
+  } catch (e) {
+    console.error(`Could not create Database client: ${e}`);
+    throw e;
+  }
 };
