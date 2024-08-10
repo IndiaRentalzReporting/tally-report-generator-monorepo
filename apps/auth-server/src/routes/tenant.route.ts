@@ -7,7 +7,7 @@ import {
   createOne
 } from '../controller/tenant.controller';
 import { validateSchema } from '../middlewares';
-import { TenantInsertSchema } from '../models/schema';
+import { TenantInsertSchema } from '../models/auth/schema';
 
 const tenantRouter = Router();
 

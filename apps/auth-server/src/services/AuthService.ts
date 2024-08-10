@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '../errors';
-import { SafeUserSelect, UserInsert, UserSelect } from '../models/schema';
+import { SafeUserSelect, UserInsert, UserSelect } from '../models/auth/schema';
 import UserService from './UserService';
 
 class AuthService {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserInsertSchema } from '../models/schema';
+import { UserInsertSchema } from '../models/auth/schema';
 import {
   handleSignUp,
   handleSignIn,

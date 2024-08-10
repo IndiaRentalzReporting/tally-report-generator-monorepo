@@ -6,7 +6,7 @@ import {
   updateOne
 } from '../controller/user.controller';
 import { validateSchema } from '../middlewares';
-import { UserInsertSchema } from '../models/schema';
+import { UserInsertSchema } from '../models/auth/schema';
 
 const userRouter = Router();
 

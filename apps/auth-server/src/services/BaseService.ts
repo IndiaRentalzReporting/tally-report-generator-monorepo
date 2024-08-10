@@ -7,8 +7,8 @@ import {
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 import { NotFoundError } from '../errors';
-import db from '../models';
-import * as schemas from '../models/schema';
+import db from '../models/auth';
+import * as schemas from '../models/auth/schema';
 
 class BaseService<
   T extends PgTableWithColumns<{

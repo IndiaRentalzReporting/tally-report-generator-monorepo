@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
 import jwt from 'jsonwebtoken';
-import { UserSelect } from '../models/schema';
+import { UserSelect } from '../models/auth/schema';
 import config from '../config';
 import UserService from '../services/UserService';
 import { NotFoundError } from '../errors';

@@ -1,7 +1,8 @@
 import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import * as auth_schema from './schema';
 import config from '../config';
+
+const { DB_MIGRATING, DB_SEEDING } = config;
 
 export const createClient = <T extends Record<string, unknown>>(
   URL: string,
@@ -18,12 +19,3 @@ export const createClient = <T extends Record<string, unknown>>(
     connection
   };
 };
-
-const { AUTH_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
-
-export let { db: auth_db, connection: auth_connection } = createClient(
-  AUTH_PG_URL,
-  auth_schema
-);
-
-export default auth_db;

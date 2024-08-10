@@ -1,26 +1,24 @@
 import postgres from 'postgres';
-import db, { createClient } from '../models';
-import { TenantInsert, TenantSchema, TenantSelect } from '../models/schema';
+import db from '../models/auth';
+import {
+  TenantInsert,
+  TenantSchema,
+  TenantSelect
+} from '../models/auth/schema';
 import BaseService from './BaseService';
 import crypto from 'crypto';
 import config from '../config';
 import { PostgresJsDatabase, drizzle } from 'drizzle-orm/postgres-js';
 import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
 import { sql } from 'drizzle-orm';
-import actions from '../models/seed/Actions/data.json';
+import actions from '../models/dashboard/seed/Actions/data.json';
 
 class TenantService extends BaseService<
   typeof TenantSchema,
   typeof db.query.TenantSchema
 > {
-  private dashboardClient: PostgresJsDatabase<typeof dashboardSchema>;
-
   constructor() {
     super(TenantSchema, db.query.TenantSchema);
-    this.dashboardClient = createClient(
-      config.DASHBOARD_PG_URL,
-      dashboardSchema
-    ).db;
   }
 
   async createOne(data: TenantInsert): Promise<TenantSelect> {

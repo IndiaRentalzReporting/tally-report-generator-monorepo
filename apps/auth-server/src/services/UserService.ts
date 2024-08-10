@@ -1,5 +1,5 @@
-import db from '../models';
-import { UserSchema } from '../models/schema';
+import db from '../models/auth';
+import { UserSchema } from '../models/auth/schema';
 import BaseService from './BaseService';
 
 class UserService extends BaseService<

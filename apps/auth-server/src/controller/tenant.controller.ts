@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
-import { TenantSelect, TenantInsert } from '../models/schema';
+import { TenantSelect, TenantInsert } from '../models/auth/schema';
 
 export const createOne = async (
   req: Request<object, object, TenantInsert>,

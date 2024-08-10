@@ -1,6 +1,6 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import db, { auth_connection } from './index';
-import drizzleConfig from '../../drizzle.config';
+import drizzleConfig from '../../../drizzle.auth.config';
 
 const main = async () => {
   await migrate(db, {

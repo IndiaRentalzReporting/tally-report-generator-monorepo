@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { SafeUserSelect, UserInsert } from '../models/schema';
+import { SafeUserSelect, UserInsert } from '../models/auth/schema';
 import { UnauthenticatedError } from '../errors';
 
 export const handleSignUp = async (

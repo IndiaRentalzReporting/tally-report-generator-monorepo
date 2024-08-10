@@ -1,8 +1,8 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { createClient } from '../models';
-import actions from '../models/seed/Actions/data.json';
-import modules from '../models/seed/Modules/data.json';
-import roles from '../models/seed/Roles/data.json';
+import actions from '../models/dashboard/seed/Actions/data.json';
+import modules from '../models/dashboard/seed/Modules/data.json';
+import roles from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
 import { BadRequestError } from '../errors';
 import { eq } from 'drizzle-orm';
