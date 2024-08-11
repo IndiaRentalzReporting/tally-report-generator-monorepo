@@ -24,7 +24,7 @@ class DashboardService {
     return `postgresql://${user}:${password}@localhost:5432/${name}`;
   }
 
-  public async migrateAndSeed() {
+  public async migrateAndSeed(userData: dashboardSchema.UserInsert) {
     migrateDashboardSchema(this.URL, async (error, stdout, stderr) => {
       if (error) {
         console.error(`Migration Error: ${error.message}`);
@@ -35,24 +35,26 @@ class DashboardService {
         throw new Error(`Migration Stderr: ${stderr}`);
       }
       console.log(`Migration Stdout: ${stdout}`);
-      await this.seedDatabase();
+      await this.seedDatabase(userData);
       return;
     });
   }
 
-  private async seedDatabase() {
+  private async seedDatabase(userData: dashboardSchema.UserInsert) {
     await this.seedAction();
     await this.seedModules();
+    await this.seedAdmin(userData);
     await this.terminateConnection();
   }
 
-  private async seedRole() {
+  private async seedRole(): Promise<dashboardSchema.RoleSelect['id']> {
     const [role] = await this.dashboardClient
       .insert(dashboardSchema.RoleSchema)
       .values({ name: roles.name })
       .returning();
 
     if (!role) throw new BadRequestError('Could not create role');
+    return role.id;
   }
 
   private async seedAction() {
@@ -83,7 +85,8 @@ class DashboardService {
     await Promise.all(promises);
   }
 
-  private async seedAdmin(data: dashboardSchema.UserInsert, role_id: string) {
+  private async seedAdmin(data: dashboardSchema.UserInsert) {
+    const role_id = await this.seedRole();
     const [admin] = await this.dashboardClient
       .insert(dashboardSchema.UserSchema)
       .values({ ...data, role_id })

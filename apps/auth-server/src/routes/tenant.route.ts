@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { Router } from 'express';
 import {
   readOne,
@@ -8,6 +9,7 @@ import {
 } from '../controller/tenant.controller';
 import { validateSchema } from '../middlewares';
 import { TenantInsertSchema } from '../models/auth/schema';
+import { UserInsertSchema } from '@fullstack-package/dashboard-schemas';
 
 const tenantRouter = Router();
 
@@ -16,8 +18,16 @@ tenantRouter.get('/read', readAll);
 tenantRouter.post(
   '/create',
   validateSchema({
-    body: TenantInsertSchema.pick({
-      name: true
+    body: z.object({
+      tenantDetails: TenantInsertSchema.pick({
+        name: true
+      }),
+      userInfo: UserInsertSchema.pick({
+        first_name: true,
+        last_name: true,
+        email: true,
+        password: true
+      })
     })
   }),
   createOne

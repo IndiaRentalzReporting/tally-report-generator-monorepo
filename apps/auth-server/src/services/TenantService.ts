@@ -11,6 +11,7 @@ import crypto from 'crypto';
 import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
+import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
 
 class TenantService extends BaseService<
   typeof TenantSchema,
@@ -20,16 +21,19 @@ class TenantService extends BaseService<
     super(TenantSchema, db.query.TenantSchema);
   }
 
-  async createOne(data: TenantInsert): Promise<TenantSelect> {
+  async onboard(
+    tenantData: TenantInsert,
+    userData: dashboardSchema.UserInsert
+  ): Promise<TenantSelect> {
     const { db_name, db_username, db_password } = await this.createDatabase(
-      data.name
+      tenantData.name
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    await DSI.migrateAndSeed();
+    await DSI.migrateAndSeed(userData);
 
     const tenant = await super.createOne({
-      ...data,
+      ...tenantData,
       db_name,
       db_username,
       db_password
