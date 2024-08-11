@@ -1,14 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
 import { TenantSelect, TenantInsert } from '../models/auth/schema';
+import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
 
 export const createOne = async (
-  req: Request<object, object, TenantInsert>,
+  req: Request<
+    object,
+    object,
+    { tenantData: TenantInsert; userData: dashboardSchema.UserInsert }
+  >,
   res: Response<{ tenant: TenantSelect }>,
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.createOne(req.body);
+    const tenant = await TenantService.onboard(
+      req.body.tenantData,
+      req.body.userData
+    );
 
     return res.json({ tenant });
   } catch (e) {
