@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
 import { UserSelect, UserInsert, SafeUserSelect } from '../models/auth/schema';
-import { NotFoundError } from '../errors';
+import { NotFoundError } from '@fullstack_package/core-application/errors';
 
 export const readAll = async (
   req: Request,

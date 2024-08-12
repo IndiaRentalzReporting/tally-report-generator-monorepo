@@ -1,15 +1,32 @@
 {
   "name": "@fullstack_package/core-application",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.js",
-    "./errors": "./src/errors/index.js",
-    "./middlewares": "./src/middlewares/index.js",
-    "./utils": "./src/utils/index.js",
-    "./loaders": "./src/loaders/index.js"
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./errors": {
+      "require": "./dist/errors/index.js",
+      "import": "./dist/errors/index.mjs",
+      "types": "./dist/errors/index.d.ts"
+    },
+    "./middlewares": {
+      "require": "./dist/middlewares/index.js",
+      "import": "./dist/middlewares/index.mjs",
+      "types": "./dist/middlewares/index.d.ts"
+    },
+    "./utils": {
+      "require": "./dist/utils/index.js",
+      "import": "./dist/utils/index.mjs",
+      "types": "./dist/utils/index.d.ts"
+    },
+    "./loaders": {
+      "require": "./dist/loaders/index.js",
+      "import": "./dist/loaders/index.mjs",
+      "types": "./dist/loaders/index.d.ts"
+    }
   },
   "scripts": {
     "build": "tsup",

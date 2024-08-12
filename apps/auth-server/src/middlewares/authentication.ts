@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { BadRequestError } from '../errors';
+import { BadRequestError } from '@fullstack_package/core-application/errors';
 
 export const authenticate = passport.authenticate('local');
 
