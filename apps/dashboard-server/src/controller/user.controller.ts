@@ -6,7 +6,7 @@ import {
   DetailedUser,
   UserInsert
 } from '../models/schema';
-import { NotFoundError } from '../errors';
+import { NotFoundError } from '@fullstack_package/core-application/errors';
 
 export const readAll = async (
   req: Request,

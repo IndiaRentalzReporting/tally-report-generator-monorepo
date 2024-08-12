@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { UserSelect } from '../models/schema';
 import config from '../config';
 import UserService from '../services/UserService';
-import { NotFoundError } from '../errors';
+import { NotFoundError } from '@fullstack_package/core-application/errors';
 
 export const modifySvgDimensions = (
   svgStr: string,

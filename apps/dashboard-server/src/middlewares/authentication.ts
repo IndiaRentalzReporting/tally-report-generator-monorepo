@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { BadRequestError, UnauthenticatedError } from '../errors';
+import {
+  BadRequestError,
+  UnauthenticatedError
+} from '@fullstack_package/core-application/errors';
 import UserService from '../services/UserService';
 import config from '../config';
 import { DetailedUser } from '../models/schema';

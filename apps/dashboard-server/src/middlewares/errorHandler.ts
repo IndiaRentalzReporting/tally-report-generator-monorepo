@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../errors';
+import { CustomError } from '@fullstack_package/core-application/errors';
 import config from '../config';
 
 export const errorHandler = (

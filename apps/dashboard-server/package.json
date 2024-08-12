@@ -48,12 +48,14 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.3",
+    "@fullstack_package/core-application": "*",
     "@fullstack_package/dashboard-schemas": "*",
+    "@neondatabase/serverless": "^0.9.3",
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "dotenv-expand": "^11.0.6",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",

@@ -5,7 +5,7 @@ import {
   BadRequestError,
   NotFoundError,
   UnauthenticatedError
-} from '../errors';
+} from '@fullstack_package/core-application/errors';
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
 import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
