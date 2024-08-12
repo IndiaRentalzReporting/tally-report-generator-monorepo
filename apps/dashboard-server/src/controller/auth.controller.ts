@@ -23,7 +23,7 @@ export const handleSignUp = async (
       password: tempPassword
     });
 
-    const { MAIL_FROM } = config.emailing;
+    const { MAIL_FROM } = config;
 
     const mailOptions = {
       from: `info${MAIL_FROM}`,
@@ -128,7 +128,7 @@ export const forgotPassword = async (
     }
 
     const resetLink = createResetPasswordLink(user, true);
-    const { MAIL_FROM } = config.emailing;
+    const { MAIL_FROM } = config;
 
     const mailOptions = {
       from: `info${MAIL_FROM}`,

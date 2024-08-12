@@ -73,7 +73,7 @@ const createModules = async () => {
 };
 
 const createRoles = async () => {
-  const name = config.app.SUPER_USER_NAME;
+  const { SUPER_USER_NAME: name } = config;
   return RoleService.createOne({ name });
 };
 
@@ -83,7 +83,7 @@ const seed = async () => {
     DEVELOPER_LAST_NAME: last_name,
     DEVELOPER_EMAIL: email,
     DEVELOPER_PASSWORD: password
-  } = config.app;
+  } = config;
 
   if (!first_name || !last_name || !email || !password)
     throw Error('Invalid user credentials');

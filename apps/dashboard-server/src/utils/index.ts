@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService';
 
 export const generateUserJWTToken = (user: UserSelect): string => {
-  const { SMTP_SECRET } = config.emailing;
+  const { SMTP_SECRET } = config;
   const token = jwt.sign({ id: user.id }, SMTP_SECRET, { expiresIn: '15m' });
   return token;
 };
@@ -16,7 +16,7 @@ export const verifyUserJWTToken = async (
   interface IToken extends jwt.JwtPayload {
     id: string;
   }
-  const { SMTP_SECRET } = config.emailing;
+  const { SMTP_SECRET } = config;
   const { id } = jwt.verify(token, SMTP_SECRET) as IToken;
   const user = await UserService.findOne({ id });
   if (!user) {
@@ -29,7 +29,7 @@ export const createResetPasswordLink = (
   user: UserSelect,
   isEmail: boolean = false
 ): string => {
-  const { FRONTEND_URL } = config.server;
+  const { FRONTEND_URL } = config;
   const token = generateUserJWTToken(user);
   const resetLink = `${isEmail ? FRONTEND_URL : ''}/reset-password/${token}`;
   return resetLink;
