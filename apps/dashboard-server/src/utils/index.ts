@@ -1,35 +1,8 @@
-import { JSDOM } from 'jsdom';
-import jwt from 'jsonwebtoken';
-import { UserSelect } from '../models/schema';
-import config from '../config';
-import UserService from '../services/UserService';
 import { NotFoundError } from '@fullstack_package/core-application/errors';
-
-export const modifySvgDimensions = (
-  svgStr: string,
-  newWidth: number,
-  newHeight: number
-): string => {
-  const dom = new JSDOM(svgStr, { contentType: 'image/svg+xml' });
-  const { document } = dom.window;
-
-  const svgElement = document.querySelector('svg');
-  if (!svgElement) {
-    throw new Error('No SVG element found');
-  }
-
-  svgElement.setAttribute('width', String(newWidth));
-  svgElement.setAttribute('height', String(newHeight));
-
-  return dom.serialize();
-};
-
-export const toTitleCase = (str: string): string => {
-  return str.replace(
-    /\w\S*/g,
-    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-  );
-};
+import { UserSelect } from '@fullstack_package/dashboard-schemas';
+import config from '../config';
+import jwt from 'jsonwebtoken';
+import UserService from '../services/UserService';
 
 export const generateUserJWTToken = (user: UserSelect): string => {
   const { SMTP_SECRET } = config.emailing;

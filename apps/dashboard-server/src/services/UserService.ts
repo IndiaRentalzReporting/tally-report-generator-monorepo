@@ -1,6 +1,6 @@
 import db from '../models';
 import { UserSchema, UserSelect, DetailedUser } from '../models/schema';
-import { toTitleCase } from '../utils';
+import { toTitleCase } from '@fullstack_package/core-application/utils';
 import BaseService from './BaseService';
 
 class UserService extends BaseService<
