@@ -7,7 +7,7 @@ import {
   updateOne,
   createOne
 } from '../controller/tenant.controller';
-import { validateSchema } from '../middlewares';
+import { validateSchema } from '@fullstack_package/core-application/middlewares';
 import { TenantInsertSchema } from '../models/auth/schema';
 import { UserInsertSchema } from '@fullstack_package/dashboard-schemas';
 
