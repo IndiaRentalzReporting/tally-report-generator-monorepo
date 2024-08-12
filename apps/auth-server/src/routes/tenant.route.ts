@@ -9,7 +9,7 @@ import {
 } from '../controller/tenant.controller';
 import { validateSchema } from '../middlewares';
 import { TenantInsertSchema } from '../models/auth/schema';
-import { UserInsertSchema } from '@fullstack-package/dashboard-schemas';
+import { UserInsertSchema } from '@fullstack_package/dashboard-schemas';
 
 const tenantRouter = Router();
 

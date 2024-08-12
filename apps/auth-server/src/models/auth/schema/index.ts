@@ -1,8 +1,8 @@
-import { UserSelect } from '@fullstack-package/auth-schemas';
+import { UserSelect } from '@fullstack_package/auth-schemas';
 declare global {
   namespace Express {
     interface User extends UserSelect {}
   }
 }
 
-export * from '@fullstack-package/auth-schemas';
+export * from '@fullstack_package/auth-schemas';

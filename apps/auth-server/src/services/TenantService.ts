@@ -11,7 +11,7 @@ import crypto from 'crypto';
 import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
-import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
+import * as dashboardSchema from '@fullstack_package/dashboard-schemas';
 
 class TenantService extends BaseService<
   typeof TenantSchema,
