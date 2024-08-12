@@ -6,7 +6,7 @@ import {
   readOne,
   deleteOne
 } from '../controller/role.controller';
-import { validateSchema } from '../middlewares';
+import { validateSchema } from '@fullstack_package/core-application/middlewares';
 import { RoleInsertSchema } from '../models/schema';
 
 const roleRouter = Router();

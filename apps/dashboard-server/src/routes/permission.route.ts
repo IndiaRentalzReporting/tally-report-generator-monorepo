@@ -6,7 +6,7 @@ import {
   readAllOfRole,
   updateMany
 } from '../controller/permission.controller';
-import { validateSchema } from '../middlewares';
+import { validateSchema } from '@fullstack_package/core-application/middlewares';
 import {
   ModuleSelectSchema,
   ActionSelectSchema,

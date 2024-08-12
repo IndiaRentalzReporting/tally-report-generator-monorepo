@@ -8,7 +8,7 @@ import {
   deleteOne,
   readOne
 } from '../controller/module.controller';
-import { validateSchema } from '../middlewares';
+import { validateSchema } from '@fullstack_package/core-application/middlewares';
 import { ModuleInsertSchema } from '../models/schema';
 
 const moduleRouter = Router();

@@ -1,36 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import passport from 'passport';
 import {
   BadRequestError,
   UnauthenticatedError
 } from '@fullstack_package/core-application/errors';
-import UserService from '../services/UserService';
-import config from '../config';
-import { DetailedUser } from '../models/schema';
-
-export const authenticate = passport.authenticate('local');
-
-export const isUnauthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isUnauthenticated()) {
-    return next();
-  }
-  throw new BadRequestError('You are already authenticated!');
-};
-
-export const isAuthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  throw new BadRequestError('You are not authenticated!');
-};
 
 export const isRoleAllowed = async (
   req: Request,
@@ -71,24 +43,4 @@ export const isRoleAllowed = async (
     }
   }
   throw new UnauthenticatedError('You are not authenticated');
-};
-
-export const isAdmin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    const {
-      user: { email }
-    } = req;
-    const user = (await UserService.findOneDetailedUser({
-      email
-    })) as DetailedUser;
-    if (user?.role?.name.toLowerCase() === config.app.SUPER_USER_NAME) {
-      return next();
-    }
-    throw new UnauthenticatedError('You are not an Admin!');
-  }
-  throw new UnauthenticatedError('You are not an logged in!');
 };

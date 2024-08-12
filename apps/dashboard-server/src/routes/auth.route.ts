@@ -10,7 +10,11 @@ import {
   resetPassword,
   checkPasswordResetToken
 } from '../controller/auth.controller';
-import { authenticate, isAuthenticated, validateSchema } from '../middlewares';
+import {
+  authenticate,
+  isAuthenticated,
+  validateSchema
+} from '@fullstack_package/core-application/middlewares';
 
 const authRouter = Router();
 
