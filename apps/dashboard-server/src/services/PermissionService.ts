@@ -15,8 +15,9 @@ class PermissionService extends BaseService<
   }
 
   public async extendSuperuserActions(action_id: string) {
+    const { SUPER_USER_NAME: name } = config;
     const { id: role_id } = await RoleService.findOne({
-      name: config.app.SUPER_USER_NAME
+      name
     });
     const permissions = await this.findMany({ role_id });
 
@@ -43,8 +44,10 @@ class PermissionService extends BaseService<
   }
 
   public async extendSuperuserModules(module_id: string) {
+    const { SUPER_USER_NAME: name } = config;
+
     const { id: role_id } = await RoleService.findOne({
-      name: config.app.SUPER_USER_NAME
+      name
     });
     const { id: permission_id } = await this.createOne({
       module_id,

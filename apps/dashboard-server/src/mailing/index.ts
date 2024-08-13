@@ -3,7 +3,7 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import Mail from 'nodemailer/lib/mailer';
 import config from '../config';
 
-const { SMTP_USER, SMTP_HOST, SMTP_PASS, SMTP_PORT } = config.emailing;
+const { SMTP_USER, SMTP_HOST, SMTP_PASS, SMTP_PORT } = config;
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,

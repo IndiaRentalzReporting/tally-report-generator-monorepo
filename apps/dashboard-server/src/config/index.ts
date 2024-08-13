@@ -1,74 +1,76 @@
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
+import { expand } from 'dotenv-expand';
+import { ZodError, z } from 'zod';
 
-const { NODE_ENV } = process.env;
-dotenv.config({ path: `.env.${NODE_ENV}` });
+const stringBoolean = z.coerce
+  .string()
+  .transform((val) => {
+    return val === 'true';
+  })
+  .default('false');
 
-type env = 'production' | 'development' | 'staging';
-const {
-  PORT = '4000',
-  SESSION_SECRET = '',
-  FRONTEND_URL = '',
+export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
 
-  MONGO_PASSWORD = '',
-  MONGO_USERNAME = '',
-  MONGO_DB_NAME = 'db',
+const EnvSchema = z.object({
+  NODE_ENV: z
+    .enum(['production', 'development', 'staging'])
+    .default('development'),
+  PORT: z.coerce.number().default(4000),
+  SESSION_SECRET: z.string(),
+  FRONTEND_URL: z.string(),
 
-  PG_HOST,
-  PG_PORT,
-  PG_PASSWORD,
-  PG_USER,
-  PG_DATABASE,
+  MONGO_USERNAME: z.string(),
+  MONGO_PASSWORD: z.string(),
+  MONGO_DB_NAME: z.string(),
+  MONGO_URI: z.string(),
 
-  SUPER_USER_NAME = '',
-  DEVELOPER_FIRST_NAME,
-  DEVELOPER_LAST_NAME,
-  DEVELOPER_EMAIL,
-  DEVELOPER_PASSWORD,
+  PG_HOST: z.string(),
+  PG_PORT: z.coerce.number(),
+  PG_PASSWORD: z.string(),
+  PG_USER: z.string(),
+  PG_DATABASE: z.string(),
+  PG_URL: z.string(),
 
-  MAIL_FROM = '',
-  SMTP_SECRET = '',
-  SMTP_PASS = '',
-  SMTP_HOST = '',
-  SMTP_PORT = '',
-  SMTP_USER = ''
-} = process.env;
-const config = {
-  app: {
-    SUPER_USER_NAME,
-    DEVELOPER_FIRST_NAME,
-    DEVELOPER_LAST_NAME,
-    DEVELOPER_EMAIL,
-    DEVELOPER_PASSWORD
-  },
-  mongo: {
-    MONGO_USERNAME,
-    MONGO_PASSWORD,
-    MONGO_URI: `mongodb+srv://${MONGO_USERNAME}:${encodeURIComponent(MONGO_PASSWORD)}@cluster0.87rgavf.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`
-  },
-  postgres: {
-    PG_URL: `postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_DATABASE}${NODE_ENV !== 'development' ? '?sslmode=require' : ''}`,
-    PG_HOST,
-    PG_PORT,
-    PG_PASSWORD,
-    PG_USER,
-    PG_DATABASE
-  },
-  server: {
-    PORT: Number(PORT),
-    NODE_ENV: NODE_ENV as env,
-    FRONTEND_URL
-  },
-  session: {
-    SESSION_SECRET
-  },
-  emailing: {
-    MAIL_FROM,
-    SMTP_HOST,
-    SMTP_PASS,
-    SMTP_PORT: Number(SMTP_PORT),
-    SMTP_SECRET,
-    SMTP_USER
-  }
+  SUPER_USER_NAME: z.string(),
+  DEVELOPER_FIRST_NAME: z.string(),
+  DEVELOPER_LAST_NAME: z.string(),
+  DEVELOPER_EMAIL: z.string(),
+  DEVELOPER_PASSWORD: z.string(),
+
+  MAIL_FROM: z.string(),
+  SMTP_SECRET: z.string(),
+  SMTP_PASS: z.string(),
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.coerce.number(),
+  SMTP_USER: z.string(),
+
+  DB_MIGRATING: stringBoolean,
+  DB_SEEDING: stringBoolean
+});
+
+expand(config());
+
+const logError = (error: ZodError) => {
+  let m = '';
+  error.issues.forEach((issue) => {
+    m += issue.path[0] + '\n';
+  });
+  return m;
 };
 
-export default config;
+try {
+  EnvSchema.parse(process.env);
+} catch (error) {
+  if (error instanceof ZodError) {
+    console.error(error);
+    let message = 'Missing required values in .env:\n';
+    message += logError(error);
+    const e = new Error(message);
+    e.stack = '';
+    throw e;
+  } else {
+    console.error(error);
+  }
+}
+
+export default EnvSchema.parse(process.env);

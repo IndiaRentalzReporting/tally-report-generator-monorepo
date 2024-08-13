@@ -52,8 +52,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@fullstack-package/auth-schemas": "*",
-    "@fullstack-package/dashboard-schemas": "*",
+    "@fullstack_package/core-application": "*",
+    "@fullstack_package/auth-schemas": "*",
+    "@fullstack_package/dashboard-schemas": "*",
     "@neondatabase/serverless": "^0.9.3",
     "bcrypt": "^5.1.1",
     "child-process": "^1.0.2",

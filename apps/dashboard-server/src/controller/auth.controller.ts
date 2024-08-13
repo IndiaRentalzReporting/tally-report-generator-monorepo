@@ -5,7 +5,7 @@ import {
   BadRequestError,
   NotFoundError,
   UnauthenticatedError
-} from '../errors';
+} from '@fullstack_package/core-application/errors';
 import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
 import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
@@ -23,7 +23,7 @@ export const handleSignUp = async (
       password: tempPassword
     });
 
-    const { MAIL_FROM } = config.emailing;
+    const { MAIL_FROM } = config;
 
     const mailOptions = {
       from: `info${MAIL_FROM}`,
@@ -128,7 +128,7 @@ export const forgotPassword = async (
     }
 
     const resetLink = createResetPasswordLink(user, true);
-    const { MAIL_FROM } = config.emailing;
+    const { MAIL_FROM } = config;
 
     const mailOptions = {
       from: `info${MAIL_FROM}`,

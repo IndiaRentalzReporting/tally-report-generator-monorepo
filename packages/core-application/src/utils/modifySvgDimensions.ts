@@ -1,9 +1,4 @@
 import { JSDOM } from 'jsdom';
-import jwt from 'jsonwebtoken';
-import { UserSelect } from '../models/auth/schema';
-import config from '../config';
-import UserService from '../services/UserService';
-import { NotFoundError } from '../errors';
 
 export const modifySvgDimensions = (
   svgStr: string,
@@ -22,11 +17,4 @@ export const modifySvgDimensions = (
   svgElement.setAttribute('height', String(newHeight));
 
   return dom.serialize();
-};
-
-export const toTitleCase = (str: string): string => {
-  return str.replace(
-    /\w\S*/g,
-    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-  );
 };

@@ -1,42 +1,38 @@
 import 'express-async-errors';
 import dotenv from 'dotenv';
-import express, { Express } from 'express';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import cors from 'cors';
-import { errorHandler, notFound } from '../middlewares';
-import sessionsLoader from './sessions';
-import passportLoader from './passport';
+import { Express } from 'express';
 import routesLoader from './routes';
 import config from '../config';
+import { expressLoader } from '@fullstack_package/core-application/loaders';
+import { connectionCallback } from './database';
+import {
+  verifyCallback,
+  serializeUserCallback,
+  deserializeUserCallback
+} from './passport';
 
 dotenv.config();
 
-const expressLoader = (): Express => {
-  const app = express();
-  const { FRONTEND_URL } = config.server;
-
-  app.use(
-    cors({
-      origin: FRONTEND_URL,
-      credentials: true
-    })
+const appLoader = async (): Promise<Express> => {
+  const { FRONTEND_URL, MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
+  const app = await expressLoader(
+    {
+      FRONTEND_URL,
+      MONGO_URI,
+      SESSION_SECRET,
+      NODE_ENV
+    },
+    {
+      verifyCallback,
+      serializeUserCallback,
+      deserializeUserCallback,
+      connectionCallback
+    }
   );
 
-  app.use(morgan('dev'));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(helmet());
-
-  sessionsLoader(app);
-  passportLoader(app);
-
   routesLoader(app);
-
-  app.use(notFound);
-  app.use(errorHandler);
 
   return app;
 };
 
-export default expressLoader;
+export default appLoader;

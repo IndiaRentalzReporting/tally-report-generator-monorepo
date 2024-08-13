@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { ActionSelect } from '../models/schema';
-import { toTitleCase } from '../utils';
 import ModuleService from '../services/ModuleService';
 import ActionService from '../services/ActionService';
 

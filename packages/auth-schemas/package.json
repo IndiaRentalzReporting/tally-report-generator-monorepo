@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack-package/auth-schemas",
+  "name": "@fullstack_package/auth-schemas",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

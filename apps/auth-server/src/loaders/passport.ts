@@ -1,51 +1,34 @@
-import { Express } from 'express';
-import passport from 'passport';
-import LocalStrategy, {
-  VerifyFunction,
-  IStrategyOptions
-} from 'passport-local';
-import UserService from '../services/UserService';
+import { VerifyFunction } from 'passport-local';
 import AuthService from '../services/AuthService';
+import UserService from '../services/UserService';
 
-const passportLoader = (app: Express) => {
-  const customFields: IStrategyOptions = {
-    usernameField: 'email'
-  };
-
-  const verifyCallback: VerifyFunction = async (email, password, done) => {
-    try {
-      const user = await AuthService.signIn({ email, password });
-      return done(null, user);
-    } catch (e) {
-      console.error(`Error while authenticating the User`);
-      return done(e);
-    }
-  };
-
-  const localStrategy = new LocalStrategy.Strategy(
-    customFields,
-    verifyCallback
-  );
-
-  passport.use(localStrategy);
-
-  passport.serializeUser(async (user, done) => {
-    done(null, user.email);
-  });
-
-  passport.deserializeUser(async (email: string, done) => {
-    try {
-      const user = await UserService.findOne({
-        email
-      });
-      if (user) done(null, user);
-    } catch (e) {
-      done(e);
-    }
-  });
-
-  app.use(passport.initialize());
-  app.use(passport.session());
+export const verifyCallback: VerifyFunction = async (email, password, done) => {
+  try {
+    const user = await AuthService.signIn({ email, password });
+    return done(null, user);
+  } catch (e) {
+    console.error(`Error while authenticating the User`);
+    return done(e);
+  }
 };
 
-export default passportLoader;
+export const serializeUserCallback = async (
+  user: Express.User,
+  done: (err: any, id?: unknown) => void
+) => {
+  done(null, user.email);
+};
+
+export const deserializeUserCallback = async (
+  email: string,
+  done: (err: any, user?: false | Express.User | null | undefined) => void
+) => {
+  try {
+    const user = await UserService.findOne({
+      email
+    });
+    if (user) done(null, user);
+  } catch (e) {
+    done(e);
+  }
+};

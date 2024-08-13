@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
 import { SafeUserSelect, UserInsert } from '../models/auth/schema';
-import { UnauthenticatedError } from '../errors';
+import { UnauthenticatedError } from '@fullstack_package/core-application/errors';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,

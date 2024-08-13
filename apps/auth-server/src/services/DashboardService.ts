@@ -3,8 +3,8 @@ import { createClient } from '../models';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import roles from '../models/dashboard/seed/Roles/data.json';
-import * as dashboardSchema from '@fullstack-package/dashboard-schemas';
-import { BadRequestError } from '../errors';
+import * as dashboardSchema from '@fullstack_package/dashboard-schemas';
+import { BadRequestError } from '@fullstack_package/core-application/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import postgres from 'postgres';
 

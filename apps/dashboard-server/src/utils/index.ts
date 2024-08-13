@@ -1,38 +1,11 @@
-import { JSDOM } from 'jsdom';
-import jwt from 'jsonwebtoken';
-import { UserSelect } from '../models/schema';
+import { NotFoundError } from '@fullstack_package/core-application/errors';
+import { UserSelect } from '@fullstack_package/dashboard-schemas';
 import config from '../config';
+import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService';
-import { NotFoundError } from '../errors';
-
-export const modifySvgDimensions = (
-  svgStr: string,
-  newWidth: number,
-  newHeight: number
-): string => {
-  const dom = new JSDOM(svgStr, { contentType: 'image/svg+xml' });
-  const { document } = dom.window;
-
-  const svgElement = document.querySelector('svg');
-  if (!svgElement) {
-    throw new Error('No SVG element found');
-  }
-
-  svgElement.setAttribute('width', String(newWidth));
-  svgElement.setAttribute('height', String(newHeight));
-
-  return dom.serialize();
-};
-
-export const toTitleCase = (str: string): string => {
-  return str.replace(
-    /\w\S*/g,
-    (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-  );
-};
 
 export const generateUserJWTToken = (user: UserSelect): string => {
-  const { SMTP_SECRET } = config.emailing;
+  const { SMTP_SECRET } = config;
   const token = jwt.sign({ id: user.id }, SMTP_SECRET, { expiresIn: '15m' });
   return token;
 };
@@ -43,7 +16,7 @@ export const verifyUserJWTToken = async (
   interface IToken extends jwt.JwtPayload {
     id: string;
   }
-  const { SMTP_SECRET } = config.emailing;
+  const { SMTP_SECRET } = config;
   const { id } = jwt.verify(token, SMTP_SECRET) as IToken;
   const user = await UserService.findOne({ id });
   if (!user) {
@@ -56,7 +29,7 @@ export const createResetPasswordLink = (
   user: UserSelect,
   isEmail: boolean = false
 ): string => {
-  const { FRONTEND_URL } = config.server;
+  const { FRONTEND_URL } = config;
   const token = generateUserJWTToken(user);
   const resetLink = `${isEmail ? FRONTEND_URL : ''}/reset-password/${token}`;
   return resetLink;

@@ -5,11 +5,8 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
-import {
-  attachModuleActionData,
-  isAuthenticated,
-  isRoleAllowed
-} from '../middlewares';
+import { isAuthenticated } from '@fullstack_package/core-application/middlewares';
+import { attachModuleActionData, isRoleAllowed } from '../middlewares';
 
 const routesLoader = (app: Express) => {
   app.use('api/v1/auth', authRouter);

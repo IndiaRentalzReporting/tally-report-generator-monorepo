@@ -1,6 +1,9 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { BadRequestError, NotFoundError } from '../errors';
+import {
+  BadRequestError,
+  NotFoundError
+} from '@fullstack_package/core-application/errors';
 import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
 import UserService from './UserService';
 

@@ -1,14 +1,18 @@
 import { Express } from 'express';
 import MongoStore from 'connect-mongo';
 import session, { SessionOptions } from 'express-session';
-import config from '../config';
 
-const sessionsLoader = (app: Express) => {
+interface IConfig {
+  SESSION_SECRET: string;
+  MONGO_URI: string;
+  NODE_ENV: string;
+}
+
+export const sessionsLoader = (
+  app: Express,
+  { SESSION_SECRET, MONGO_URI, NODE_ENV }: IConfig
+) => {
   try {
-    const { SESSION_SECRET } = config.session;
-    const { NODE_ENV } = config.server;
-    const { MONGO_URI } = config.mongo;
-
     let sessionStore;
     try {
       sessionStore = MongoStore.create({
@@ -41,5 +45,3 @@ const sessionsLoader = (app: Express) => {
     throw error;
   }
 };
-
-export default sessionsLoader;

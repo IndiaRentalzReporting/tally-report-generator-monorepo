@@ -1,7 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
 import config from './src/config';
 
-const { PG_URL } = config.postgres;
+const { PG_URL } = config;
 
 console.log(PG_URL);
 export default defineConfig({
