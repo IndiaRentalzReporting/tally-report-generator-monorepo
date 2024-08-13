@@ -7,11 +7,11 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
+    './base.js',
     'airbnb',
     'airbnb-typescript',
     'airbnb/hooks',
-    'plugin:react-hooks/recommended',
-    './base.js'
+    'plugin:react-hooks/recommended'
   ],
   env: {
     browser: true

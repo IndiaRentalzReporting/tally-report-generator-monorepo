@@ -1,10 +1,10 @@
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: [
+    './base.js',
     'airbnb-base',
     'airbnb-typescript/base',
-    'plugin:node/recommended',
-    './base.js'
+    'plugin:node/recommended'
   ],
   rules: {
     'node/no-unsupported-features/es-syntax': 'off',

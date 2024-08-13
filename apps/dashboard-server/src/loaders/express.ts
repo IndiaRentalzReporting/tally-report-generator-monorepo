@@ -16,6 +16,7 @@ dotenv.config();
 const appLoader = async (): Promise<Express> => {
   const { FRONTEND_URL, MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
   const app = await expressLoader(
+    routesLoader,
     {
       FRONTEND_URL,
       MONGO_URI,
@@ -29,8 +30,6 @@ const appLoader = async (): Promise<Express> => {
       connectionCallback
     }
   );
-
-  routesLoader(app);
 
   return app;
 };

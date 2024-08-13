@@ -1,4 +1,4 @@
-import { DetailedUser } from '@fullstack_package/dashboard-schemas';
+import { DetailedUser } from '@fullstack_package/dashboard-schemas/schemas';
 
 declare global {
   namespace Express {
@@ -6,4 +6,4 @@ declare global {
   }
 }
 
-export * from '@fullstack_package/dashboard-schemas';
+export * from '@fullstack_package/dashboard-schemas/schemas';

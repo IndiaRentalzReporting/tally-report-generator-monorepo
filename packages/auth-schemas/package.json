@@ -2,24 +2,34 @@
   "name": "@fullstack_package/auth-schemas",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "exports": {
+    "./schemas": {
+      "require": "./dist/schemas/index.js",
+      "import": "./dist/schemas/index.mjs",
+      "types": "./dist/schemas/index.d.ts"
+    },
+    "./services": {
+      "require": "./dist/services/index.js",
+      "import": "./dist/services/index.mjs",
+      "types": "./dist/services/index.d.ts"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup",
     "lint": "eslint . --ext ts --fix --max-warnings 0",
     "dev": "npm run build -- --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "typescript": "^5.4.5"
+    "@fullstack_package/eslint-config": "*",
+    "@fullstack_package/base-schemas": "*",
+    "@fullstack_package/typescript-config": "*",
+    "tsup": "^8.2.4"
   }
 }

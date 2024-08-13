@@ -9,6 +9,10 @@ import { passportLoader } from './passport';
 import { VerifyFunction } from 'passport-local';
 import { connectAndLog } from './database';
 
+interface IRoutesLoader {
+  (app: Express): void;
+}
+
 interface IConfig {
   FRONTEND_URL: string;
   NODE_ENV: string;
@@ -30,6 +34,7 @@ interface ICallbacks {
 }
 
 export const expressLoader = async (
+  routesLoader: IRoutesLoader,
   { FRONTEND_URL, NODE_ENV, SESSION_SECRET, MONGO_URI }: IConfig,
   {
     connectionCallback,
@@ -59,6 +64,7 @@ export const expressLoader = async (
     serializeUserCallback,
     deserializeUserCallback
   );
+  routesLoader(app);
 
   app.use(notFound());
   app.use(errorHandler(NODE_ENV));
