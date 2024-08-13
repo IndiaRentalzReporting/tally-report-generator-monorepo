@@ -22,15 +22,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
     "@fullstack_package/eslint-config": "*",
+    "@fullstack_package/base-schemas": "*",
     "@fullstack_package/typescript-config": "*",
     "tsup": "^8.2.4"
   }
