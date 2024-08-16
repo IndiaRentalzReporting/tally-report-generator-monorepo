@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import routesLoader from './routes';
 import config from '../config';
-import { expressLoader } from '@fullstack_package/core-application/loaders';
+import { expressLoader } from '@trg_package/loaders';
 import { connectionCallback } from './database';
 import {
   verifyCallback,

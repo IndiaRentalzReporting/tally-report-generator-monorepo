@@ -1,8 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import {
-  BadRequestError,
-  UnauthenticatedError
-} from '@fullstack_package/core-application/errors';
+import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 
 export const isRoleAllowed = async (
   req: Request,

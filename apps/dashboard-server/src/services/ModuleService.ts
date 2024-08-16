@@ -1,7 +1,7 @@
 import db from '../models';
 import { ModuleSchema } from '../models/schema';
 import * as dashboardSchemas from '../models/schema';
-import { BaseService } from '@fullstack_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-schemas/services';
 
 class ModuleService extends BaseService<
   typeof dashboardSchemas,

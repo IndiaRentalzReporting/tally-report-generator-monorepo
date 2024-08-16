@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as z from 'zod';
-import { PGColumnDataType } from '@fullstack_package/pg-orm';
+import { PGColumnDataType } from '@trg_package/pg-orm';
 import {
   createOne,
   readAll,
@@ -8,7 +8,7 @@ import {
   deleteOne,
   readOne
 } from '../controller/module.controller';
-import { validateSchema } from '@fullstack_package/core-application/middlewares';
+import { validateSchema } from '@trg_package/middlewares';
 import { ModuleInsertSchema } from '../models/schema';
 
 const moduleRouter = Router();

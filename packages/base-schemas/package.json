@@ -1,13 +1,23 @@
 {
-  "name": "@fullstack_package/base-schemas",
+  "name": "@trg_package/base-schemas",
   "version": "1.0.0",
   "description": "",
   "exports": {
-    "./schemas": "./src/schemas/index.ts",
-    "./services": "./src/services/index.ts"
+    "./schemas": {
+      "require": "./dist/schemas/index.js",
+      "import": "./dist/schemas/index.mjs",
+      "types": "./dist/schemas/index.d.ts"
+    },
+    "./services": {
+      "require": "./dist/services/index.js",
+      "import": "./dist/services/index.mjs",
+      "types": "./dist/services/index.d.ts"
+    }
   },
   "scripts": {
-    "lint": "eslint . --ext ts --fix --max-warnings 0"
+    "build": "tsup",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +28,9 @@
     "postgres": "^3.4.4"
   },
   "devDependencies": {
-    "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/typescript-config": "*"
+    "@trg_package/eslint-config": "*",
+    "@trg_package/typescript-config": "*",
+    "typescript": "^5.4.5",
+    "tsup": "^8.2.4"
   }
 }

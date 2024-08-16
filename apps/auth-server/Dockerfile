@@ -4,7 +4,7 @@ FROM base as builder
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune @fullstack_app/server --docker
+RUN turbo prune @trg_app/server --docker
 
 FROM base as installer
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npm install
 COPY --from=builder app/out/full .
 COPY turbo.json turbo.json
 RUN npm install -g turbo
-RUN turbo run build --filter=@fullstack_app/server...
+RUN turbo run build --filter=@trg_app/server...
 
 FROM base as runner
 WORKDIR /app

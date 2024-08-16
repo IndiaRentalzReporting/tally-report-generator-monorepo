@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_app/auth-server",
+  "name": "@trg_app/auth-server",
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
@@ -21,9 +21,8 @@
     "db-dashboard:seed": "cross-env DB_SEEDING=true tsx ./src/models/seed"
   },
   "devDependencies": {
-    "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/pg-orm": "*",
-    "@fullstack_package/typescript-config": "*",
+    "@trg_package/eslint-config": "*",
+    "@trg_package/typescript-config": "*",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
@@ -52,9 +51,13 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@fullstack_package/core-application": "*",
-    "@fullstack_package/auth-schemas": "*",
-    "@fullstack_package/dashboard-schemas": "*",
+    "@trg_package/pg-orm": "*",
+    "@trg_package/loaders": "*",
+    "@trg_package/middlewares": "*",
+    "@trg_package/utils": "*",
+    "@trg_package/errors": "*",
+    "@trg_package/auth-schemas": "*",
+    "@trg_package/dashboard-schemas": "*",
     "@neondatabase/serverless": "^0.9.3",
     "bcrypt": "^5.1.1",
     "child-process": "^1.0.2",

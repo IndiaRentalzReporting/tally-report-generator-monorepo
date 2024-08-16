@@ -5,7 +5,7 @@ import config from '../config';
 import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';
 import RoleService from './RoleService';
-import { BaseService } from '@fullstack_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-schemas/services';
 
 class PermissionService extends BaseService<
   typeof dashboardSchemas,

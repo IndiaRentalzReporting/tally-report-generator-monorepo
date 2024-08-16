@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
+import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import { ModuleInsert, ModuleSelect } from '../models/schema/';
 import DatabaseService from '../services/DatabaseService';
 import PermissionService from '../services/PermissionService';

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../errors';
+import { CustomError } from '@trg_package/errors';
 
 export const errorHandler =
   (NODE_ENV: string) =>

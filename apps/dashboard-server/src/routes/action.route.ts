@@ -6,7 +6,7 @@ import {
   updateOne,
   readOne
 } from '../controller/action.controller';
-import { validateSchema } from '@fullstack_package/core-application/middlewares';
+import { validateSchema } from '@trg_package/middlewares';
 import { ActionInsertSchema } from '../models/schema';
 
 const actionRouter = Router();

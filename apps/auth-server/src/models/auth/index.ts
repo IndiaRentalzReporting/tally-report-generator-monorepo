@@ -1,6 +1,6 @@
 import * as auth_schema from './schema';
 import config from '../../config';
-import { BaseService } from '@fullstack_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-schemas/services';
 
 const { AUTH_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
 

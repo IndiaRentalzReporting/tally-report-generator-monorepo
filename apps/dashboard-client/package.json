@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_app/dashboard-client",
+  "name": "@trg_app/dashboard-client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -38,9 +38,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/pg-orm": "*",
-    "@fullstack_package/typescript-config": "*",
+    "@trg_package/eslint-config": "*",
+    "@trg_package/pg-orm": "*",
+    "@trg_package/typescript-config": "*",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",

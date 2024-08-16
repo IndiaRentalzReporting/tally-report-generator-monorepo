@@ -1,4 +1,4 @@
-import { BaseServiceNew } from '@fullstack_package/base-schemas/services';
+import { BaseServiceNew } from '@trg_package/base-schemas/services';
 import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 

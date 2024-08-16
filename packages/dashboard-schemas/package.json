@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_package/dashboard-schemas",
+  "name": "@trg_package/dashboard-schemas",
   "version": "1.0.0",
   "description": "",
   "exports": {
@@ -23,13 +23,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@trg_package/base-schemas": "*",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/typescript-config": "*",
-    "@fullstack_package/base-schemas": "*",
+    "@trg_package/eslint-config": "*",
+    "@trg_package/typescript-config": "*",
     "tsup": "^8.2.4"
   }
 }

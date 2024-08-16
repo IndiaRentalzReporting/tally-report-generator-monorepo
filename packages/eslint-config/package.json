@@ -1,5 +1,5 @@
 {
-  "name": "@fullstack_package/eslint-config",
+  "name": "@trg_package/eslint-config",
   "version": "0.0.0",
   "private": true,
   "files": [

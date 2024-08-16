@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject, ZodError as ZE } from 'zod';
-import { ZodError } from '../errors';
+import { ZodError } from '@trg_package/errors';
 
 interface IValidator {
   body?: AnyZodObject;

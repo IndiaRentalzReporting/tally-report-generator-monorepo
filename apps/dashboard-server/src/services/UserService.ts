@@ -1,8 +1,8 @@
 import db from '../models';
 import * as dashboardSchemas from '../models/schema';
 import { UserSchema, UserSelect, DetailedUser } from '../models/schema';
-import { toTitleCase } from '@fullstack_package/core-application/utils';
-import { BaseService } from '@fullstack_package/base-schemas/services';
+import { toTitleCase } from '@trg_package/utils';
+import { BaseService } from '@trg_package/base-schemas/services';
 
 class UserService extends BaseService<
   typeof dashboardSchemas,

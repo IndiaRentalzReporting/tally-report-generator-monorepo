@@ -5,7 +5,7 @@ import {
   deleteOne,
   updateOne
 } from '../controller/user.controller';
-import { validateSchema } from '@fullstack_package/core-application/middlewares';
+import { validateSchema } from '@trg_package/middlewares';
 import { UserInsertSchema } from '../models/auth/schema';
 
 const userRouter = Router();

@@ -14,7 +14,7 @@ import {
   authenticate,
   isAuthenticated,
   validateSchema
-} from '@fullstack_package/core-application/middlewares';
+} from '@trg_package/middlewares';
 
 const authRouter = Router();
 

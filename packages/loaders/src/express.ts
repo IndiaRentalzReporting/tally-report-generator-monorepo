@@ -3,7 +3,7 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
-import { errorHandler, notFound } from '../middlewares';
+import { errorHandler, notFound } from '@trg_package/middlewares';
 import { sessionsLoader } from './sessions';
 import { passportLoader } from './passport';
 import { VerifyFunction } from 'passport-local';

@@ -1,1 +1,1 @@
-export * from '@fullstack_package/dashboard-schemas/schemas';
+export * from '@trg_package/dashboard-schemas/schemas';

@@ -1,1 +1,1 @@
-export * from '@fullstack_package/base-schemas/schemas';
+export * from '@trg_package/base-schemas/schemas';

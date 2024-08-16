@@ -6,10 +6,7 @@ import {
   handleStatusCheck,
   handleLogout
 } from '../controller/auth.controller';
-import {
-  authenticate,
-  validateSchema
-} from '@fullstack_package/core-application/middlewares';
+import { authenticate, validateSchema } from '@trg_package/middlewares';
 
 const authRouter = Router();
 
