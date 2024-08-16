@@ -26,9 +26,16 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.findOne({
-      id: req.params.id
-    });
+    const user = await UserService.findOne(
+      {
+        id: req.params.id
+      },
+      {
+        with: {
+          tenant: true
+        }
+      }
+    );
 
     if (!user) throw new NotFoundError('User does not exist');
 

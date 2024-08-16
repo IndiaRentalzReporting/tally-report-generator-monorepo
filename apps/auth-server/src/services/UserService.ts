@@ -1,13 +1,15 @@
 import db from '../models/auth';
+import * as authSchemas from '../models/auth/schema';
 import { UserSchema } from '../models/auth/schema';
-import BaseService from './BaseService';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
 class UserService extends BaseService<
+  typeof authSchemas,
   typeof UserSchema,
   typeof db.query.UserSchema
 > {
   constructor() {
-    super(UserSchema, db.query.UserSchema);
+    super(db, UserSchema, db.query.UserSchema);
   }
 }
 

@@ -1,12 +1,13 @@
-import { createClient } from '..';
 import * as auth_schema from './schema';
 import config from '../../config';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
-const { AUTH_PG_URL } = config;
+const { AUTH_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
 
-export let { db: auth_db, connection: auth_connection } = createClient(
-  AUTH_PG_URL,
-  auth_schema
-);
+export let { db: auth_db, connection: auth_connection } =
+  BaseService.createClient(AUTH_PG_URL, auth_schema, {
+    DB_MIGRATING,
+    DB_SEEDING
+  });
 
 export default auth_db;

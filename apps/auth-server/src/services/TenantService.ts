@@ -5,7 +5,8 @@ import {
   TenantSchema,
   TenantSelect
 } from '../models/auth/schema';
-import BaseService from './BaseService';
+import { BaseService } from '@fullstack_package/base-schemas/services';
+import * as authschemas from '../models/auth/schema';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';
@@ -14,11 +15,12 @@ import { sql } from 'drizzle-orm';
 import * as dashboardSchema from '@fullstack_package/dashboard-schemas/schemas';
 
 class TenantService extends BaseService<
+  typeof authschemas,
   typeof TenantSchema,
   typeof db.query.TenantSchema
 > {
   constructor() {
-    super(TenantSchema, db.query.TenantSchema);
+    super(db, TenantSchema, db.query.TenantSchema);
   }
 
   async onboard(
