@@ -1,17 +1,19 @@
 import db from '../models';
+import * as dashboardSchemas from '../models/schema';
 import { PermissionSchema } from '../models/schema';
 import config from '../config';
-import BaseService from './BaseService';
 import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';
 import RoleService from './RoleService';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
 class PermissionService extends BaseService<
+  typeof dashboardSchemas,
   typeof PermissionSchema,
   typeof db.query.PermissionSchema
 > {
   constructor() {
-    super(PermissionSchema, db.query.PermissionSchema);
+    super(db, PermissionSchema, db.query.PermissionSchema);
   }
 
   public async extendSuperuserActions(action_id: string) {

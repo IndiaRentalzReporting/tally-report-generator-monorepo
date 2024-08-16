@@ -1,16 +1,13 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
-import config from '../config';
-
-const { PG_URL } = config;
-const migrationClient = postgres(PG_URL, { max: 1 });
+import dbClient, { dashboard_connection } from './index';
+import drizzleConfig from '../../drizzle.config';
 
 const main = async () => {
-  await migrate(drizzle(migrationClient), {
-    migrationsFolder: './src/models/migrations'
+  await migrate(dbClient, {
+    migrationsFolder: drizzleConfig.out!
   });
-  await migrationClient.end();
+
+  dashboard_connection.end();
 };
 
 main();

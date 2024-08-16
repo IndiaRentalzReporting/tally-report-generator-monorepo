@@ -3,18 +3,10 @@ import {
   ModuleSelect,
   ActionSelect,
   RoleSelect,
-  PermissionSelect,
-  PermissionSchema
+  PermissionSelect
 } from '../models/schema';
-import BaseService from '../services/BaseService';
-import db from '../models';
 import PermissionService from '../services/PermissionService';
 import ActionService from '../services/ActionService';
-
-const permissionService = new BaseService(
-  PermissionSchema,
-  db.query.PermissionSchema
-);
 
 export const readAll = async (
   req: Request,
@@ -22,7 +14,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await permissionService.findMany(
+    const permissions = await PermissionService.findMany(
       {},
       {
         with: {
@@ -68,7 +60,7 @@ export const readAllOfRole = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await permissionService.findMany({
+    const permissions = await PermissionService.findMany({
       role_id: req.params.role_id
     });
     res.json({ permissions });
@@ -96,7 +88,7 @@ export const createMany = async (
   try {
     const { role_id, permissions } = req.body;
     const promises = permissions.map(async ({ module_id, action_ids }) => {
-      const permission = await permissionService.createOne({
+      const permission = await PermissionService.createOne({
         module_id,
         role_id
       });
@@ -140,8 +132,8 @@ export const updateMany = async (
     const { role_id, permissions } = req.body;
     const promises = permissions.map(
       async ({ permission_id, module_id, action_ids }) => {
-        await permissionService.deleteOneById(permission_id);
-        const permission = await permissionService.createOne({
+        await PermissionService.deleteOneById(permission_id);
+        const permission = await PermissionService.createOne({
           module_id,
           role_id
         });

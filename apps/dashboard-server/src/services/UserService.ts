@@ -1,14 +1,16 @@
 import db from '../models';
+import * as dashboardSchemas from '../models/schema';
 import { UserSchema, UserSelect, DetailedUser } from '../models/schema';
 import { toTitleCase } from '@fullstack_package/core-application/utils';
-import BaseService from './BaseService';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
 class UserService extends BaseService<
+  typeof dashboardSchemas,
   typeof UserSchema,
   typeof db.query.UserSchema
 > {
   constructor() {
-    super(UserSchema, db.query.UserSchema);
+    super(db, UserSchema, db.query.UserSchema);
   }
 
   public async findOneDetailedUser(

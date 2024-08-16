@@ -1,13 +1,15 @@
 import db from '../models';
+import * as dashboardSchemas from '../models/schema';
 import { RoleSchema } from '../models/schema';
-import BaseService from './BaseService';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
 class RoleService extends BaseService<
+  typeof dashboardSchemas,
   typeof RoleSchema,
   typeof db.query.RoleSchema
 > {
   constructor() {
-    super(RoleSchema, db.query.RoleSchema);
+    super(db, RoleSchema, db.query.RoleSchema);
   }
 }
 

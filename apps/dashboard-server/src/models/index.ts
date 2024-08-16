@@ -1,33 +1,13 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import {
-  PostgresJsDatabase,
-  drizzle as pgDrizzle
-} from 'drizzle-orm/postgres-js';
-import {
-  NeonDatabase,
-  drizzle as neonDrizzle
-} from 'drizzle-orm/neon-serverless';
-import ws from 'ws';
-
-import postgres from 'postgres';
-import * as schema from './schema';
+import * as dashboard_schema from './schema';
 import config from '../config';
+import { BaseService } from '@fullstack_package/base-schemas/services';
 
-const { PG_URL, NODE_ENV } = config;
+const { PG_URL, DB_MIGRATING, DB_SEEDING } = config;
 
-type DBType<env extends string> = env extends 'development'
-  ? PostgresJsDatabase<typeof schema>
-  : NeonDatabase<typeof schema>;
+export let { db: dashboard_db, connection: dashboard_connection } =
+  BaseService.createClient(PG_URL, dashboard_schema, {
+    DB_MIGRATING,
+    DB_SEEDING
+  });
 
-let db: DBType<typeof NODE_ENV>;
-
-if (NODE_ENV !== 'development') {
-  neonConfig.webSocketConstructor = ws;
-  const pool = new Pool({ connectionString: PG_URL });
-  db = neonDrizzle(pool, { schema, logger: true });
-} else {
-  const client = postgres(PG_URL);
-  db = pgDrizzle(client, { schema, logger: true });
-}
-
-export default db;
+export default dashboard_db;
