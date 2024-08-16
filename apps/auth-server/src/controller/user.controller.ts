@@ -26,16 +26,9 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.findOne(
-      {
-        id: req.params.id
-      },
-      {
-        with: {
-          tenant: true
-        }
-      }
-    );
+    const user = await UserService.findOne({
+      id: req.params.id
+    });
 
     if (!user) throw new NotFoundError('User does not exist');
 
@@ -73,9 +66,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.deleteOneById(
-      req.params.id
-    );
+    const { password, ...user } = await UserService.deleteOne(req.params.id);
 
     return res.json({ user });
   } catch (e) {
