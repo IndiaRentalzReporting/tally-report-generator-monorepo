@@ -7,20 +7,10 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./errors": {
-      "require": "./dist/errors/index.js",
-      "import": "./dist/errors/index.mjs",
-      "types": "./dist/errors/index.d.ts"
-    },
     "./middlewares": {
       "require": "./dist/middlewares/index.js",
       "import": "./dist/middlewares/index.mjs",
       "types": "./dist/middlewares/index.d.ts"
-    },
-    "./utils": {
-      "require": "./dist/utils/index.js",
-      "import": "./dist/utils/index.mjs",
-      "types": "./dist/utils/index.d.ts"
     },
     "./loaders": {
       "require": "./dist/loaders/index.js",

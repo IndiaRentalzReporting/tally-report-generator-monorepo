@@ -1,0 +1,22 @@
+{
+  "name": "@fullstack_package/utils",
+  "version": "1.0.0",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
+  },
+  "devDependencies": {
+    "@fullstack_package/eslint-config": "*",
+    "@fullstack_package/typescript-config": "*",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "http-status-codes": "^2.3.0"
+  }
+}
