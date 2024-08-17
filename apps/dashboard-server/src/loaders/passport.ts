@@ -1,7 +1,7 @@
 import { VerifyFunction } from 'passport-local';
 import AuthService from '../services/AuthService';
 import UserService from '../services/UserService';
-import { DetailedUser } from '@fullstack_package/dashboard-schemas/schemas';
+import { DetailedUser } from '@trg_package/dashboard-schemas/schemas';
 
 export const verifyCallback: VerifyFunction = async (email, password, done) => {
   try {

@@ -7,9 +7,9 @@ import {
   updateOne,
   createOne
 } from '../controller/tenant.controller';
-import { validateSchema } from '@fullstack_package/core-application/middlewares';
+import { validateSchema } from '@trg_package/middlewares';
 import { TenantInsertSchema } from '../models/auth/schema';
-import { UserInsertSchema } from '@fullstack_package/dashboard-schemas/schemas';
+import { UserInsertSchema } from '@trg_package/dashboard-schemas/schemas';
 
 const tenantRouter = Router();
 

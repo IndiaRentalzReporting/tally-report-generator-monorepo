@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
+import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import { ModuleInsert, ModuleSelect } from '../models/schema/';
 import DatabaseService from '../services/DatabaseService';
 import PermissionService from '../services/PermissionService';
@@ -25,7 +25,7 @@ export const createOne = async (
     try {
       await DatabaseService.createNewTable(module.name, req.body.columnDetails);
     } catch (e) {
-      await ModuleService.deleteOneById(module.id);
+      await ModuleService.deleteOne(module.id);
     }
 
     await PermissionService.extendSuperuserModules(module.id);
@@ -60,7 +60,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.deleteOneById(req.params.id);
+    const module = await ModuleService.deleteOne(req.params.id);
     await DatabaseService.dropTable(module.name);
     return res.json({ module });
   } catch (e) {

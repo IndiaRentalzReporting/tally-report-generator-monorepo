@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
 import { TenantSelect, TenantInsert } from '../models/auth/schema';
-import * as dashboardSchema from '@fullstack_package/dashboard-schemas/schemas';
+import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
 
 export const createOne = async (
   req: Request<
@@ -81,7 +81,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.deleteOneById(req.params.id);
+    const tenant = await TenantService.deleteOne(req.params.id);
 
     return res.json({ tenant });
   } catch (e) {

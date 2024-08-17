@@ -5,7 +5,7 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
-import { isAuthenticated } from '@fullstack_package/core-application/middlewares';
+import { isAuthenticated } from '@trg_package/middlewares';
 import { attachModuleActionData, isRoleAllowed } from '../middlewares';
 
 const routesLoader = (app: Express) => {

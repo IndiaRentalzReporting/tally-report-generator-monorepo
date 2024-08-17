@@ -1,16 +1,6 @@
 import db from '../models';
-import { RoleSchema } from '../models/schema';
-import BaseService from './BaseService';
+import { RoleService } from '@trg_package/dashboard-schemas/services';
 
-class RoleService extends BaseService<
-  typeof RoleSchema,
-  typeof db.query.RoleSchema
-> {
-  constructor() {
-    super(RoleSchema, db.query.RoleSchema);
-  }
-}
-
-const RSI = new RoleService();
+const RSI = new RoleService(db);
 
 export default RSI;

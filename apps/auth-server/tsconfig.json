@@ -1,5 +1,5 @@
 {
-  "extends": "@fullstack_package/typescript-config/express.json",
+  "extends": "@trg_package/typescript-config/express.json",
   "compilerOptions": {
     "outDir": "dist"
   },

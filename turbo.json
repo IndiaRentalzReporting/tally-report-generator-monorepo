@@ -3,24 +3,6 @@
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "env": [
-        "MONGO_PASSWORD",
-        "MONGO_USERNAME",
-        "MONGO_DB_NAME",
-        "PORT",
-        "SESSION_SECRET",
-        "NODE_ENV",
-        "PG_HOST",
-        "PG_PORT",
-        "PG_PASSWORD",
-        "PG_USER",
-        "PG_DATABASE",
-        "SUPER_USER_NAME",
-        "DEVELOPER_FIRST_NAME",
-        "DEVELOPER_LAST_NAME",
-        "DEVELOPER_EMAIL",
-        "DEVELOPER_PASSWORD"
-      ],
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },

@@ -1,16 +1,6 @@
 import db from '../models';
-import { ModuleSchema } from '../models/schema';
-import BaseService from './BaseService';
+import { ModuleService } from '@trg_package/dashboard-schemas/services';
 
-class ModuleService extends BaseService<
-  typeof ModuleSchema,
-  typeof db.query.ModuleSchema
-> {
-  constructor() {
-    super(ModuleSchema, db.query.ModuleSchema);
-  }
-}
-
-const MSI = new ModuleService();
+const MSI = new ModuleService(db);
 
 export default MSI;

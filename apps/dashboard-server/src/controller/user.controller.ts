@@ -6,7 +6,7 @@ import {
   DetailedUser,
   UserInsert
 } from '../models/schema';
-import { NotFoundError } from '@fullstack_package/core-application/errors';
+import { NotFoundError } from '@trg_package/errors';
 
 export const readAll = async (
   req: Request,
@@ -138,9 +138,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.deleteOneById(
-      req.params.id
-    );
+    const { password, ...user } = await UserService.deleteOne(req.params.id);
 
     return res.json({ user });
   } catch (e) {

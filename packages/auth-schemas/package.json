@@ -1,35 +1,25 @@
 {
-  "name": "@fullstack_package/auth-schemas",
+  "name": "@trg_package/auth-schemas",
   "version": "1.0.0",
   "description": "",
   "exports": {
-    "./schemas": {
-      "require": "./dist/schemas/index.js",
-      "import": "./dist/schemas/index.mjs",
-      "types": "./dist/schemas/index.d.ts"
-    },
-    "./services": {
-      "require": "./dist/services/index.js",
-      "import": "./dist/services/index.mjs",
-      "types": "./dist/services/index.d.ts"
-    }
+    "./schemas": "./src/schemas/index.ts",
+    "./services": "./src/services/index.ts"
   },
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
-    "dev": "npm run build -- --watch"
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@trg_package/base-service": "*",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "@fullstack_package/eslint-config": "*",
-    "@fullstack_package/base-schemas": "*",
-    "@fullstack_package/typescript-config": "*",
+    "@trg_package/eslint-config": "*",
+    "@trg_package/typescript-config": "*",
     "tsup": "^8.2.4"
   }
 }

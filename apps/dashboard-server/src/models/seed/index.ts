@@ -1,4 +1,4 @@
-import { PGColumnDataTypeValue } from '@fullstack_package/pg-orm';
+import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import config from '../../config';
 import AuthService from '../../services/AuthService';
 import UserService from '../../services/UserService';
@@ -64,7 +64,7 @@ const createModules = async () => {
     try {
       await DatabaseService.createNewTable(createdModule.name, columnDetails);
     } catch (e) {
-      await ModuleService.deleteOneById(createdModule.id);
+      await ModuleService.deleteOne(createdModule.id);
     }
 
     await PermissionService.extendSuperuserModules(createdModule.id);

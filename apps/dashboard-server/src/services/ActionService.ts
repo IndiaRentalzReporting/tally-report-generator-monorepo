@@ -1,7 +1,6 @@
 import db from '../models';
-import { ActionSchema } from '../models/schema';
-import BaseService from './BaseService';
+import { ActionService } from '@trg_package/dashboard-schemas/services';
 
-const ActionService = new BaseService(ActionSchema, db.query.ActionSchema);
+const ASI = new ActionService(db);
 
-export default ActionService;
+export default ASI;

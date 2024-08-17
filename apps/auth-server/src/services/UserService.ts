@@ -1,16 +1,6 @@
-import db from '../models/auth';
-import { UserSchema } from '../models/auth/schema';
-import BaseService from './BaseService';
+import { UserService } from '@trg_package/auth-schemas/services';
+import db from '../models/auth/index';
 
-class UserService extends BaseService<
-  typeof UserSchema,
-  typeof db.query.UserSchema
-> {
-  constructor() {
-    super(UserSchema, db.query.UserSchema);
-  }
-}
-
-const USI = new UserService();
+const USI = new UserService(db);
 
 export default USI;

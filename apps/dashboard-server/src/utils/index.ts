@@ -1,5 +1,5 @@
-import { NotFoundError } from '@fullstack_package/core-application/errors';
-import { UserSelect } from '@fullstack_package/dashboard-schemas/schemas';
+import { NotFoundError } from '@trg_package/errors';
+import { UserSelect } from '@trg_package/dashboard-schemas/schemas';
 import config from '../config';
 import jwt from 'jsonwebtoken';
 import UserService from '../services/UserService';
