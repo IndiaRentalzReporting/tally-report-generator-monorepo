@@ -5,7 +5,7 @@ import {
   TenantSchema,
   TenantSelect
 } from '../models/auth/schema';
-import { BaseService } from '@trg_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-service';
 import * as authschemas from '../models/auth/schema';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';

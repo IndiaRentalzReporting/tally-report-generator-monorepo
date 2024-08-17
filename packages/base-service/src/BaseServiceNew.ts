@@ -1,28 +1,21 @@
-import { and, eq, TableRelationalConfig } from 'drizzle-orm';
+import { NotFoundError } from '@trg_package/errors';
+import { and, eq } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
-import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
-export class BaseService<
-  H extends Record<string, unknown>,
+export class BaseServiceNew<
   T extends PgTableWithColumns<{
     name: string;
     schema: undefined;
     columns: Record<string, any>;
     dialect: 'pg';
-  }>,
-  K extends RelationalQueryBuilder<T, TableRelationalConfig>
+  }>
 > {
-  private entity: string;
   constructor(
-    protected dbClient: PostgresJsDatabase<H>,
-    protected schema: T,
-    protected tableName: K
-  ) {
-    //@ts-ignore
-    this.entity = this.tableName.tableConfig.dbName;
-  }
+    protected dbClient: PostgresJsDatabase<Record<string, unknown>>,
+    protected schema: T
+  ) {}
 
   public static createClient<T extends Record<string, unknown>>(
     URL: string,
@@ -31,16 +24,17 @@ export class BaseService<
       DB_MIGRATING: boolean;
       DB_SEEDING: boolean;
     }
-  ): { db: PostgresJsDatabase<T>; connection: postgres.Sql } {
+  ): { client: PostgresJsDatabase<T>; connection: postgres.Sql } {
     try {
       const connection = postgres(URL, {
         max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : undefined
       });
+      const client = drizzle(connection, {
+        schema,
+        logger: true
+      });
       return {
-        db: drizzle(connection, {
-          schema,
-          logger: true
-        }),
+        client,
         connection
       };
     } catch (e) {
@@ -55,54 +49,53 @@ export class BaseService<
       .values(data)
       .returning();
 
-    if (!entity) throw new Error(`${this.entity} returned as undefined`);
+    if (!entity)
+      throw new NotFoundError(`${this.schema._?.name} returned as undefined`);
 
     return entity;
   }
 
   public async findMany(
-    data: Partial<T['$inferSelect']> = {},
-    extra?: Omit<NonNullable<Parameters<K['findMany']>[0]>, 'where'>
-  ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
+    data: Partial<T['$inferSelect']> = {}
+  ): Promise<T['$inferSelect'][]> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
     >;
     const values = Object.values(data) as Array<any>;
-    const entity = await this.tableName.findMany({
-      where: and(
-        ...keys.map((key, index) => eq(this.schema[key], values[index]))
-      ),
-      ...extra
-    });
+    const entity = await this.dbClient
+      .select()
+      .from(this.schema)
+      .where(
+        and(...keys.map((key, index) => eq(this.schema[key], values[index])))
+      );
 
     if (!entity.length) {
-      throw new Error(`${this.entity} does not exist`);
+      throw new NotFoundError(`${this.schema._?.name} does not exist`);
     }
 
-    return entity as NonNullable<Awaited<ReturnType<K['findMany']>>>;
+    return entity;
   }
 
   public async findOne(
-    data: Partial<T['$inferSelect']>,
-    extra?: Omit<NonNullable<Parameters<K['findFirst']>[0]>, 'where'>
-  ): Promise<NonNullable<Awaited<ReturnType<K['findFirst']>>>> {
+    data: Partial<T['$inferSelect']> = {}
+  ): Promise<T['$inferSelect']> {
     const keys = Object.keys(data) as Array<
       keyof Partial<typeof this.schema.$inferSelect>
     >;
     const values = Object.values(data) as Array<any>;
-
-    const entity = await this.tableName.findFirst({
-      where: and(
-        ...keys.map((key, index) => eq(this.schema[key], values[index]))
-      ),
-      ...extra
-    });
+    const [entity] = await this.dbClient
+      .select()
+      .from(this.schema)
+      .where(
+        and(...keys.map((key, index) => eq(this.schema[key], values[index])))
+      )
+      .limit(1);
 
     if (!entity) {
-      throw new Error(`${this.entity} does not exist`);
+      throw new NotFoundError(`${this.schema._?.name} does not exist`);
     }
 
-    return entity as NonNullable<Awaited<ReturnType<K['findFirst']>>>;
+    return entity;
   }
 
   public async updateOne(
@@ -115,12 +108,13 @@ export class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new Error(`${this.entity} does not exits`);
+    if (!entity)
+      throw new NotFoundError(`${this.schema._?.name} does not exits`);
 
     return entity;
   }
 
-  public async deleteOneById(
+  public async deleteOne(
     id: T['$inferSelect']['id']
   ): Promise<T['$inferSelect']> {
     const [entity] = await this.dbClient
@@ -128,7 +122,8 @@ export class BaseService<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new Error(`${this.entity} does not exits`);
+    if (!entity)
+      throw new NotFoundError(`${this.schema._?.name} does not exits`);
 
     return entity;
   }

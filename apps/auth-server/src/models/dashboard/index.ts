@@ -1,6 +1,6 @@
 import * as dashboard_schema from './schema';
 import config, { DashboardPgUrlKey } from '../../config';
-import { BaseService } from '@trg_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-service';
 
 const DASHBOARD_PG_URL = config[DashboardPgUrlKey];
 const { DB_MIGRATING, DB_SEEDING } = config;

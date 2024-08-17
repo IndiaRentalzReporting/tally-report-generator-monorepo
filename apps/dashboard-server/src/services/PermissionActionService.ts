@@ -1,7 +1,7 @@
 import db from '../models';
 import * as dashboardSchemas from '../models/schema';
 import { PermissionActionSchema } from '../models/schema';
-import { BaseService } from '@trg_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-service';
 
 class PermissionActionService extends BaseService<
   typeof dashboardSchemas,

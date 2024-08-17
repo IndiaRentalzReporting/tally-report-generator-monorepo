@@ -1,19 +1,10 @@
 {
-  "name": "@trg_package/base-schemas",
+  "name": "@trg_package/base-service",
   "version": "1.0.0",
   "description": "",
-  "exports": {
-    "./schemas": {
-      "require": "./dist/schemas/index.js",
-      "import": "./dist/schemas/index.mjs",
-      "types": "./dist/schemas/index.d.ts"
-    },
-    "./services": {
-      "require": "./dist/services/index.js",
-      "import": "./dist/services/index.mjs",
-      "types": "./dist/services/index.d.ts"
-    }
-  },
+  "require": "./dist/index.jss",
+  "import": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "lint": "eslint . --ext ts --fix --max-warnings 0",
@@ -23,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@trg_package/errors": "*",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "postgres": "^3.4.4"

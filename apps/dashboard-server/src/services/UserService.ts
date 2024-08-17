@@ -2,7 +2,7 @@ import db from '../models';
 import * as dashboardSchemas from '../models/schema';
 import { UserSchema, UserSelect, DetailedUser } from '../models/schema';
 import { toTitleCase } from '@trg_package/utils';
-import { BaseService } from '@trg_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-service';
 
 class UserService extends BaseService<
   typeof dashboardSchemas,

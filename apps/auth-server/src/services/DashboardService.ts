@@ -3,7 +3,7 @@ import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import roles from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
-import { BaseService } from '@trg_package/base-schemas/services';
+import { BaseService } from '@trg_package/base-service';
 import { BadRequestError } from '@trg_package/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import postgres from 'postgres';
