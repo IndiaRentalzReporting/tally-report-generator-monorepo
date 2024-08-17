@@ -33,45 +33,44 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.findOne(
-      { id: req.params.id },
-      {
-        with: {
-          permission: {
-            columns: {
-              module_id: false,
-              updatedAt: false,
-              role_id: false,
-              createdAt: false,
+    const role = await RoleService.findOne({ id: req.params.id });
+    //   {
+    //     with: {
+    //       permission: {
+    //         columns: {
+    //           module_id: false,
+    //           updatedAt: false,
+    //           role_id: false,
+    //           createdAt: false,
 
-              id: false
-            },
-            with: {
-              permissionAction: {
-                columns: {
-                  permission_id: false,
-                  action_id: false
-                },
-                with: {
-                  action: {
-                    columns: {
-                      name: true,
-                      id: true
-                    }
-                  }
-                }
-              },
-              module: {
-                columns: {
-                  name: true,
-                  id: true
-                }
-              }
-            }
-          }
-        }
-      }
-    );
+    //           id: false
+    //         },
+    //         with: {
+    //           permissionAction: {
+    //             columns: {
+    //               permission_id: false,
+    //               action_id: false
+    //             },
+    //             with: {
+    //               action: {
+    //                 columns: {
+    //                   name: true,
+    //                   id: true
+    //                 }
+    //               }
+    //             }
+    //           },
+    //           module: {
+    //             columns: {
+    //               name: true,
+    //               id: true
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // );
     return res.json({ role });
   } catch (e) {
     console.error("Couldn't fetch a Role");
@@ -117,7 +116,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.deleteOneById(req.params.id);
+    const role = await RoleService.deleteOne(req.params.id);
     return res.json({
       role
     });

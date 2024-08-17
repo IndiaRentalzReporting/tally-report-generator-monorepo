@@ -138,9 +138,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.deleteOneById(
-      req.params.id
-    );
+    const { password, ...user } = await UserService.deleteOne(req.params.id);
 
     return res.json({ user });
   } catch (e) {

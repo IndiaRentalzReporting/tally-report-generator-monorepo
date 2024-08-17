@@ -51,7 +51,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.deleteOneById(req.params.id);
+    const action = await ActionService.deleteOne(req.params.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not delete action');

@@ -81,7 +81,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.deleteOneById(req.params.id);
+    const tenant = await TenantService.deleteOne(req.params.id);
 
     return res.json({ tenant });
   } catch (e) {

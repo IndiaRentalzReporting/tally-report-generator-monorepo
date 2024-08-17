@@ -64,7 +64,7 @@ const createModules = async () => {
     try {
       await DatabaseService.createNewTable(createdModule.name, columnDetails);
     } catch (e) {
-      await ModuleService.deleteOneById(createdModule.id);
+      await ModuleService.deleteOne(createdModule.id);
     }
 
     await PermissionService.extendSuperuserModules(createdModule.id);

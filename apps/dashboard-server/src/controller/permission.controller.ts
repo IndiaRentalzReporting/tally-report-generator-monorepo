@@ -132,7 +132,7 @@ export const updateMany = async (
     const { role_id, permissions } = req.body;
     const promises = permissions.map(
       async ({ permission_id, module_id, action_ids }) => {
-        await PermissionService.deleteOneById(permission_id);
+        await PermissionService.deleteOne(permission_id);
         const permission = await PermissionService.createOne({
           module_id,
           role_id
