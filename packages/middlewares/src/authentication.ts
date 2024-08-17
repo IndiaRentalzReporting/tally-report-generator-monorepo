@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { BadRequestError } from '@trg_package/errors';
+import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 
 export const authenticate = passport.authenticate('local');
 
@@ -23,5 +23,5 @@ export const isAuthenticated = (
   if (req.isAuthenticated()) {
     return next();
   }
-  throw new BadRequestError('You are not authenticated!');
+  throw new UnauthenticatedError('You are not authenticated!');
 };

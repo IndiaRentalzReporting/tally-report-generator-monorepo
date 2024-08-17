@@ -1,13 +1,9 @@
 {
   "name": "@trg_package/utils",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
-    "dev": "tsup --watch"
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "devDependencies": {
     "@trg_package/eslint-config": "*",

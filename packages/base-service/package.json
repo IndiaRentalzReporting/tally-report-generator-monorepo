@@ -2,13 +2,9 @@
   "name": "@trg_package/base-service",
   "version": "1.0.0",
   "description": "",
-  "require": "./dist/index.jss",
-  "import": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
-    "dev": "tsup --watch"
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "keywords": [],
   "author": "",
