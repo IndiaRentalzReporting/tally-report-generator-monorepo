@@ -1,61 +1,57 @@
 import db from '../models';
-import * as dashboardSchemas from '../models/schema';
-import { UserSchema, UserSelect, DetailedUser } from '../models/schema';
+import { UserSelect, DetailedUser } from '../models/schema';
 import { toTitleCase } from '@trg_package/utils';
-import { BaseService } from '@trg_package/base-service';
+import { UserService as BaseUserService } from '@trg_package/dashboard-schemas/services';
 
-class UserService extends BaseService<
-  typeof dashboardSchemas,
-  typeof UserSchema,
-  typeof db.query.UserSchema
-> {
+class UserService extends BaseUserService {
   constructor() {
-    super(db, UserSchema, db.query.UserSchema);
+    super(db);
   }
 
   public async findOneDetailedUser(
     data: Partial<typeof this.schema.$inferSelect>
-  ): Promise<NonNullable<ReturnType<typeof this.tableName.findFirst>>> {
-    return super.findOne(data, {
-      with: {
-        role: {
-          columns: {
-            name: true
-          },
-          with: {
-            permission: {
-              columns: {
-                role_id: false,
-                createdAt: false,
-                updatedAt: false,
-                module_id: false
-              },
-              with: {
-                permissionAction: {
-                  columns: {
-                    permission_id: false,
-                    action_id: false
-                  },
-                  with: {
-                    action: {
-                      columns: {
-                        name: true
-                      }
-                    }
-                  }
-                },
-                module: {
-                  columns: {
-                    name: true,
-                    id: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
+  ) {
+    return super.findOne(data);
+    //   , {
+    //   with: {
+    //     role: {
+    //       columns: {
+    //         name: true
+    //       },
+    //       with: {
+    //         permission: {
+    //           columns: {
+    //             role_id: false,
+    //             createdAt: false,
+    //             updatedAt: false,
+    //             module_id: false
+    //           },
+    //           with: {
+    //             permissionAction: {
+    //               columns: {
+    //                 permission_id: false,
+    //                 action_id: false
+    //               },
+    //               with: {
+    //                 action: {
+    //                   columns: {
+    //                     name: true
+    //                   }
+    //                 }
+    //               }
+    //             },
+    //             module: {
+    //               columns: {
+    //                 name: true,
+    //                 id: true
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   public prettifyUser(user: DetailedUser): DetailedUser {

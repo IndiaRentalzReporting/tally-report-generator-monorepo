@@ -1,18 +1,6 @@
 import db from '../models';
-import * as dashboardSchemas from '../models/schema';
-import { PermissionActionSchema } from '../models/schema';
-import { BaseService } from '@trg_package/base-service';
+import { PermissionActionService } from '@trg_package/dashboard-schemas/services';
 
-class PermissionActionService extends BaseService<
-  typeof dashboardSchemas,
-  typeof PermissionActionSchema,
-  typeof db.query.PermissionActionSchema
-> {
-  constructor() {
-    super(db, PermissionActionSchema, db.query.PermissionActionSchema);
-  }
-}
+const PASI = new PermissionActionService(db);
 
-const PSAI = new PermissionActionService();
-
-export default PSAI;
+export default PASI;

@@ -1,18 +1,6 @@
 import db from '../models';
-import { ActionSchema } from '../models/schema';
-import * as dashboardSchemas from '../models/schema';
-import { BaseService } from '@trg_package/base-service';
+import { ActionService } from '@trg_package/dashboard-schemas/services';
 
-class ActionService extends BaseService<
-  typeof dashboardSchemas,
-  typeof ActionSchema,
-  typeof db.query.ActionSchema
-> {
-  constructor() {
-    super(db, ActionSchema, db.query.ActionSchema);
-  }
-}
-
-const ASI = new ActionService();
+const ASI = new ActionService(db);
 
 export default ASI;

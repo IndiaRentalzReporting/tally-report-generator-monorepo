@@ -1,19 +1,13 @@
 import db from '../models';
-import * as dashboardSchemas from '../models/schema';
-import { PermissionSchema } from '../models/schema';
 import config from '../config';
 import PermissionActionService from './PermissionActionService';
 import ActionService from './ActionService';
 import RoleService from './RoleService';
-import { BaseService } from '@trg_package/base-service';
+import { PermissionService as BasePermissionService } from '@trg_package/dashboard-schemas/services';
 
-class PermissionService extends BaseService<
-  typeof dashboardSchemas,
-  typeof PermissionSchema,
-  typeof db.query.PermissionSchema
-> {
+class PermissionService extends BasePermissionService {
   constructor() {
-    super(db, PermissionSchema, db.query.PermissionSchema);
+    super(db);
   }
 
   public async extendSuperuserActions(action_id: string) {

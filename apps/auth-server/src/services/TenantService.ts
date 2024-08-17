@@ -5,8 +5,7 @@ import {
   TenantSchema,
   TenantSelect
 } from '../models/auth/schema';
-import { BaseService } from '@trg_package/base-service';
-import * as authschemas from '../models/auth/schema';
+import { TenantService as BaseTenantService } from '@trg_package/auth-schemas/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';
@@ -14,13 +13,9 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
 
-class TenantService extends BaseService<
-  typeof authschemas,
-  typeof TenantSchema,
-  typeof db.query.TenantSchema
-> {
+class TenantService extends BaseTenantService {
   constructor() {
-    super(db, TenantSchema, db.query.TenantSchema);
+    super(db);
   }
 
   async onboard(
