@@ -39,12 +39,23 @@ class TenantService extends BaseTenantService {
   }
 
   private generateUniqueIdentifier(baseName: string) {
-    const randomSuffix = crypto.randomBytes(4).toString('hex');
+    const randomSuffix = crypto
+      .randomBytes(4)
+      .toString('hex')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
     return `${baseName}_${randomSuffix}`;
   }
 
   private generateSecurePassword(length = 32) {
-    return crypto.randomBytes(length).toString('base64').slice(0, length);
+    return crypto
+      .randomBytes(length)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '')
+      .slice(0, length);
   }
 
   private generateTenantDBCredentials(tenantName: string) {

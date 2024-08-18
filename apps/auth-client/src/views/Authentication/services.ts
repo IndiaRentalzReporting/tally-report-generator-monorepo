@@ -14,7 +14,7 @@ export const services = {
     tenant: TenantInsert;
     user: UserInsert;
   }): AxiosPromise<{ user: SafeUserSelect }> => {
-    return axios.post('/tenant/create', data);
+    return axios.post('/tenants/create', data);
   },
   signUp: (data: RegisterUser): AxiosPromise<SafeUserSelect> => {
     return axios.post(`/auth/sign-up`, data);
