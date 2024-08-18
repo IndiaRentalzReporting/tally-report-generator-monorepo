@@ -24,22 +24,3 @@ export type UserInsert = typeof UserSchema.$inferInsert;
 export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
 export const UserSelectSchema = createSelectSchema(UserSchema);
-export type UserRole = {
-  name: RoleSelect['name'];
-  permission: Array<{
-    id: PermissionSelect['id'];
-    permissionAction: Array<{
-      action: {
-        name: ActionSelect['name'];
-      };
-    }>;
-    module: {
-      id: ModuleSelect['id'];
-      name: ModuleSelect['name'];
-      icon: ModuleSelect['icon'];
-    };
-  }>;
-};
-export type DetailedUser = UserSelect & {
-  role: UserRole | null;
-};

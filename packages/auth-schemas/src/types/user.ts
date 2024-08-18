@@ -7,4 +7,12 @@ type RegisterUser = Pick<
 
 type LoginUser = Pick<UserSelect, 'email' | 'password'>;
 
-export { type UserInsert, type UserSelect, type RegisterUser, type LoginUser };
+type SafeUserSelect = Omit<UserSelect, 'password'>;
+
+export {
+  UserInsert,
+  UserSelect,
+  type RegisterUser,
+  type LoginUser,
+  type SafeUserSelect
+};

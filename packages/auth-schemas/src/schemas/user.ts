@@ -21,4 +21,3 @@ export type UserInsert = typeof UserSchema.$inferInsert;
 export const UserInsertSchema = createInsertSchema(UserSchema);
 export type UserSelect = typeof UserSchema.$inferSelect;
 export const UserSelectSchema = createSelectSchema(UserSchema);
-export type SafeUserSelect = Omit<UserSelect, 'password'>;
