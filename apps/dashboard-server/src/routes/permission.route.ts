@@ -12,7 +12,7 @@ import {
   ActionSelectSchema,
   RoleSelectSchema,
   PermissionSelectSchema
-} from '../models/schema';
+} from '@trg_package/dashboard-schemas/types';
 
 const permissionRouter = Router();
 

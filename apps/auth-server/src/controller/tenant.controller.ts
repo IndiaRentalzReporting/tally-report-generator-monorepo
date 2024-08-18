@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
-import { TenantSelect, TenantInsert } from '../models/auth/schema';
+import { TenantSelect, TenantInsert } from '@trg_package/auth-schemas/types';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
+import { UserInsert } from '@trg_package/dashboard-schemas/types';
 
 export const createOne = async (
   req: Request<
     object,
     object,
-    { tenantData: TenantInsert; userData: dashboardSchema.UserInsert }
+    { tenantData: TenantInsert; userData: UserInsert }
   >,
   res: Response<{ tenant: TenantSelect }>,
   next: NextFunction

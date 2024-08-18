@@ -1,7 +1,8 @@
-export * from './users';
-export * from './permissions';
-export * from './roles';
+export { UserSchema } from './users';
+export { PermissionSchema } from './permissions';
+export { RoleSchema } from './roles';
+export { PermissionActionSchema } from './permissionAction';
 export * from './relations';
-export * from './actions';
-export * from './modules';
+export { ActionSchema } from './actions';
+export { ModuleSchema } from './modules';
 export * from './base';

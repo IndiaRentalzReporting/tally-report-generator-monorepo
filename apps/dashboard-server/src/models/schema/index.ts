@@ -1,4 +1,4 @@
-import { DetailedUser } from '@trg_package/dashboard-schemas/schemas';
+import { DetailedUser } from '@trg_package/dashboard-schemas/types';
 
 declare global {
   namespace Express {

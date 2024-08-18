@@ -1,5 +1,5 @@
 import db from '../models';
-import { UserSelect, DetailedUser } from '../models/schema';
+import { UserSelect, DetailedUser } from '@trg_package/dashboard-schemas/types';
 import { toTitleCase } from '@trg_package/utils';
 import { UserService as BaseUserService } from '@trg_package/dashboard-schemas/services';
 

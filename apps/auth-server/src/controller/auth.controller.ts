@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { SafeUserSelect, UserInsert } from '../models/auth/schema';
+import { SafeUserSelect, UserInsert } from '@trg_package/auth-schemas/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 export const handleSignUp = async (

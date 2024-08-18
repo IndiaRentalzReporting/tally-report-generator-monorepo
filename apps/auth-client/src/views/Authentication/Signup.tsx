@@ -12,7 +12,7 @@ import {
   Label
 } from '@/components/ui';
 import { services } from './services';
-import { RegisterUser } from '@/models';
+import { RegisterUser } from '@trg_package/auth-schemas/types';
 
 export const SignupForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -104,6 +104,7 @@ export const SignupForm = () => {
                 value={registerData.password}
                 onChange={handleFormChange}
                 type="password"
+                placeholder="********"
               />
             </div>
             <Button type="submit" className="w-full" isLoading={loading}>

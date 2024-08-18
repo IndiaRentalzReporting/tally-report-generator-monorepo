@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@trg_package/auth-schemas": "*",
     "@trg_package/pg-orm": "*",
     "@hookform/resolvers": "^3.6.0",
     "@radix-ui/react-accordion": "^1.1.2",

@@ -1,5 +1,9 @@
 import { AxiosPromise } from 'axios';
-import { DetailedUser, RegisterUser, User } from '@/models';
+import {
+  DetailedUser,
+  RegisterUser,
+  UserSelect
+} from '@trg_package/dashboard-schemas/types';
 import axios from '@/services/client';
 
 export const services = {
@@ -9,25 +13,27 @@ export const services = {
     return axios.get('/users/read');
   },
   getOne: async (
-    id: User['id'] | undefined
+    id: UserSelect['id'] | undefined
   ): AxiosPromise<{
     user: DetailedUser;
   }> => {
     return axios.get(`/users/read/${id}`);
   },
-  createOne: (data: RegisterUser): AxiosPromise<Omit<User, 'password'>> => {
+  createOne: (
+    data: RegisterUser
+  ): AxiosPromise<Omit<UserSelect, 'password'>> => {
     return axios.post(`/auth/sign-up`, data);
   },
   updateOne: async (
-    id: User['id'] | undefined,
-    data: Partial<User>
+    id: UserSelect['id'] | undefined,
+    data: Partial<UserSelect>
   ): AxiosPromise<{
     user: DetailedUser;
   }> => {
     return axios.patch(`/users/update/${id}`, data);
   },
   deleteOne: async (
-    id: User['id'] | undefined
+    id: UserSelect['id'] | undefined
   ): AxiosPromise<{
     user: DetailedUser;
   }> => {

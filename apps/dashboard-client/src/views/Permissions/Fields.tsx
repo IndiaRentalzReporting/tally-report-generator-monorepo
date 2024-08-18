@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import { Module } from '@/models';
+import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
 import {
   CardDescription,
   CardHeader,
@@ -22,8 +22,8 @@ import { services as roleService } from '../Roles/services';
 import { services as actionService } from '../Actions/services';
 
 interface ColumnData {
-  module_name: Module['name'];
-  module_id: Module['id'];
+  module_name: ModuleSelect['name'];
+  module_id: ModuleSelect['id'];
 }
 
 const Fields: React.FC<StateAsProps> = ({
@@ -114,7 +114,7 @@ const Fields: React.FC<StateAsProps> = ({
     setColumns([
       {
         accessorKey: 'module_name',
-        header: 'Module Name'
+        header: 'ModuleSelect Name'
       },
       ...actionColumns
     ]);

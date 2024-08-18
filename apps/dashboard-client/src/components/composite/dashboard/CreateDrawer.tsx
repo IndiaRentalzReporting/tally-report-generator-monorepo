@@ -14,12 +14,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui';
-import { Module } from '@/models';
+import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
 import { When } from '@/components/utility';
 import { useIsAllowed } from '@/lib/hooks';
 
 interface ICreateDrawerProps {
-  module: Module['name'];
+  module: ModuleSelect['name'];
 }
 const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
   const isCreateAllowed = useIsAllowed({

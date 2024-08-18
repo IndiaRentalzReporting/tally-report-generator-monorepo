@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as z from 'zod';
-import { UserInsertSchema } from '../models/schema';
+import { UserInsertSchema } from '@trg_package/dashboard-schemas/types';
 import {
   handleSignUp,
   handleSignIn,

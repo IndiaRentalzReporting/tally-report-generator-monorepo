@@ -1,6 +1,11 @@
 import { AxiosPromise } from 'axios';
 import Module from 'module';
-import { Action, DetailedPermission, Permission, Role } from '@/models';
+import {
+  ActionSelect,
+  DetailedPermission,
+  PermissionSelect,
+  RoleSelect
+} from '@trg_package/dashboard-schemas/types';
 import axios from '@/services/client';
 
 export const services = {
@@ -10,20 +15,20 @@ export const services = {
     return axios.get('/permissions/read');
   },
   getAllOfRole: async (
-    id: Permission['id']
+    id: PermissionSelect['id']
   ): AxiosPromise<{
     permissions: DetailedPermission[];
   }> => {
     return axios.get(`/permissions/read/${id}`);
   },
   createMany: async (data: {
-    role_id: Role['id'];
+    role_id: RoleSelect['id'];
     permissions: {
       module_id: Module['id'];
-      action_ids: Action['id'][];
+      action_ids: ActionSelect['id'][];
     }[];
   }): AxiosPromise<{
-    permission: Permission;
+    permission: PermissionSelect;
   }> => {
     return axios.post('/permissions/create/many', {
       permissions: data.permissions,
@@ -31,21 +36,21 @@ export const services = {
     });
   },
   updateMany: async (data: {
-    role_id: Role['id'];
+    role_id: RoleSelect['id'];
     permissions: {
-      permission_id: Permission['id'];
+      permission_id: PermissionSelect['id'];
       module_id: Module['id'];
-      action_ids: Action['id'][];
+      action_ids: ActionSelect['id'][];
     }[];
   }): AxiosPromise<{
-    permission: Permission;
+    permission: PermissionSelect;
   }> => {
     return axios.patch(`/permissions/update/many`, data);
   },
   deleteOne: async (
-    id: Permission['id']
+    id: PermissionSelect['id']
   ): AxiosPromise<{
-    permission: Permission;
+    permission: PermissionSelect;
   }> => {
     return axios.delete(`/permissions/delete/${id}`);
   }

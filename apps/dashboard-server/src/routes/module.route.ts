@@ -9,7 +9,7 @@ import {
   readOne
 } from '../controller/module.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { ModuleInsertSchema } from '../models/schema';
+import { ModuleInsertSchema } from '@trg_package/dashboard-schemas/types';
 
 const moduleRouter = Router();
 

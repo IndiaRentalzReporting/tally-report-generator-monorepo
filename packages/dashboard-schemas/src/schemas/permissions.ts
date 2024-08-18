@@ -27,8 +27,3 @@ export type PermissionInsert = typeof PermissionSchema.$inferInsert;
 export const PermissionInsertSchema = createInsertSchema(PermissionSchema);
 export type PermissionSelect = typeof PermissionSchema.$inferSelect;
 export const PermissionSelectSchema = createSelectSchema(PermissionSchema);
-export interface DetailedPermission extends PermissionSelect {
-  module: Pick<ModuleSelect, 'name' | 'id'>;
-  role: Pick<RoleSelect, 'name' | 'id'>;
-  permissionAction: Array<{ action: Pick<ActionSelect, 'name' | 'id'> }>;
-}

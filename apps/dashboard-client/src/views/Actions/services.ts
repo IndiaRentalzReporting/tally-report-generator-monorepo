@@ -1,39 +1,39 @@
 import { AxiosPromise } from 'axios';
-import { Action } from '@/models';
+import { ActionSelect } from '@trg_package/dashboard-schemas/types';
 import axios from '@/services/client';
 
 export const services = {
   getAll: async (): AxiosPromise<{
-    actions: Action[];
+    actions: ActionSelect[];
   }> => {
     return axios.get('/actions/read');
   },
   getOne: async (
-    id: Action['id']
+    id: ActionSelect['id']
   ): AxiosPromise<{
-    action: Action;
+    action: ActionSelect;
   }> => {
     return axios.get(`/actions/read/${id}`);
   },
   createOne: async (
-    data: Partial<Action>
+    data: Partial<ActionSelect>
   ): AxiosPromise<{
-    action: Action;
+    action: ActionSelect;
   }> => {
     return axios.post(`/actions/create/`, data);
   },
   updateOne: async (
-    id: Action['id'],
-    data: Partial<Action>
+    id: ActionSelect['id'],
+    data: Partial<ActionSelect>
   ): AxiosPromise<{
-    action: Action;
+    action: ActionSelect;
   }> => {
     return axios.patch(`/actions/update/${id}`, data);
   },
   deleteOne: async (
-    id: Action['id']
+    id: ActionSelect['id']
   ): AxiosPromise<{
-    action: Action;
+    action: ActionSelect;
   }> => {
     return axios.delete(`/actions/delete/${id}`);
   }

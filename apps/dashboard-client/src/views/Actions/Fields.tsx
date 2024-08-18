@@ -1,7 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/ui';
 import { StateAsProps } from './interface';
-import { Action } from '@/models';
 
 const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => {
   return (
