@@ -2,20 +2,16 @@ import { AxiosPromise } from 'axios';
 import {
   RegisterUser,
   LoginUser,
-  UserSelect
+  UserSelect,
+  SafeUserSelect
 } from '@trg_package/auth-schemas/types';
 import axios from '@/services/client';
 
 export const services = {
-  signUp: (data: RegisterUser): AxiosPromise<Omit<UserSelect, 'password'>> => {
+  signUp: (data: RegisterUser): AxiosPromise<SafeUserSelect> => {
     return axios.post(`/auth/sign-up`, data);
   },
-  signIn: (
-    data: LoginUser
-  ): AxiosPromise<{
-    user: Omit<UserSelect, 'password'>;
-    resetPasswordLink?: string;
-  }> => {
+  signIn: (data: LoginUser): AxiosPromise<{ user: SafeUserSelect }> => {
     return axios.post(`/auth/sign-in`, data);
   },
   forgot_password: (data: {

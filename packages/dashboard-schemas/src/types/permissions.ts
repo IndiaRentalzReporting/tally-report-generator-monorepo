@@ -1,12 +1,12 @@
+import { ActionSelect } from '../schemas/actions';
+import { ModuleSelect } from '../schemas/modules';
 import {
   type PermissionSelect,
-  type ModuleSelect,
-  type RoleSelect,
   type PermissionInsert,
   PermissionInsertSchema,
-  PermissionSelectSchema,
-  type ActionSelect
-} from '../schemas';
+  PermissionSelectSchema
+} from '../schemas/permissions';
+import { RoleSelect } from '../schemas/roles';
 
 interface DetailedPermission extends PermissionSelect {
   module: Pick<ModuleSelect, 'name' | 'id'>;

@@ -4,7 +4,7 @@ import {
   ActionSelect,
   RoleSelect,
   PermissionSelect
-} from '../models/schema';
+} from '@trg_package/dashboard-schemas/types';
 import PermissionService from '../services/PermissionService';
 import ActionService from '../services/ActionService';
 

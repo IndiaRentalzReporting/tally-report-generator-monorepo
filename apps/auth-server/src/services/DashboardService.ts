@@ -8,6 +8,9 @@ import { BadRequestError } from '@trg_package/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import postgres from 'postgres';
 import config from '../config';
+import { UserInsert } from '@trg_package/auth-schemas/types';
+import { UserSchema as DashboardUserSchema } from '@trg_package/dashboard-schemas/schemas';
+import { RoleSelect } from '@trg_package/dashboard-schemas/types';
 
 class DashboardService {
   private dashboardConnection: postgres.Sql<{}>;
@@ -33,7 +36,7 @@ class DashboardService {
     return `postgresql://${user}:${password}@localhost:5432/${name}`;
   }
 
-  public async migrateAndSeed(userData: dashboardSchema.UserInsert) {
+  public async migrateAndSeed(userData: UserInsert) {
     migrateDashboardSchema(this.URL, async (error, stdout, stderr) => {
       if (error) {
         console.error(`Migration Error: ${error.message}`);
@@ -49,14 +52,14 @@ class DashboardService {
     });
   }
 
-  private async seedDatabase(userData: dashboardSchema.UserInsert) {
+  private async seedDatabase(userData: UserInsert) {
     await this.seedAction();
     await this.seedModules();
     await this.seedAdmin(userData);
     await this.terminateConnection();
   }
 
-  private async seedRole(): Promise<dashboardSchema.RoleSelect['id']> {
+  private async seedRole(): Promise<RoleSelect['id']> {
     const [role] = await this.dashboardClient
       .insert(dashboardSchema.RoleSchema)
       .values({ name: roles.name })
@@ -94,10 +97,10 @@ class DashboardService {
     await Promise.all(promises);
   }
 
-  private async seedAdmin(data: dashboardSchema.UserInsert) {
+  private async seedAdmin(data: UserInsert) {
     const role_id = await this.seedRole();
     const [admin] = await this.dashboardClient
-      .insert(dashboardSchema.UserSchema)
+      .insert(DashboardUserSchema)
       .values({ ...data, role_id })
       .returning();
 

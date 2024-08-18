@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { ActionInsert, ActionSelect } from '../models/schema';
+import {
+  ActionInsert,
+  ActionSelect
+} from '@trg_package/dashboard-schemas/types';
 import PermissionService from '../services/PermissionService';
 import ActionService from '../services/ActionService';
 

@@ -1,13 +1,13 @@
 import {
-  type ModuleSelect,
   type UserInsert,
   type UserSelect,
   UserInsertSchema,
-  UserSelectSchema,
-  type ActionSelect,
-  type PermissionSelect,
-  type RoleSelect
-} from '../schemas';
+  UserSelectSchema
+} from '../schemas/users';
+import { ActionSelect } from '../schemas/actions';
+import { ModuleSelect } from '../schemas/modules';
+import { RoleSelect } from '../schemas/roles';
+import { PermissionSelect } from '../schemas/permissions';
 
 type RegisterUser = Pick<
   UserInsert,

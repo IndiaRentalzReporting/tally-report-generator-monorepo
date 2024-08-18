@@ -3,4 +3,4 @@ export {
   type PermissionActionSelect,
   PermissionActionInsertSchema,
   PermissionActionSelectSchema
-} from '../schemas/relations';
+} from '../schemas/permissionAction';

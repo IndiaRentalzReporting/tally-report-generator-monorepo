@@ -1,7 +1,11 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '@trg_package/errors';
-import { UserInsert, UserSelect, DetailedUser } from '../models/schema';
+import {
+  UserInsert,
+  UserSelect,
+  DetailedUser
+} from '@trg_package/dashboard-schemas/types';
 import UserService from './UserService';
 
 class AuthService {

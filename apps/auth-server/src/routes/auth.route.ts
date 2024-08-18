@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserInsertSchema } from '../models/auth/schema';
+import { UserInsertSchema } from '@trg_package/auth-schemas/types';
 import {
   handleSignUp,
   handleSignIn,

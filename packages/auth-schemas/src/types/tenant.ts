@@ -1,1 +1,6 @@
-export { type TenantInsert, type TenantSelect } from '../schemas/tenant';
+export {
+  type TenantInsert,
+  type TenantSelect,
+  TenantInsertSchema,
+  TenantSelectSchema
+} from '../schemas/tenant';

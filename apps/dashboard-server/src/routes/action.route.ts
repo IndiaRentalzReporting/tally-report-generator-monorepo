@@ -7,7 +7,7 @@ import {
   readOne
 } from '../controller/action.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { ActionInsertSchema } from '../models/schema';
+import { ActionInsertSchema } from '@trg_package/dashboard-schemas/types';
 
 const actionRouter = Router();
 

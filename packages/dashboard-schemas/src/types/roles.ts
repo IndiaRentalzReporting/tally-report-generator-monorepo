@@ -1,12 +1,12 @@
+import { ActionSelect } from '../schemas/actions';
+import { ModuleSelect } from '../schemas/modules';
+import { PermissionSelect } from '../schemas/permissions';
 import {
   type RoleInsert,
   type RoleSelect,
   RoleInsertSchema,
-  RoleSelectSchema,
-  type ActionSelect,
-  type ModuleSelect,
-  type PermissionSelect
-} from '../schemas';
+  RoleSelectSchema
+} from '../schemas/roles';
 
 type DetailedRole = RoleSelect & {
   permission: Array<{
@@ -33,8 +33,5 @@ export {
   RoleInsertSchema,
   RoleSelectSchema,
   type DetailedRole,
-  type RoleWithPermission,
-  ActionSelect,
-  ModuleSelect,
-  PermissionSelect
+  type RoleWithPermission
 };

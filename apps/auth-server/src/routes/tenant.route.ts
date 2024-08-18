@@ -8,8 +8,10 @@ import {
   createOne
 } from '../controller/tenant.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { TenantInsertSchema } from '../models/auth/schema';
-import { UserInsertSchema } from '@trg_package/dashboard-schemas/schemas';
+import {
+  TenantInsertSchema,
+  UserInsertSchema
+} from '@trg_package/auth-schemas/types';
 
 const tenantRouter = Router();
 

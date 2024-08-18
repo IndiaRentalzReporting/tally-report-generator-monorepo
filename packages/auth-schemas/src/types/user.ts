@@ -1,4 +1,9 @@
-import { type UserInsert, type UserSelect } from '../schemas/user';
+import {
+  type UserInsert,
+  type UserSelect,
+  UserInsertSchema,
+  UserSelectSchema
+} from '../schemas/user';
 
 type RegisterUser = Pick<
   UserInsert,
@@ -14,5 +19,7 @@ export {
   UserSelect,
   type RegisterUser,
   type LoginUser,
-  type SafeUserSelect
+  type SafeUserSelect,
+  UserInsertSchema,
+  UserSelectSchema
 };

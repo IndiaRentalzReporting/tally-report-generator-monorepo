@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import db from '../models';
-import { ModuleInsert } from '../models/schema';
+import { ModuleInsert } from '@trg_package/dashboard-schemas/types';
 
 class DatabaseService {
   public static async createNewTable(

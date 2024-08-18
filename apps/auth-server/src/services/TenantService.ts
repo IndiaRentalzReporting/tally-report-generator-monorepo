@@ -1,10 +1,7 @@
 import postgres from 'postgres';
 import db from '../models/auth';
-import {
-  TenantInsert,
-  TenantSchema,
-  TenantSelect
-} from '../models/auth/schema';
+import { TenantInsert, TenantSelect } from '@trg_package/auth-schemas/types';
+import { UserInsert as DashboardUserInsert } from '@trg_package/dashboard-schemas/types';
 import { TenantService as BaseTenantService } from '@trg_package/auth-schemas/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
@@ -20,7 +17,7 @@ class TenantService extends BaseTenantService {
 
   async onboard(
     tenantData: TenantInsert,
-    userData: dashboardSchema.UserInsert
+    userData: DashboardUserInsert
   ): Promise<TenantSelect> {
     const { db_name, db_username, db_password } = await this.createDatabase(
       tenantData.name

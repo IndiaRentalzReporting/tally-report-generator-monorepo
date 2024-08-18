@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import UserService from '../services/UserService';
-import { UserSelect, UserInsert, SafeUserSelect } from '../models/auth/schema';
+import {
+  UserSelect,
+  UserInsert,
+  SafeUserSelect
+} from '@trg_package/auth-schemas/types';
 import { NotFoundError } from '@trg_package/errors';
 
 export const readAll = async (

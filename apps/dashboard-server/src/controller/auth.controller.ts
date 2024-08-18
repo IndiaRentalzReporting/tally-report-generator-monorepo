@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { UserInsert, DetailedUser, UserSelect } from '../models/schema';
+import {
+  UserInsert,
+  DetailedUser,
+  UserSelect
+} from '@trg_package/dashboard-schemas/types';
 import {
   BadRequestError,
   NotFoundError,
