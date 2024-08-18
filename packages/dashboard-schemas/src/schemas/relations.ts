@@ -5,6 +5,7 @@ import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const PermissionActionSchema = pgTable(
   'permission_action',
@@ -79,4 +80,10 @@ export const actionSchemaRelation = relations(ActionSchema, ({ many }) => ({
 }));
 
 export type PermissionActionInsert = typeof PermissionActionSchema.$inferInsert;
+export const PermissionActionInsertSchema = createInsertSchema(
+  PermissionActionSchema
+);
 export type PermissionActionSelect = typeof PermissionActionSchema.$inferSelect;
+export const PermissionActionSelectSchema = createSelectSchema(
+  PermissionActionSchema
+);

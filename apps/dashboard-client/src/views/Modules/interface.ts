@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Module } from '@/models';
+import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
 
 export interface State
-  extends Pick<Module, 'id' | 'name' | 'icon' | 'isPrivate'> {}
+  extends Pick<ModuleSelect, 'id' | 'name' | 'icon' | 'isPrivate'> {}
 
 export const initialState: State = {
   id: '',

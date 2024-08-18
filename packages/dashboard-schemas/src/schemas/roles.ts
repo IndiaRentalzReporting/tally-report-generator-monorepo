@@ -3,6 +3,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { ModuleSelect } from './modules';
 import { ActionSelect } from './actions';
 import { BaseEntitySchema } from './base';
+import { PermissionSelect } from './permissions';
 
 export const RoleSchema = pgTable('roles', {
   ...BaseEntitySchema
@@ -25,4 +26,9 @@ export type DetailedRole = RoleSelect & {
     };
   }>;
 };
+
+export interface RoleWithPermission extends RoleSelect {
+  permission: Array<Pick<PermissionSelect, 'id'>>;
+}
+
 export const RoleSelectSchema = createSelectSchema(RoleSchema);

@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Role } from '@/models';
+import { RoleSelect } from '@trg_package/dashboard-schemas/types';
 
-export interface State extends Pick<Role, 'id' | 'name'> {}
+export interface State extends Pick<RoleSelect, 'id' | 'name'> {}
 
 export const initialState: State = {
   id: '',

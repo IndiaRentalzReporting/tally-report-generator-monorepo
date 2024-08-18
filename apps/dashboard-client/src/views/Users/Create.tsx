@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui';
-import { RegisterUser } from '@/models';
+import { RegisterUser } from '@trg_package/dashboard-schemas/types';
 import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';

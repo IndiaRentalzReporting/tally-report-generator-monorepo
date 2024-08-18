@@ -1,5 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
-import { DetailedPermission, ModulePermissions } from '@/models';
+import {
+  DetailedPermission,
+  ModulePermissions
+} from '@trg_package/dashboard-schemas/types';
 import { State as RoleState } from '../Roles/interface';
 
 export interface State

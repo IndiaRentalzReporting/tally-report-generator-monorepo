@@ -17,7 +17,7 @@ const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path="/">
-        <Route index element={<Navigate to="/dashboard" />} />
+        <Route index element={<Navigate to="/sign-in" />} />
         <Route path="sign-up" element={<SignupForm />} />
         <Route path="sign-in" element={<SigninForm />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

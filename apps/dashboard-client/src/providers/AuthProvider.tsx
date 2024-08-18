@@ -1,7 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { DetailedUser, Permissions, UserRole } from '@/models';
+import {
+  DetailedUser,
+  Permissions,
+  UserRole
+} from '@trg_package/dashboard-schemas/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;

@@ -1,4 +1,4 @@
-import { Action, Module } from '@/models';
+import { Action, Module } from '@trg_package/dashboard-schemas/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const useIsAllowed = (data: {

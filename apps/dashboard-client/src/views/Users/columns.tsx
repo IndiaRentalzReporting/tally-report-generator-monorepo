@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { DetailedUser } from '@/models';
+import { DetailedUser } from '@trg_package/dashboard-schemas/types';
 import { services } from './services';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { When } from '@/components/utility';

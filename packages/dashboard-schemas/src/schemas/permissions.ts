@@ -32,3 +32,27 @@ export interface DetailedPermission extends PermissionSelect {
   role: Pick<RoleSelect, 'name' | 'id'>;
   permissionAction: Array<{ action: Pick<ActionSelect, 'name' | 'id'> }>;
 }
+
+export interface Permissions {
+  module: Pick<ModuleSelect, 'icon' | 'name'>;
+  actions: ActionSelect['name'][];
+}
+
+export interface DetailedPermission extends PermissionSelect {
+  module: Pick<ModuleSelect, 'name' | 'id'>;
+  role: Pick<RoleSelect, 'name' | 'id'>;
+  permissionAction: Array<{
+    action: Pick<ActionSelect, 'name' | 'id'>;
+  }>;
+}
+
+export interface ModulePermissions {
+  [module_id: string]: {
+    [action_id: string]: boolean;
+  };
+}
+
+export interface ModuleAction {
+  module_id: ModuleSelect['id'];
+  action_ids: ActionSelect['id'][];
+}

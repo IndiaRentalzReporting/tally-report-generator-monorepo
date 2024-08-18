@@ -2,11 +2,15 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
 import { services } from './services';
 import { Button, Skeleton } from '@/components/ui';
-import { Permission, ModuleAction, ModulePermissions } from '@/models';
+import {
+  PermissionSelect,
+  ModuleAction,
+  ModulePermissions
+} from '@trg_package/dashboard-schemas/types';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
 
-const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
+const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
   const [modulePermissions, setModulePermission] =
     React.useState<ModulePermissions>({});
@@ -96,7 +100,7 @@ const Update: React.FC<Pick<Permission, 'id'>> = ({ id }) => {
         className="w-min mt-2"
         isLoading={createPermissionLoading}
       >
-        Create Permission
+        Create PermissionSelect
       </Button>
     </form>
   );
