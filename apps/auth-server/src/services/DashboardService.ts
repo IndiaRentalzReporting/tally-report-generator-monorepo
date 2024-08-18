@@ -33,14 +33,13 @@ class DashboardService {
     );
     this.dashboardClient = db;
     this.dashboardConnection = connection;
-    this.migrateAndSeed();
   }
 
   private createUrl(user: string, password: string, name: string) {
     return `postgresql://${user}:${password}@localhost:5432/${name}`;
   }
 
-  private async migrateAndSeed() {
+  public async migrateAndSeed(userData: UserInsert) {
     migrateDashboardSchema(this.URL, async (error, stdout, stderr) => {
       if (error) {
         console.error(`Migration Error: ${error.message}`);
@@ -51,16 +50,16 @@ class DashboardService {
         throw new Error(`Migration Stderr: ${stderr}`);
       }
       console.log(`Migration Stdout: ${stdout}`);
+      await this.seedDatabase(userData);
       return;
     });
   }
 
-  public async seedDatabase(userData: UserInsert): Promise<UserSelect> {
+  private async seedDatabase(userData: UserInsert) {
     await this.seedAction();
     await this.seedModules();
-    const user = await this.createAdmin(userData);
+    await this.createAdmin(userData);
     await this.terminateConnection();
-    return user;
   }
 
   private async seedRole(): Promise<RoleSelect['id']> {

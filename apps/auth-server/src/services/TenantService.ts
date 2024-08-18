@@ -20,13 +20,13 @@ class TenantService extends BaseTenantService {
   async onboard(
     tenantData: TenantInsert,
     userData: DashboardUserInsert
-  ): Promise<{ tenant: TenantSelect; user: UserSelect }> {
+  ): Promise<TenantSelect> {
     const { db_name, db_username, db_password } = await this.createDatabase(
       tenantData.name
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    const user = await DSI.seedDatabase(userData);
+    await DSI.migrateAndSeed(userData);
 
     const tenant = await super.createOne({
       ...tenantData,
@@ -35,7 +35,7 @@ class TenantService extends BaseTenantService {
       db_password
     });
 
-    return { tenant, user };
+    return tenant;
   }
 
   private generateUniqueIdentifier(baseName: string) {

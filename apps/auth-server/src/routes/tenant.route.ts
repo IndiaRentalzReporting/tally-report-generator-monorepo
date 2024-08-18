@@ -21,10 +21,10 @@ tenantRouter.post(
   '/create',
   validateSchema({
     body: z.object({
-      tenantDetails: TenantInsertSchema.pick({
+      tenant: TenantInsertSchema.pick({
         name: true
       }),
-      userInfo: UserInsertSchema.pick({
+      user: UserInsertSchema.pick({
         first_name: true,
         last_name: true,
         email: true,

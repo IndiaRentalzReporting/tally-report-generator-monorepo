@@ -3,11 +3,19 @@ import {
   RegisterUser,
   LoginUser,
   UserSelect,
-  SafeUserSelect
+  SafeUserSelect,
+  TenantInsert,
+  UserInsert
 } from '@trg_package/auth-schemas/types';
 import axios from '@/services/client';
 
 export const services = {
+  onboard: (data: {
+    tenant: TenantInsert;
+    user: UserInsert;
+  }): AxiosPromise<{ user: SafeUserSelect }> => {
+    return axios.post('/tenant/create', data);
+  },
   signUp: (data: RegisterUser): AxiosPromise<SafeUserSelect> => {
     return axios.post(`/auth/sign-up`, data);
   },
