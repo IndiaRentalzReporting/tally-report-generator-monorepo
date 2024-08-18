@@ -1,14 +1,16 @@
 import postgres from 'postgres';
 import db from '../models/auth';
 import { TenantInsert, TenantSelect } from '@trg_package/auth-schemas/types';
-import { UserInsert as DashboardUserInsert } from '@trg_package/dashboard-schemas/types';
+import {
+  UserInsert as DashboardUserInsert,
+  UserSelect
+} from '@trg_package/dashboard-schemas/types';
 import { TenantService as BaseTenantService } from '@trg_package/auth-schemas/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
 
 class TenantService extends BaseTenantService {
   constructor() {
@@ -18,13 +20,13 @@ class TenantService extends BaseTenantService {
   async onboard(
     tenantData: TenantInsert,
     userData: DashboardUserInsert
-  ): Promise<TenantSelect> {
+  ): Promise<{ tenant: TenantSelect; user: UserSelect }> {
     const { db_name, db_username, db_password } = await this.createDatabase(
       tenantData.name
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    await DSI.migrateAndSeed(userData);
+    const user = await DSI.seedDatabase(userData);
 
     const tenant = await super.createOne({
       ...tenantData,
@@ -33,7 +35,7 @@ class TenantService extends BaseTenantService {
       db_password
     });
 
-    return tenant;
+    return { tenant, user };
   }
 
   private generateUniqueIdentifier(baseName: string) {
@@ -54,9 +56,9 @@ class TenantService extends BaseTenantService {
   }
 
   private async createDatabase(tenantName: TenantInsert['name']): Promise<{
-    db_name: string;
-    db_username: string;
-    db_password: string;
+    db_name: NonNullable<TenantSelect['db_name']>;
+    db_username: NonNullable<TenantSelect['db_username']>;
+    db_password: NonNullable<TenantSelect['db_password']>;
   }> {
     const { SUPERUSER_PG_URL } = config;
 

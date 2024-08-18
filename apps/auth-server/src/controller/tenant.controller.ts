@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
-import { TenantSelect, TenantInsert } from '@trg_package/auth-schemas/types';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
+import {
+  TenantSelect,
+  TenantInsert,
+  SafeUserSelect
+} from '@trg_package/auth-schemas/types';
 import { UserInsert } from '@trg_package/dashboard-schemas/types';
+import UserService from '../services/UserService';
 
 export const createOne = async (
   req: Request<
@@ -10,16 +14,15 @@ export const createOne = async (
     object,
     { tenantData: TenantInsert; userData: UserInsert }
   >,
-  res: Response<{ tenant: TenantSelect }>,
+  res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.onboard(
-      req.body.tenantData,
-      req.body.userData
-    );
+    const { tenantData, userData } = req.body;
+    const { tenant } = await TenantService.onboard(tenantData, userData);
+    const { password, ...user } = await UserService.createOne(userData);
 
-    return res.json({ tenant });
+    return res.json({ tenant, user });
   } catch (e) {
     console.error("Couldn't create a Tenant");
     return next(e);
