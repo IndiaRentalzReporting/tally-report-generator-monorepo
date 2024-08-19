@@ -9,16 +9,14 @@ import { UserInsert } from '@trg_package/dashboard-schemas/types';
 import UserService from '../services/UserService';
 
 export const createOne = async (
-  req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
-  res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
+  req: Request<object, object, TenantInsert>,
+  res: Response<{ tenant: TenantSelect }>,
   next: NextFunction
 ) => {
   try {
-    const { tenant: tenantData, user: userData } = req.body;
-    const tenant = await TenantService.onboard(tenantData, userData);
-    const { password, ...user } = await UserService.createOne(userData);
+    const tenant = await TenantService.createOne(req.body);
 
-    return res.json({ tenant, user });
+    return res.json({ tenant });
   } catch (e) {
     console.error("Couldn't create a Tenant");
     return next(e);

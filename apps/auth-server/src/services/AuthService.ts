@@ -3,29 +3,50 @@ import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '@trg_package/errors';
 import {
   SafeUserSelect,
+  TenantInsert,
+  TenantSelect,
   UserInsert,
   UserSelect
 } from '@trg_package/auth-schemas/types';
 import UserService from './UserService';
+import TenantService from './TenantService';
 
 class AuthService {
-  public static async signUp(data: UserInsert): Promise<SafeUserSelect> {
-    try {
-      await UserService.findOne({
-        email: data.email
-      });
-      throw new BadRequestError('User Already Exists');
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        const { password, ...user } = await UserService.createOne({
-          ...data,
-          password: await this.hashPassword(data.password)
-        });
+  public static async signUp(data: {
+    user: UserInsert;
+    tenant: TenantInsert;
+  }): Promise<{ user: SafeUserSelect; tenant: TenantSelect }> {
+    const { user: userData, tenant: tenantData } = data;
 
-        return user;
-      }
+    const existingUser = await UserService.findOne({
+      email: userData.email
+    }).catch((e) => {
+      if (e instanceof NotFoundError) return null;
       throw e;
+    });
+
+    if (existingUser) {
+      throw new BadRequestError('User Already Exists');
     }
+
+    const existingTenant = await TenantService.findOne({
+      name: tenantData.name
+    }).catch((e) => {
+      if (e instanceof NotFoundError) return null;
+      throw e;
+    });
+
+    if (existingTenant) {
+      throw new BadRequestError('Tenant Already Exists');
+    }
+
+    const { password, ...user } = await UserService.createOne({
+      ...userData,
+      password: await this.hashPassword(userData.password)
+    });
+    const tenant = await TenantService.onboard(tenantData, userData);
+
+    return { user, tenant };
   }
 
   public static async signIn(
