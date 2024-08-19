@@ -22,7 +22,7 @@ export const PublicRoutes: React.FC = () => {
   return (
     <If condition={isAuthenticated}>
       <Then>
-        <Navigate to="/dashboard" />
+        <Navigate to={import.meta.env.VITE_DASHBOARD_URL} />
       </Then>
       <Else>
         <Outlet />

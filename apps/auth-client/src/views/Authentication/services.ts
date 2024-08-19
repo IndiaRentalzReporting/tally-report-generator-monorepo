@@ -14,20 +14,12 @@ const authAxios = createAxiosInstance({
   withCredentials: true
 });
 
-const tenantAxios = createAxiosInstance({
-  baseURL: '/v1/tenants',
-  withCredentials: true
-});
-
 export const services = {
-  onboard: (data: {
+  signUp: (data: {
     tenant: TenantInsert;
     user: UserInsert;
   }): AxiosPromise<{ user: SafeUserSelect }> => {
-    return tenantAxios.post('/create', data);
-  },
-  signUp: (data: RegisterUser): AxiosPromise<SafeUserSelect> => {
-    return authAxios.post(`/sign-up`, data);
+    return authAxios.post('/sign-up', data);
   },
   signIn: (data: LoginUser): AxiosPromise<{ user: SafeUserSelect }> => {
     return authAxios.post(`/sign-in`, data);

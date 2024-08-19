@@ -13,11 +13,13 @@ import {
 } from '@/components/ui';
 import { services } from './services';
 import { RegisterUser, TenantInsert } from '@trg_package/auth-schemas/types';
+import { useToast } from '@/lib/hooks';
 
 export const SignupForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const [tenantData, setTenantData] = useState<TenantInsert>({
     name: ''
@@ -31,13 +33,17 @@ export const SignupForm = () => {
 
   const { mutateAsync: signUpMutation } = useMutation({
     mutationFn: () =>
-      services.onboard({
+      services.signUp({
         tenant: tenantData,
         user: userData
       }),
     onSettled() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
       setLoading(false);
+      toast({
+        title: 'Success',
+        description: 'Account created successfully'
+      });
       navigate('/sign-in');
     }
   });
