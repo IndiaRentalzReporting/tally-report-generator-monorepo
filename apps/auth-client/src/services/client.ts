@@ -1,5 +1,4 @@
 import Axios, { AxiosError } from 'axios';
-
 import { toast } from '@/lib/hooks';
 
 const axios = Axios.create();
@@ -47,7 +46,7 @@ axios.interceptors.response.use(
   }
 );
 
-axios.defaults.baseURL = 'http://localhost:4000/api/v1';
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 export default axios;
