@@ -6,7 +6,7 @@ import tenantRouter from '../routes/tenant.route';
 
 const routesLoader = (app: Express) => {
   app.use('/api/v1/auth', authRouter);
-  // app.use(isAuthenticated);
+  app.use(isAuthenticated);
   app.use('/api/v1/users', userRouter);
   app.use('/api/v1/tenants', tenantRouter);
 };
