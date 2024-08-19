@@ -7,6 +7,7 @@ import {
   UserInsert
 } from '@trg_package/auth-schemas/types';
 import { UnauthenticatedError } from '@trg_package/errors';
+import config from '../config';
 
 export const handleSignUp = async (
   req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
@@ -31,8 +32,7 @@ export const handleSignIn = async (
 ) => {
   try {
     if (req.isAuthenticated()) {
-      const { user } = req;
-      return res.json({ user });
+      return res.redirect(config.DASHBOARD_FRONTEND_URL);
     }
     throw new UnauthenticatedError('Not logged in');
   } catch (err) {

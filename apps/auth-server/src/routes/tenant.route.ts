@@ -23,12 +23,6 @@ tenantRouter.post(
     body: z.object({
       tenant: TenantInsertSchema.pick({
         name: true
-      }),
-      user: UserInsertSchema.pick({
-        first_name: true,
-        last_name: true,
-        email: true,
-        password: true
       })
     })
   }),

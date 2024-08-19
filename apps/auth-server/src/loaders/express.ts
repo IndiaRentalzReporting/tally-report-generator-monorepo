@@ -14,11 +14,11 @@ import {
 dotenv.config();
 
 const appLoader = async (): Promise<Express> => {
-  const { FRONTEND_URL, MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
+  const { AUTH_FRONTEND_URL, MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
   const app = await expressLoader(
     routesLoader,
     {
-      FRONTEND_URL,
+      FRONTEND_URL: AUTH_FRONTEND_URL,
       MONGO_URI,
       SESSION_SECRET,
       NODE_ENV
