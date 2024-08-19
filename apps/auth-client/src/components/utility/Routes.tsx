@@ -21,7 +21,7 @@ export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
   useEffect(() => {
     if (!!isAuthenticated) {
-      window.location.href = 'http://dashboard.localhost';
+      window.location.href = 'http://dashboard.trg.local';
     }
   }, [isAuthenticated]);
   return (

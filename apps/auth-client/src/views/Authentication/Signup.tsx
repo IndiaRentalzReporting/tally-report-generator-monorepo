@@ -38,7 +38,7 @@ export const SignupForm = () => {
         user: userData
       }),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
       setLoading(false);
       toast({
         title: 'Success',

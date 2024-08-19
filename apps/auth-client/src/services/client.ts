@@ -55,7 +55,7 @@ const createAxiosInstance = (defaults: {
     }
   );
 
-  axios.defaults.baseURL = 'http://auth.localhost/api' + defaults.baseURL;
+  axios.defaults.baseURL = 'http://auth.trg.local/api' + defaults.baseURL;
   axios.defaults.withCredentials = defaults.withCredentials;
 
   return axios;

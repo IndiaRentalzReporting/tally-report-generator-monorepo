@@ -28,7 +28,9 @@ export const sessionsLoader = (
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 4 // 4 hours,
+        maxAge: 1000 * 60 * 60 * 4, // 4 hours,
+        sameSite: 'lax',
+        domain: '.trg.local'
       },
       store: sessionStore
     };

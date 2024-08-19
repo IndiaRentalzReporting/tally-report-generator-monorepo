@@ -33,7 +33,7 @@ const appLoader = async (): Promise<Express> => {
 
   app.use(
     cors({
-      origin: ['http://dashboard.localhost', 'http://auth.localhost'],
+      origin: ['http://dashboard.trg.local', 'http://auth.trg.local'],
       credentials: true
     })
   );
