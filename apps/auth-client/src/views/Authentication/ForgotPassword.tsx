@@ -20,7 +20,7 @@ export const ForgotPassword: FC = () => {
 
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
     useMutation({
-      mutationFn: () => services.forgot_password({ email }),
+      mutationFn: () => services.forgotPassword({ email }),
       onSuccess: (data) => {
         setEmail('');
         toast({

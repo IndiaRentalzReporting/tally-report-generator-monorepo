@@ -22,15 +22,15 @@ export const services = {
   signIn: (data: LoginUser): AxiosPromise<{ user: SafeUserSelect }> => {
     return axios.post(`/auth/sign-in`, data);
   },
-  forgot_password: (data: {
+  forgotPassword: (data: {
     email: UserSelect['email'];
   }): AxiosPromise<{ message: string }> => {
     return axios.post('/auth/forgot-password', data);
   },
-  check_reset_password: (token: string): AxiosPromise<{ token: string }> => {
+  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => {
     return axios.post(`/auth/check-reset-password/${token}`);
   },
-  reset_password: (data: {
+  resetPassword: (data: {
     token: string;
     password: string;
     confirmPassword: string;
