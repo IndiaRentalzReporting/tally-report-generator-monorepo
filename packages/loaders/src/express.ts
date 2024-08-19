@@ -2,7 +2,6 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import cors from 'cors';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import { sessionsLoader } from './sessions';
 import { passportLoader } from './passport';
@@ -14,7 +13,6 @@ interface IRoutesLoader {
 }
 
 interface IConfig {
-  FRONTEND_URL: string;
   NODE_ENV: string;
   SESSION_SECRET: string;
   MONGO_URI: string;
@@ -35,7 +33,7 @@ interface ICallbacks {
 
 export const expressLoader = async (
   routesLoader: IRoutesLoader,
-  { FRONTEND_URL, NODE_ENV, SESSION_SECRET, MONGO_URI }: IConfig,
+  { NODE_ENV, SESSION_SECRET, MONGO_URI }: IConfig,
   {
     connectionCallback,
     verifyCallback,
@@ -46,12 +44,6 @@ export const expressLoader = async (
   await connectAndLog(connectionCallback);
   const app = express();
 
-  app.use(
-    cors({
-      origin: FRONTEND_URL,
-      credentials: true
-    })
-  );
   app.use(morgan('dev'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

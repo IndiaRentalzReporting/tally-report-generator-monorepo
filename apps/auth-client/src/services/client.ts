@@ -55,7 +55,7 @@ const createAxiosInstance = (defaults: {
     }
   );
 
-  axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL + defaults.baseURL;
+  axios.defaults.baseURL = 'http://auth.localhost/api' + defaults.baseURL;
   axios.defaults.withCredentials = defaults.withCredentials;
 
   return axios;

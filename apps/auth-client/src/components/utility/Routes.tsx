@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
-import { Else, If, Then } from './Conditionals';
+import { Else, If, Then, When } from './Conditionals';
 
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -19,14 +19,14 @@ export const PrivateRoutes: React.FC = () => {
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  useEffect(() => {
+    if (!!isAuthenticated) {
+      window.location.href = 'http://dashboard.localhost';
+    }
+  }, [isAuthenticated]);
   return (
-    <If condition={isAuthenticated}>
-      <Then>
-        <Navigate to={import.meta.env.VITE_DASHBOARD_URL} />
-      </Then>
-      <Else>
-        <Outlet />
-      </Else>
-    </If>
+    <When condition={!isAuthenticated}>
+      <Outlet />
+    </When>
   );
 };

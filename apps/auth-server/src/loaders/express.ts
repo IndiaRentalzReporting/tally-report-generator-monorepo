@@ -1,5 +1,6 @@
 import 'express-async-errors';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { Express } from 'express';
 import routesLoader from './routes';
 import config from '../config';
@@ -14,11 +15,10 @@ import {
 dotenv.config();
 
 const appLoader = async (): Promise<Express> => {
-  const { AUTH_FRONTEND_URL, MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
+  const { MONGO_URI, SESSION_SECRET, NODE_ENV } = config;
   const app = await expressLoader(
     routesLoader,
     {
-      FRONTEND_URL: AUTH_FRONTEND_URL,
       MONGO_URI,
       SESSION_SECRET,
       NODE_ENV
@@ -29,6 +29,13 @@ const appLoader = async (): Promise<Express> => {
       deserializeUserCallback,
       connectionCallback
     }
+  );
+
+  app.use(
+    cors({
+      origin: ['http://dashboard.localhost', 'http://auth.localhost'],
+      credentials: true
+    })
   );
 
   return app;

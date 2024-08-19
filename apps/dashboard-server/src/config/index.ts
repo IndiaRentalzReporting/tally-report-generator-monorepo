@@ -17,7 +17,6 @@ const EnvSchema = z.object({
     .default('development'),
   PORT: z.coerce.number().default(4000),
   SESSION_SECRET: z.string(),
-  FRONTEND_URL: z.string(),
 
   MONGO_USERNAME: z.string(),
   MONGO_PASSWORD: z.string(),
