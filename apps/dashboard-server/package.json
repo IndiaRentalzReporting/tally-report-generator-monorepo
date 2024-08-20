@@ -14,8 +14,7 @@
     "db:generate": "cross-env NODE_ENV=development drizzle-kit generate",
     "db:migrate": "cross-env NODE_ENV=development drizzle-kit migrate",
     "db:drop": "cross-env NODE_ENV=development drizzle-kit drop",
-    "db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
-    "db:seed": "cross-env NODE_ENV=development tsx ./src/models/seed"
+    "db:studio": "cross-env NODE_ENV=development drizzle-kit studio"
   },
   "devDependencies": {
     "@trg_package/eslint-config": "*",
