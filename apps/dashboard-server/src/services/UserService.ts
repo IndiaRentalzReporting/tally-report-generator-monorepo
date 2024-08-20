@@ -11,47 +11,46 @@ class UserService extends BaseUserService {
   public async findOneDetailedUser(
     data: Partial<typeof this.schema.$inferSelect>
   ) {
-    return super.findOne(data);
-    //   , {
-    //   with: {
-    //     role: {
-    //       columns: {
-    //         name: true
-    //       },
-    //       with: {
-    //         permission: {
-    //           columns: {
-    //             role_id: false,
-    //             createdAt: false,
-    //             updatedAt: false,
-    //             module_id: false
-    //           },
-    //           with: {
-    //             permissionAction: {
-    //               columns: {
-    //                 permission_id: false,
-    //                 action_id: false
-    //               },
-    //               with: {
-    //                 action: {
-    //                   columns: {
-    //                     name: true
-    //                   }
-    //                 }
-    //               }
-    //             },
-    //             module: {
-    //               columns: {
-    //                 name: true,
-    //                 id: true
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // });
+    return super.findOne(data, {
+      with: {
+        role: {
+          columns: {
+            name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
   }
 
   public prettifyUser(user: DetailedUser): DetailedUser {

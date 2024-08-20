@@ -76,7 +76,7 @@ export class BaseServiceNew<
           RelationalQueryBuilder<
             ExtractTablesWithRelations<H>,
             TableRelationalConfig
-          >['findFirst']
+          >['findMany']
         >[0]
       >,
       'where'
