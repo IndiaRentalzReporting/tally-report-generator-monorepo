@@ -3,12 +3,9 @@ import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import roles from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
-import { BaseServiceNew } from '@trg_package/base-service';
 import { BadRequestError } from '@trg_package/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
-import config from '../config';
-import { UserSchema as DashboardUserSchema } from '@trg_package/dashboard-schemas/schemas';
 import {
   ActionService,
   ModuleService,
@@ -20,6 +17,7 @@ import {
   RoleSelect,
   UserSelect
 } from '@trg_package/dashboard-schemas/types';
+import { createDashboardClient } from '@trg_package/express/models';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
@@ -27,18 +25,14 @@ class DashboardService {
   public URL: string;
 
   constructor(db_username: string, db_password: string, db_name: string) {
-    const { DB_MIGRATING, DB_SEEDING } = config;
-    this.URL = BaseServiceNew.createUrl({ db_username, db_password, db_name });
-    const { client, connection } = BaseServiceNew.createClient(
-      this.URL,
-      dashboardSchema,
-      {
-        DB_MIGRATING,
-        DB_SEEDING
-      }
-    );
+    const { client, connection, DASHBOARD_PG_URL } = createDashboardClient({
+      db_username,
+      db_password,
+      db_name
+    });
     this.dashboardClient = client;
     this.dashboardConnection = connection;
+    this.URL = DASHBOARD_PG_URL;
   }
 
   public async migrateAndSeed(userData: UserInsert) {

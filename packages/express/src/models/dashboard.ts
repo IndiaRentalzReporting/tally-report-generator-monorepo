@@ -1,7 +1,7 @@
 import * as dashboard_schema from '@trg_package/dashboard-schemas/schemas';
 import { BaseServiceNew } from '@trg_package/base-service';
 
-export const createDbClient = async ({
+export const createDashboardClient = ({
   db_username,
   db_password,
   db_name

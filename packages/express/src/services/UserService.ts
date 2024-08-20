@@ -1,6 +1,6 @@
 import { UserService as BaseUserService } from '@trg_package/auth-schemas/services';
 import { UserService as DashboardUserService } from '@trg_package/dashboard-schemas/services';
-import { authDb, createDbClient } from '../models/index';
+import { authDb, createDashboardClient } from '../models/index';
 import { UserSelect } from '@trg_package/auth-schemas/types';
 import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
@@ -26,7 +26,7 @@ class UserService extends BaseUserService {
       }
 
       const { client: dashboard_db, connection: dashboard_connection } =
-        await createDbClient({
+        await createDashboardClient({
           db_username,
           db_password,
           db_name
