@@ -21,6 +21,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@trg_package/auth-schemas": "*",
+    "@trg_package/base-service": "*",
     "@trg_package/middlewares": "*",
     "connect-mongo": "^5.1.0",
     "express": "^4.19.2",
