@@ -1,6 +1,6 @@
 import { TenantService } from '@trg_package/auth-schemas/services';
-import { auth_db } from '../models';
+import { authDb } from '../models';
 
-const TSI = new TenantService(auth_db);
+const TSI = new TenantService(authDb);
 
 export default TSI;

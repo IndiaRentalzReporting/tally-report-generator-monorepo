@@ -1,6 +1,6 @@
 import { UserService as BaseUserService } from '@trg_package/auth-schemas/services';
 import { UserService as DashboardUserService } from '@trg_package/dashboard-schemas/services';
-import { auth_db, createDbClient } from '../models/index';
+import { authDb, createDbClient } from '../models/index';
 import { UserSelect } from '@trg_package/auth-schemas/types';
 import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
@@ -8,7 +8,7 @@ import { DetailedUser } from '@trg_package/dashboard-schemas/types';
 
 class UserService extends BaseUserService {
   constructor() {
-    super(auth_db);
+    super(authDb);
   }
 
   public async findOne(

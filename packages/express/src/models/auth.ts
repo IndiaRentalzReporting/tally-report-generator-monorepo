@@ -1,11 +1,11 @@
-import * as auth_schema from '@trg_package/auth-schemas/schemas';
+import * as authSchema from '@trg_package/auth-schemas/schemas';
 import { BaseServiceNew } from '@trg_package/base-service';
 import config from '../config';
 
-const { AUTH_PG_URL } = config;
+export const { AUTH_PG_URL } = config;
 
-export const { client: auth_db, connection: auth_connection } =
-  BaseServiceNew.createClient(AUTH_PG_URL, auth_schema, {
+export const { client: authDb, connection: authConnection } =
+  BaseServiceNew.createClient(AUTH_PG_URL, authSchema, {
     DB_MIGRATING: false,
     DB_SEEDING: false
   });

@@ -15,8 +15,14 @@ export const createDbClient = async ({
     db_password,
     db_name
   });
-  return BaseServiceNew.createClient(DASHBOARD_PG_URL, dashboard_schema, {
-    DB_MIGRATING: false,
-    DB_SEEDING: false
-  });
+  const { client, connection } = BaseServiceNew.createClient(
+    DASHBOARD_PG_URL,
+    dashboard_schema,
+    {
+      DB_MIGRATING: false,
+      DB_SEEDING: false
+    }
+  );
+
+  return { client, connection, DASHBOARD_PG_URL };
 };
