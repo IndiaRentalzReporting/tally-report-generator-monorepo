@@ -15,6 +15,7 @@ export class BaseServiceNew<
     dialect: 'pg';
   }>
 > {
+  private entity: string;
   constructor(
     protected dbClient: PostgresJsDatabase<H>,
     protected schema: T,
@@ -22,7 +23,10 @@ export class BaseServiceNew<
       ExtractTablesWithRelations<H>,
       TableRelationalConfig
     >
-  ) {}
+  ) {
+    //@ts-ignore
+    this.entity = this.tableName.tableConfig.dbName;
+  }
 
   public static createClient<T extends Record<string, unknown>>(
     URL: string,
@@ -57,7 +61,7 @@ export class BaseServiceNew<
       .returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} returned as undefined`);
+      throw new NotFoundError(`Returned as undefined in ${this.entity}`);
 
     return entity;
   }
@@ -88,7 +92,7 @@ export class BaseServiceNew<
     });
 
     if (!entity.length) {
-      throw new NotFoundError(`${this.schema._?.name} does not exist`);
+      throw new NotFoundError(`Does not exist in ${this.entity}`);
     }
 
     return entity;
@@ -123,7 +127,7 @@ export class BaseServiceNew<
     console.log(Object.entries(this.tableName));
 
     if (!entity) {
-      throw new NotFoundError(`${this.schema._?.name} does not exist`);
+      throw new NotFoundError(`Does not exist in ${this.entity}`);
     }
 
     return entity;
@@ -139,8 +143,7 @@ export class BaseServiceNew<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} does not exits`);
+    if (!entity) throw new NotFoundError(`Does not exit in ${this.entity}`);
 
     return entity;
   }
@@ -153,8 +156,7 @@ export class BaseServiceNew<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} does not exits`);
+    if (!entity) throw new NotFoundError(`Does not exit in ${this.entity}`);
 
     return entity;
   }
