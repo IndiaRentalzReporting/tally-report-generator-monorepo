@@ -10,6 +10,12 @@ import { Sql } from 'postgres';
 import config from '../config';
 import { UserSchema as DashboardUserSchema } from '@trg_package/dashboard-schemas/schemas';
 import {
+  ActionService,
+  ModuleService,
+  RoleService,
+  UserService
+} from '@trg_package/dashboard-schemas/services';
+import {
   UserInsert,
   RoleSelect,
   UserSelect
@@ -62,53 +68,34 @@ class DashboardService {
     await this.terminateConnection();
   }
 
-  private async seedRole(): Promise<RoleSelect['id']> {
-    const [role] = await this.dashboardClient
-      .insert(dashboardSchema.RoleSchema)
-      .values({ name: roles.name })
-      .returning();
-
-    if (!role) throw new BadRequestError('Could not create role');
-    return role.id;
-  }
-
   private async seedAction() {
-    const promises = actions.map(async ({ name }) => {
-      try {
-        return await this.dashboardClient
-          .insert(dashboardSchema.ActionSchema)
-          .values({ name })
-          .returning();
-      } catch (error) {
-        throw new BadRequestError(`Could not create action ${name}: ${error}`);
-      }
-    });
+    const ASI = new ActionService(this.dashboardClient);
+    const promises = actions.map(
+      async ({ name }) => await ASI.createOne({ name })
+    );
+
     await Promise.all(promises);
   }
 
   private async seedModules() {
-    const promises = modules.map(async ({ name }) => {
-      try {
-        return await this.dashboardClient
-          .insert(dashboardSchema.ModuleSchema)
-          .values({ name })
-          .returning();
-      } catch (error) {
-        throw new BadRequestError(`Could not create module ${name}: ${error}`);
-      }
-    });
+    const MSI = new ModuleService(this.dashboardClient);
+    const promises = modules.map(
+      async ({ name }) => await MSI.createOne({ name })
+    );
     await Promise.all(promises);
   }
 
   private async createAdmin(data: UserInsert): Promise<UserSelect> {
+    const USI = new UserService(this.dashboardClient);
     const role_id = await this.seedRole();
-    const [admin] = await this.dashboardClient
-      .insert(DashboardUserSchema)
-      .values({ ...data, role_id })
-      .returning();
-
-    if (!admin) throw new BadRequestError('Could not create admin');
+    const admin = await USI.createOne({ ...data, role_id });
     return admin;
+  }
+
+  private async seedRole(): Promise<RoleSelect['id']> {
+    const RSI = new RoleService(this.dashboardClient);
+    const role = await RSI.createOne({ name: roles.name });
+    return role.id;
   }
 
   private async terminateConnection() {
