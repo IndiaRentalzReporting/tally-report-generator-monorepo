@@ -3,7 +3,7 @@ import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import roles from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
-import { BaseService } from '@trg_package/base-service';
+import { BaseServiceNew } from '@trg_package/base-service';
 import { BadRequestError } from '@trg_package/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
@@ -28,8 +28,8 @@ class DashboardService {
 
   constructor(db_username: string, db_password: string, db_name: string) {
     const { DB_MIGRATING, DB_SEEDING } = config;
-    this.URL = this.createUrl(db_username, db_password, db_name);
-    const { db, connection } = BaseService.createClient(
+    this.URL = BaseServiceNew.createUrl({ db_username, db_password, db_name });
+    const { client, connection } = BaseServiceNew.createClient(
       this.URL,
       dashboardSchema,
       {
@@ -37,12 +37,8 @@ class DashboardService {
         DB_SEEDING
       }
     );
-    this.dashboardClient = db;
+    this.dashboardClient = client;
     this.dashboardConnection = connection;
-  }
-
-  private createUrl(user: string, password: string, name: string) {
-    return `postgresql://${user}:${password}@localhost:5432/${name}`;
   }
 
   public async migrateAndSeed(userData: UserInsert) {

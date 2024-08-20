@@ -1,11 +1,11 @@
 import * as dashboard_schema from './schema';
 import config from '../config';
-import { BaseService } from '@trg_package/base-service';
+import { BaseServiceNew } from '@trg_package/base-service';
 
 const { PG_URL, DB_MIGRATING, DB_SEEDING } = config;
 
-export let { db: dashboard_db, connection: dashboard_connection } =
-  BaseService.createClient(PG_URL, dashboard_schema, {
+export let { client: dashboard_db, connection: dashboard_connection } =
+  BaseServiceNew.createClient(PG_URL, dashboard_schema, {
     DB_MIGRATING,
     DB_SEEDING
   });

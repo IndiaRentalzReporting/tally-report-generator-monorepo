@@ -25,7 +25,7 @@ class UserService extends BaseUserService {
         throw new BadRequestError('Tenant databse error');
       }
 
-      const { db: dashboard_db, connection: dashboard_connection } =
+      const { client: dashboard_db, connection: dashboard_connection } =
         await createDbClient({
           db_username,
           db_password,
