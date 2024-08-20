@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@trg_package/pg-orm": "*",
-    "@trg_package/loaders": "*",
+    "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
     "@trg_package/utils": "*",
     "@trg_package/errors": "*",
