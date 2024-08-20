@@ -41,8 +41,11 @@ class AuthService {
       throw new BadRequestError('Tenant Already Exists');
     }
 
-    const { password, ...user } = await UserService.createOne(userData);
     const tenant = await TenantService.onboard(tenantData, userData);
+    const { password, ...user } = await UserService.createOne({
+      ...userData,
+      tenant_id: tenant.id
+    });
 
     return { user, tenant };
   }

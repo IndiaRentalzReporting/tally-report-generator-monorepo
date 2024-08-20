@@ -16,16 +16,24 @@ export const serializeUserCallback = async (
   user: Express.User,
   done: (err: any, id?: unknown) => void
 ) => {
-  done(null, user.email);
+  done(null, {
+    email: user.email,
+    tenant: user.tenant_id
+  });
 };
 
 export const deserializeUserCallback = async (
-  email: string,
+  userObject: {
+    email: string;
+    tenant: string;
+  },
   done: (err: any, user?: false | Express.User | null | undefined) => void
 ) => {
+  const { email, tenant } = userObject;
   try {
     const user = await UserService.findOne({
-      email
+      email,
+      tenant_id: tenant
     });
     if (user) done(null, user);
   } catch (e) {

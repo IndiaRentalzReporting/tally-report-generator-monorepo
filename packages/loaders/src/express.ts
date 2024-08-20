@@ -18,7 +18,7 @@ interface IConfig {
   MONGO_URI: string;
 }
 
-interface ICallbacks {
+export interface ICallbacks {
   connectionCallback: () => Promise<void>;
   verifyCallback: VerifyFunction;
   serializeUserCallback: (
@@ -26,7 +26,10 @@ interface ICallbacks {
     done: (err: any, id?: unknown) => void
   ) => void;
   deserializeUserCallback: (
-    id: string,
+    id: {
+      email: string;
+      tenant: string;
+    },
     done: (err: any, user?: false | Express.User | null | undefined) => void
   ) => void;
 }

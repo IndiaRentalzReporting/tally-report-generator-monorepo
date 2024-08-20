@@ -4,15 +4,13 @@ import { BadRequestError, NotFoundError } from '@trg_package/errors';
 import {
   UserInsert,
   UserSelect,
-  DetailedUser
-} from '@trg_package/dashboard-schemas/types';
-import UserService from './UserService';
+  SafeUserSelect
+} from '@trg_package/auth-schemas/types';
+import UserService from './AuthUserService';
 import { comparePassword } from '@trg_package/utils';
 
 class AuthService {
-  public static async signUp(
-    data: UserInsert
-  ): Promise<Omit<UserSelect, 'password'>> {
+  public static async signUp(data: UserInsert): Promise<SafeUserSelect> {
     const doesUserAlreadyExists = await UserService.findOne({
       email: data.email
     });
@@ -27,11 +25,11 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<DetailedUser> {
+  ): Promise<UserSelect> {
     const { email, password } = data;
-    const user = (await UserService.findOneDetailedUser({
+    const user = await UserService.findOne({
       email
-    })) as DetailedUser;
+    });
 
     if (user === undefined) {
       throw new NotFoundError('User does not exist');
@@ -46,7 +44,7 @@ class AuthService {
     data: Pick<UserInsert, 'email'> & {
       password: string;
     }
-  ): Promise<Omit<UserSelect, 'password'>> {
+  ): Promise<SafeUserSelect> {
     const { email, password: pw } = data;
     const { password, ...user } = await UserService.updateOne(email, {
       password: pw

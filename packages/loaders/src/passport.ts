@@ -4,18 +4,13 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
+import { ICallbacks } from './express';
 
 export const passportLoader = (
   app: Express,
-  verifyCallback: VerifyFunction,
-  serializeUserCallback: (
-    user: Express.User,
-    done: (err: any, id?: unknown) => void
-  ) => void,
-  deserializeUserCallback: (
-    id: string,
-    done: (err: any, user?: false | Express.User | null | undefined) => void
-  ) => void
+  verifyCallback: ICallbacks['verifyCallback'],
+  serializeUserCallback: ICallbacks['serializeUserCallback'],
+  deserializeUserCallback: ICallbacks['deserializeUserCallback']
 ) => {
   const customFields: IStrategyOptions = {
     usernameField: 'email'

@@ -16,7 +16,7 @@
     "db-dashboard:generate": "drizzle-kit --config=drizzle.dashboard.config.ts generate",
     "db-dashboard:migrate": "cross-env DB_MIGRATING=true drizzle-kit --config=drizzle.dashboard.config.ts migrate",
     "db-dashboard:drop": "drizzle-kit --config=drizzle.dashboard.config.ts drop",
-    "db-dashboard:studio": "cross-env DASHBOARD_PG_URL=postgres://indiarentalz_6ec195f3:X2r0qAMo0Vm1YrYdW354OCcQtZD85c2l@localhost:5432/indiarentalz_58c76d72 drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893"
+    "db-dashboard:studio": "cross-env DASHBOARD_PG_URL=postgres://indiarentalz_9dee8ed2:dsankbMMoOsAgkkkj93tcr13JDZod51w@localhost:5432/indiarentalz_0117736d drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893"
   },
   "devDependencies": {
     "@trg_package/eslint-config": "*",

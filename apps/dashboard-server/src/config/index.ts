@@ -30,6 +30,13 @@ const EnvSchema = z.object({
   PG_DATABASE: z.string(),
   PG_URL: z.string(),
 
+  AUTH_PG_HOST: z.string(),
+  AUTH_PG_PORT: z.coerce.number(),
+  AUTH_PG_PASSWORD: z.string(),
+  AUTH_PG_USER: z.string(),
+  AUTH_PG_DATABASE: z.string(),
+  AUTH_PG_URL: z.string(),
+
   SUPER_USER_NAME: z.string(),
   DEVELOPER_FIRST_NAME: z.string(),
   DEVELOPER_LAST_NAME: z.string(),
