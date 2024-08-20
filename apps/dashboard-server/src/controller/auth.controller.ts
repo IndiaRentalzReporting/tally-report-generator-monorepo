@@ -99,7 +99,7 @@ export const handleStatusCheck = (
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated() && req.user.status !== 'active') {
+    if (req.isAuthenticated()) {
       const {
         user: { password, ...userWithoutPassword }
       } = req;
@@ -125,8 +125,7 @@ export const forgotPassword = async (
 ) => {
   try {
     const { email } = req.body;
-    const u = (await UserService.findOne({ email })) as DetailedUser;
-    const user = UserService.prettifyUser(u);
+    const user = await UserService.findOneDetailedUser({ email });
 
     if (!user) {
       throw new NotFoundError('User does not exists');

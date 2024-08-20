@@ -126,8 +126,6 @@ export class BaseServiceNew<
       ...extra
     });
 
-    console.log(Object.entries(this.tableName));
-
     if (!entity) {
       throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
     }
