@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '@trg_package/errors';
+import { comparePassword } from '@trg_package/utils';
 import {
   SafeUserSelect,
   TenantInsert,
@@ -40,10 +41,7 @@ class AuthService {
       throw new BadRequestError('Tenant Already Exists');
     }
 
-    const { password, ...user } = await UserService.createOne({
-      ...userData,
-      password: await this.hashPassword(userData.password)
-    });
+    const { password, ...user } = await UserService.createOne(userData);
     const tenant = await TenantService.onboard(tenantData, userData);
 
     return { user, tenant };
@@ -61,7 +59,7 @@ class AuthService {
       throw new NotFoundError('User does not exist');
     }
 
-    await this.comparePassword(password, user.password);
+    await comparePassword(password, user.password);
 
     return user;
   }
@@ -81,19 +79,6 @@ class AuthService {
     }
 
     return user;
-  }
-
-  static async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  }
-
-  static async comparePassword(password: string, hash: string): Promise<void> {
-    const doesPasswordMatch = await bcrypt.compare(password, hash);
-    if (!doesPasswordMatch) {
-      throw new BadRequestError('Wrong Password');
-    }
   }
 
   static async generateTempPassword(length: number): Promise<string> {

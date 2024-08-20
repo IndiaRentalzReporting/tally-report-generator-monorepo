@@ -21,7 +21,6 @@
   "devDependencies": {
     "@trg_package/eslint-config": "*",
     "@trg_package/typescript-config": "*",
-    "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
@@ -57,7 +56,6 @@
     "@trg_package/auth-schemas": "*",
     "@trg_package/dashboard-schemas": "*",
     "@neondatabase/serverless": "^0.9.3",
-    "bcrypt": "^5.1.1",
     "child-process": "^1.0.2",
     "connect-mongo": "^5.1.0",
     "cors": "^2.8.5",

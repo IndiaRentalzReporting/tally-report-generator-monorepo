@@ -14,6 +14,7 @@ import { sendMail } from '../mailing';
 import UserService from '../services/UserService';
 import { createResetPasswordLink, verifyUserJWTToken } from '../utils';
 import config from '../config';
+import { hashPassword } from '@trg_package/utils';
 
 export const handleSignUp = async (
   req: Request<object, object, UserInsert>,
@@ -197,7 +198,7 @@ export const resetPassword = async (
       throw new BadRequestError('Password does not match');
     }
 
-    const hashedPassword = await AuthService.hashPassword(password);
+    const hashedPassword = await hashPassword(password);
 
     await UserService.updateOne(userId, {
       password: hashedPassword,

@@ -7,6 +7,7 @@ import {
   DetailedUser
 } from '@trg_package/dashboard-schemas/types';
 import UserService from './UserService';
+import { comparePassword } from '@trg_package/utils';
 
 class AuthService {
   public static async signUp(
@@ -36,10 +37,7 @@ class AuthService {
       throw new NotFoundError('User does not exist');
     }
 
-    const passwordMatch = await this.comparePassword(password, user.password);
-    if (!passwordMatch) {
-      throw new BadRequestError('Wrong Password');
-    }
+    await comparePassword(password, user.password);
 
     return user;
   }
@@ -59,20 +57,6 @@ class AuthService {
     }
 
     return user;
-  }
-
-  public static async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  }
-
-  static async comparePassword(
-    password: string,
-    hash: string
-  ): Promise<boolean> {
-    const doesPasswordMatch = await bcrypt.compare(password, hash);
-    return doesPasswordMatch;
   }
 
   static async generateTempPassword(length: number): Promise<string> {
