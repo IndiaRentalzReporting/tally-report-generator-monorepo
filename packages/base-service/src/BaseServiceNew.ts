@@ -1,4 +1,4 @@
-import { NotFoundError } from '@trg_package/errors';
+import { BadRequestError, NotFoundError } from '@trg_package/errors';
 import { ExtractTablesWithRelations, TableRelationalConfig } from 'drizzle-orm';
 import { and, eq } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
@@ -49,7 +49,7 @@ export class BaseServiceNew<
         connection
       };
     } catch (e) {
-      console.error(`Could not create Database client: ${e}`);
+      console.error(`Could not create Database client with URL - ${URL}: ${e}`);
       throw e;
     }
   }
@@ -61,7 +61,9 @@ export class BaseServiceNew<
       .returning();
 
     if (!entity)
-      throw new NotFoundError(`Returned as undefined in ${this.entity}`);
+      throw new BadRequestError(
+        `Returned as undefined in ${this.entity}: ${data}`
+      );
 
     return entity;
   }
@@ -92,7 +94,7 @@ export class BaseServiceNew<
     });
 
     if (!entity.length) {
-      throw new NotFoundError(`Does not exist in ${this.entity}`);
+      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
     }
 
     return entity;
@@ -127,7 +129,7 @@ export class BaseServiceNew<
     console.log(Object.entries(this.tableName));
 
     if (!entity) {
-      throw new NotFoundError(`Does not exist in ${this.entity}`);
+      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
     }
 
     return entity;
@@ -143,7 +145,8 @@ export class BaseServiceNew<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`Does not exit in ${this.entity}`);
+    if (!entity)
+      throw new NotFoundError(`Does not exit in ${this.entity}: ${data}`);
 
     return entity;
   }
@@ -156,7 +159,8 @@ export class BaseServiceNew<
       .where(eq(this.schema.id, id))
       .returning();
 
-    if (!entity) throw new NotFoundError(`Does not exit in ${this.entity}`);
+    if (!entity)
+      throw new NotFoundError(`Does not exit in ${this.entity}: ${id}`);
 
     return entity;
   }
