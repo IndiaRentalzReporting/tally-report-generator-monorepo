@@ -71,7 +71,6 @@ export const createOne = async (
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
-    req.permissionService.extendSuperuserActions(action.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');

@@ -22,7 +22,6 @@ export const createOne = async (
 ) => {
   try {
     const module = await req.moduleService.createOne(req.body.moduleDetails);
-    await req.permissionService.extendSuperuserModules(module.id);
     return res.json({ module });
   } catch (e) {
     console.error('Could not create a new Module');
