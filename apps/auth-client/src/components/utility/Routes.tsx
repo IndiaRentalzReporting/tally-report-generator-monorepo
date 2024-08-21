@@ -4,7 +4,10 @@ import { useAuth } from '@/providers/AuthProvider';
 import { Else, If, Then, When } from './Conditionals';
 
 export const PrivateRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return;
+
   return (
     <If condition={isAuthenticated}>
       <Then>
@@ -18,7 +21,10 @@ export const PrivateRoutes: React.FC = () => {
 };
 
 export const PublicRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return;
+
   useEffect(() => {
     if (!!isAuthenticated) {
       window.location.href = 'http://dashboard.trg.local';

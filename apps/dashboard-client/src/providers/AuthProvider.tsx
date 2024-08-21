@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { data: authData, isFetching } = useQuery({
     queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
-    queryKey: ['auth', 'statusCheck'],
+    queryKey: ['auth', 'status'],
     staleTime: 1000 * 60 * 15
   });
 

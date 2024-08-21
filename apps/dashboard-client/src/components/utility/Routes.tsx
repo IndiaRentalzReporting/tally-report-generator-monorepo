@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
-import { Else, If, Then } from './Conditionals';
+import { Else, If, Then, When } from './Conditionals';
 
 export const PrivateRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return;
+
+  useEffect(() => {
+    console.log({ isAuthenticated }, 'dashboard');
+    if (!isAuthenticated) {
+      window.location.href = 'http://auth.trg.local';
+    }
+  }, [isAuthenticated]);
+
   return (
-    <If condition={isAuthenticated}>
-      <Then>
-        <Outlet />
-      </Then>
-      <Else>
-        <Navigate to="/sign-in" />
-      </Else>
-    </If>
+    <When condition={isAuthenticated}>
+      <Outlet />
+    </When>
   );
 };

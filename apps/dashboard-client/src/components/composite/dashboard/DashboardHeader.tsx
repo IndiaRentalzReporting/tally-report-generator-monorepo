@@ -33,7 +33,7 @@ const DashboardHeader: React.FC = () => {
   const { mutateAsync: signOutMutation } = useMutation({
     mutationFn: () => services.Authentication.signOut(),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
       navigate('/sign-in');
     }
   });
