@@ -9,13 +9,6 @@ import { ModuleSelect } from '../schemas/modules';
 import { RoleSelect } from '../schemas/roles';
 import { PermissionSelect } from '../schemas/permissions';
 
-type RegisterUser = Pick<
-  UserInsert,
-  'email' | 'password' | 'first_name' | 'last_name'
->;
-
-type LoginUser = Pick<UserSelect, 'email' | 'password'>;
-
 type UserRole = {
   name: RoleSelect['name'];
   permission: Array<{
@@ -37,8 +30,6 @@ type DetailedUser = UserSelect & {
 };
 
 export {
-  type RegisterUser,
-  type LoginUser,
   type DetailedUser,
   type UserRole,
   UserInsert,

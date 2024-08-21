@@ -1,4 +1,4 @@
-import * as dashboard_schema from '@trg_package/dashboard-schemas/schemas';
+import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
 import { BaseServiceNew } from '@trg_package/base-service';
 
 export const createDashboardClient = ({
@@ -17,7 +17,7 @@ export const createDashboardClient = ({
   });
   const { client, connection } = BaseServiceNew.createClient(
     DASHBOARD_PG_URL,
-    dashboard_schema,
+    dashboardSchemas,
     {
       DB_MIGRATING: false,
       DB_SEEDING: false

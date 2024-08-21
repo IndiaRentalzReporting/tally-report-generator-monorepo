@@ -6,6 +6,7 @@ import { errorHandler, notFound } from '@trg_package/middlewares';
 import { sessionsLoader } from './loaders/sessions';
 import { passportLoader } from './loaders/passport';
 import config from './config';
+import { attachPGDashboard } from './middlewares';
 
 export const expressLoader = async (
   routesLoader: (app: Express) => void
@@ -19,6 +20,9 @@ export const expressLoader = async (
 
   sessionsLoader(app);
   passportLoader(app);
+
+  app.use(attachPGDashboard);
+
   routesLoader(app);
 
   const { NODE_ENV } = config;
