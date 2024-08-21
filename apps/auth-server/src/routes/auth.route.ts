@@ -1,5 +1,8 @@
 import { Router } from 'express';
-import { UserInsertSchema } from '@trg_package/auth-schemas/types';
+import {
+  TenantInsertSchema,
+  UserInsertSchema
+} from '@trg_package/auth-schemas/types';
 import {
   handleSignUp,
   handleSignIn,
@@ -7,6 +10,7 @@ import {
   handleLogout
 } from '../controller/auth.controller';
 import { authenticate, validateSchema } from '@trg_package/middlewares';
+import z from 'zod';
 
 const authRouter = Router();
 
@@ -22,13 +26,18 @@ authRouter.post(
 authRouter.post(
   '/sign-up',
   validateSchema({
-    body: UserInsertSchema.extend({
-      password: UserInsertSchema.shape.password.min(8)
-    }).pick({
-      first_name: true,
-      last_name: true,
-      email: true,
-      password: true
+    body: z.object({
+      tenant: TenantInsertSchema.pick({
+        name: true
+      }),
+      user: UserInsertSchema.extend({
+        password: UserInsertSchema.shape.password.min(8)
+      }).pick({
+        first_name: true,
+        last_name: true,
+        email: true,
+        password: true
+      })
     })
   }),
   handleSignUp

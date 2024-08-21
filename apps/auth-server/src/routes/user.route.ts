@@ -3,12 +3,26 @@ import {
   readOne,
   readAll,
   deleteOne,
-  updateOne
+  updateOne,
+  createOne
 } from '../controller/user.controller';
 import { validateSchema } from '@trg_package/middlewares';
 import { UserInsertSchema } from '@trg_package/auth-schemas/types';
 
 const userRouter = Router();
+
+userRouter.post(
+  '/create',
+  validateSchema({
+    body: UserInsertSchema.pick({
+      first_name: true,
+      last_name: true,
+      email: true,
+      password: true
+    })
+  }),
+  createOne
+);
 
 userRouter.get('/read', readAll);
 

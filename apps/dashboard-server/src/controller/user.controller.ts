@@ -15,7 +15,7 @@ export const readAll = async (
 ) => {
   try {
     const usersWithPassword = await UserService.findMany(
-      { id: req.user?.id ?? '' },
+      {},
       {
         with: {
           role: {
@@ -75,10 +75,9 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const u = (await UserService.findOneDetailedUser({
+    const user = await UserService.findOneDetailedUser({
       id: req.params.id
-    })) as DetailedUser;
-    const user = UserService.prettifyUser(u);
+    });
 
     if (!user) throw new NotFoundError('User does not exist');
 
@@ -101,13 +100,15 @@ export const updateRole = async (
   res: Response<{ userIds: string[] }>,
   next: NextFunction
 ) => {
+  const { userIds, roleId } = req.body;
   try {
-    const userIds = await UserService.updateRole(
-      req.body.userIds,
-      req.body.roleId
-    );
+    const updatedUserIds = userIds.map(async (user_id) => {
+      const { id } = await UserService.updateOne(user_id, { role_id: roleId });
 
-    return res.json({ userIds });
+      return id;
+    });
+
+    return Promise.all(updatedUserIds).then((res) => res);
   } catch (e) {
     console.error("Couldn't assign a role to users");
     return next(e);

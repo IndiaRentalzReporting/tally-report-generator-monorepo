@@ -47,7 +47,7 @@ axios.interceptors.response.use(
   }
 );
 
-axios.defaults.baseURL = 'http://localhost:4001/api/v1';
+axios.defaults.baseURL = 'http://dashboard.trg.local/api/v1';
 axios.defaults.withCredentials = true;
 
 export default axios;

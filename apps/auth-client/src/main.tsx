@@ -7,6 +7,7 @@ import './index.css';
 import 'react-toastify/ReactToastify.css';
 import { Toaster } from './components/ui';
 import { ThemeProvider } from './providers/ThemeProvider';
+import { AuthProvider } from './providers/AuthProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,11 +22,13 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <div className="flex flex-col h-screen">
-          <App />
-        </div>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+          <div className="flex flex-col h-screen">
+            <App />
+          </div>
+        </ThemeProvider>
+      </AuthProvider>
       <Toaster />
     </QueryClientProvider>
   </React.StrictMode>

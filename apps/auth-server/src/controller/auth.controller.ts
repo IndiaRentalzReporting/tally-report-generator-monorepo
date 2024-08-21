@@ -1,16 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
-import { SafeUserSelect, UserInsert } from '@trg_package/auth-schemas/types';
+import {
+  SafeUserSelect,
+  TenantInsert,
+  TenantSelect,
+  UserInsert
+} from '@trg_package/auth-schemas/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 export const handleSignUp = async (
-  req: Request<object, object, UserInsert>,
-  res: Response<{ user: SafeUserSelect }>,
+  req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
+  res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
-    const user = await AuthService.signUp(req.body);
-    res.json({ user });
+    const { user, tenant } = await AuthService.signUp(req.body);
+    res.json({ user, tenant });
   } catch (err) {
     console.error(`Could not sign up the User: `, err);
     return next(err);

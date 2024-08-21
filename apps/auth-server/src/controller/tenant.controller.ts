@@ -1,23 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
-import { TenantSelect, TenantInsert } from '@trg_package/auth-schemas/types';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
+import {
+  TenantSelect,
+  TenantInsert,
+  SafeUserSelect
+} from '@trg_package/auth-schemas/types';
 import { UserInsert } from '@trg_package/dashboard-schemas/types';
+import UserService from '../services/UserService';
 
 export const createOne = async (
-  req: Request<
-    object,
-    object,
-    { tenantData: TenantInsert; userData: UserInsert }
-  >,
+  req: Request<object, object, TenantInsert>,
   res: Response<{ tenant: TenantSelect }>,
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.onboard(
-      req.body.tenantData,
-      req.body.userData
-    );
+    const tenant = await TenantService.createOne(req.body);
 
     return res.json({ tenant });
   } catch (e) {

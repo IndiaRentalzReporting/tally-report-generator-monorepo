@@ -16,19 +16,6 @@ const EnvSchema = z.object({
     .enum(['production', 'development', 'staging'])
     .default('development'),
   PORT: z.coerce.number().default(4000),
-  SESSION_SECRET: z.string(),
-  FRONTEND_URL: z.string(),
-  MONGO_USERNAME: z.string(),
-  MONGO_PASSWORD: z.string(),
-  MONGO_DB_NAME: z.string(),
-  MONGO_URI: z.string(),
-
-  AUTH_PG_HOST: z.string(),
-  AUTH_PG_PORT: z.coerce.number(),
-  AUTH_PG_PASSWORD: z.string(),
-  AUTH_PG_USER: z.string(),
-  AUTH_PG_DATABASE: z.string(),
-  AUTH_PG_URL: z.string(),
 
   [DashboardPgUrlKey]: z.string().optional(),
 

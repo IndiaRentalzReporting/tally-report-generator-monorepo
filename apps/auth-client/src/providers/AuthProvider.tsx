@@ -1,26 +1,18 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import {
-  DetailedUser,
-  Permissions,
-  UserRole
-} from '@trg_package/dashboard-schemas/types';
+import { SafeUserSelect } from '@trg_package/auth-schemas/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
-  user: DetailedUser | null;
+  user: SafeUserSelect | null;
   loading: boolean;
-  permissions: Permissions[];
 }
 
 const initialState: AuthProviderState = {
   isAuthenticated: false,
   loading: true,
-  user: null,
-  permissions: JSON.parse(
-    localStorage.getItem('permissions') ?? '[]'
-  ) as AuthProviderState['permissions']
+  user: null
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -39,38 +31,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     staleTime: 1000 * 60 * 15
   });
 
-  const createPermissions = (
-    permissions: UserRole['permission'] | undefined
-  ): Permissions[] => {
-    const p =
-      permissions?.map(({ module, permissionAction }) => {
-        const { name, icon } = module;
-        return {
-          module: { name, icon },
-          actions: permissionAction.map(({ action }) => action.name)
-        };
-      }) ?? [];
-    localStorage.setItem('permissions', JSON.stringify(p));
-    return p;
-  };
-
   useEffect(() => {
     if (!authData || !authData.user || !authData.isAuthenticated) {
       setState({
-        ...initialState,
-        permissions: []
+        ...initialState
       });
       return;
     }
 
     const { user, isAuthenticated } = authData;
-    const permissions = createPermissions(user.role?.permission);
 
     setState({
       user,
       isAuthenticated,
-      loading: false,
-      permissions
+      loading: false
     });
   }, [authData]);
 

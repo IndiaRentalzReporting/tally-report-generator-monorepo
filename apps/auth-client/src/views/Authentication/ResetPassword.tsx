@@ -24,7 +24,7 @@ export const ResetPassword: FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const { data: token, isError } = useQuery({
-    queryFn: () => services.check_reset_password(unvalidatedToken ?? ''),
+    queryFn: () => services.checkResetPassword(unvalidatedToken ?? ''),
     select: (data) => data.data,
     queryKey: ['reset token', 'validation']
   });
@@ -32,7 +32,7 @@ export const ResetPassword: FC = () => {
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
     useMutation({
       mutationFn: () =>
-        services.reset_password({
+        services.resetPassword({
           token: token?.token ?? '',
           password,
           confirmPassword

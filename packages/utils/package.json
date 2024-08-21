@@ -8,7 +8,12 @@
   "devDependencies": {
     "@trg_package/eslint-config": "*",
     "@trg_package/typescript-config": "*",
-    "typescript": "^5.4.5",
-    "tsup": "^8.2.4"
+    "@types/bcrypt": "^5.0.2",
+    "tsup": "^8.2.4",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@trg_package/errors": "^1.0.0",
+    "bcrypt": "^5.1.1"
   }
 }

@@ -12,14 +12,19 @@ import {
   Label
 } from '@/components/ui';
 import { services } from './services';
-import { RegisterUser } from '@trg_package/auth-schemas/types';
+import { RegisterUser, TenantInsert } from '@trg_package/auth-schemas/types';
+import { useToast } from '@/lib/hooks';
 
 export const SignupForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const [registerData, setRegisterData] = useState<RegisterUser>({
+  const [tenantData, setTenantData] = useState<TenantInsert>({
+    name: ''
+  });
+  const [userData, setUserData] = useState<RegisterUser>({
     email: '',
     password: '',
     first_name: '',
@@ -27,17 +32,28 @@ export const SignupForm = () => {
   });
 
   const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.signUp(data),
+    mutationFn: () =>
+      services.signUp({
+        tenant: tenantData,
+        user: userData
+      }),
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
       setLoading(false);
+      toast({
+        title: 'Success',
+        description: 'Account created successfully'
+      });
       navigate('/sign-in');
     }
   });
 
-  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFormChange = <T extends Object>(
+    e: ChangeEvent<HTMLInputElement>,
+    callback: React.Dispatch<React.SetStateAction<T>>
+  ) => {
     const { value, name } = e.target;
-    setRegisterData((prev) => ({
+    callback((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -46,7 +62,7 @@ export const SignupForm = () => {
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     setLoading(true);
     e.preventDefault();
-    signUpMutation(registerData);
+    signUpMutation();
   };
 
   return (
@@ -60,14 +76,25 @@ export const SignupForm = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp} className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="company_name">Comapny Name</Label>
+              <Input
+                id="company_name"
+                name="name"
+                value={tenantData.name}
+                onChange={(e) => handleFormChange(e, setTenantData)}
+                placeholder="Max"
+                required
+              />
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="first-name">First name</Label>
                 <Input
                   id="first-name"
                   name="first_name"
-                  value={registerData.first_name}
-                  onChange={handleFormChange}
+                  value={userData.first_name}
+                  onChange={(e) => handleFormChange(e, setUserData)}
                   placeholder="Max"
                   required
                 />
@@ -77,8 +104,8 @@ export const SignupForm = () => {
                 <Input
                   id="last-name"
                   name="last_name"
-                  value={registerData.last_name}
-                  onChange={handleFormChange}
+                  value={userData.last_name}
+                  onChange={(e) => handleFormChange(e, setUserData)}
                   placeholder="Robinson"
                   required
                 />
@@ -90,8 +117,8 @@ export const SignupForm = () => {
                 id="email"
                 type="email"
                 name="email"
-                value={registerData.email}
-                onChange={handleFormChange}
+                value={userData.email}
+                onChange={(e) => handleFormChange(e, setUserData)}
                 placeholder="m@example.com"
                 required
               />
@@ -101,8 +128,8 @@ export const SignupForm = () => {
               <Input
                 id="password"
                 name="password"
-                value={registerData.password}
-                onChange={handleFormChange}
+                value={userData.password}
+                onChange={(e) => handleFormChange(e, setUserData)}
                 type="password"
                 placeholder="********"
               />

@@ -1,31 +1,53 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, NotFoundError } from '@trg_package/errors';
+import { comparePassword } from '@trg_package/utils';
 import {
   SafeUserSelect,
+  TenantInsert,
+  TenantSelect,
   UserInsert,
   UserSelect
 } from '@trg_package/auth-schemas/types';
 import UserService from './UserService';
+import TenantService from './TenantService';
 
 class AuthService {
-  public static async signUp(data: UserInsert): Promise<SafeUserSelect> {
-    try {
-      await UserService.findOne({
-        email: data.email
-      });
-      throw new BadRequestError('User Already Exists');
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        const { password, ...user } = await UserService.createOne({
-          ...data,
-          password: await this.hashPassword(data.password)
-        });
+  public static async signUp(data: {
+    user: UserInsert;
+    tenant: TenantInsert;
+  }): Promise<{ user: SafeUserSelect; tenant: TenantSelect }> {
+    const { user: userData, tenant: tenantData } = data;
 
-        return user;
-      }
+    const existingUser = await UserService.findOne({
+      email: userData.email
+    }).catch((e) => {
+      if (e instanceof NotFoundError) return null;
       throw e;
+    });
+
+    if (existingUser) {
+      throw new BadRequestError('User Already Exists');
     }
+
+    const existingTenant = await TenantService.findOne({
+      name: tenantData.name
+    }).catch((e) => {
+      if (e instanceof NotFoundError) return null;
+      throw e;
+    });
+
+    if (existingTenant) {
+      throw new BadRequestError('Tenant Already Exists');
+    }
+
+    const tenant = await TenantService.onboard(tenantData, userData);
+    const { password, ...user } = await UserService.createOne({
+      ...userData,
+      tenant_id: tenant.id
+    });
+
+    return { user, tenant };
   }
 
   public static async signIn(
@@ -40,7 +62,7 @@ class AuthService {
       throw new NotFoundError('User does not exist');
     }
 
-    await this.comparePassword(password, user.password);
+    await comparePassword(password, user.password);
 
     return user;
   }
@@ -60,19 +82,6 @@ class AuthService {
     }
 
     return user;
-  }
-
-  static async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    const passwordHash = await bcrypt.hash(password, salt);
-    return passwordHash;
-  }
-
-  static async comparePassword(password: string, hash: string): Promise<void> {
-    const doesPasswordMatch = await bcrypt.compare(password, hash);
-    if (!doesPasswordMatch) {
-      throw new BadRequestError('Wrong Password');
-    }
   }
 
   static async generateTempPassword(length: number): Promise<string> {

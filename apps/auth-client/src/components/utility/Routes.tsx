@@ -8,15 +8,30 @@ export const PrivateRoutes: React.FC = () => {
 
   if (loading) return;
 
+  return (
+    <If condition={isAuthenticated}>
+      <Then>
+        <Outlet />
+      </Then>
+      <Else>
+        <Navigate to="/sign-in" />
+      </Else>
+    </If>
+  );
+};
+
+export const PublicRoutes: React.FC = () => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return;
+
   useEffect(() => {
-    console.log({ isAuthenticated }, 'dashboard');
-    if (!isAuthenticated) {
-      window.location.href = 'http://auth.trg.local';
+    if (!!isAuthenticated) {
+      window.location.href = 'http://dashboard.trg.local';
     }
   }, [isAuthenticated]);
-
   return (
-    <When condition={isAuthenticated}>
+    <When condition={!isAuthenticated}>
       <Outlet />
     </When>
   );

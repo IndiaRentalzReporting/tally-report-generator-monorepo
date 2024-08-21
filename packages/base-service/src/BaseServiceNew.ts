@@ -1,4 +1,4 @@
-import { NotFoundError } from '@trg_package/errors';
+import { BadRequestError, NotFoundError } from '@trg_package/errors';
 import { ExtractTablesWithRelations, TableRelationalConfig } from 'drizzle-orm';
 import { and, eq } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
@@ -15,6 +15,7 @@ export class BaseServiceNew<
     dialect: 'pg';
   }>
 > {
+  private entity: string;
   constructor(
     protected dbClient: PostgresJsDatabase<H>,
     protected schema: T,
@@ -22,7 +23,22 @@ export class BaseServiceNew<
       ExtractTablesWithRelations<H>,
       TableRelationalConfig
     >
-  ) {}
+  ) {
+    //@ts-ignore
+    this.entity = this.tableName.tableConfig.dbName;
+  }
+
+  public static createUrl({
+    db_username,
+    db_password,
+    db_name
+  }: {
+    db_username: string;
+    db_password: string;
+    db_name: string;
+  }): string {
+    return `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
+  }
 
   public static createClient<T extends Record<string, unknown>>(
     URL: string,
@@ -45,7 +61,7 @@ export class BaseServiceNew<
         connection
       };
     } catch (e) {
-      console.error(`Could not create Database client: ${e}`);
+      console.error(`Could not create Database client with URL - ${URL}: ${e}`);
       throw e;
     }
   }
@@ -57,7 +73,9 @@ export class BaseServiceNew<
       .returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} returned as undefined`);
+      throw new BadRequestError(
+        `Returned as undefined in ${this.entity}: ${data}`
+      );
 
     return entity;
   }
@@ -70,7 +88,7 @@ export class BaseServiceNew<
           RelationalQueryBuilder<
             ExtractTablesWithRelations<H>,
             TableRelationalConfig
-          >['findFirst']
+          >['findMany']
         >[0]
       >,
       'where'
@@ -88,7 +106,7 @@ export class BaseServiceNew<
     });
 
     if (!entity.length) {
-      throw new NotFoundError(`${this.schema._?.name} does not exist`);
+      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
     }
 
     return entity;
@@ -120,10 +138,8 @@ export class BaseServiceNew<
       ...extra
     });
 
-    console.log(Object.entries(this.tableName));
-
     if (!entity) {
-      throw new NotFoundError(`${this.schema._?.name} does not exist`);
+      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
     }
 
     return entity;
@@ -140,7 +156,7 @@ export class BaseServiceNew<
       .returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} does not exits`);
+      throw new NotFoundError(`Does not exit in ${this.entity}: ${data}`);
 
     return entity;
   }
@@ -154,7 +170,7 @@ export class BaseServiceNew<
       .returning();
 
     if (!entity)
-      throw new NotFoundError(`${this.schema._?.name} does not exits`);
+      throw new NotFoundError(`Does not exit in ${this.entity}: ${id}`);
 
     return entity;
   }

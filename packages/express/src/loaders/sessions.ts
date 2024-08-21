@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import MongoStore from 'connect-mongo';
 import session, { SessionOptions } from 'express-session';
+import config from '../config';
 
 interface IConfig {
   SESSION_SECRET: string;
@@ -8,10 +9,8 @@ interface IConfig {
   NODE_ENV: string;
 }
 
-export const sessionsLoader = (
-  app: Express,
-  { SESSION_SECRET, MONGO_URI, NODE_ENV }: IConfig
-) => {
+export const sessionsLoader = (app: Express) => {
+  const { SESSION_SECRET, MONGO_URI, NODE_ENV } = config;
   try {
     let sessionStore;
     try {
@@ -28,7 +27,9 @@ export const sessionsLoader = (
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 1000 * 60 * 60 * 4 // 4 hours,
+        maxAge: 1000 * 60 * 60 * 4, // 4 hours,
+        sameSite: 'lax',
+        domain: '.trg.local'
       },
       store: sessionStore
     };

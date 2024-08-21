@@ -1,14 +1,16 @@
 import postgres from 'postgres';
 import db from '../models/auth';
 import { TenantInsert, TenantSelect } from '@trg_package/auth-schemas/types';
-import { UserInsert as DashboardUserInsert } from '@trg_package/dashboard-schemas/types';
+import {
+  UserInsert as DashboardUserInsert,
+  UserSelect
+} from '@trg_package/dashboard-schemas/types';
 import { TenantService as BaseTenantService } from '@trg_package/auth-schemas/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
 
 class TenantService extends BaseTenantService {
   constructor() {
@@ -37,12 +39,23 @@ class TenantService extends BaseTenantService {
   }
 
   private generateUniqueIdentifier(baseName: string) {
-    const randomSuffix = crypto.randomBytes(4).toString('hex');
+    const randomSuffix = crypto
+      .randomBytes(4)
+      .toString('hex')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
     return `${baseName}_${randomSuffix}`;
   }
 
   private generateSecurePassword(length = 32) {
-    return crypto.randomBytes(length).toString('base64').slice(0, length);
+    return crypto
+      .randomBytes(length)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '')
+      .slice(0, length);
   }
 
   private generateTenantDBCredentials(tenantName: string) {
@@ -54,9 +67,9 @@ class TenantService extends BaseTenantService {
   }
 
   private async createDatabase(tenantName: TenantInsert['name']): Promise<{
-    db_name: string;
-    db_username: string;
-    db_password: string;
+    db_name: NonNullable<TenantSelect['db_name']>;
+    db_username: NonNullable<TenantSelect['db_username']>;
+    db_password: NonNullable<TenantSelect['db_password']>;
   }> {
     const { SUPERUSER_PG_URL } = config;
 

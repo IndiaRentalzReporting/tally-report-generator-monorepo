@@ -26,13 +26,8 @@ export const SigninForm = () => {
 
   const { mutateAsync: signInMutation } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
-    onSuccess: (data) => {
-      if (data.data.resetPasswordLink) {
-        navigate(data.data.resetPasswordLink);
-      }
-    },
     onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'statusCheck'] });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
       setLoading(false);
     }
   });
