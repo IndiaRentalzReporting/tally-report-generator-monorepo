@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { ActionSelect } from '@trg_package/dashboard-schemas/types';
-import ModuleService from '../services/ModuleService';
-import ActionService from '../services/ActionService';
 
 declare global {
   namespace Express {
@@ -20,10 +18,10 @@ export const attachModuleActionData = async (
   const { url } = req;
   const [_, module, action] = url.split('/');
 
-  const Y = await ActionService.findOne({
+  const Y = await req.actionService.findOne({
     name: action?.toUpperCase() as ActionSelect['name']
   });
-  const X = await ModuleService.findOne({
+  const X = await req.moduleService.findOne({
     name: module?.toUpperCase()
   });
 

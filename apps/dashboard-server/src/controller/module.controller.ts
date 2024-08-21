@@ -4,9 +4,6 @@ import {
   ModuleInsert,
   ModuleSelect
 } from '@trg_package/dashboard-schemas/types';
-import DatabaseService from '../services/DatabaseService';
-import PermissionService from '../services/PermissionService';
-import ModuleService from '../services/ModuleService';
 
 export const createOne = async (
   req: Request<
@@ -24,14 +21,8 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.createOne(req.body.moduleDetails);
-    try {
-      await DatabaseService.createNewTable(module.name, req.body.columnDetails);
-    } catch (e) {
-      await ModuleService.deleteOne(module.id);
-    }
-
-    await PermissionService.extendSuperuserModules(module.id);
+    const module = await req.moduleService.createOne(req.body.moduleDetails);
+    await req.permissionService.extendSuperuserModules(module.id);
     return res.json({ module });
   } catch (e) {
     console.error('Could not create a new Module');
@@ -45,11 +36,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const { name: oldName } = await ModuleService.findOne({
-      id: req.params.id
-    });
-    const module = await ModuleService.updateOne(req.params.id, req.body);
-    await DatabaseService.updateTable(oldName, module.name);
+    const module = await req.moduleService.updateOne(req.params.id, req.body);
     return res.json({ module });
   } catch (e) {
     console.error('Could not update a Module');
@@ -63,8 +50,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.deleteOne(req.params.id);
-    await DatabaseService.dropTable(module.name);
+    const module = await req.moduleService.deleteOne(req.params.id);
     return res.json({ module });
   } catch (e) {
     console.error('Could not delete a Module');
@@ -78,7 +64,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await ModuleService.findMany({});
+    const modules = await req.moduleService.findMany({});
     return res.json({ modules });
   } catch (e) {
     console.error("Couldn't fetch all Modules");
@@ -88,15 +74,14 @@ export const readAll = async (
 
 export const readOne = async (
   req: Request<Pick<ModuleSelect, 'id'>>,
-  res: Response<{ module: ModuleSelect; columns: Object }>,
+  res: Response<{ module: ModuleSelect }>,
   next: NextFunction
 ) => {
   try {
-    const module = await ModuleService.findOne({
+    const module = await req.moduleService.findOne({
       id: req.params.id
     });
-    const columns = await DatabaseService.findColumns(module.name);
-    return res.json({ module, columns });
+    return res.json({ module });
   } catch (e) {
     console.error("Couldn't fetch Module");
     return next(e);

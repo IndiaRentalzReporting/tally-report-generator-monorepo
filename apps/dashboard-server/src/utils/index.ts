@@ -2,7 +2,7 @@ import { NotFoundError } from '@trg_package/errors';
 import { UserSelect } from '@trg_package/dashboard-schemas/types';
 import config from '../config';
 import jwt from 'jsonwebtoken';
-import UserService from '../services/UserService';
+import { UserService } from '@trg_package/dashboard-schemas/services';
 
 export const generateUserJWTToken = (user: UserSelect): string => {
   const { SMTP_SECRET } = config;
@@ -11,7 +11,8 @@ export const generateUserJWTToken = (user: UserSelect): string => {
 };
 
 export const verifyUserJWTToken = async (
-  token: string
+  token: string,
+  UserService: UserService
 ): Promise<UserSelect['id']> => {
   interface IToken extends jwt.JwtPayload {
     id: string;

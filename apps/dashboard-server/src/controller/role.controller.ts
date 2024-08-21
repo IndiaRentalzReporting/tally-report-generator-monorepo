@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { RoleInsert, RoleSelect } from '@trg_package/dashboard-schemas/types';
-import RoleService from '../services/RoleService';
 
 export const readAll = async (
   req: Request,
@@ -8,7 +7,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await RoleService.findMany(
+    const roles = await req.roleService.findMany(
       {},
       {
         with: {
@@ -33,7 +32,7 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.findOne(
+    const role = await req.roleService.findOne(
       { id: req.params.id },
       {
         with: {
@@ -85,7 +84,7 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.createOne(req.body);
+    const role = await req.roleService.createOne(req.body);
     return res.json({
       role
     });
@@ -101,7 +100,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.updateOne(req.params.id, req.body);
+    const role = await req.roleService.updateOne(req.params.id, req.body);
     return res.json({
       role
     });
@@ -117,7 +116,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await RoleService.deleteOne(req.params.id);
+    const role = await req.roleService.deleteOne(req.params.id);
     return res.json({
       role
     });
