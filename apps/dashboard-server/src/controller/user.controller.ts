@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import UserService from '../services/UserService';
 import {
   RoleSelect,
   UserSelect,
@@ -14,7 +13,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await UserService.findMany(
+    const usersWithPassword = await req.userService.findMany(
       {},
       {
         with: {
@@ -75,7 +74,7 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.findOneDetailedUser({
+    const user = await req.userService.findOneDetailedUser({
       id: req.params.id
     });
 
@@ -103,7 +102,9 @@ export const updateRole = async (
   const { userIds, roleId } = req.body;
   try {
     const updatedUserIds = userIds.map(async (user_id) => {
-      const { id } = await UserService.updateOne(user_id, { role_id: roleId });
+      const { id } = await req.userService.updateOne(user_id, {
+        role_id: roleId
+      });
 
       return id;
     });
@@ -121,7 +122,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.updateOne(
+    const { password, ...user } = await req.userService.updateOne(
       req.params.id,
       req.body
     );
@@ -139,7 +140,9 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.deleteOne(req.params.id);
+    const { password, ...user } = await req.userService.deleteOne(
+      req.params.id
+    );
 
     return res.json({ user });
   } catch (e) {

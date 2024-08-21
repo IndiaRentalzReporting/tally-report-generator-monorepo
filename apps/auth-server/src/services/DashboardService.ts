@@ -52,16 +52,16 @@ class DashboardService {
   }
 
   private async seedDatabase(userData: UserInsert) {
+    await this.createAdmin(userData);
     await this.seedAction();
     await this.seedModules();
-    await this.createAdmin(userData);
     await this.terminateConnection();
   }
 
   private async seedAction() {
     const ASI = new ActionService(this.dashboardClient);
     const promises = actions.map(
-      async ({ name }) => await ASI.createOne({ name })
+      async ({ name }) => await ASI.createOne({ name, isReadonly: true })
     );
 
     await Promise.all(promises);
@@ -70,21 +70,21 @@ class DashboardService {
   private async seedModules() {
     const MSI = new ModuleService(this.dashboardClient);
     const promises = modules.map(
-      async ({ name }) => await MSI.createOne({ name })
+      async ({ name }) => await MSI.createOne({ name, isReadonly: true })
     );
     await Promise.all(promises);
   }
 
   private async createAdmin(data: UserInsert): Promise<UserSelect> {
-    const USI = new UserService(this.dashboardClient);
     const role_id = await this.seedRole();
-    const admin = await USI.createOne({ ...data, role_id });
+    const USI = new UserService(this.dashboardClient);
+    const admin = await USI.createOne({ ...data, role_id, isReadonly: true });
     return admin;
   }
 
   private async seedRole(): Promise<RoleSelect['id']> {
     const RSI = new RoleService(this.dashboardClient);
-    const role = await RSI.createOne({ name: roles.name });
+    const role = await RSI.createOne({ name: roles.name, isReadonly: true });
     return role.id;
   }
 

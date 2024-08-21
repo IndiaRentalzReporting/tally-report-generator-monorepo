@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import * as z from 'zod';
-import { PGColumnDataType } from '@trg_package/pg-orm';
 import {
   createOne,
   readAll,
@@ -16,18 +14,10 @@ const moduleRouter = Router();
 moduleRouter.post(
   '/create',
   validateSchema({
-    body: z.object({
-      moduleDetails: ModuleInsertSchema.pick({
-        name: true,
-        isPrivate: true,
-        icon: true
-      }),
-      columnDetails: z.array(
-        z.object({
-          name: z.string(),
-          type: z.custom((val) => val in PGColumnDataType)
-        })
-      )
+    body: ModuleInsertSchema.pick({
+      name: true,
+      isPrivate: true,
+      icon: true
     })
   }),
   createOne

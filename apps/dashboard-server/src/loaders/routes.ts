@@ -7,9 +7,11 @@ import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
 import { isAuthenticated } from '@trg_package/middlewares';
 import { attachModuleActionData, isRoleAllowed } from '../middlewares';
+import { attachServices } from '../middlewares/attachServices';
 
 const routesLoader = (app: Express) => {
   app.use('/api/v1/auth', authRouter);
+  app.use(attachServices);
   // app.use(isAuthenticated);
   // app.use(attachModuleActionData);
   // app.use(isRoleAllowed);

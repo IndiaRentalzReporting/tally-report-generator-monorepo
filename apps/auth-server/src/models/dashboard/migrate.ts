@@ -1,5 +1,5 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import db, { dashboard_connection } from './index';
+import db, { dashboardConnection } from './index';
 import drizzleConfig from '../../../drizzle.dashboard.config';
 
 const main = async () => {
@@ -7,7 +7,7 @@ const main = async () => {
     migrationsFolder: drizzleConfig.out!
   });
 
-  dashboard_connection.end();
+  dashboardConnection.end();
 };
 
 main();

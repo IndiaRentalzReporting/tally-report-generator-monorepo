@@ -5,8 +5,6 @@ import {
   RoleSelect,
   PermissionSelect
 } from '@trg_package/dashboard-schemas/types';
-import PermissionService from '../services/PermissionService';
-import ActionService from '../services/ActionService';
 
 export const readAll = async (
   req: Request,
@@ -14,7 +12,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await PermissionService.findMany(
+    const permissions = await req.permissionService.findMany(
       {},
       {
         with: {
@@ -60,7 +58,7 @@ export const readAllOfRole = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await PermissionService.findMany({
+    const permissions = await req.permissionService.findMany({
       role_id: req.params.role_id
     });
     res.json({ permissions });
@@ -88,15 +86,15 @@ export const createMany = async (
   try {
     const { role_id, permissions } = req.body;
     const promises = permissions.map(async ({ module_id, action_ids }) => {
-      const permission = await PermissionService.createOne({
+      const permission = await req.permissionService.createOne({
         module_id,
         role_id
       });
       action_ids.forEach(async (action_id) => {
-        const _ = await ActionService.findOne({
+        const _ = await req.actionService.findOne({
           id: action_id
         });
-        await PermissionService.assignAction({
+        await req.permissionService.assignAction({
           permission_id: permission.id,
           action_id
         });
@@ -132,16 +130,16 @@ export const updateMany = async (
     const { role_id, permissions } = req.body;
     const promises = permissions.map(
       async ({ permission_id, module_id, action_ids }) => {
-        await PermissionService.deleteOne(permission_id);
-        const permission = await PermissionService.createOne({
+        await req.permissionService.deleteOne(permission_id);
+        const permission = await req.permissionService.createOne({
           module_id,
           role_id
         });
         action_ids.forEach(async (action_id) => {
-          const _ = await ActionService.findOne({
+          const _ = await req.actionService.findOne({
             id: action_id
           });
-          await PermissionService.assignAction({
+          await req.permissionService.assignAction({
             permission_id: permission.id,
             action_id
           });

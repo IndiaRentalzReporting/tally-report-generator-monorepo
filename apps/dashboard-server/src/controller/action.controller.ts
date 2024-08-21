@@ -3,8 +3,6 @@ import {
   ActionInsert,
   ActionSelect
 } from '@trg_package/dashboard-schemas/types';
-import PermissionService from '../services/PermissionService';
-import ActionService from '../services/ActionService';
 
 export const readAll = async (
   req: Request,
@@ -12,7 +10,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await ActionService.findMany({});
+    const actions = await req.actionService.findMany({});
     return res.json({ actions });
   } catch (e) {
     console.error('Could not fetch all actions');
@@ -26,7 +24,7 @@ export const readOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.findOne({ id: req.params.id });
+    const action = await req.actionService.findOne({ id: req.params.id });
     return res.json({ action });
   } catch (e) {
     console.error('Action does not exist!');
@@ -40,7 +38,7 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.updateOne(req.params.id, req.body);
+    const action = await req.actionService.updateOne(req.params.id, req.body);
     return res.json({ action });
   } catch (e) {
     console.error('Could not update action');
@@ -54,7 +52,7 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await ActionService.deleteOne(req.params.id);
+    const action = await req.actionService.deleteOne(req.params.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not delete action');
@@ -69,11 +67,10 @@ export const createOne = async (
 ) => {
   try {
     const data = req.body;
-    const action = await ActionService.createOne({
+    const action = await req.actionService.createOne({
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
-    PermissionService.extendSuperuserActions(action.id);
     return res.json({ action });
   } catch (e) {
     console.error('Could not create an action');
