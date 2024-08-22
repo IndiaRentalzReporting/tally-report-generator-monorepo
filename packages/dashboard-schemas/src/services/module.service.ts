@@ -41,7 +41,7 @@ export class ModuleService extends BaseServiceNew<
     const role = await this.RoleService.findOne({
       name
     }).catch((e) => {
-      if (e.status === 404) return null;
+      if (e instanceof NotFoundError) return null;
       throw e;
     });
 
@@ -55,7 +55,7 @@ export class ModuleService extends BaseServiceNew<
     });
 
     const actions = await this.ActionService.findMany({}).catch((e) => {
-      if (e.status === 404) return null;
+      if (e instanceof NotFoundError) return null;
       throw e;
     });
 

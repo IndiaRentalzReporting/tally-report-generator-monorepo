@@ -1,14 +1,18 @@
 [
   {
-    "name": "CREATE"
+    "name": "CREATE",
+    "isReadonly": true
   },
   {
-    "name": "READ"
+    "name": "READ",
+    "isReadonly": true
   },
   {
-    "name": "UPDATE"
+    "name": "UPDATE",
+    "isReadonly": true
   },
   {
-    "name": "DELETE"
+    "name": "DELETE",
+    "isReadonly": true
   }
 ]

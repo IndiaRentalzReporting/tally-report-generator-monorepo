@@ -1,17 +1,24 @@
 [
   {
-    "name": "ROLES"
+    "name": "ROLES",
+    "isReadonly": true
   },
   {
-    "name": "USERS"
+    "name": "USERS",
+    "isReadonly": true
   },
   {
-    "name": "MODULES"
+    "name": "MODULES",
+    "isReadonly": true,
+    "isPrivate": true
   },
   {
-    "name": "PERMISSIONS"
+    "name": "PERMISSIONS",
+    "isReadonly": true
   },
   {
-    "name": "ACTIONS"
+    "name": "ACTIONS",
+    "isReadonly": true,
+    "isPrivate": true
   }
 ]
