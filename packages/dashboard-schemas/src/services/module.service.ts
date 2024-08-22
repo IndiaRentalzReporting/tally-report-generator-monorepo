@@ -38,32 +38,34 @@ export class ModuleService extends BaseServiceNew<
   private async extendSuperuserModules(module_id: string) {
     let name = 'SUPERUSER';
 
-    try {
-      const { id: role_id } = await this.RoleService.findOne({
-        name
+    const role = await this.RoleService.findOne({
+      name
+    }).catch((e) => {
+      if (e.status === 404) return null;
+      throw e;
+    });
+
+    if (!role) return;
+
+    const { id: role_id } = role;
+
+    const { id: permission_id } = await this.PermissionService.createOne({
+      module_id,
+      role_id
+    });
+
+    const actions = await this.ActionService.findMany({}).catch((e) => {
+      if (e.status === 404) return null;
+      throw e;
+    });
+
+    if (!actions) return;
+
+    for (const { id: action_id } of actions) {
+      await this.PermissionActionService.createOne({
+        permission_id,
+        action_id
       });
-      const { id: permission_id } = await this.PermissionService.createOne({
-        module_id,
-        role_id
-      });
-
-      const actions = await this.ActionService.findMany({});
-
-      const promises = actions.map(
-        async ({ id: action_id }) =>
-          await this.PermissionActionService.createOne({
-            permission_id,
-            action_id
-          })
-      );
-
-      await Promise.all(promises);
-    } catch (error) {
-      if (error instanceof NotFoundError) {
-        console.log('Superuser Role not found');
-      } else {
-        throw error;
-      }
     }
   }
 }

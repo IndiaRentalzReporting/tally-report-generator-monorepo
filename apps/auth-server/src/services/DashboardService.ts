@@ -36,19 +36,8 @@ class DashboardService {
   }
 
   public async migrateAndSeed(userData: UserInsert) {
-    migrateDashboardSchema(this.URL, async (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Migration Error: ${error.message}`);
-        throw new BadRequestError(`Could not migrate schema: ${error}`);
-      }
-      if (stderr) {
-        console.error(`Migration Stderr: ${stderr}`);
-        throw new Error(`Migration Stderr: ${stderr}`);
-      }
-      console.log(`Migration Stdout: ${stdout}`);
-      await this.seedDatabase(userData);
-      return;
-    });
+    migrateDashboardSchema(this.URL);
+    await this.seedDatabase(userData);
   }
 
   private async seedDatabase(userData: UserInsert) {
@@ -60,19 +49,16 @@ class DashboardService {
 
   private async seedAction() {
     const ASI = new ActionService(this.dashboardClient);
-    const promises = actions.map(
-      async ({ name }) => await ASI.createOne({ name, isReadonly: true })
-    );
-
-    await Promise.all(promises);
+    for (const { name } of actions) {
+      await ASI.createOne({ name, isReadonly: true });
+    }
   }
 
   private async seedModules() {
     const MSI = new ModuleService(this.dashboardClient);
-    const promises = modules.map(
-      async ({ name }) => await MSI.createOne({ name, isReadonly: true })
-    );
-    await Promise.all(promises);
+    for (const { name } of actions) {
+      await MSI.createOne({ name, isReadonly: true });
+    }
   }
 
   private async createAdmin(data: UserInsert): Promise<UserSelect> {
