@@ -59,7 +59,7 @@ class TenantService extends BaseTenantService {
   }
 
   private generateTenantDBCredentials(tenantName: string) {
-    const baseName = tenantName.toLowerCase();
+    const baseName = tenantName.toLowerCase().replace(/ /g, '_');
     const db_name = this.generateUniqueIdentifier(baseName);
     const db_username = this.generateUniqueIdentifier(baseName);
     const db_password = this.generateSecurePassword();

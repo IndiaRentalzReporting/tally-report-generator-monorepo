@@ -33,26 +33,31 @@ export class ActionService extends BaseServiceNew<
   private async extendSuperuserActions(action_id: string) {
     let name = 'SUPERUSER';
 
-    try {
-      const { id: role_id } = await this.RoleService.findOne({
-        name
-      });
-      const permissions = await this.PermissionService.findMany({ role_id });
+    const role = await this.RoleService.findOne({
+      name
+    }).catch((e) => {
+      if (e.status === 404) return null;
+      throw e;
+    });
 
-      let promises = permissions.map(
-        async ({ id: permission_id }) =>
-          await this.PermissionActionService.createOne({
-            permission_id,
-            action_id
-          })
-      );
-      await Promise.all(promises);
-    } catch (error) {
-      if (error instanceof NotFoundError) {
-        console.log('Superuser Role not found');
-      } else {
-        throw error;
-      }
+    if (!role) return;
+
+    const { id: role_id } = role;
+
+    const permissions = await this.PermissionService.findMany({
+      role_id
+    }).catch((e) => {
+      if (e.status === 404) return null;
+      throw e;
+    });
+
+    if (!permissions) return;
+
+    for (const { id: permission_id } of permissions) {
+      await this.PermissionActionService.createOne({
+        permission_id,
+        action_id
+      });
     }
   }
 }
