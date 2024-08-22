@@ -1,9 +1,6 @@
-import { varchar, uuid, pgTable, pgEnum } from 'drizzle-orm/pg-core';
+import { varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { RoleSchema, RoleSelect } from './roles';
-import { PermissionSelect } from './permissions';
-import { ModuleSelect } from './modules';
-import { ActionSelect } from './actions';
+import { RoleSchema } from './roles';
 import { BaseEntitySchema } from './base';
 
 const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;

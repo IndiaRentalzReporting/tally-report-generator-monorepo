@@ -12,39 +12,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await req.permissionService.findMany(
-      {},
-      {
-        with: {
-          module: {
-            columns: {
-              name: true,
-              id: true
-            }
-          },
-          permissionAction: {
-            columns: {
-              action_id: false,
-              permission_id: false
-            },
-            with: {
-              action: {
-                columns: {
-                  name: true,
-                  id: true
-                }
-              }
-            }
-          },
-          role: {
-            columns: {
-              name: true,
-              id: true
-            }
-          }
-        }
-      }
-    );
+    const permissions = await req.permissionService.findMany({});
     res.json({ permissions });
   } catch (e) {
     console.error("Couldn't fetch permissions");

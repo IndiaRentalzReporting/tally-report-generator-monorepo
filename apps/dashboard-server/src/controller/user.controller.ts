@@ -13,49 +13,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await req.userService.findMany(
-      {},
-      {
-        with: {
-          role: {
-            columns: {
-              name: true
-            },
-            with: {
-              permission: {
-                columns: {
-                  role_id: false,
-                  createdAt: false,
-                  updatedAt: false,
-                  module_id: false
-                },
-                with: {
-                  permissionAction: {
-                    columns: {
-                      permission_id: false,
-                      action_id: false
-                    },
-                    with: {
-                      action: {
-                        columns: {
-                          name: true
-                        }
-                      }
-                    }
-                  },
-                  module: {
-                    columns: {
-                      name: true,
-                      id: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    );
+    const usersWithPassword = await req.userService.findMany({});
     const users = usersWithPassword.map(
       ({ password, ...user }) => user
     ) as Omit<DetailedUser, 'password'>[];
