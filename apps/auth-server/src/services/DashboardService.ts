@@ -16,7 +16,7 @@ import {
   RoleSelect,
   UserSelect
 } from '@trg_package/dashboard-schemas/types';
-import { createDashboardClient } from '@trg_package/express/models';
+import { createDashboardClient } from '@trg_package/express';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;

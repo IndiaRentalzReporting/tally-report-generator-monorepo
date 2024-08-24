@@ -1,5 +1,5 @@
 import { defineConfig } from 'drizzle-kit';
-import { AUTH_PG_URL } from '@trg_package/express/models';
+import { AUTH_PG_URL } from '@trg_package/express';
 
 export default defineConfig({
   dialect: 'postgresql',
