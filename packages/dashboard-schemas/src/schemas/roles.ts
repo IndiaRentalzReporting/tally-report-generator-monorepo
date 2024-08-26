@@ -1,9 +1,6 @@
 import { pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { ModuleSelect } from './modules';
-import { ActionSelect } from './actions';
 import { BaseEntitySchema } from './base';
-import { PermissionSelect } from './permissions';
 
 export const RoleSchema = pgTable('roles', {
   ...BaseEntitySchema

@@ -25,31 +25,6 @@ export class BaseService<
     this.entity = this.tableName.tableConfig.dbName;
   }
 
-  public static createClient<T extends Record<string, unknown>>(
-    URL: string,
-    schema: T,
-    options: {
-      DB_MIGRATING: boolean;
-      DB_SEEDING: boolean;
-    }
-  ): { db: PostgresJsDatabase<T>; connection: postgres.Sql } {
-    try {
-      const connection = postgres(URL, {
-        max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : undefined
-      });
-      return {
-        db: drizzle(connection, {
-          schema,
-          logger: true
-        }),
-        connection
-      };
-    } catch (e) {
-      console.error(`Could not create Database client: ${e}`);
-      throw e;
-    }
-  }
-
   public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
     const [entity] = await this.dbClient
       .insert(this.schema)

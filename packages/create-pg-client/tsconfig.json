@@ -1,0 +1,4 @@
+{
+  "extends": "@trg_package/typescript-config/base.json",
+  "include": ["src"]
+}

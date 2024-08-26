@@ -5,7 +5,7 @@ export default defineConfig([
     entry: ['src/services/index.ts', 'src/schemas/index.ts'],
     outDir: 'dist/node',
     format: ['cjs', 'esm'],
-    target: 'node14',
+    target: 'node18',
     platform: 'node',
     dts: true,
     sourcemap: true,

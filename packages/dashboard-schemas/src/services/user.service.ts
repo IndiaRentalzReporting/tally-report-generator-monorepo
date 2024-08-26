@@ -5,6 +5,7 @@ import * as dashboardSchemas from '../schemas';
 import { hashPassword, toTitleCase } from '@trg_package/utils';
 import { UserInsert, UserSelect } from '../schemas/users';
 import { DetailedUser } from '../types';
+import { eq } from 'drizzle-orm';
 
 export class UserService extends BaseServiceNew<
   typeof dashboardSchemas,
@@ -22,13 +23,12 @@ export class UserService extends BaseServiceNew<
     return user;
   }
 
-  public async findOneDetailedUser(
-    data: Partial<typeof this.schema.$inferSelect>
-  ): Promise<DetailedUser> {
-    const user = (await super.findOne(data, {
+  public async findMany(data: Partial<typeof this.schema.$inferSelect>) {
+    const users = await super.findMany(data, {
       with: {
         role: {
           columns: {
+            //@ts-ignore
             name: true
           },
           with: {
@@ -64,8 +64,57 @@ export class UserService extends BaseServiceNew<
           }
         }
       }
-    })) as unknown as DetailedUser;
-    const prettyUser = this.prettifyUser(user);
+    });
+
+    return users;
+  }
+
+  public async findOneDetailedUser(
+    data: Partial<typeof this.schema.$inferSelect>
+  ): Promise<DetailedUser> {
+    const user = await super.findOne(data, {
+      with: {
+        role: {
+          columns: {
+            //@ts-ignore
+            name: true
+          },
+          with: {
+            permission: {
+              columns: {
+                role_id: false,
+                createdAt: false,
+                updatedAt: false,
+                module_id: false
+              },
+              with: {
+                permissionAction: {
+                  columns: {
+                    permission_id: false,
+                    action_id: false
+                  },
+                  with: {
+                    action: {
+                      columns: {
+                        name: true
+                      }
+                    }
+                  },
+                  module: {
+                    columns: {
+                      name: true,
+                      id: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    const prettyUser = this.prettifyUser(user as DetailedUser);
     return prettyUser;
   }
 

@@ -1,5 +1,5 @@
 import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
-import { BaseServiceNew } from '@trg_package/base-service';
+import { createUrl, createClient } from '@trg_package/create-pg-client';
 
 export const createDashboardClient = ({
   db_username,
@@ -10,12 +10,12 @@ export const createDashboardClient = ({
   db_password: string;
   db_name: string;
 }) => {
-  const DASHBOARD_PG_URL = BaseServiceNew.createUrl({
+  const DASHBOARD_PG_URL = createUrl({
     db_username,
     db_password,
     db_name
   });
-  const { client, connection } = BaseServiceNew.createClient(
+  const { client, connection } = createClient(
     DASHBOARD_PG_URL,
     dashboardSchemas,
     {

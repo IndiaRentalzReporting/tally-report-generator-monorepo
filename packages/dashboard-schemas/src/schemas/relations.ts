@@ -1,11 +1,9 @@
-import { primaryKey, pgTable, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { UserSchema } from './users';
 import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { PermissionActionSchema } from './permissionAction';
 
 export const userSchemaRelation = relations(UserSchema, ({ one }) => ({

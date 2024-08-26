@@ -1,7 +1,8 @@
 {
-  "extends": "@trg_package/typescript-config/base.json",
-  "include": ["src"],
+  "extends": "@trg_package/typescript-config/express.json",
   "compilerOptions": {
     "outDir": "dist"
-  }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
 }

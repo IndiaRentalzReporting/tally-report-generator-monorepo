@@ -36,7 +36,7 @@ export class ActionService extends BaseServiceNew<
     const role = await this.RoleService.findOne({
       name
     }).catch((e) => {
-      if (e.status === 404) return null;
+      if (e instanceof NotFoundError) return null;
       throw e;
     });
 
@@ -47,7 +47,7 @@ export class ActionService extends BaseServiceNew<
     const permissions = await this.PermissionService.findMany({
       role_id
     }).catch((e) => {
-      if (e.status === 404) return null;
+      if (e instanceof NotFoundError) return null;
       throw e;
     });
 

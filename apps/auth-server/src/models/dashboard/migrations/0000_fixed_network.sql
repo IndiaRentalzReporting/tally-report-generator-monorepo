@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS "actions" (
 	"name" varchar(200) NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3)
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "modules" (
@@ -20,15 +20,21 @@ CREATE TABLE IF NOT EXISTS "modules" (
 	"name" varchar(200) NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3),
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
 	"isPrivate" boolean DEFAULT false NOT NULL,
 	"icon" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "permission_action" (
+	"status" "status" DEFAULT 'active' NOT NULL,
+	"isReadonly" boolean DEFAULT false NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
 	"permission_id" uuid NOT NULL,
 	"action_id" uuid NOT NULL,
 	CONSTRAINT "permission_action_permission_id_action_id_pk" PRIMARY KEY("permission_id","action_id")
@@ -38,10 +44,10 @@ CREATE TABLE IF NOT EXISTS "permissions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3),
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
 	"role_id" uuid NOT NULL,
 	"module_id" uuid NOT NULL
 );
@@ -51,20 +57,20 @@ CREATE TABLE IF NOT EXISTS "roles" (
 	"name" varchar(200) NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3)
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"status" "status" DEFAULT 'active' NOT NULL,
 	"isReadonly" boolean DEFAULT false NOT NULL,
-	"createdAt" timestamp (3) DEFAULT now() NOT NULL,
-	"updatedAt" timestamp (3) DEFAULT now(),
-	"deletedAt" timestamp (3),
-	"approvedAt" timestamp (3),
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
 	"role_id" uuid,
 	"first_name" varchar(50) NOT NULL,
 	"last_name" varchar(50) NOT NULL,

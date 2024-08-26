@@ -1,9 +1,8 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
-import roles from '../models/dashboard/seed/Roles/data.json';
+import superUserRole from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
-import { BadRequestError } from '@trg_package/errors';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
 import {
@@ -17,7 +16,7 @@ import {
   RoleSelect,
   UserSelect
 } from '@trg_package/dashboard-schemas/types';
-import { createDashboardClient } from '@trg_package/express/models';
+import { createDashboardClient } from '@trg_package/express';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
@@ -49,15 +48,15 @@ class DashboardService {
 
   private async seedAction() {
     const ASI = new ActionService(this.dashboardClient);
-    for (const { name } of actions) {
-      await ASI.createOne({ name, isReadonly: true });
+    for (const action of actions) {
+      await ASI.createOne(action);
     }
   }
 
   private async seedModules() {
     const MSI = new ModuleService(this.dashboardClient);
-    for (const { name } of actions) {
-      await MSI.createOne({ name, isReadonly: true });
+    for (const module of modules) {
+      await MSI.createOne(module);
     }
   }
 
@@ -70,7 +69,7 @@ class DashboardService {
 
   private async seedRole(): Promise<RoleSelect['id']> {
     const RSI = new RoleService(this.dashboardClient);
-    const role = await RSI.createOne({ name: roles.name, isReadonly: true });
+    const role = await RSI.createOne(superUserRole);
     return role.id;
   }
 
