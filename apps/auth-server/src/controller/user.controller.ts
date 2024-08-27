@@ -17,7 +17,6 @@ export const createOne = async (
 
     return res.json({ user });
   } catch (e) {
-    console.error("Couldn't delete a user");
     return next(e);
   }
 };
@@ -34,7 +33,6 @@ export const readAll = async (
       users
     });
   } catch (e) {
-    console.error("Couldn't fetch all Users!");
     return next(e);
   }
 };
@@ -54,7 +52,6 @@ export const readOne = async (
       user: userWithoutPassword
     });
   } catch (e) {
-    console.error("Couldn't fetch all Users!");
     return next(e);
   }
 };
@@ -72,7 +69,6 @@ export const updateOne = async (
 
     return res.json({ user });
   } catch (e) {
-    console.error("Couldn't delete a user");
     return next(e);
   }
 };
@@ -87,7 +83,6 @@ export const deleteOne = async (
 
     return res.json({ user });
   } catch (e) {
-    console.error("Couldn't delete a user");
     return next(e);
   }
 };

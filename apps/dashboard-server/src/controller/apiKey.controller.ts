@@ -7,7 +7,6 @@ export const createOne = async (
 ) => {
   try {
   } catch (e) {
-    console.error('Could not create api key', e);
     next(e);
   }
 };

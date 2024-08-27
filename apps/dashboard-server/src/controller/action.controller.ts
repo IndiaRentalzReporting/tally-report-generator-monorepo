@@ -13,7 +13,6 @@ export const readAll = async (
     const actions = await req.actionService.findMany({});
     return res.json({ actions });
   } catch (e) {
-    console.error('Could not fetch all actions');
     return next(e);
   }
 };
@@ -27,7 +26,6 @@ export const readOne = async (
     const action = await req.actionService.findOne({ id: req.params.id });
     return res.json({ action });
   } catch (e) {
-    console.error('Action does not exist!');
     return next(e);
   }
 };
@@ -41,7 +39,6 @@ export const updateOne = async (
     const action = await req.actionService.updateOne(req.params.id, req.body);
     return res.json({ action });
   } catch (e) {
-    console.error('Could not update action');
     return next(e);
   }
 };
@@ -55,7 +52,6 @@ export const deleteOne = async (
     const action = await req.actionService.deleteOne(req.params.id);
     return res.json({ action });
   } catch (e) {
-    console.error('Could not delete action');
     return next(e);
   }
 };
@@ -73,7 +69,6 @@ export const createOne = async (
     });
     return res.json({ action });
   } catch (e) {
-    console.error('Could not create an action');
     return next(e);
   }
 };

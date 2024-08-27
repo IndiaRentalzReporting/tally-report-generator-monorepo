@@ -24,7 +24,6 @@ export const createOne = async (
     const module = await req.moduleService.createOne(req.body.moduleDetails);
     return res.json({ module });
   } catch (e) {
-    console.error('Could not create a new Module');
     return next(e);
   }
 };
@@ -38,7 +37,6 @@ export const updateOne = async (
     const module = await req.moduleService.updateOne(req.params.id, req.body);
     return res.json({ module });
   } catch (e) {
-    console.error('Could not update a Module');
     return next(e);
   }
 };
@@ -52,7 +50,6 @@ export const deleteOne = async (
     const module = await req.moduleService.deleteOne(req.params.id);
     return res.json({ module });
   } catch (e) {
-    console.error('Could not delete a Module');
     return next(e);
   }
 };
@@ -66,7 +63,6 @@ export const readAll = async (
     const modules = await req.moduleService.findMany({});
     return res.json({ modules });
   } catch (e) {
-    console.error("Couldn't fetch all Modules");
     return next(e);
   }
 };
@@ -82,7 +78,6 @@ export const readOne = async (
     });
     return res.json({ module });
   } catch (e) {
-    console.error("Couldn't fetch Module");
     return next(e);
   }
 };

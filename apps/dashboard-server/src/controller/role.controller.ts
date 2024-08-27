@@ -10,7 +10,6 @@ export const readAll = async (
     const roles = await req.roleService.findMany({});
     return res.json({ roles });
   } catch (e) {
-    console.error("Couldn't fetch all Roles");
     return next(e);
   }
 };
@@ -24,7 +23,6 @@ export const readOne = async (
     const role = await req.roleService.findOne({ id: req.params.id });
     return res.json({ role });
   } catch (e) {
-    console.error("Couldn't fetch a Role");
     return next(e);
   }
 };
@@ -40,7 +38,6 @@ export const createOne = async (
       role
     });
   } catch (e) {
-    console.error("Couldn't create a new Role");
     return next(e);
   }
 };
@@ -56,7 +53,6 @@ export const updateOne = async (
       role
     });
   } catch (e) {
-    console.error("Couldn't update the Role");
     return next(e);
   }
 };
@@ -72,7 +68,6 @@ export const deleteOne = async (
       role
     });
   } catch (e) {
-    console.error("Couldn't delete the Role");
     return next(e);
   }
 };

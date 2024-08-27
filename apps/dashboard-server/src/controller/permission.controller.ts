@@ -15,7 +15,6 @@ export const readAll = async (
     const permissions = await req.permissionService.findMany({});
     res.json({ permissions });
   } catch (e) {
-    console.error("Couldn't fetch permissions");
     return next(e);
   }
 };
@@ -31,7 +30,6 @@ export const readAllOfRole = async (
     });
     res.json({ permissions });
   } catch (e) {
-    console.error("Couldn't fetch permissions");
     return next(e);
   }
 };
@@ -73,7 +71,6 @@ export const createMany = async (
       permissions: await Promise.all(promises)
     });
   } catch (e) {
-    console.error("Couldn't assign permissions to a role");
     return next(e);
   }
 };
@@ -119,7 +116,6 @@ export const updateMany = async (
       permissions: await Promise.all(promises)
     });
   } catch (e) {
-    console.error("Couldn't update permissions for a role");
     return next(e);
   }
 };

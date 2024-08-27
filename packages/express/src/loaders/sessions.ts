@@ -2,12 +2,7 @@ import { Express } from 'express';
 import MongoStore from 'connect-mongo';
 import session, { SessionOptions } from 'express-session';
 import config from '../config';
-
-interface IConfig {
-  SESSION_SECRET: string;
-  MONGO_URI: string;
-  NODE_ENV: string;
-}
+import { BadRequestError, DatabaseError } from '@trg_package/errors';
 
 export const sessionsLoader = (app: Express) => {
   const { SESSION_SECRET, MONGO_URI, NODE_ENV } = config;
@@ -18,8 +13,7 @@ export const sessionsLoader = (app: Express) => {
         mongoUrl: MONGO_URI
       });
     } catch (err) {
-      console.error('Could not connect to the Session Database');
-      throw err;
+      throw new DatabaseError('Could not connect to the Session Database');
     }
 
     const sessionObject: SessionOptions = {
@@ -42,7 +36,6 @@ export const sessionsLoader = (app: Express) => {
 
     app.use(session(sessionObject));
   } catch (error) {
-    console.error('Could not setup the Sessions Library!');
-    throw error;
+    throw new BadRequestError('Could not setup the Sessions Library!');
   }
 };

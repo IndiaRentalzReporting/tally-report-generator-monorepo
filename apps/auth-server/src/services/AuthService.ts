@@ -73,10 +73,6 @@ class AuthService {
       password: pw
     });
 
-    if (user === undefined) {
-      throw new NotFoundError('User does not exist');
-    }
-
     return user;
   }
 
