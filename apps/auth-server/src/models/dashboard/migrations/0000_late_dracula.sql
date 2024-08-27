@@ -15,6 +15,19 @@ CREATE TABLE IF NOT EXISTS "actions" (
 	"approvedAt" timestamp
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "api_keys" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar(200) NOT NULL,
+	"status" "status" DEFAULT 'active' NOT NULL,
+	"isReadonly" boolean DEFAULT false NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
+	"key" varchar(64) NOT NULL,
+	CONSTRAINT "api_keys_key_unique" UNIQUE("key")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "modules" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(200) NOT NULL,
