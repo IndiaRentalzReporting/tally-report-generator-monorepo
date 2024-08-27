@@ -71,7 +71,7 @@ class AuthService {
     data: Pick<UserInsert, 'email'> & {
       password: string;
     }
-  ): Promise<Omit<UserSelect, 'password'>> {
+  ): Promise<SafeUserSelect> {
     const { email, password: pw } = data;
     const { password, ...user } = await UserService.updateOne(email, {
       password: pw

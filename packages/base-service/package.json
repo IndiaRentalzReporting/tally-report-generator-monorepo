@@ -12,8 +12,7 @@
   "dependencies": {
     "@trg_package/errors": "*",
     "drizzle-orm": "^0.31.2",
-    "drizzle-zod": "^0.5.1",
-    "postgres": "^3.4.4"
+    "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
     "@trg_package/eslint-config": "*",

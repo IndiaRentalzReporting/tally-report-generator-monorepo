@@ -3,8 +3,7 @@ import { ExtractTablesWithRelations, TableRelationalConfig } from 'drizzle-orm';
 import { and, eq } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
-import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export class BaseServiceNew<
   H extends Record<string, unknown>,

@@ -9,7 +9,7 @@ import { NotFoundError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
-  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  res: Response<{ user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {

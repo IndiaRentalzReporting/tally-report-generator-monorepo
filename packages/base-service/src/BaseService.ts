@@ -2,8 +2,7 @@ import { NotFoundError } from '@trg_package/errors';
 import { and, eq, TableRelationalConfig } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
-import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export class BaseService<
   H extends Record<string, unknown>,
