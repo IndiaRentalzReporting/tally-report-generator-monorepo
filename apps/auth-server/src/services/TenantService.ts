@@ -11,6 +11,7 @@ import crypto from 'crypto';
 import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
+import { DatabaseError } from '@trg_package/errors';
 
 class TenantService extends BaseTenantService {
   constructor() {
@@ -95,7 +96,7 @@ class TenantService extends BaseTenantService {
         sql`GRANT ALL PRIVILEGES ON DATABASE ${sql.identifier(db_name)} TO ${sql.identifier(db_username)}`
       );
     } catch (e) {
-      throw new Error(`Could not create database: ${e}`);
+      throw new DatabaseError(`Could not create dashboard database: ${e}`);
     }
 
     return { db_name, db_username, db_password };

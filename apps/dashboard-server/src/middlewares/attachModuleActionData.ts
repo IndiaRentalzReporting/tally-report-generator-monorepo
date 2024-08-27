@@ -19,7 +19,7 @@ export const attachModuleActionData = async (
   const [_, module, action] = url.split('/');
 
   const Y = await req.actionService.findOne({
-    name: action?.toUpperCase() as ActionSelect['name']
+    name: action?.toUpperCase()
   });
   const X = await req.moduleService.findOne({
     name: module?.toUpperCase()

@@ -1,12 +1,13 @@
 import * as dashboard_schema from './schema';
 import config, { DashboardPgUrlKey } from '../../config';
 import { createClient } from '@trg_package/create-pg-client';
+import { BadRequestError } from '@trg_package/errors';
 
 const DASHBOARD_PG_URL = config[DashboardPgUrlKey];
 const { DB_MIGRATING, DB_SEEDING } = config;
 
 if (!DASHBOARD_PG_URL) {
-  throw new Error('Dashboard database URL not provided');
+  throw new BadRequestError('Dashboard database URL not provided');
 }
 
 export let { client: dashboardDb, connection: dashboardConnection } =

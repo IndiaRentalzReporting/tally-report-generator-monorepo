@@ -58,10 +58,6 @@ class AuthService {
       email
     });
 
-    if (!user) {
-      throw new NotFoundError('User does not exist');
-    }
-
     await comparePassword(password, user.password);
 
     return user;

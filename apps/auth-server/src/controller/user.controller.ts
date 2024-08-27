@@ -49,8 +49,6 @@ export const readOne = async (
       id: req.params.id
     });
 
-    if (!user) throw new NotFoundError('User does not exist');
-
     const { password, ...userWithoutPassword } = user;
     return res.json({
       user: userWithoutPassword
