@@ -58,10 +58,6 @@ class AuthService {
       email
     });
 
-    if (!user) {
-      throw new NotFoundError('User does not exist');
-    }
-
     await comparePassword(password, user.password);
 
     return user;
@@ -76,10 +72,6 @@ class AuthService {
     const { password, ...user } = await UserService.updateOne(email, {
       password: pw
     });
-
-    if (user === undefined) {
-      throw new NotFoundError('User does not exist');
-    }
 
     return user;
   }

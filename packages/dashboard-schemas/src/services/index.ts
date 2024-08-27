@@ -4,3 +4,4 @@ export * from './permission.service';
 export * from './permissionAction.service';
 export * from './module.service';
 export * from './action.service';
+export * from './apiKey.service';

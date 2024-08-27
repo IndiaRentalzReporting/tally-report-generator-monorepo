@@ -40,7 +40,6 @@ export const handleStatusCheck = (
       isAuthenticated: false
     });
   } catch (e) {
-    console.error(`Couldn't check the status`);
     return next(e);
   }
 };

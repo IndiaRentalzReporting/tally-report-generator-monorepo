@@ -12,7 +12,6 @@ export const createOne = async (
 
     return res.json({ tenant });
   } catch (e) {
-    console.error("Couldn't create a Tenant");
     return next(e);
   }
 };
@@ -28,7 +27,6 @@ export const readAll = async (
       tenants
     });
   } catch (e) {
-    console.error("Couldn't fetch all Tenants!");
     return next(e);
   }
 };
@@ -47,7 +45,6 @@ export const readOne = async (
       tenant
     });
   } catch (e) {
-    console.error(`Couldn't fetch Tenant with id ${req.params.id}!`);
     return next(e);
   }
 };
@@ -62,7 +59,6 @@ export const updateOne = async (
 
     return res.json({ tenant });
   } catch (e) {
-    console.error(`Couldn't update Tenant with id ${req.params.id}!`);
     return next(e);
   }
 };
@@ -77,7 +73,6 @@ export const deleteOne = async (
 
     return res.json({ tenant });
   } catch (e) {
-    console.error(`Couldn't delete Tenant with id ${req.params.id}!`);
     return next(e);
   }
 };

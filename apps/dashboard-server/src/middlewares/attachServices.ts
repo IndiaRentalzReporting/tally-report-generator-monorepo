@@ -3,7 +3,8 @@ import {
   RoleService,
   ModuleService,
   ActionService,
-  PermissionService
+  PermissionService,
+  ApiKeyService
 } from '@trg_package/dashboard-schemas/services';
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
@@ -16,6 +17,7 @@ declare global {
       moduleService: ModuleService;
       actionService: ActionService;
       permissionService: PermissionService;
+      apiKeyService: ApiKeyService;
     }
   }
 }
@@ -33,5 +35,6 @@ export const attachServices = (
   req.moduleService = new ModuleService(dashboardDb);
   req.actionService = new ActionService(dashboardDb);
   req.permissionService = new PermissionService(dashboardDb);
+  req.apiKeyService = new ApiKeyService(dashboardDb);
   next();
 };

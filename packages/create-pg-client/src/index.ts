@@ -1,3 +1,4 @@
+import { BadRequestError } from '@trg_package/errors';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
@@ -35,7 +36,8 @@ export const createClient = <T extends Record<string, unknown>>(
       connection
     };
   } catch (e) {
-    console.error(`Could not create Database client with URL - ${URL}: ${e}`);
-    throw e;
+    throw new BadRequestError(
+      `Could not create Database client with URL - ${URL}: ${e}`
+    );
   }
 };

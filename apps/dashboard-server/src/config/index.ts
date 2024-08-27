@@ -1,3 +1,4 @@
+import { BadRequestError } from '@trg_package/errors';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
 import { ZodError, z } from 'zod';
@@ -31,10 +32,9 @@ try {
   EnvSchema.parse(process.env);
 } catch (error) {
   if (error instanceof ZodError) {
-    console.error(error);
     let message = 'Missing required values in .env:\n';
     message += logError(error);
-    const e = new Error(message);
+    const e = new BadRequestError(message);
     e.stack = '';
     throw e;
   } else {

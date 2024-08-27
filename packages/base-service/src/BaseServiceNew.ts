@@ -1,4 +1,11 @@
-import { BadRequestError, NotFoundError } from '@trg_package/errors';
+import {
+  BadRequestError,
+  CreateError,
+  DeleteError,
+  NotFoundError,
+  ReadError,
+  UpdateError
+} from '@trg_package/errors';
 import { ExtractTablesWithRelations, TableRelationalConfig } from 'drizzle-orm';
 import { and, eq } from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
@@ -28,17 +35,18 @@ export class BaseServiceNew<
   }
 
   public async createOne(data: T['$inferInsert']): Promise<T['$inferSelect']> {
-    const [entity] = await this.dbClient
-      .insert(this.schema)
-      .values(data)
-      .returning();
+    try {
+      const [entity] = await this.dbClient
+        .insert(this.schema)
+        .values(data)
+        .returning();
 
-    if (!entity)
-      throw new BadRequestError(
-        `Returned as undefined in ${this.entity}: ${data}`
-      );
+      if (!entity) throw new CreateError(this.entity, data);
 
-    return entity;
+      return entity;
+    } catch (e) {
+      throw new CreateError(this.entity, data);
+    }
   }
 
   public async findMany(
@@ -55,22 +63,26 @@ export class BaseServiceNew<
       'where'
     >
   ): Promise<T['$inferSelect'][]> {
-    const keys = Object.keys(data) as Array<
-      keyof Partial<typeof this.schema.$inferSelect>
-    >;
-    const values = Object.values(data) as Array<any>;
-    const entity = await this.tableName.findMany({
-      where: and(
-        ...keys.map((key, index) => eq(this.schema[key], values[index]))
-      ),
-      ...extra
-    });
+    try {
+      const keys = Object.keys(data) as Array<
+        keyof Partial<typeof this.schema.$inferSelect>
+      >;
+      const values = Object.values(data) as Array<any>;
+      const entity = await this.tableName.findMany({
+        where: and(
+          ...keys.map((key, index) => eq(this.schema[key], values[index]))
+        ),
+        ...extra
+      });
 
-    if (!entity.length) {
-      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
+      if (!entity.length) {
+        throw new ReadError(this.entity, data);
+      }
+
+      return entity;
+    } catch (error) {
+      throw new ReadError(this.entity, data);
     }
-
-    return entity;
   }
 
   public async findOne(
@@ -87,52 +99,62 @@ export class BaseServiceNew<
       'where'
     >
   ): Promise<T['$inferSelect']> {
-    const keys = Object.keys(data) as Array<
-      keyof Partial<typeof this.schema.$inferSelect>
-    >;
-    const values = Object.values(data) as Array<any>;
+    try {
+      const keys = Object.keys(data) as Array<
+        keyof Partial<typeof this.schema.$inferSelect>
+      >;
+      const values = Object.values(data) as Array<any>;
 
-    const entity = await this.tableName.findFirst({
-      where: and(
-        ...keys.map((key, index) => eq(this.schema[key], values[index]))
-      ),
-      ...extra
-    });
+      const entity = await this.tableName.findFirst({
+        where: and(
+          ...keys.map((key, index) => eq(this.schema[key], values[index]))
+        ),
+        ...extra
+      });
 
-    if (!entity) {
-      throw new NotFoundError(`Does not exist in ${this.entity}: ${data}`);
+      if (!entity) {
+        throw new ReadError(this.entity, data);
+      }
+
+      return entity;
+    } catch (error) {
+      throw new ReadError(this.entity, data);
     }
-
-    return entity;
   }
 
   public async updateOne(
     id: T['$inferSelect']['id'],
     data: Partial<T['$inferInsert']>
   ): Promise<T['$inferSelect']> {
-    const [entity] = await this.dbClient
-      .update(this.schema)
-      .set({ ...data })
-      .where(eq(this.schema.id, id))
-      .returning();
+    try {
+      const [entity] = await this.dbClient
+        .update(this.schema)
+        .set({ ...data })
+        .where(eq(this.schema.id, id))
+        .returning();
 
-    if (!entity)
-      throw new NotFoundError(`Does not exit in ${this.entity}: ${data}`);
+      if (!entity) throw new UpdateError(this.entity, data);
 
-    return entity;
+      return entity;
+    } catch (error) {
+      throw new UpdateError(this.entity, data);
+    }
   }
 
   public async deleteOne(
     id: T['$inferSelect']['id']
   ): Promise<T['$inferSelect']> {
-    const [entity] = await this.dbClient
-      .delete(this.schema)
-      .where(eq(this.schema.id, id))
-      .returning();
+    try {
+      const [entity] = await this.dbClient
+        .delete(this.schema)
+        .where(eq(this.schema.id, id))
+        .returning();
 
-    if (!entity)
-      throw new NotFoundError(`Does not exit in ${this.entity}: ${id}`);
+      if (!entity) throw new DeleteError(this.entity, id);
 
-    return entity;
+      return entity;
+    } catch (error) {
+      throw new DeleteError(this.entity, id);
+    }
   }
 }

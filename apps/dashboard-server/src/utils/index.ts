@@ -20,9 +20,6 @@ export const verifyUserJWTToken = async (
   const { SMTP_SECRET } = config;
   const { id } = jwt.verify(token, SMTP_SECRET) as IToken;
   const user = await UserService.findOne({ id });
-  if (!user) {
-    throw new NotFoundError('User does not exist!');
-  }
   return user.id;
 };
 

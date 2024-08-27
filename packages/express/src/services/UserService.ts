@@ -22,7 +22,7 @@ class UserService extends BaseUserService {
       );
 
       if (!db_name || !db_username || !db_password) {
-        throw new BadRequestError('Tenant databse error');
+        throw new BadRequestError('Tenant database error, missing credentials');
       }
 
       const { client: dashboard_db, connection: dashboard_connection } =

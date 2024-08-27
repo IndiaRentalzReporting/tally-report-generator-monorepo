@@ -17,7 +17,6 @@ export const handleSignUp = async (
     const { user, tenant } = await AuthService.signUp(req.body);
     res.json({ user, tenant });
   } catch (err) {
-    console.error(`Could not sign up the User: `, err);
     return next(err);
   }
 };
@@ -36,7 +35,6 @@ export const handleSignIn = async (
     }
     throw new UnauthenticatedError('Not logged in');
   } catch (err) {
-    console.error(`Could not sign in the User`);
     return next(err);
   }
 };
@@ -80,7 +78,6 @@ export const handleStatusCheck = (
       isAuthenticated: false
     });
   } catch (e) {
-    console.error(`Couldn't check the status`);
     return next(e);
   }
 };
