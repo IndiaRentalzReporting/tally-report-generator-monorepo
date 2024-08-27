@@ -1,0 +1,10 @@
+{
+  "extends": "@trg_package/typescript-config/react.json",
+  "include": ["src", "*.js", "*.ts", ".eslint.cjs"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
