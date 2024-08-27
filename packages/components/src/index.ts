@@ -1,3 +1,1 @@
-import './global.css';
-
-export * from './components/ui/alert';
+export * from './components/ui/';

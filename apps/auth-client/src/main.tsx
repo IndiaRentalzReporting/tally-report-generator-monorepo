@@ -2,10 +2,10 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
-import './index.css';
+import '@trg_package/components/styles.css';
 
 import 'react-toastify/ReactToastify.css';
-import { Toaster } from './components/ui';
+import { Toaster } from '@trg_package/components';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { AuthProvider } from './providers/AuthProvider';
 

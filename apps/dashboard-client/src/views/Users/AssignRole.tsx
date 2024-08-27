@@ -16,7 +16,7 @@ import {
   SelectItem,
   CardDescription,
   Card
-} from '@/components/ui';
+} from '@trg_package/components';
 import { services } from './services';
 import { services as roleServices } from '../Roles/services';
 import { columnsWithSelection as columns } from './columns';

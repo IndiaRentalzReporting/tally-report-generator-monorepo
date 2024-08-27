@@ -13,7 +13,7 @@ import {
   Skeleton,
   CardHeader,
   CardTitle
-} from '@/components/ui';
+} from '@trg_package/components';
 import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
 import { When } from '@/components/utility';
 import { useIsAllowed } from '@/lib/hooks';

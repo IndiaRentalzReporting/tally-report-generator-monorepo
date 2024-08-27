@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
 import { services } from './services';
-import { Button, Skeleton } from '@/components/ui';
+import { Button, Skeleton } from '@trg_package/components';
 import {
   PermissionSelect,
   ModuleAction,

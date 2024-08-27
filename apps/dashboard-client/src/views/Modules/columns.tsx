@@ -3,7 +3,7 @@ import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
 import { services } from './services';
 import { Else, If, Then } from '@/components/utility';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { Button } from '@/components/ui';
+import { Button } from '@trg_package/components';
 import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [

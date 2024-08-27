@@ -19,7 +19,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@/components/ui';
+} from '@trg_package/components';
 import { When } from '@/components/utility';
 
 interface DataTableProps<TData, TValue> {

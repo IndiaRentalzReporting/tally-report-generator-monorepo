@@ -4,7 +4,7 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler } from 'react';
 import { services } from './services';
-import { Button } from '@/components/ui';
+import { Button } from '@trg_package/components';
 import { ModulePermissions } from './interface';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';

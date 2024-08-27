@@ -2,22 +2,36 @@
   "name": "@trg_package/components",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/index.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./styles.css": "./dist/index.css",
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tailwindcss -i ./src/global.css -o ./dist/index.css",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "tailwindcss -i ./src/global.css -o ./dist/index.css --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.378.0",
-    "react": "^18.3.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@trg_package/tailwind-config": "*",
     "@trg_package/eslint-config": "*",
     "@trg_package/typescript-config": "*",
     "autoprefixer": "^10.4.20",

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Skeleton
-} from '@/components/ui';
+} from '@trg_package/components';
 import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from './columns';
 

@@ -10,7 +10,7 @@ import {
   Button,
   Input,
   ToastAction
-} from '@/components/ui';
+} from '@trg_package/components';
 import { services } from './services';
 import { useToast } from '@/lib/hooks';
 

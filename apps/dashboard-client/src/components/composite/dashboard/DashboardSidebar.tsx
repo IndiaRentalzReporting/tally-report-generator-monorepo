@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
   AccordionContent,
   Button
-} from '@/components/ui';
+} from '@trg_package/components';
 import { When } from '@/components/utility';
 import { useNav } from '@/providers/NavigationProvider';
 

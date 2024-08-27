@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Skeleton } from '@/components/ui';
+import { Skeleton } from '@trg_package/components';
 
 interface IModuleMapperProps {
   module: string;

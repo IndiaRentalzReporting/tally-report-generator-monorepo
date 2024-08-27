@@ -1,9 +1,9 @@
+import type { Config } from 'tailwindcss';
 import tailwindAnimate from 'tailwindcss-animate';
 
-/** @type {import('tailwindcss').Config} */
-export default {
+// We want each package to be responsible for its own content.
+const config: Omit<Config, 'content'> = {
   darkMode: ['class'],
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './src/App.tsx'],
   theme: {
     container: {
       center: true,
@@ -71,3 +71,4 @@ export default {
   },
   plugins: [tailwindAnimate]
 };
+export default config;
