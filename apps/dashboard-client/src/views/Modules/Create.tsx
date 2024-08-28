@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui';
+} from '@trg_package/components';
 import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';

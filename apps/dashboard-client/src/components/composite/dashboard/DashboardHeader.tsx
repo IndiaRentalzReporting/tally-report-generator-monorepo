@@ -20,7 +20,7 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger
-} from '@/components/ui';
+} from '@trg_package/components';
 import { ToggleTheme } from '../ToggleTheme';
 import services from '@/services';
 import { useAuth } from '@/providers/AuthProvider';

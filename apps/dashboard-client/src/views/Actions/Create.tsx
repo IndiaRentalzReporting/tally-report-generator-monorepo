@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { services } from './services';
 import Fields from './Fields';
-import { Button } from '@/components/ui';
+import { Button } from '@trg_package/components';
 import { State, initialState } from './interface';
 
 const Create: React.FC = () => {

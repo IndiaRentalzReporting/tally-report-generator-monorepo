@@ -18,7 +18,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue
-} from '@/components/ui';
+} from '@trg_package/components';
 import { DataTable } from '@/components/composite';
 import { When } from '@/components/utility';
 

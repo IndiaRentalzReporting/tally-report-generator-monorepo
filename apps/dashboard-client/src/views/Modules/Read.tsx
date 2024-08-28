@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
   Skeleton
-} from '@/components/ui';
+} from '@trg_package/components';
 import { services } from './services';
 import { columns } from './columns';
 

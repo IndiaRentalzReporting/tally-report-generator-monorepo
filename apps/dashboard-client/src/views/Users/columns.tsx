@@ -4,7 +4,7 @@ import { DetailedUser } from '@trg_package/dashboard-schemas/types';
 import { services } from './services';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { When } from '@/components/utility';
-import { Button, Checkbox } from '@/components/ui';
+import { Button, Checkbox } from '@trg_package/components';
 
 export const columns: ColumnDef<DetailedUser>[] = [
   {

@@ -14,7 +14,7 @@ import {
   Card,
   CardContent,
   Skeleton
-} from '../ui';
+} from '@trg_package/components';
 
 interface IUpdateEntityProps {
   module: string;

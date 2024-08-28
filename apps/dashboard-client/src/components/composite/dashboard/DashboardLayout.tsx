@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { SkeletonOverlay } from '@/components/ui';
+import { SkeletonOverlay } from '@trg_package/components';
 import { useAuth } from '@/providers/AuthProvider';
 import { When } from '../../utility';
 import DashboardHeader from './DashboardHeader';

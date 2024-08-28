@@ -14,7 +14,7 @@ import {
   SelectValue,
   Skeleton,
   Switch
-} from '@/components/ui';
+} from '@trg_package/components';
 import { StateAsProps } from './interface';
 import { DataTable } from '@/components/composite';
 import { services as moduleService } from '../Modules/services';

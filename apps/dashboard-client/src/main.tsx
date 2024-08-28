@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+// maintain precedence of tailwindcss
+import '@trg_package/components/styles.css';
+import './globals.css';
+// maintain precedence of tailwindcss
 import { RootLayout } from './components/composite';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

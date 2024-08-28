@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@/components/ui';
+import { Button } from '@trg_package/components';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { services } from './services';
 import { State } from './interface';

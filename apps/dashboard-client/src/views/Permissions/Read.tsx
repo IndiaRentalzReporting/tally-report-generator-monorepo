@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardContent,
   Skeleton
-} from '@/components/ui';
+} from '@trg_package/components';
 import { services } from './services';
 import { columns } from './columns';
 import { GroupingDataTable } from '@/components/composite/table/grouping-data-table';
