@@ -9,7 +9,7 @@ import {
   PermissionService,
   RoleService
 } from '.';
-import { NotFoundError } from '@trg_package/errors';
+import { ReadError } from '@trg_package/errors';
 
 export class ModuleService extends BaseServiceNew<
   typeof dashboardSchemas,
@@ -41,7 +41,7 @@ export class ModuleService extends BaseServiceNew<
     const role = await this.RoleService.findOne({
       name
     }).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 
@@ -55,7 +55,7 @@ export class ModuleService extends BaseServiceNew<
     });
 
     const actions = await this.ActionService.findMany({}).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 

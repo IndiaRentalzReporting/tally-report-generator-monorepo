@@ -6,7 +6,7 @@ import { ActionInsert, ActionSelect } from '../types';
 import { RoleService } from './role.service';
 import { PermissionActionService } from './permissionAction.service';
 import { PermissionService } from './permission.service';
-import { NotFoundError } from '@trg_package/errors';
+import { ReadError } from '@trg_package/errors';
 
 export class ActionService extends BaseServiceNew<
   typeof dashboardSchemas,
@@ -36,7 +36,7 @@ export class ActionService extends BaseServiceNew<
     const role = await this.RoleService.findOne({
       name
     }).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 
@@ -47,7 +47,7 @@ export class ActionService extends BaseServiceNew<
     const permissions = await this.PermissionService.findMany({
       role_id
     }).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 

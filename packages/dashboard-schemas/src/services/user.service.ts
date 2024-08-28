@@ -99,12 +99,12 @@ export class UserService extends BaseServiceNew<
                         name: true
                       }
                     }
-                  },
-                  module: {
-                    columns: {
-                      name: true,
-                      id: true
-                    }
+                  }
+                },
+                module: {
+                  columns: {
+                    name: true,
+                    id: true
                   }
                 }
               }
@@ -114,19 +114,6 @@ export class UserService extends BaseServiceNew<
       }
     });
 
-    const prettyUser = this.prettifyUser(user as DetailedUser);
-    return prettyUser;
-  }
-
-  private prettifyUser(user: DetailedUser): DetailedUser {
-    user?.role?.permission.map((permission) => {
-      permission.module.name = toTitleCase(permission.module.name);
-      permission.permissionAction.map((action) => {
-        action.action.name = toTitleCase(action.action.name);
-        return action;
-      });
-      return permission;
-    });
-    return user;
+    return user as DetailedUser;
   }
 }

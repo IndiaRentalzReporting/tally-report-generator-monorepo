@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { BadRequestError, NotFoundError } from '@trg_package/errors';
+import { BadRequestError, ReadError } from '@trg_package/errors';
 import { comparePassword } from '@trg_package/utils';
 import {
   SafeUserSelect,
@@ -22,7 +22,7 @@ class AuthService {
     const existingUser = await UserService.findOne({
       email: userData.email
     }).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 
@@ -33,7 +33,7 @@ class AuthService {
     const existingTenant = await TenantService.findOne({
       name: tenantData.name
     }).catch((e) => {
-      if (e instanceof NotFoundError) return null;
+      if (e instanceof ReadError) return null;
       throw e;
     });
 

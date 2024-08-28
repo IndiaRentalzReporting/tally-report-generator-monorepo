@@ -17,6 +17,7 @@ export class CreateError extends DatabaseError {
       `Failed to insert ${entity} with data: ${JSON.stringify(data)}`,
       StatusCodes.BAD_REQUEST
     );
+    Object.setPrototypeOf(this, CreateError.prototype);
   }
 }
 
@@ -26,6 +27,7 @@ export class ReadError extends DatabaseError {
       `Failed to read ${entity} with query: ${JSON.stringify(query)}`,
       StatusCodes.NOT_FOUND
     );
+    Object.setPrototypeOf(this, ReadError.prototype);
   }
 }
 
@@ -35,11 +37,13 @@ export class UpdateError extends DatabaseError {
       `Failed to update ${entity} with data: ${JSON.stringify(data)}`,
       StatusCodes.BAD_REQUEST
     );
+    Object.setPrototypeOf(this, UpdateError.prototype);
   }
 }
 
 export class DeleteError extends DatabaseError {
   constructor(entity: string, id: string) {
     super(`Failed to delete ${entity} with id: ${id}`, StatusCodes.BAD_REQUEST);
+    Object.setPrototypeOf(this, DeleteError.prototype);
   }
 }
