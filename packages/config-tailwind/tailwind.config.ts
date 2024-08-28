@@ -1,7 +1,6 @@
 import type { Config } from 'tailwindcss';
 import tailwindAnimate from 'tailwindcss-animate';
 
-// We want each package to be responsible for its own content.
 const config: Omit<Config, 'content'> = {
   darkMode: ['class'],
   theme: {

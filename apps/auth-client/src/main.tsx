@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
+import './globals.css';
 import '@trg_package/components/styles.css';
 
 import 'react-toastify/ReactToastify.css';
