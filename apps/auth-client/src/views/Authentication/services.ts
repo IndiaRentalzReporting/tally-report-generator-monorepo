@@ -6,7 +6,7 @@ import {
   SafeUserSelect,
   TenantInsert,
   UserInsert
-} from '@trg_package/auth-schemas/types';
+} from '../../../../../packages/schemas-auth/dist/types';
 import createAxiosInstance from '@/services/client';
 
 const authAxios = createAxiosInstance({

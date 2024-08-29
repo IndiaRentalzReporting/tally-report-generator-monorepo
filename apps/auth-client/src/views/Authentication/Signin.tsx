@@ -12,7 +12,7 @@ import {
   Label
 } from '@trg_package/components';
 import { services } from './services';
-import { LoginUser } from '@trg_package/auth-schemas/types';
+import { LoginUser } from '../../../../../packages/schemas-auth/dist/types';
 
 export const SigninForm = () => {
   const navigate = useNavigate();

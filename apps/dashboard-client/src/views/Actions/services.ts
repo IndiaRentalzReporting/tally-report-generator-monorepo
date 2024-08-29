@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios';
-import { ActionSelect } from '@trg_package/dashboard-schemas/types';
+import { ActionSelect } from '../../../../../packages/schemas-dashboard/dist/types';
 import axios from '@/services/client';
 
 export const services = {

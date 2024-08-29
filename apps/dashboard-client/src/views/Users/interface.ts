@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser } from '../../../../../packages/schemas-dashboard/dist/types';
 
 export interface State
   extends Pick<

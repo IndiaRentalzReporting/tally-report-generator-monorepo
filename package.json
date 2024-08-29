@@ -10,8 +10,8 @@
     "clean-install": "npm run clean && npm run install"
   },
   "devDependencies": {
-    "@trg_package/eslint-config": "*",
-    "@trg_package/typescript-config": "*",
+    "@trg_package/config-eslint": "*",
+    "@trg_package/config-typescript": "*",
     "prettier": "^3.3.3",
     "turbo": "latest"
   },

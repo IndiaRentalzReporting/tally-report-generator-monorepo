@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
+import { ModuleSelect } from '../../../../../packages/schemas-dashboard/dist/types';
 
 export interface State
   extends Pick<ModuleSelect, 'id' | 'name' | 'icon' | 'isPrivate'> {}

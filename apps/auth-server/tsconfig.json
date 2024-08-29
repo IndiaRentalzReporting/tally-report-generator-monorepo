@@ -1,5 +1,5 @@
 {
-  "extends": "@trg_package/typescript-config/express.json",
+  "extends": "@trg_package/config-typescript/express.json",
   "compilerOptions": {
     "outDir": "dist"
   },

@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["@trg_package/eslint-config/react.js"],
+  "extends": ["@trg_package/config-eslint/react.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": true

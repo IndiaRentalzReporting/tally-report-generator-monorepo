@@ -6,8 +6,8 @@
     "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "devDependencies": {
-    "@trg_package/eslint-config": "*",
-    "@trg_package/typescript-config": "*",
+    "@trg_package/config-eslint": "*",
+    "@trg_package/config-typescript": "*",
     "@types/bcrypt": "^5.0.2",
     "tsup": "^8.2.4",
     "typescript": "^5.4.5"

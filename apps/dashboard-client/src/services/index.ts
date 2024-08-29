@@ -1,6 +1,6 @@
 import { AxiosPromise } from 'axios';
 import axios from './client';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser } from '../../../../packages/schemas-dashboard/dist/types';
 
 const services = {
   Authentication: {

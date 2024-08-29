@@ -6,7 +6,7 @@ import {
   PermissionSelect,
   RoleWithPermission,
   ActionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '../../../../../packages/schemas-dashboard/dist/types';
 
 export const services = {
   createOne: async (data: {

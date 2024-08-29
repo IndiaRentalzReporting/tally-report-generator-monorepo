@@ -1,12 +1,12 @@
 {
-  "name": "@trg_package/tailwind-config",
+  "name": "@trg_package/config-tailwind",
   "version": "0.0.0",
   "private": true,
   "exports": {
     ".": "./tailwind.config.ts"
   },
   "devDependencies": {
-    "@trg_package/typescript-config": "*",
+    "@trg_package/config-typescript": "*",
     "tailwindcss": "^3.4.1"
   }
 }

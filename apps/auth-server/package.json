@@ -19,8 +19,8 @@
     "db-dashboard:studio": "cross-env DASHBOARD_PG_URL=postgres://indiarentalz_1e3a9fe2:jg4RP6VLLnzPMLSlapkng_ES_g136RrC@localhost:5432/indiarentalz_3fb93d24 drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893"
   },
   "devDependencies": {
-    "@trg_package/eslint-config": "*",
-    "@trg_package/typescript-config": "*",
+    "@trg_package/config-eslint": "*",
+    "@trg_package/config-typescript": "*",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
