@@ -5,7 +5,6 @@ import { useIsAllowed } from '@/lib/hooks';
 import {
   Drawer,
   DrawerTrigger,
-  Button,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,

@@ -1,9 +1,12 @@
-import { Action, Module } from '@trg_package/dashboard-schemas/types';
+import {
+  ActionSelect,
+  ModuleSelect
+} from '@trg_package/dashboard-schemas/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const useIsAllowed = (data: {
-  module: Module['name'];
-  action: Action['name'];
+  module: ModuleSelect['name'];
+  action: ActionSelect['name'];
 }): boolean => {
   const { permissions } = useAuth();
 

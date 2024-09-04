@@ -2,6 +2,40 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
   "tasks": {
+    "@trg_app/auth-client#build": {
+      "dependsOn": ["^build"],
+      "env": ["VITE_PORT"]
+    },
+    "@trg_app/dashboard-client#build": {
+      "dependsOn": ["^build"],
+      "env": ["VITE_PORT"]
+    },
+    "@trg_app/auth-server#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "SUPERUSER_PG_HOST",
+        "SUPERUSER_PG_PORT",
+        "SUPERUSER_PG_PASSWORD",
+        "SUPERUSER_PG_USER",
+        "SUPERUSER_PG_DATABASE",
+        "SUPERUSER_PG_URL"
+      ]
+    },
+    "@trg_app/dashboard-server#build": {
+      "dependsOn": ["^build"],
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "SMTP_SECRET",
+        "SMTP_HOST",
+        "SMTP_PORT",
+        "SMTP_USER",
+        "SMTP_PASS",
+        "MAIL_FROM"
+      ]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]

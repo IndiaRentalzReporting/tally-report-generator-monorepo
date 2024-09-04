@@ -1,9 +1,6 @@
 import { AxiosPromise } from 'axios';
-import {
-  DetailedUser,
-  RegisterUser,
-  UserSelect
-} from '@trg_package/dashboard-schemas/types';
+import { DetailedUser, UserSelect } from '@trg_package/dashboard-schemas/types';
+import { RegisterUser } from '@trg_package/auth-schemas/types';
 import axios from '@/services/client';
 
 export const services = {

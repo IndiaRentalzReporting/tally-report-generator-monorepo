@@ -55,13 +55,13 @@ const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
         <Input
           minLength={3}
           placeholder="Module Icon SVG"
-          value={moduleIcon}
+          value={moduleIcon ?? ''}
           onChange={(e) => setModuleIcon(e.target.value)}
         />
         <div
           ref={iconRef}
           dangerouslySetInnerHTML={{
-            __html: moduleData.icon
+            __html: moduleData.icon ?? ''
           }}
           className="border border-border rounded-md p-2"
         />
