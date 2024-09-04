@@ -1,7 +1,7 @@
 import {
   ModulePermissions,
   ModuleAction
-} from '../../../../../packages/schemas-dashboard/dist/types';
+} from '@trg_package/dashboard-schemas/types';
 
 export const createPermissionsUsingModulePermissions = (
   modulePermissions: ModulePermissions

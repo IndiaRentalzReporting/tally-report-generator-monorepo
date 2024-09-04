@@ -5,7 +5,7 @@ import {
   DetailedPermission,
   PermissionSelect,
   RoleSelect
-} from '../../../../../packages/schemas-dashboard/dist/types';
+} from '@trg_package/dashboard-schemas/types';
 import axios from '@/services/client';
 
 export const services = {

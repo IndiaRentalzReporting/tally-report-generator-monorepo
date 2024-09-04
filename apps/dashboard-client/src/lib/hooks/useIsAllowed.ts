@@ -1,7 +1,4 @@
-import {
-  Action,
-  Module
-} from '../../../../../packages/schemas-dashboard/dist/types';
+import { Action, Module } from '@trg_package/dashboard-schemas/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const useIsAllowed = (data: {

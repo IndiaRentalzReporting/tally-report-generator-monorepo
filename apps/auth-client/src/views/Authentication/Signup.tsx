@@ -12,10 +12,7 @@ import {
   Label
 } from '@trg_package/components';
 import { services } from './services';
-import {
-  RegisterUser,
-  TenantInsert
-} from '../../../../../packages/schemas-auth/dist/types';
+import { RegisterUser, TenantInsert } from '@trg_package/auth-schemas/types';
 import { useToast } from '@/lib/hooks';
 
 export const SignupForm = () => {

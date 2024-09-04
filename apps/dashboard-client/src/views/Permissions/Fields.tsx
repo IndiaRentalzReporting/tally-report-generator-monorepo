@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import { ModuleSelect } from '../../../../../packages/schemas-dashboard/dist/types';
+import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
 import {
   CardDescription,
   CardHeader,

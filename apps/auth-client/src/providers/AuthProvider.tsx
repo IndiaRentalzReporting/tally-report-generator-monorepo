@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import services from '@/services';
-import { SafeUserSelect } from '../../../../packages/schemas-auth/dist/types';
+import { SafeUserSelect } from '@trg_package/auth-schemas/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;

@@ -5,7 +5,7 @@ import {
   DetailedUser,
   Permissions,
   UserRole
-} from '../../../../packages/schemas-dashboard/dist/types';
+} from '@trg_package/dashboard-schemas/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;

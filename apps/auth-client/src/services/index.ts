@@ -1,6 +1,6 @@
 import { AxiosPromise } from 'axios';
 import createAxiosInstance from './client';
-import { SafeUserSelect } from '../../../../packages/schemas-auth/dist/types';
+import { SafeUserSelect } from '@trg_package/auth-schemas/types';
 
 const authAxios = createAxiosInstance({
   baseURL: '/v1/auth',
