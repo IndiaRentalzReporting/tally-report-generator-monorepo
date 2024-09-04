@@ -1,7 +1,13 @@
 {
   "extends": "@trg_package/config-typescript/express.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["./*.js", "src/**/*.ts", "test/**/*.ts", "drizzle.auth.config.ts"]
+  "include": ["src", "*.js", "*.ts", ".eslint.js"],
+  "exclude": ["node_modules", "dist", ".turbo"]
 }

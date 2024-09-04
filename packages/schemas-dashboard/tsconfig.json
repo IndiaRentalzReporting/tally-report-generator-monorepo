@@ -1,7 +1,13 @@
 {
   "extends": "@trg_package/config-typescript/base.json",
-  "include": ["src"],
   "compilerOptions": {
-    "outDir": "dist"
-  }
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", ".eslintrc"],
+  "exclude": ["node_modules", "dist", ".turbo"]
 }

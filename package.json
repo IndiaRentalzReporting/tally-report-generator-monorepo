@@ -6,8 +6,7 @@
     "dev": "turbo dev --concurrency=13",
     "lint": "turbo lint --concurrency=13",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clean": "rm -rf **/dist **/.turbo **/node_modules",
-    "clean-install": "npm run clean && npm run install"
+    "clean": "rm -rf **/dist **/.turbo **/node_modules"
   },
   "devDependencies": {
     "@trg_package/config-eslint": "*",
