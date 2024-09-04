@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom';
 import { PrivateRoutes, ModuleMapper } from './components/utility';
 import { DashboardLayout } from './components/composite';
-import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './providers/AuthProvider';
 
 const App = () => {

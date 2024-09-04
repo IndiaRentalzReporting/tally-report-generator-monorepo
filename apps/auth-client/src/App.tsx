@@ -11,7 +11,6 @@ import {
   ForgotPassword,
   ResetPassword
 } from './views/Authentication';
-import 'react-toastify/dist/ReactToastify.css';
 import { PublicRoutes } from './components/utility/Routes';
 
 const App = () => {

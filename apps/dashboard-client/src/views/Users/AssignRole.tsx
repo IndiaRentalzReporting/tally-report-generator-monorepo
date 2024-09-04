@@ -25,7 +25,7 @@ const AssignRole: React.FC = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
-  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
+  const { data: allUsers = [] } = useQuery({
     queryFn: () => services.getAll(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
