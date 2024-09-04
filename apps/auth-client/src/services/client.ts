@@ -1,10 +1,4 @@
-import Axios, {
-  AxiosDefaults,
-  AxiosError,
-  AxiosHeaderValue,
-  AxiosInstance,
-  HeadersDefaults
-} from 'axios';
+import Axios, { AxiosError, AxiosInstance } from 'axios';
 import { toast } from '@/lib/hooks';
 
 const createAxiosInstance = (defaults: {

@@ -1,6 +1,5 @@
 import { AxiosPromise } from 'axios';
 import {
-  RegisterUser,
   LoginUser,
   UserSelect,
   SafeUserSelect,

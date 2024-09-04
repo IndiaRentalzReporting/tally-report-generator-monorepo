@@ -17,7 +17,7 @@ const SkeletonOverlay = ({ className, ...props }: Omit<Props, 'isLoading'>) => {
   );
 };
 
-const Skeleton = ({ className, children, isLoading, ...props }: Props) => {
+const Skeleton = ({ className, children, isLoading }: Props) => {
   return (
     <If condition={isLoading}>
       <Then>

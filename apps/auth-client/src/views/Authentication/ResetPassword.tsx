@@ -1,5 +1,5 @@
 import { Label } from '@radix-ui/react-label';
-import React, { useState, FC, FormEvent } from 'react';
+import { useState, FC, FormEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import {

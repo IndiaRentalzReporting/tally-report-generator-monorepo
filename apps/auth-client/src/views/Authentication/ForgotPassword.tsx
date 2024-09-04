@@ -1,5 +1,5 @@
 import { Label } from '@radix-ui/react-label';
-import React, { useState, FC, FormEvent } from 'react';
+import { useState, FC, FormEvent } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import {
   Card,

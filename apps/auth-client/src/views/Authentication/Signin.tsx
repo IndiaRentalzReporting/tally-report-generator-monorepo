@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -15,7 +15,6 @@ import { services } from './services';
 import { LoginUser } from '../../../../../packages/schemas-auth/dist/types';
 
 export const SigninForm = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
