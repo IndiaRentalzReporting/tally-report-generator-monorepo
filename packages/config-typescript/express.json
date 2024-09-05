@@ -5,7 +5,6 @@
   "compilerOptions": {
     "lib": ["es2020"],
     "noEmit": false,
-    "incremental": true,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": false,
     "removeComments": true

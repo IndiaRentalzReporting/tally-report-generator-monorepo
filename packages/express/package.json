@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "",
-    "lint": "eslint . --ext ts --fix --max-warnings 0"
+    "build": "tsup",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@trg_package/config-eslint": "*",
