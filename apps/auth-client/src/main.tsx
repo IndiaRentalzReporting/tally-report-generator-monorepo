@@ -6,7 +6,6 @@ import App from './App';
 import '@trg_package/components/styles.css';
 import './globals.css';
 // maintain precedence of tailwindcss
-import 'react-toastify/ReactToastify.css';
 import { Toaster } from '@trg_package/components';
 import { ThemeProvider } from './providers/ThemeProvider';
 import { AuthProvider } from './providers/AuthProvider';

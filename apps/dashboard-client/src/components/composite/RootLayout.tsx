@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { Toaster } from '@trg_package/components';
-import 'react-toastify/ReactToastify.css';
 
 interface Props {
   children: React.ReactNode;

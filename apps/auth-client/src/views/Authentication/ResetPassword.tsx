@@ -1,4 +1,4 @@
-import { Label } from '@radix-ui/react-label';
+import { Label } from '@trg_package/components';
 import { useState, FC, FormEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
