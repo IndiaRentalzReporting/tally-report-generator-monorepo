@@ -4,8 +4,10 @@ import {
   SafeUserSelect,
   TenantInsert,
   TenantSelect,
-  UserInsert
+  UserInsert,
+  DetailedUser as AuthDetailedUser
 } from '@trg_package/auth-schemas/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 export const handleSignUp = async (
@@ -58,18 +60,16 @@ export const handleLogout = (
 export const handleStatusCheck = (
   req: Request,
   res: Response<{
-    user: SafeUserSelect | null;
+    user: (AuthDetailedUser & DashDetailedUser) | null;
     isAuthenticated: boolean;
   }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
-      const {
-        user: { password, ...userWithoutPassword }
-      } = req;
+      const { user } = req;
       return res.json({
-        user: userWithoutPassword,
+        user,
         isAuthenticated: true
       });
     }
