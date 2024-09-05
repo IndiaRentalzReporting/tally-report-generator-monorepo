@@ -15,7 +15,6 @@
   "devDependencies": {
     "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
-    "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
@@ -42,7 +41,6 @@
     "@trg_package/pg-orm": "*",
     "@trg_package/utils": "*",
     "axios": "^1.7.7",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
     "express": "^4.19.2",
