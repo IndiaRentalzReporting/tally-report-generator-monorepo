@@ -54,6 +54,8 @@
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
     "nodemailer": "^6.9.14",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "postgres": "^3.4.4",
     "zod": "^3.23.8"
   }

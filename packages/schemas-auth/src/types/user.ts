@@ -17,7 +17,7 @@ type DetailedUser = UserSelect & {
   tenant: TenantSelect;
 };
 
-type SafeUserSelect = Omit<DetailedUser, 'password'>;
+type SafeUserSelect = Omit<LoginUser, 'password'>;
 
 export {
   UserInsert,

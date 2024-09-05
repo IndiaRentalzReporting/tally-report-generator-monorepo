@@ -5,12 +5,12 @@ import config from '../config';
 import { BadRequestError, DatabaseError } from '@trg_package/errors';
 
 export const sessionsLoader = (app: Express) => {
-  const { SESSION_SECRET, MONGO_URI, NODE_ENV } = config;
+  const { SESSION_SECRET, MONGO_URL, NODE_ENV } = config;
   try {
     let sessionStore;
     try {
       sessionStore = MongoStore.create({
-        mongoUrl: MONGO_URI
+        mongoUrl: MONGO_URL
       });
     } catch (err) {
       throw new DatabaseError('Could not connect to the Session Database');

@@ -7,6 +7,8 @@ const EnvSchema = z.object({
   NODE_ENV: z
     .enum(['production', 'development', 'staging'])
     .default('development'),
+  AUTH_SUBDOMAIN: z.string().default('auth'),
+  DASH_SUBDOMAIN: z.string().default('dashboard'),
 
   PORT: z.coerce.number().default(4000),
 
@@ -42,4 +44,12 @@ try {
   }
 }
 
-export default EnvSchema.parse(process.env);
+const env = EnvSchema.parse(process.env);
+let finalEnv: z.infer<typeof EnvSchema> & {
+  PROTOCOL: string;
+} = {
+  ...env,
+  PROTOCOL: env.NODE_ENV === 'production' ? 'https' : 'http'
+};
+
+export default finalEnv;
