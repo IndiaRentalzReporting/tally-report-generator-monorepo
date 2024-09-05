@@ -1,21 +1,7 @@
 import { BadRequestError } from '@trg_package/errors';
 import { NextFunction, Response, Request } from 'express';
 import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
 import { createUrl, createClient } from '@trg_package/create-pg-client';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
-
-declare global {
-  namespace Express {
-    interface Request {
-      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
-      dashboardConnection: postgres.Sql<{}>;
-    }
-    interface User extends AuthDetailedUser, DashDetailedUser {}
-  }
-}
 
 export const attachPGDashboard = async (
   req: Request,

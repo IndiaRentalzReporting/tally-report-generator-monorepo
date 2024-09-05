@@ -11,13 +11,13 @@ type RegisterUser = Pick<
   'email' | 'password' | 'first_name' | 'last_name'
 >;
 
-type LoginUser = Pick<UserSelect, 'email' | 'password'>;
-
-type SafeUserSelect = Omit<UserSelect, 'password'>;
+type LoginUser = Pick<UserInsert, 'email' | 'password'>;
 
 type DetailedUser = UserSelect & {
   tenant: TenantSelect;
 };
+
+type SafeUserSelect = Omit<DetailedUser, 'password'>;
 
 export {
   UserInsert,

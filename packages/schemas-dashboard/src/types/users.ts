@@ -25,6 +25,7 @@ type UserRole = {
     };
   }>;
 };
+
 type DetailedUser = UserSelect & {
   role: UserRole | null;
 };

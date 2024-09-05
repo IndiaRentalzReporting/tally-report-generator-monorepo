@@ -6,14 +6,6 @@ import LocalStrategy, {
 } from 'passport-local';
 import AuthService from '../services/AuthService';
 import UserService from '../services/UserService';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
-
-declare global {
-  namespace Express {
-    interface User extends AuthDetailedUser, DashDetailedUser {}
-  }
-}
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {
