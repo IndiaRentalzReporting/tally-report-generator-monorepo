@@ -7,10 +7,11 @@ import {
   TenantInsert,
   TenantSelect,
   UserInsert,
-  UserSelect
+  DetailedUser as AuthDetailedUser
 } from '@trg_package/auth-schemas/types';
 import UserService from './UserService';
 import TenantService from './TenantService';
+import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 
 class AuthService {
   public static async signUp(data: {
@@ -52,7 +53,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<UserSelect> {
+  ): Promise<AuthDetailedUser & DashDetailedUser> {
     const { email, password } = data;
     const user = await UserService.findOne({
       email

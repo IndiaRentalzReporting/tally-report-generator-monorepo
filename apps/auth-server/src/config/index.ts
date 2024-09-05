@@ -27,6 +27,20 @@ const EnvSchema = z.object({
   SUPERUSER_PG_DATABASE: z.string(),
   SUPERUSER_PG_URL: z.string(),
 
+  AUTH_PG_HOST: z.string(),
+  AUTH_PG_PORT: z.coerce.number(),
+  AUTH_PG_PASSWORD: z.string(),
+  AUTH_PG_USER: z.string(),
+  AUTH_PG_DATABASE: z.string(),
+  AUTH_PG_URL: z.string(),
+
+  SESSION_SECRET: z.string(),
+
+  MONGO_USER: z.string(),
+  MONGO_DATABASE: z.string(),
+  MONGO_PASSWORD: z.string(),
+  MONGO_URI: z.string(),
+
   DB_MIGRATING: stringBoolean,
   DB_SEEDING: stringBoolean
 });

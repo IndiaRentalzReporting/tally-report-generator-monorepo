@@ -6,12 +6,12 @@ import LocalStrategy, {
 } from 'passport-local';
 import AuthService from '../services/AuthService';
 import UserService from '../services/UserService';
-import { UserSelect } from '@trg_package/auth-schemas/types';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 
 declare global {
   namespace Express {
-    interface User extends UserSelect, DetailedUser {}
+    interface User extends AuthDetailedUser, DashDetailedUser {}
   }
 }
 
