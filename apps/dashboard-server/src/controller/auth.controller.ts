@@ -31,26 +31,25 @@ export const handleStatusCheck = async (
     const authResponse: AxiosResponse<{
       user: AuthDetailedUser & DashDetailedUser;
       isAuthenticated: boolean;
-    }> = await axios.get('http://localhost:3001/api/v1/auth/status', {
+    }> = await axios.get('http://localhost:4000/api/v1/auth/status', {
       withCredentials: true,
       headers: {
         cookie: req.headers.cookie
       }
     });
     const { user, isAuthenticated } = authResponse.data;
-    if (req.isAuthenticated()) {
-      const {
-        user: { password, ...userWithoutPassword }
-      } = req;
+    if (isAuthenticated && user) {
+      const { password, ...userWithoutPassword } = user;
       return res.json({
         user: userWithoutPassword,
         isAuthenticated: true
       });
+    } else {
+      return res.json({
+        user: null,
+        isAuthenticated: false
+      });
     }
-    return res.json({
-      user: null,
-      isAuthenticated: false
-    });
   } catch (e) {
     return next(e);
   }

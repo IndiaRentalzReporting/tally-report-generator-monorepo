@@ -9,7 +9,12 @@ import { sessionsLoader } from './sessions';
 
 const { NODE_ENV } = config;
 const appLoader = async (): Promise<Express> => {
-  const app = await expressLoader(NODE_ENV, routesLoader);
+  const app = await expressLoader({
+    NODE_ENV,
+    routesLoader,
+    passportLoader,
+    sessionsLoader
+  });
 
   app.use(
     cors({
@@ -17,9 +22,6 @@ const appLoader = async (): Promise<Express> => {
       credentials: true
     })
   );
-
-  app.use(passportLoader);
-  app.use(sessionsLoader);
 
   return app;
 };
