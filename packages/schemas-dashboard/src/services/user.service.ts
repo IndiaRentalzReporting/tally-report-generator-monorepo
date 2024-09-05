@@ -2,10 +2,9 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as dashboardSchemas from '../schemas';
-import { hashPassword, toTitleCase } from '@trg_package/utils';
+import { hashPassword } from '@trg_package/utils';
 import { UserInsert, UserSelect } from '../schemas/users';
 import { DetailedUser } from '../types';
-import { eq } from 'drizzle-orm';
 
 export class UserService extends BaseServiceNew<
   typeof dashboardSchemas,

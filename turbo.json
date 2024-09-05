@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["DOMAIN", "TLD"],
   "tasks": {
     "@trg_app/auth-client#build": {
       "dependsOn": ["^build"],
