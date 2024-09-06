@@ -9,6 +9,9 @@ const EnvSchema = z.object({
   AUTH_SUBDOMAIN: z.string(),
   DASH_SUBDOMAIN: z.string(),
 
+  DOMAIN: z.string(),
+  TLD: z.string(),
+
   PORT: z.coerce.number().default(4000),
 
   MAIL_FROM: z.string(),

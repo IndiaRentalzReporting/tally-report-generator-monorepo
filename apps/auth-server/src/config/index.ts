@@ -19,6 +19,9 @@ const EnvSchema = z.object({
   AUTH_SUBDOMAIN: z.string(),
   DASH_SUBDOMAIN: z.string(),
 
+  DOMAIN: z.string(),
+  TLD: z.string(),
+
   [DashboardPgUrlKey]: z.string().optional(),
 
   SUPERUSER_PG_HOST: z.string(),
