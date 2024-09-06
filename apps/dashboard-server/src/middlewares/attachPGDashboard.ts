@@ -1,19 +1,7 @@
-import TenantService from '../services/TenantService';
 import { BadRequestError } from '@trg_package/errors';
 import { NextFunction, Response, Request } from 'express';
-import { createDashboardClient } from '../models';
 import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
-
-declare global {
-  namespace Express {
-    interface Request {
-      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
-      dashboardConnection: postgres.Sql<{}>;
-    }
-  }
-}
+import { createUrl, createClient } from '@trg_package/create-pg-client';
 
 export const attachPGDashboard = async (
   req: Request,
@@ -21,21 +9,21 @@ export const attachPGDashboard = async (
   next: NextFunction
 ) => {
   if (req.isAuthenticated() && req.user.tenant_id) {
-    const { tenant_id } = req.user;
-
-    const { db_name, db_username, db_password } = await TenantService.findOne({
-      id: tenant_id
-    });
+    const { db_name, db_username, db_password } = req.user.tenant;
 
     if (!db_name || !db_username || !db_password) {
       throw new BadRequestError('Tenant database error, missing credentials');
     }
 
+    const DASHBOARD_PG_URL = createUrl({
+      db_username,
+      db_password,
+      db_name
+    });
     const { client: dashboardDb, connection: dashboardConnection } =
-      createDashboardClient({
-        db_username,
-        db_password,
-        db_name
+      createClient(DASHBOARD_PG_URL, dashboardSchemas, {
+        DB_MIGRATING: false,
+        DB_SEEDING: false
       });
 
     req.dashboardDb = dashboardDb;

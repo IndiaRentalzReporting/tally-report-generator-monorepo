@@ -24,7 +24,7 @@ export const handleSignUp = async (
 export const handleSignIn = async (
   req: Request<object, object, UserInsert>,
   res: Response<{
-    user: SafeUserSelect;
+    user: Request['user'];
   }>,
   next: NextFunction
 ) => {
@@ -58,18 +58,16 @@ export const handleLogout = (
 export const handleStatusCheck = (
   req: Request,
   res: Response<{
-    user: SafeUserSelect | null;
+    user: Request['user'] | null;
     isAuthenticated: boolean;
   }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
-      const {
-        user: { password, ...userWithoutPassword }
-      } = req;
+      const { user } = req;
       return res.json({
-        user: userWithoutPassword,
+        user,
         isAuthenticated: true
       });
     }

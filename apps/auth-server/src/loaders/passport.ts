@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import { Express, Request } from 'express';
 import passport from 'passport';
 import LocalStrategy, {
   VerifyFunction,
@@ -6,14 +6,6 @@ import LocalStrategy, {
 } from 'passport-local';
 import AuthService from '../services/AuthService';
 import UserService from '../services/UserService';
-import { UserSelect } from '@trg_package/auth-schemas/types';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
-
-declare global {
-  namespace Express {
-    interface User extends UserSelect, DetailedUser {}
-  }
-}
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {
@@ -38,7 +30,7 @@ export const passportLoader = (app: Express) => {
   passport.use(localStrategy);
 
   const serializeUserCallback = async (
-    user: Express.User,
+    user: NonNullable<Request['user']>,
     done: (err: any, id?: unknown) => void
   ) => {
     done(null, {
@@ -52,7 +44,10 @@ export const passportLoader = (app: Express) => {
       email: string;
       tenant: string;
     },
-    done: (err: any, user?: false | Express.User | null | undefined) => void
+    done: (
+      err: any,
+      user?: false | NonNullable<Request['user']> | null | undefined
+    ) => void
   ) => {
     const { email, tenant: tenant_id } = userObject;
     try {

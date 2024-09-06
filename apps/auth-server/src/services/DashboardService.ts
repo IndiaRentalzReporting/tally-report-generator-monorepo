@@ -16,7 +16,7 @@ import {
   RoleSelect,
   UserSelect
 } from '@trg_package/dashboard-schemas/types';
-import { createDashboardClient } from '@trg_package/express';
+import { createUrl, createClient } from '@trg_package/create-pg-client';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
@@ -24,11 +24,19 @@ class DashboardService {
   public URL: string;
 
   constructor(db_username: string, db_password: string, db_name: string) {
-    const { client, connection, DASHBOARD_PG_URL } = createDashboardClient({
+    const DASHBOARD_PG_URL = createUrl({
       db_username,
       db_password,
       db_name
     });
+    const { client, connection } = createClient(
+      DASHBOARD_PG_URL,
+      dashboardSchema,
+      {
+        DB_MIGRATING: true,
+        DB_SEEDING: true
+      }
+    );
     this.dashboardClient = client;
     this.dashboardConnection = connection;
     this.URL = DASHBOARD_PG_URL;

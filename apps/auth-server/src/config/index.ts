@@ -17,6 +17,8 @@ const EnvSchema = z.object({
     .enum(['production', 'development', 'staging'])
     .default('development'),
   PORT: z.coerce.number().default(4000),
+  AUTH_SUBDOMAIN: z.string().default('auth'),
+  DASH_SUBDOMAIN: z.string().default('dashboard'),
 
   [DashboardPgUrlKey]: z.string().optional(),
 
@@ -26,6 +28,20 @@ const EnvSchema = z.object({
   SUPERUSER_PG_USER: z.string(),
   SUPERUSER_PG_DATABASE: z.string(),
   SUPERUSER_PG_URL: z.string(),
+
+  AUTH_PG_HOST: z.string(),
+  AUTH_PG_PORT: z.coerce.number(),
+  AUTH_PG_PASSWORD: z.string(),
+  AUTH_PG_USER: z.string(),
+  AUTH_PG_DATABASE: z.string(),
+  AUTH_PG_URL: z.string(),
+
+  SESSION_SECRET: z.string(),
+
+  MONGO_USER: z.string(),
+  MONGO_DATABASE: z.string(),
+  MONGO_PASSWORD: z.string(),
+  MONGO_URL: z.string(),
 
   DB_MIGRATING: stringBoolean,
   DB_SEEDING: stringBoolean
@@ -55,4 +71,12 @@ try {
   }
 }
 
-export default EnvSchema.parse(process.env);
+const env = EnvSchema.parse(process.env);
+let finalEnv: z.infer<typeof EnvSchema> & {
+  PROTOCOL: string;
+} = {
+  ...env,
+  PROTOCOL: env.NODE_ENV === 'production' ? 'https' : 'http'
+};
+
+export default finalEnv;

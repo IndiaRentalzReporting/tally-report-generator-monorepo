@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
+import axios, { AxiosResponse } from 'axios';
 
 export const handleLogout = (
   req: Request,
@@ -17,28 +19,37 @@ export const handleLogout = (
   });
 };
 
-export const handleStatusCheck = (
+export const handleStatusCheck = async (
   req: Request,
   res: Response<{
-    user: Omit<DetailedUser, 'password'> | null;
+    user: Omit<DashDetailedUser, 'password'> | null;
     isAuthenticated: boolean;
   }>,
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated()) {
-      const {
-        user: { password, ...userWithoutPassword }
-      } = req;
+    const authResponse: AxiosResponse<{
+      user: AuthDetailedUser & DashDetailedUser;
+      isAuthenticated: boolean;
+    }> = await axios.get('http://localhost:4000/api/v1/auth/status', {
+      withCredentials: true,
+      headers: {
+        cookie: req.headers.cookie
+      }
+    });
+    const { user, isAuthenticated } = authResponse.data;
+    if (isAuthenticated && user) {
+      const { password, ...userWithoutPassword } = user;
       return res.json({
         user: userWithoutPassword,
         isAuthenticated: true
       });
+    } else {
+      return res.json({
+        user: null,
+        isAuthenticated: false
+      });
     }
-    return res.json({
-      user: null,
-      isAuthenticated: false
-    });
   } catch (e) {
     return next(e);
   }

@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { BadRequestError, ReadError } from '@trg_package/errors';
 import { comparePassword } from '@trg_package/utils';
@@ -6,11 +5,11 @@ import {
   SafeUserSelect,
   TenantInsert,
   TenantSelect,
-  UserInsert,
-  UserSelect
+  UserInsert
 } from '@trg_package/auth-schemas/types';
 import UserService from './UserService';
 import TenantService from './TenantService';
+import { Request } from 'express';
 
 class AuthService {
   public static async signUp(data: {
@@ -52,7 +51,7 @@ class AuthService {
 
   public static async signIn(
     data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<UserSelect> {
+  ): Promise<Request['user']> {
     const { email, password } = data;
     const user = await UserService.findOne({
       email

@@ -9,19 +9,6 @@ import {
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 
-declare global {
-  namespace Express {
-    interface Request {
-      userService: UserService;
-      roleService: RoleService;
-      moduleService: ModuleService;
-      actionService: ActionService;
-      permissionService: PermissionService;
-      apiKeyService: ApiKeyService;
-    }
-  }
-}
-
 export const attachServices = (
   req: Request,
   res: Response,
