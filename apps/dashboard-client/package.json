@@ -10,9 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@trg_package/errors": "*",
+    "@trg_package/auth-schemas": "*",
     "@trg_package/components": "*",
     "@trg_package/dashboard-schemas": "*",
-    "@trg_package/auth-schemas": "*",
     "@trg_package/pg-orm": "*",
     "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",

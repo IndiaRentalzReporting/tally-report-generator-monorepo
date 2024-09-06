@@ -2,16 +2,17 @@ import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 import { When } from './Conditionals';
+import config from '@/config';
 
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+  const { PROTOCOL, VITE_AUTH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
 
   if (loading) return;
 
   useEffect(() => {
-    console.log({ isAuthenticated }, 'dashboard');
     if (!isAuthenticated) {
-      window.location.href = 'http://auth.trg.local';
+      window.location.href = `${PROTOCOL}://${VITE_AUTH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
   }, [isAuthenticated]);
 

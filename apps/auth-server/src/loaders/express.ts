@@ -5,10 +5,8 @@ import config from '../config';
 import { passportLoader } from './passport';
 import { sessionsLoader } from './sessions';
 
-const { NODE_ENV } = config;
 const appLoader = async (): Promise<Express> => {
   const app = await expressLoader({
-    NODE_ENV,
     routesLoader,
     passportLoader,
     sessionsLoader

@@ -33,9 +33,7 @@ apiKeyRouter.get(
 apiKeyRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ApiKeyInsertSchema.extend({
-      name: ApiKeyInsertSchema.shape.name.optional()
-    }).pick({
+    body: ApiKeyInsertSchema.pick({
       name: true
     }),
     params: ApiKeyInsertSchema.pick({

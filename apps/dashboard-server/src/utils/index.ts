@@ -27,7 +27,8 @@ export const createResetPasswordLink = (
   user: UserSelect,
   isEmail: boolean = false
 ): string => {
-  const FRONTEND_URL = 'http://dashboard.trg.local';
+  const { PROTOCOL, DASH_SUBDOMAIN, DOMAIN, TLD } = config;
+  const FRONTEND_URL = `${PROTOCOL}://${DASH_SUBDOMAIN}.${DOMAIN}.${TLD}`;
   const token = generateUserJWTToken(user);
   const resetLink = `${isEmail ? FRONTEND_URL : ''}/reset-password/${token}`;
   return resetLink;
