@@ -1,5 +1,6 @@
 import Axios, { AxiosError, AxiosInstance } from 'axios';
 import { toast } from '@/lib/hooks';
+import config from '@/config';
 
 const createAxiosInstance = (defaults: {
   baseURL: string;
@@ -49,7 +50,11 @@ const createAxiosInstance = (defaults: {
     }
   );
 
-  axios.defaults.baseURL = 'http://auth.trg.local/api' + defaults.baseURL;
+  const { PROTOCOL, VITE_AUTH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
+
+  axios.defaults.baseURL =
+    `${PROTOCOL}://${VITE_AUTH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}/api` +
+    defaults.baseURL;
   axios.defaults.withCredentials = defaults.withCredentials;
 
   return axios;

@@ -1,6 +1,7 @@
 import Axios, { AxiosError } from 'axios';
 
 import { toast } from '@/lib/hooks';
+import config from '@/config';
 
 const axios = Axios.create();
 
@@ -47,7 +48,9 @@ axios.interceptors.response.use(
   }
 );
 
-axios.defaults.baseURL = 'http://dashboard.trg.local/api/v1';
+const { PROTOCOL, VITE_DASH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
+
+axios.defaults.baseURL = `${PROTOCOL}://${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}/api/v1`;
 axios.defaults.withCredentials = true;
 
 export default axios;
