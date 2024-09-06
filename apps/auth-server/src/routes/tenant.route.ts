@@ -42,19 +42,13 @@ tenantRouter.get(
 tenantRouter.patch(
   '/update/:id',
   validateSchema({
-    body: TenantInsertSchema.extend({
-      name: TenantInsertSchema.shape.name.optional(),
-      status: TenantInsertSchema.shape.status.optional(),
-      isReadonly: TenantInsertSchema.shape.isReadonly.optional(),
-      deletedAt: TenantInsertSchema.shape.deletedAt.optional(),
-      approvedAt: TenantInsertSchema.shape.approvedAt.optional()
-    }).pick({
+    body: TenantInsertSchema.pick({
       name: true,
       status: true,
       isReadonly: true,
       deletedAt: true,
       approvedAt: true
-    }),
+    }).partial(),
     params: TenantInsertSchema.pick({
       id: true
     })

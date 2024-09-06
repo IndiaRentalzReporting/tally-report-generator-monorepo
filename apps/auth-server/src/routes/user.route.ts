@@ -39,17 +39,12 @@ userRouter.get(
 userRouter.patch(
   '/update/:id',
   validateSchema({
-    body: UserInsertSchema.extend({
-      first_name: UserInsertSchema.shape.first_name.optional(),
-      last_name: UserInsertSchema.shape.last_name.optional(),
-      email: UserInsertSchema.shape.email.optional(),
-      password: UserInsertSchema.shape.password.optional()
-    }).pick({
+    body: UserInsertSchema.pick({
       first_name: true,
       last_name: true,
       email: true,
       password: true
-    }),
+    }).partial(),
     params: UserInsertSchema.pick({
       id: true
     })

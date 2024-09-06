@@ -33,9 +33,7 @@ actionRouter.get(
 actionRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ActionInsertSchema.extend({
-      name: ActionInsertSchema.shape.name.optional()
-    }).pick({
+    body: ActionInsertSchema.pick({
       name: true
     }),
     params: ActionInsertSchema.pick({

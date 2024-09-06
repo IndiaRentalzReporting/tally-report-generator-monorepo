@@ -33,9 +33,7 @@ roleRouter.post(
 roleRouter.patch(
   '/update/:id',
   validateSchema({
-    body: RoleInsertSchema.extend({
-      name: RoleInsertSchema.shape.name.optional()
-    }).pick({
+    body: RoleInsertSchema.pick({
       name: true
     }),
     params: RoleInsertSchema.pick({
