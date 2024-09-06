@@ -1,14 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { ActionSelect } from '@trg_package/dashboard-schemas/types';
-
-declare global {
-  namespace Express {
-    interface Request {
-      module?: string;
-      action?: string;
-    }
-  }
-}
 
 export const attachModuleActionData = async (
   req: Request,
