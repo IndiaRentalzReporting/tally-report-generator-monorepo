@@ -6,7 +6,7 @@ import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
 import config from './config';
 
-const { NODE_ENV } = config;
+const { NODE_ENV, DOMAIN, TLD } = config;
 
 export const expressLoader = async ({
   routesLoader,
@@ -25,7 +25,7 @@ export const expressLoader = async ({
   app.use(helmet());
   app.use(
     cors({
-      origin: /trg\.local$/,
+      origin: new RegExp(`${DOMAIN}\\.${TLD}$`),
       credentials: true
     })
   );
