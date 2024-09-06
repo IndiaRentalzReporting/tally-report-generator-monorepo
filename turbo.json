@@ -1,19 +1,27 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["DOMAIN", "TLD"],
+  "globalEnv": [
+    "NODE_ENV",
+    "DOMAIN",
+    "TLD",
+    "AUTH_SUBDOMAIN",
+    "DASH_SUBDOMAIN"
+  ],
   "tasks": {
     "@trg_app/auth-client#build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": ["VITE_PORT"]
     },
     "@trg_app/dashboard-client#build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": ["VITE_PORT"]
     },
     "@trg_app/auth-server#build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": [
-        "NODE_ENV",
         "PORT",
         "SUPERUSER_PG_HOST",
         "SUPERUSER_PG_PORT",
@@ -25,8 +33,8 @@
     },
     "@trg_app/dashboard-server#build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": [
-        "NODE_ENV",
         "PORT",
         "SMTP_SECRET",
         "SMTP_HOST",

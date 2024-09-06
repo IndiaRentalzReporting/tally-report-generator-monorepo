@@ -4,14 +4,15 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
+import config from './config';
+
+const { NODE_ENV } = config;
 
 export const expressLoader = async ({
-  NODE_ENV,
   routesLoader,
   passportLoader,
   sessionsLoader
 }: {
-  NODE_ENV: string;
   routesLoader: (app: Express) => void;
   passportLoader?: (app: Express) => void;
   sessionsLoader?: (app: Express) => void;
@@ -24,7 +25,7 @@ export const expressLoader = async ({
   app.use(helmet());
   app.use(
     cors({
-      origin: ['http://dashboard.trg.local', 'http://auth.trg.local'],
+      origin: /trg\.local$/,
       credentials: true
     })
   );

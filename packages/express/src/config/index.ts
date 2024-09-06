@@ -5,18 +5,8 @@ import { ZodError, z } from 'zod';
 
 const EnvSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'staging']),
-
-  AUTH_SUBDOMAIN: z.string(),
-  DASH_SUBDOMAIN: z.string(),
-
-  PORT: z.coerce.number().default(4000),
-
-  MAIL_FROM: z.string(),
-  SMTP_SECRET: z.string(),
-  SMTP_PASS: z.string(),
-  SMTP_HOST: z.string(),
-  SMTP_PORT: z.coerce.number(),
-  SMTP_USER: z.string()
+  DOMAIN: z.string(),
+  TLD: z.string()
 });
 
 expand(config());
