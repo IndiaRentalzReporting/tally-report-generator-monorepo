@@ -1,7 +1,7 @@
 import { Express } from 'express';
 import authRouter from '../routes/auth.route';
 import userRouter from '../routes/user.route';
-import { isAuthenticated } from '@trg_package/middlewares';
+import { isAuthenticated } from '../middlewares';
 import tenantRouter from '../routes/tenant.route';
 
 const routesLoader = (app: Express) => {

@@ -12,8 +12,8 @@ export const useIsAllowed = (data: {
 
   const isAllowed = permissions.find(
     (permission) =>
-      permission.actions.includes(data.action) &&
-      permission.module.name === data.module
+      permission.actions.includes(data.action.toUpperCase()) &&
+      permission.module.name === data.module.toUpperCase()
   );
 
   if (isAllowed) return true;

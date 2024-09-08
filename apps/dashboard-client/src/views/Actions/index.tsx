@@ -5,9 +5,10 @@ import Read from './Read';
 
 const Roles: React.FC = () => {
   const isReadAllowed = useIsAllowed({
-    module: 'Roles',
+    module: 'Actions',
     action: 'Read'
   });
+
   return (
     <When condition={isReadAllowed}>
       <Read />
