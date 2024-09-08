@@ -40,6 +40,12 @@ const EnvSchema = z.object({
   AUTH_PG_DATABASE: z.string(),
   AUTH_PG_URL: z.string(),
 
+  DASHBOARD_PG_HOST: z.string().optional(),
+  DASHBOARD_PG_PORT: z.coerce.number().optional(),
+  DASHBOARD_PG_PASSWORD: z.string().optional(),
+  DASHBOARD_PG_USER: z.string().optional(),
+  DASHBOARD_PG_DATABASE: z.string().optional(),
+
   SESSION_SECRET: z.string(),
 
   MONGO_USER: z.string(),
