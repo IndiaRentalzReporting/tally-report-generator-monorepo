@@ -1,8 +1,7 @@
 import clsx from 'clsx';
-import { Menu, Package2, CircleUser, Search, ChevronDown } from 'lucide-react';
-import React, { useMemo } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Menu, Package2, Search, ChevronDown } from 'lucide-react';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { When } from '@/components/utility';
 import {
   Accordion,
@@ -10,40 +9,18 @@ import {
   AccordionItem,
   AccordionTrigger,
   Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
   Input,
   Sheet,
   SheetContent,
   SheetTrigger
 } from '@trg_package/components';
-import { ToggleTheme } from '../ToggleTheme';
-import services from '@/services';
-import { useAuth } from '@/providers/AuthProvider';
 import { useNav } from '@/providers/NavigationProvider';
+import ToggleThemeDropdown from '../ToggleThemeDropdown';
 import ApiKeyDropdown from '../ApiKeyDropdown';
+import UserSettingsDropdown from '../UserSettingsDropdown';
 
 const DashboardHeader: React.FC = () => {
   const { navigation } = useNav();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.Authentication.signOut(),
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      navigate('/sign-in');
-    }
-  });
-
-  const { user } = useAuth();
-  const userName = useMemo(
-    () => `${user?.first_name} ${user?.last_name}`,
-    [user]
-  );
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -130,26 +107,9 @@ const DashboardHeader: React.FC = () => {
           </div>
         </form>
       </div>
-      <ToggleTheme />
+      <ToggleThemeDropdown />
       <ApiKeyDropdown />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="h-5 w-5" />
-            <span className="sr-only">Toggle user menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>{userName}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => signOutMutation()}>
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <UserSettingsDropdown />
     </header>
   );
 };

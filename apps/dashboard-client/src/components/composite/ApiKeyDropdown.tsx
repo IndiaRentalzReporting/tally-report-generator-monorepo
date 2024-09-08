@@ -19,7 +19,7 @@ export default function Component() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full">
-        <Button type="button" variant="ghost" size="icon">
+        <Button type="button" variant="outline" size="icon">
           <KeyIcon className="h-5 w-5" />
           <span className="sr-only">API Keys</span>
         </Button>

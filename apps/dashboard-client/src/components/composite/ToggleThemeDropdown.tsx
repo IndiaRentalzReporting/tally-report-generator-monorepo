@@ -9,7 +9,7 @@ import {
 } from '@trg_package/components';
 import { useTheme } from '@/providers/ThemeProvider';
 
-export const ToggleTheme = () => {
+const ToggleThemeDropdown = () => {
   const { setTheme } = useTheme();
 
   return (
@@ -35,3 +35,5 @@ export const ToggleTheme = () => {
     </DropdownMenu>
   );
 };
+
+export default ToggleThemeDropdown;
