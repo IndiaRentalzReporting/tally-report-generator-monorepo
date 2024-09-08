@@ -25,6 +25,7 @@ import { ToggleTheme } from '../ToggleTheme';
 import services from '@/services';
 import { useAuth } from '@/providers/AuthProvider';
 import { useNav } from '@/providers/NavigationProvider';
+import ApiKeyDropdown from '../ApiKeyDropdown';
 
 const DashboardHeader: React.FC = () => {
   const { navigation } = useNav();
@@ -130,6 +131,7 @@ const DashboardHeader: React.FC = () => {
         </form>
       </div>
       <ToggleTheme />
+      <ApiKeyDropdown />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">

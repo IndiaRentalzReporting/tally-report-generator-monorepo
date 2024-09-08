@@ -16,3 +16,4 @@ export * from './accordion';
 export * from './toast';
 export * from './select';
 export * from './toaster';
+export * from './textarea';
