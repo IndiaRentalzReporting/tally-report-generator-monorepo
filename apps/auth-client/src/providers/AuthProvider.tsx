@@ -1,18 +1,56 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import {
+  UseMutateAsyncFunction,
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import services from '@/services';
-import { SafeUserSelect } from '@trg_package/auth-schemas/types';
+import {
+  LoginUser,
+  RegisterUser,
+  SafeUserSelect,
+  TenantInsert
+} from '@trg_package/auth-schemas/types';
+import { AxiosResponse } from 'axios';
 
 interface AuthProviderState {
-  isAuthenticated: boolean;
   user: SafeUserSelect | null;
+  isAuthenticated: boolean;
   loading: boolean;
+  signUp: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        user: SafeUserSelect;
+      }>,
+      Error,
+      { user: RegisterUser; tenant: TenantInsert }
+    >;
+  };
+  signIn: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        user: SafeUserSelect;
+      }>,
+      Error,
+      LoginUser
+    >;
+  };
 }
 
 const initialState: AuthProviderState = {
+  user: null,
   isAuthenticated: false,
   loading: true,
-  user: null
+  signUp: {
+    mutation: () => Promise.reject('SignUp Mutation does not exist'),
+    isLoading: false
+  },
+  signIn: {
+    mutation: () => Promise.reject('SignIn Mutation does not exist'),
+    isLoading: false
+  }
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -22,13 +60,26 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [state, setState] = useState<AuthProviderState>(initialState);
+  const [state, setState] =
+    useState<Omit<AuthProviderState, 'signIn' | 'signUp'>>(initialState);
 
   const { data: authData, isFetching } = useQuery({
-    queryFn: () => services.Authentication.status(),
+    queryFn: () => services.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'status'],
+    refetchOnMount: true,
     staleTime: 1000 * 60 * 15
+  });
+
+  const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
+    mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
+      services.signUp(data),
+    mutationKey: ['auth', 'signUp']
+  });
+
+  const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
+    mutationFn: (data: LoginUser) => services.signIn(data),
+    mutationKey: ['auth', 'signUp']
   });
 
   useEffect(() => {
@@ -55,7 +106,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }));
   }, [isFetching]);
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        signIn: { mutation: signInMutation, isLoading: isSigningIn },
+        signUp: { mutation: signUpMutation, isLoading: isSigningUp }
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
