@@ -40,6 +40,7 @@ declare global {
       apiKeyService: ApiKeyService;
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
       dashboardConnection: Sql<{}>;
+      attacheDBandServices: boolean;
     }
   }
 }
