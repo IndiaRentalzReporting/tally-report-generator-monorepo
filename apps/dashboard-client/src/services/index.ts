@@ -1,6 +1,7 @@
 import { AxiosPromise } from 'axios';
 import { createAuthAxiosInstance } from './client';
 import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { RegisterUser, SafeUserSelect } from '@trg_package/auth-schemas/types';
 
 const authAxios = createAuthAxiosInstance({
   baseURL: '/v1/auth',
@@ -17,6 +18,9 @@ const services = {
     },
     signOut: (): AxiosPromise<{ message: string }> => {
       return authAxios.post(`/sign-out`);
+    },
+    signUp: (data: RegisterUser): AxiosPromise<{ user: SafeUserSelect }> => {
+      return authAxios.post(`/sign-up`, data);
     }
   }
 };

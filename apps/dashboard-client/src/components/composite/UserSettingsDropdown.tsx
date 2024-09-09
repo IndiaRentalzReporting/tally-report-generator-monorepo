@@ -1,6 +1,4 @@
 import { useAuth } from '@/providers/AuthProvider';
-import services from '@/services';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,21 +11,9 @@ import {
 import { CircleUser } from 'lucide-react';
 
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router';
 
 const UserSettingsDropdown: React.FC = () => {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-
-  const { mutateAsync: signOutMutation } = useMutation({
-    mutationFn: () => services.Authentication.signOut(),
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      navigate('/sign-in');
-    }
-  });
-
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const userName = useMemo(
     () => `${user?.first_name} ${user?.last_name}`,
     [user]
@@ -47,9 +33,7 @@ const UserSettingsDropdown: React.FC = () => {
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOutMutation()}>
-          Logout
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

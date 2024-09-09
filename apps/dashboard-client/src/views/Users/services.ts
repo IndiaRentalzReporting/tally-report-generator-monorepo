@@ -1,6 +1,5 @@
 import { AxiosPromise } from 'axios';
 import { DetailedUser, UserSelect } from '@trg_package/dashboard-schemas/types';
-import { RegisterUser } from '@trg_package/auth-schemas/types';
 import { createDashboardAxiosInstance } from '@/services/client';
 
 const usersAxios = createDashboardAxiosInstance({
@@ -20,11 +19,6 @@ export const services = {
     user: DetailedUser;
   }> => {
     return usersAxios.get(`/read/${id}`);
-  },
-  createOne: (
-    data: RegisterUser
-  ): AxiosPromise<Omit<UserSelect, 'password'>> => {
-    return usersAxios.post(`/sign-up`, data);
   },
   updateOne: async (
     id: UserSelect['id'],
