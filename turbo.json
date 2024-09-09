@@ -5,7 +5,12 @@
     "DOMAIN",
     "TLD",
     "AUTH_SUBDOMAIN",
-    "DASH_SUBDOMAIN"
+    "DASH_SUBDOMAIN",
+    "MONGO_USER",
+    "MONGO_DATABASE",
+    "MONGO_PASSWORD",
+    "MONGO_URL",
+    "SESSION_SECRET"
   ],
   "tasks": {
     "@trg_app/auth-client#build": {

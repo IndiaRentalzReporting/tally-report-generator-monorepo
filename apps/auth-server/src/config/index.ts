@@ -13,16 +13,14 @@ const stringBoolean = z.coerce
 export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
 
 const EnvSchema = z.object({
-  NODE_ENV: z
-    .enum(['production', 'development', 'staging'])
-    .default('development'),
-  PORT: z.coerce.number().default(4000),
+  NODE_ENV: z.enum(['production', 'development', 'staging']),
+  PORT: z.coerce.number(),
 
-  AUTH_SUBDOMAIN: z.string().default('auth'),
-  DASH_SUBDOMAIN: z.string().default('dashboard'),
+  AUTH_SUBDOMAIN: z.string(),
+  DASH_SUBDOMAIN: z.string(),
 
-  DOMAIN: z.string().default('trg'),
-  TLD: z.string().default('local'),
+  DOMAIN: z.string(),
+  TLD: z.string(),
 
   [DashboardPgUrlKey]: z.string().optional(),
 
@@ -45,13 +43,6 @@ const EnvSchema = z.object({
   DASHBOARD_PG_PASSWORD: z.string().optional(),
   DASHBOARD_PG_USER: z.string().optional(),
   DASHBOARD_PG_DATABASE: z.string().optional(),
-
-  SESSION_SECRET: z.string(),
-
-  MONGO_USER: z.string(),
-  MONGO_DATABASE: z.string(),
-  MONGO_PASSWORD: z.string(),
-  MONGO_URL: z.string(),
 
   DB_MIGRATING: stringBoolean,
   DB_SEEDING: stringBoolean
