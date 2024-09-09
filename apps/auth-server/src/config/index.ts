@@ -17,8 +17,12 @@ const EnvSchema = z.object({
     .enum(['production', 'development', 'staging'])
     .default('development'),
   PORT: z.coerce.number().default(4000),
+
   AUTH_SUBDOMAIN: z.string().default('auth'),
   DASH_SUBDOMAIN: z.string().default('dashboard'),
+
+  DOMAIN: z.string().default('trg'),
+  TLD: z.string().default('local'),
 
   [DashboardPgUrlKey]: z.string().optional(),
 
@@ -35,6 +39,12 @@ const EnvSchema = z.object({
   AUTH_PG_USER: z.string(),
   AUTH_PG_DATABASE: z.string(),
   AUTH_PG_URL: z.string(),
+
+  DASHBOARD_PG_HOST: z.string().optional(),
+  DASHBOARD_PG_PORT: z.coerce.number().optional(),
+  DASHBOARD_PG_PASSWORD: z.string().optional(),
+  DASHBOARD_PG_USER: z.string().optional(),
+  DASHBOARD_PG_DATABASE: z.string().optional(),
 
   SESSION_SECRET: z.string(),
 

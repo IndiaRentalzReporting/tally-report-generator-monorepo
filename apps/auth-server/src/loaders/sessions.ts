@@ -5,7 +5,7 @@ import config from '../config';
 import { BadRequestError, DatabaseError } from '@trg_package/errors';
 
 export const sessionsLoader = (app: Express) => {
-  const { SESSION_SECRET, MONGO_URL, NODE_ENV } = config;
+  const { SESSION_SECRET, MONGO_URL, NODE_ENV, DOMAIN, TLD } = config;
   try {
     let sessionStore;
     try {
@@ -23,7 +23,7 @@ export const sessionsLoader = (app: Express) => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 4, // 4 hours,
         sameSite: 'lax',
-        domain: '.trg.local'
+        domain: `.${DOMAIN}.${TLD}`
       },
       store: sessionStore
     };

@@ -35,15 +35,11 @@ moduleRouter.get('/read', readAll);
 moduleRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ModuleInsertSchema.extend({
-      name: ModuleInsertSchema.shape.name.optional(),
-      isPrivate: ModuleInsertSchema.shape.isPrivate.optional(),
-      icon: ModuleInsertSchema.shape.icon.optional()
-    }).pick({
+    body: ModuleInsertSchema.pick({
       name: true,
       isPrivate: true,
       icon: true
-    }),
+    }).partial(),
     params: ModuleInsertSchema.pick({
       id: true
     })

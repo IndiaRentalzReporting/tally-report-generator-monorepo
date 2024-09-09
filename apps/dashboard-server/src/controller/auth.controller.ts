@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
 import axios, { AxiosResponse } from 'axios';
+import config from '../config';
 
 export const handleLogout = (
   req: Request,
@@ -27,16 +28,20 @@ export const handleStatusCheck = async (
   }>,
   next: NextFunction
 ) => {
+  const { PROTOCOL, AUTH_SUBDOMAIN, DOMAIN, TLD } = config;
   try {
     const authResponse: AxiosResponse<{
       user: AuthDetailedUser & DashDetailedUser;
       isAuthenticated: boolean;
-    }> = await axios.get('http://localhost:4000/api/v1/auth/status', {
-      withCredentials: true,
-      headers: {
-        cookie: req.headers.cookie
+    }> = await axios.get(
+      `${PROTOCOL}://${AUTH_SUBDOMAIN}.${DOMAIN}.${TLD}/api/v1/auth/status`,
+      {
+        withCredentials: true,
+        headers: {
+          cookie: req.headers.cookie
+        }
       }
-    });
+    );
     const { user, isAuthenticated } = authResponse.data;
     if (isAuthenticated && user) {
       const { password, ...userWithoutPassword } = user;

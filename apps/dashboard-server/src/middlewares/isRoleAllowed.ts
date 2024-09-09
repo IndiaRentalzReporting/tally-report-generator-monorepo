@@ -6,7 +6,7 @@ export const isRoleAllowed = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.isAuthenticated()) {
+  if (!!req.user) {
     const {
       user: { role },
       module,
@@ -28,8 +28,6 @@ export const isRoleAllowed = async (
             ({ action: { name: actionName } }) => actionName === action
           ) && moduleName === module
       );
-
-      console.log(allowed);
 
       if (allowed) return next();
       throw new UnauthenticatedError(

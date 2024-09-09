@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 import { Else, If, Then, When } from './Conditionals';
+import config from '@/config';
 
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -22,12 +23,13 @@ export const PrivateRoutes: React.FC = () => {
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+  const { PROTOCOL, VITE_DASH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
 
   if (loading) return;
 
   useEffect(() => {
     if (!!isAuthenticated) {
-      window.location.href = 'http://dashboard.trg.local';
+      window.location.href = `${PROTOCOL}://${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
   }, [isAuthenticated]);
   return (

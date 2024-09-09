@@ -5,16 +5,21 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
-import { isAuthenticated } from '@trg_package/middlewares';
-import { attachModuleActionData, isRoleAllowed } from '../middlewares';
-import { attachServices } from '../middlewares/attachServices';
+import {
+  attachModuleActionData,
+  attachPGDashboard,
+  attachServices,
+  attachUser,
+  isRoleAllowed
+} from '../middlewares';
 
 const routesLoader = (app: Express) => {
   app.use('/api/v1/auth', authRouter);
+  app.use(attachUser);
+  app.use(attachPGDashboard);
   app.use(attachServices);
-  // app.use(isAuthenticated);
-  // app.use(attachModuleActionData);
-  // app.use(isRoleAllowed);
+  app.use(attachModuleActionData);
+  app.use(isRoleAllowed);
   app.use('/api/v1/roles', roleRouter);
   app.use('/api/v1/users', userRouter);
   app.use('/api/v1/modules', moduleRouter);

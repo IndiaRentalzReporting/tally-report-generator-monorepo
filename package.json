@@ -2,11 +2,14 @@
   "name": "fullstack-monorepo-template",
   "private": true,
   "scripts": {
-    "build": "turbo build --concurrency=13",
-    "dev": "turbo dev --concurrency=13",
-    "lint": "turbo lint --concurrency=13",
+    "build": "dotenv -- turbo build --concurrency=13",
+    "dev": "dotenv -- turbo dev --concurrency=13",
+    "lint": "dotenv -- turbo lint --concurrency=13",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "find . -type d \\( -name 'node_modules' -o -name 'dist' -o -name '.turbo' \\) -prune -exec rm -rf {} +"
+  },
+  "dependencies": {
+    "dotenv-cli": "^7.4.2"
   },
   "devDependencies": {
     "@trg_package/config-eslint": "*",

@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.40.1",
+    "@trg_package/auth-schemas": "*",
     "@trg_package/components": "*",
     "@trg_package/dashboard-schemas": "*",
-    "@trg_package/auth-schemas": "*",
-    "@tanstack/react-query": "^5.40.1",
+    "@trg_package/errors": "*",
     "axios": "^1.7.2",
+    "lucide-react": "^0.439.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.23.0",
@@ -22,8 +24,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@trg_package/config-tailwind": "*",
     "@trg_package/config-eslint": "*",
+    "@trg_package/config-tailwind": "*",
     "@trg_package/config-typescript": "*",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.66",

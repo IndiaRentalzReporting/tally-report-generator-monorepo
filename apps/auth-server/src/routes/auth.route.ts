@@ -9,7 +9,8 @@ import {
   handleStatusCheck,
   handleLogout
 } from '../controller/auth.controller';
-import { authenticate, validateSchema } from '@trg_package/middlewares';
+import { authenticate } from '../middlewares';
+import { validateSchema } from '@trg_package/middlewares';
 import z from 'zod';
 
 const authRouter = Router();
