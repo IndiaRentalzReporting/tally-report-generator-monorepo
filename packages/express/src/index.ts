@@ -5,17 +5,16 @@ import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
 import config from './config';
+import { sessionsLoader } from './loaders/sessions';
 
 const { NODE_ENV, DOMAIN, TLD } = config;
 
 export const expressLoader = async ({
   routesLoader,
-  passportLoader,
-  sessionsLoader
+  passportLoader
 }: {
   routesLoader: (app: Express) => void;
   passportLoader?: (app: Express) => void;
-  sessionsLoader?: (app: Express) => void;
 }): Promise<Express> => {
   const app = express();
 
@@ -30,7 +29,7 @@ export const expressLoader = async ({
     })
   );
 
-  sessionsLoader && sessionsLoader(app);
+  sessionsLoader(app);
   passportLoader && passportLoader(app);
 
   routesLoader(app);
