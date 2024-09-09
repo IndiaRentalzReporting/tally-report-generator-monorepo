@@ -19,22 +19,28 @@ interface AuthProviderState {
   user: DetailedUser | null;
   loading: boolean;
   permissions: Permissions[];
-  signOut: UseMutateAsyncFunction<
-    AxiosResponse<{
-      message: string;
-    }>
-  >;
-  signUp: UseMutateAsyncFunction<
-    AxiosResponse<
-      {
-        user: SafeUserSelect;
-      },
-      any
-    >,
-    Error,
-    RegisterUser,
-    unknown
-  >;
+  signOut: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        message: string;
+      }>
+    >;
+  };
+  signUp: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<
+        {
+          user: SafeUserSelect;
+        },
+        any
+      >,
+      Error,
+      RegisterUser,
+      unknown
+    >;
+  };
 }
 
 const initialState: AuthProviderState = {
@@ -44,8 +50,14 @@ const initialState: AuthProviderState = {
   permissions: JSON.parse(
     localStorage.getItem('permissions') ?? '[]'
   ) as AuthProviderState['permissions'],
-  signOut: () => Promise.reject('SignOut Mutation does not exist'),
-  signUp: () => Promise.reject('SignUp Mutation does not exist')
+  signOut: {
+    mutation: () => Promise.reject('SignOut Mutation does not exist'),
+    isLoading: false
+  },
+  signUp: {
+    mutation: () => Promise.reject('SignUp Mutation does not exist'),
+    isLoading: false
+  }
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -71,7 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     {
       mutationFn: () => services.Authentication.signOut(),
       mutationKey: ['auth', 'signOut'],
-      onSettled() {
+      onSuccess() {
         queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
       }
     }
@@ -120,13 +132,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      loading: isFetching || isSigningOut || isSigningUp
+      loading: isFetching
     }));
   }, [isFetching]);
 
   return (
     <AuthContext.Provider
-      value={{ ...state, signUp: signUpMutation, signOut: signOutMutation }}
+      value={{
+        ...state,
+        signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+        signOut: { mutation: signOutMutation, isLoading: isSigningOut }
+      }}
     >
       {children}
     </AuthContext.Provider>

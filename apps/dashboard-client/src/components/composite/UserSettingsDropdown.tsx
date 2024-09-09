@@ -13,7 +13,10 @@ import { CircleUser } from 'lucide-react';
 import React, { useMemo } from 'react';
 
 const UserSettingsDropdown: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const {
+    user,
+    signOut: { mutation: signOut, isLoading }
+  } = useAuth();
   const userName = useMemo(
     () => `${user?.first_name} ${user?.last_name}`,
     [user]
@@ -33,7 +36,15 @@ const UserSettingsDropdown: React.FC = () => {
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+        <Button
+          onClick={() => signOut()}
+          isLoading={isLoading}
+          variant="ghost"
+          size="default"
+          className=" w-full"
+        >
+          Logout
+        </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   );

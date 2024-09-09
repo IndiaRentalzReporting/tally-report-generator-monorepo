@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import {
   UseMutateAsyncFunction,
   useMutation,
-  useQuery
+  useQuery,
+  useQueryClient
 } from '@tanstack/react-query';
 import services from '@/services';
 import {
@@ -60,6 +61,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const queryClient = useQueryClient();
   const [state, setState] =
     useState<Omit<AuthProviderState, 'signIn' | 'signUp'>>(initialState);
 
@@ -79,7 +81,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
-    mutationKey: ['auth', 'signUp']
+    mutationKey: ['auth', 'signUp'],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
   });
 
   useEffect(() => {
