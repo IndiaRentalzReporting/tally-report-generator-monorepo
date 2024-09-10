@@ -4,17 +4,15 @@ import { expand } from 'dotenv-expand';
 import { ZodError, z } from 'zod';
 
 const EnvSchema = z.object({
-  NODE_ENV: z
-    .enum(['production', 'development', 'staging'])
-    .default('development'),
+  NODE_ENV: z.enum(['production', 'development', 'staging']),
 
-  AUTH_SUBDOMAIN: z.string().default('auth'),
-  DASH_SUBDOMAIN: z.string().default('dashboard'),
+  AUTH_SUBDOMAIN: z.string(),
+  DASH_SUBDOMAIN: z.string(),
 
-  DOMAIN: z.string().default('trg'),
-  TLD: z.string().default('local'),
+  DOMAIN: z.string(),
+  TLD: z.string(),
 
-  PORT: z.coerce.number().default(4000),
+  PORT: z.coerce.number(),
 
   MAIL_FROM: z.string(),
   SMTP_SECRET: z.string(),

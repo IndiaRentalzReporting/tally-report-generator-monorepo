@@ -1,32 +1,24 @@
 import React, { FormEvent, useState } from 'react';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Button } from '@trg_package/components';
-import { RegisterUser } from '@trg_package/auth-schemas/types';
-import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
+import { useAuth } from '@/providers/AuthProvider';
 
 const Create: React.FC = () => {
+  const {
+    signUp: { mutation: signUp, isLoading }
+  } = useAuth();
   const [userData, setUserData] = useState<State>(initialState);
-
-  const queryClient = useQueryClient();
-  const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: (data: RegisterUser) => services.createOne(data),
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
-      setUserData(initialState);
-    }
-  });
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signUpMutation(userData);
+    signUp(userData);
   };
 
   return (
     <form className="h-full flex flex-col gap-4" onSubmit={handleSignUp}>
       <Fields userData={userData} setUserData={setUserData} />
-      <Button type="submit" className="w-full mt-auto">
+      <Button isLoading={isLoading} type="submit" className="w-full mt-auto">
         Create
       </Button>
     </form>

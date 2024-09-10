@@ -1,6 +1,12 @@
 import { AxiosPromise } from 'axios';
-import axios from './client';
+import { createAuthAxiosInstance } from './client';
 import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { RegisterUser, SafeUserSelect } from '@trg_package/auth-schemas/types';
+
+const authAxios = createAuthAxiosInstance({
+  baseURL: '/v1/auth',
+  withCredentials: true
+});
 
 const services = {
   Authentication: {
@@ -8,10 +14,13 @@ const services = {
       user: DetailedUser | null;
       isAuthenticated: boolean;
     }> => {
-      return axios.get(`/auth/status`);
+      return authAxios.get(`/status`);
     },
     signOut: (): AxiosPromise<{ message: string }> => {
-      return axios.post(`/auth/sign-out`);
+      return authAxios.post(`/sign-out`);
+    },
+    signUp: (data: RegisterUser): AxiosPromise<{ user: SafeUserSelect }> => {
+      return authAxios.post(`/sign-up`, data);
     }
   }
 };

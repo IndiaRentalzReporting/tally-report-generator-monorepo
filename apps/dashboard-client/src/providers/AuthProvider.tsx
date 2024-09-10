@@ -1,17 +1,46 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  UseMutateAsyncFunction,
+  useQueryClient
+} from '@tanstack/react-query';
 import services from '@/services';
 import {
   DetailedUser,
   Permissions,
   UserRole
 } from '@trg_package/dashboard-schemas/types';
+import { AxiosResponse } from 'axios';
+import { RegisterUser, SafeUserSelect } from '@trg_package/auth-schemas/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;
   user: DetailedUser | null;
   loading: boolean;
   permissions: Permissions[];
+  signOut: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        message: string;
+      }>
+    >;
+  };
+  signUp: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<
+        {
+          user: SafeUserSelect;
+        },
+        any
+      >,
+      Error,
+      RegisterUser,
+      unknown
+    >;
+  };
 }
 
 const initialState: AuthProviderState = {
@@ -20,7 +49,15 @@ const initialState: AuthProviderState = {
   user: null,
   permissions: JSON.parse(
     localStorage.getItem('permissions') ?? '[]'
-  ) as AuthProviderState['permissions']
+  ) as AuthProviderState['permissions'],
+  signOut: {
+    mutation: () => Promise.reject('SignOut Mutation does not exist'),
+    isLoading: false
+  },
+  signUp: {
+    mutation: () => Promise.reject('SignUp Mutation does not exist'),
+    isLoading: false
+  }
 };
 
 const AuthContext = createContext<AuthProviderState>(initialState);
@@ -30,13 +67,31 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [state, setState] = useState<AuthProviderState>(initialState);
+  const queryClient = useQueryClient();
 
-  const { data: authData, isFetching } = useQuery({
+  const [state, setState] =
+    useState<Omit<AuthProviderState, 'signUp' | 'signOut'>>(initialState);
+
+  const { data: authStatus, isFetching } = useQuery({
     queryFn: () => services.Authentication.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'status'],
     staleTime: 1000 * 60 * 15
+  });
+
+  const { mutateAsync: signOutMutation, isPending: isSigningOut } = useMutation(
+    {
+      mutationFn: () => services.Authentication.signOut(),
+      mutationKey: ['auth', 'signOut'],
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
+    }
+  );
+
+  const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
+    mutationFn: (data: RegisterUser) => services.Authentication.signUp(data),
+    mutationKey: ['auth', 'signUp']
   });
 
   const createPermissions = (
@@ -55,7 +110,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    if (!authData || !authData.user || !authData.isAuthenticated) {
+    if (!authStatus || !authStatus.user || !authStatus.isAuthenticated) {
       setState({
         ...initialState,
         permissions: []
@@ -63,7 +118,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    const { user, isAuthenticated } = authData;
+    const { user, isAuthenticated } = authStatus;
     const permissions = createPermissions(user.role?.permission);
 
     setState({
@@ -72,7 +127,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       loading: false,
       permissions
     });
-  }, [authData]);
+  }, [authStatus]);
 
   useEffect(() => {
     setState((prev) => ({
@@ -81,7 +136,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }));
   }, [isFetching]);
 
-  return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        ...state,
+        signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+        signOut: { mutation: signOutMutation, isLoading: isSigningOut }
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

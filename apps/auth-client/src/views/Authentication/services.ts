@@ -1,11 +1,5 @@
 import { AxiosPromise } from 'axios';
-import {
-  LoginUser,
-  UserSelect,
-  SafeUserSelect,
-  TenantInsert,
-  UserInsert
-} from '@trg_package/auth-schemas/types';
+import { UserSelect } from '@trg_package/auth-schemas/types';
 import createAxiosInstance from '@/services/client';
 
 const authAxios = createAxiosInstance({
@@ -14,15 +8,6 @@ const authAxios = createAxiosInstance({
 });
 
 export const services = {
-  signUp: (data: {
-    tenant: TenantInsert;
-    user: UserInsert;
-  }): AxiosPromise<{ user: SafeUserSelect }> => {
-    return authAxios.post('/sign-up', data);
-  },
-  signIn: (data: LoginUser): AxiosPromise<{ user: SafeUserSelect }> => {
-    return authAxios.post(`/sign-in`, data);
-  },
   forgotPassword: (data: {
     email: UserSelect['email'];
   }): AxiosPromise<{ message: string }> => {

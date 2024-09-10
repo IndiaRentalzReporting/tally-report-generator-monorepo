@@ -1,7 +1,5 @@
 import expressLoader from './loaders/express';
 import config from './config';
-import type { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
-import type { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
 import type {
   UserService,
@@ -42,7 +40,7 @@ declare global {
       apiKeyService: ApiKeyService;
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
       dashboardConnection: Sql<{}>;
+      attacheDBandServices: boolean;
     }
-    interface User extends AuthDetailedUser, DashDetailedUser {}
   }
 }
