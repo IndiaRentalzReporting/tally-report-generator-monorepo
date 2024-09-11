@@ -3,8 +3,8 @@ import {
   type UserSelect,
   UserInsertSchema,
   UserSelectSchema
-} from '../schemas/user';
-import { TenantSelect } from './tenant';
+} from '../schemas/users';
+import { TenantSelect } from './tenants';
 
 type RegisterUser = Pick<
   UserInsert,
