@@ -1,7 +1,7 @@
 import { varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from './base';
-import { TenantSchema } from './tenant';
+import { TenantSchema } from './tenants';
 
 const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
 

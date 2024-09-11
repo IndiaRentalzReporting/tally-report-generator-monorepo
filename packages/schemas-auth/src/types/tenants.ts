@@ -3,4 +3,4 @@ export {
   type TenantSelect,
   TenantInsertSchema,
   TenantSelectSchema
-} from '../schemas/tenant';
+} from '../schemas/tenants';

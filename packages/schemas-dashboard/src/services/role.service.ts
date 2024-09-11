@@ -11,7 +11,7 @@ export class RoleService extends BaseServiceNew<
     super(db, RoleSchema, db.query.RoleSchema);
   }
 
-  public async findMany(data: Partial<typeof this.schema.$inferSelect>) {
+  public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const roles = await super.findMany(data, {
       with: {
         permission: {

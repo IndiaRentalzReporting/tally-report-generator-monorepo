@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   ActionInsert,
   ActionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
   req: Request,
@@ -10,7 +10,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await req.actionService.findMany({});
+    const actions = await req.actionService.findMany();
     return res.json({ actions });
   } catch (e) {
     return next(e);

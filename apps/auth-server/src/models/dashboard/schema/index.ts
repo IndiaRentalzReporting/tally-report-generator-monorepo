@@ -1,1 +1,1 @@
-export * from '@trg_package/dashboard-schemas/schemas';
+export * from '@trg_package/schemas-dashboard/schemas';

@@ -13,14 +13,16 @@ const stringBoolean = z.coerce
 export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
 
 const EnvSchema = z.object({
-  NODE_ENV: z.enum(['production', 'development', 'staging']),
+  NODE_ENV: z
+    .enum(['production', 'development', 'staging'])
+    .default('development'),
   PORT: z.coerce.number(),
 
-  AUTH_SUBDOMAIN: z.string(),
-  DASH_SUBDOMAIN: z.string(),
+  AUTH_SUBDOMAIN: z.string().default('auth'),
+  DASH_SUBDOMAIN: z.string().default('dashboard'),
 
-  DOMAIN: z.string(),
-  TLD: z.string(),
+  DOMAIN: z.string().default('trg'),
+  TLD: z.string().default('local'),
 
   [DashboardPgUrlKey]: z.string().optional(),
 

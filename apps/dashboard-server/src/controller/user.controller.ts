@@ -4,7 +4,7 @@ import {
   UserSelect,
   DetailedUser,
   UserInsert
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { NotFoundError } from '@trg_package/errors';
 
 export const readAll = async (
@@ -13,7 +13,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await req.userService.findMany({});
+    const usersWithPassword = await req.userService.findMany();
     const users = usersWithPassword.map(
       ({ password, ...user }) => user
     ) as Omit<DetailedUser, 'password'>[];

@@ -5,7 +5,7 @@ import {
   TenantInsert,
   TenantSelect,
   UserInsert
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 export const handleSignUp = async (

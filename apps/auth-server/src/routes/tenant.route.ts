@@ -11,7 +11,7 @@ import { validateSchema } from '@trg_package/middlewares';
 import {
   TenantInsertSchema,
   UserInsertSchema
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 
 const tenantRouter = Router();
 

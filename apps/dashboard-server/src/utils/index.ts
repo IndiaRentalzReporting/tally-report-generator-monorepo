@@ -1,8 +1,8 @@
 import { NotFoundError } from '@trg_package/errors';
-import { UserSelect } from '@trg_package/dashboard-schemas/types';
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import config from '../config';
 import jwt from 'jsonwebtoken';
-import { UserService } from '@trg_package/dashboard-schemas/services';
+import { UserService } from '@trg_package/schemas-dashboard/services';
 
 export const generateUserJWTToken = (user: UserSelect): string => {
   const { SMTP_SECRET } = config;

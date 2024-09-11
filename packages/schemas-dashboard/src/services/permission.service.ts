@@ -2,7 +2,7 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { PermissionSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as dashboardSchemas from '../schemas';
-import { PermissionActionService } from './permissionAction.service';
+import { PermissionActionService } from './permission_action.service';
 
 export class PermissionService extends BaseServiceNew<
   typeof dashboardSchemas,
@@ -25,7 +25,7 @@ export class PermissionService extends BaseServiceNew<
     await this.PermissionActionService.createOne({ permission_id, action_id });
   }
 
-  public async findMany(data: Partial<typeof this.schema.$inferSelect>) {
+  public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const permissions = await super.findMany(data, {
       with: {
         module: {

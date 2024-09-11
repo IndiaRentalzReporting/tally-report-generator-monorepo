@@ -7,7 +7,7 @@ import {
   PermissionSelect,
   RoleWithPermission,
   ActionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 const rolesAxios = createDashboardAxiosInstance({
   baseURL: '/v1/roles',

@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios';
-import { ActionSelect } from '@trg_package/dashboard-schemas/types';
+import { ActionSelect } from '@trg_package/schemas-dashboard/types';
 import { createDashboardAxiosInstance } from '@/services/client';
 
 const actionsAxios = createDashboardAxiosInstance({

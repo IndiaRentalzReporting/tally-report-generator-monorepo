@@ -3,4 +3,4 @@ export {
   type ApiKeySelect,
   ApiKeyInsertSchema,
   ApiKeySelectSchema
-} from '../schemas/apiKey';
+} from '../schemas/apiKeys';

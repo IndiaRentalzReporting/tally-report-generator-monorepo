@@ -4,11 +4,11 @@ import { PermissionSchema } from './permissions';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from './base';
 
-const { id, name, ...BaseEntitySchemaWithourIdAndName } = BaseEntitySchema;
+const { id, name, ...BaseEntitySchemaWithoutIdAndName } = BaseEntitySchema;
 export const PermissionActionSchema = pgTable(
   'permission_action',
   {
-    ...BaseEntitySchemaWithourIdAndName,
+    ...BaseEntitySchemaWithoutIdAndName,
     permission_id: uuid('permission_id')
       .notNull()
       .references(() => PermissionSchema.id, {

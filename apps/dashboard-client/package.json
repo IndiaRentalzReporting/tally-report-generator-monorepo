@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@trg_package/errors": "*",
-    "@trg_package/auth-schemas": "*",
+    "@trg_package/schemas-auth": "*",
     "@trg_package/components": "*",
-    "@trg_package/dashboard-schemas": "*",
+    "@trg_package/schemas-dashboard": "*",
     "@trg_package/pg-orm": "*",
     "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",

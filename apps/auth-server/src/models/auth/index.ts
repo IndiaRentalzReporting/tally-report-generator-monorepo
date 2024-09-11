@@ -1,4 +1,4 @@
-import * as authSchemas from '@trg_package/auth-schemas/schemas';
+import * as authSchemas from '@trg_package/schemas-auth/schemas';
 import { createClient } from '@trg_package/create-pg-client';
 import config from '../../config';
 

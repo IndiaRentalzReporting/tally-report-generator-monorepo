@@ -29,12 +29,11 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@trg_package/auth-schemas": "*",
-    "@trg_package/dashboard-schemas": "*",
+    "@trg_package/schemas-auth": "*",
+    "@trg_package/schemas-dashboard": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
-    "@trg_package/pg-orm": "*",
     "@trg_package/utils": "*",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",

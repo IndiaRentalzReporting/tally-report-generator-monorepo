@@ -1,5 +1,5 @@
 {
-  "name": "@trg_package/auth-schemas",
+  "name": "@trg_package/schemas-auth",
   "version": "1.0.0",
   "description": "",
   "exports": {

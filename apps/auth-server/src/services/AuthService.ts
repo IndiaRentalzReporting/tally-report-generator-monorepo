@@ -6,7 +6,7 @@ import {
   TenantInsert,
   TenantSelect,
   UserInsert
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 import UserService from './UserService';
 import TenantService from './TenantService';
 import { Request } from 'express';

@@ -5,7 +5,7 @@ import {
   ActionService,
   PermissionService,
   ApiKeyService
-} from '@trg_package/dashboard-schemas/services';
+} from '@trg_package/schemas-dashboard/services';
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 

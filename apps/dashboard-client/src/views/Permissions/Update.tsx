@@ -6,7 +6,7 @@ import {
   PermissionSelect,
   ModuleAction,
   ModulePermissions
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
 

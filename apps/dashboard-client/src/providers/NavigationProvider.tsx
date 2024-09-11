@@ -2,10 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import {
-  ActionSelect,
   ModuleSelect,
   Permissions
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { toTitleCase } from '@/lib/utils';
 
 interface NavItem {
@@ -44,23 +43,23 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   ): NavItemWithChildren[] => {
     return permissions.map((permission) => {
       const {
-        module: { name, icon },
-        actions
+        module: { name, icon }
+        // actions
       } = permission;
       const moduleName = name.toLowerCase();
-      const children: NavItem[] = actions.map((action) => {
-        const moduleAction = action.toLowerCase() as Lowercase<
-          ActionSelect['name']
-        >;
-        return {
-          to: `/dashboard/${moduleName}/${moduleAction}`,
-          name: action
-        };
-      });
+      // const children: NavItem[] = actions.map((action) => {
+      //   const moduleAction = action.toLowerCase() as Lowercase<
+      //     ActionSelect['name']
+      //   >;
+      //   return {
+      //     to: `/dashboard/${moduleName}/${moduleAction}`,
+      //     name: action
+      //   };
+      // });
       return {
         to: `/dashboard/${moduleName}`,
         name,
-        children: [] ?? children,
+        children: [],
         icon
       };
     });

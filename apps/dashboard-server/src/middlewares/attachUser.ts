@@ -1,8 +1,8 @@
 import config from '../config';
 import axios, { AxiosResponse } from 'axios';
 import { NextFunction, Response, Request } from 'express';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 const { PROTOCOL, AUTH_SUBDOMAIN, DOMAIN, TLD } = config;
