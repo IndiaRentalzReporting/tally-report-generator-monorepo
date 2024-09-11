@@ -1,22 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import {
   ModuleInsert,
   ModuleSelect
 } from '@trg_package/schemas-dashboard/types';
 
 export const createOne = async (
-  req: Request<
-    object,
-    object,
-    {
-      moduleDetails: ModuleInsert;
-      columnDetails: Array<{
-        name: ModuleInsert['name'];
-        type: PGColumnDataTypeValue;
-      }>;
-    }
-  >,
+  req: Request<object, object, { moduleDetails: ModuleInsert }>,
   res: Response<{ module: ModuleSelect | null }>,
   next: NextFunction
 ) => {

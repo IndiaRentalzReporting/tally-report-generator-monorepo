@@ -34,7 +34,6 @@
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
-    "@trg_package/pg-orm": "*",
     "@trg_package/utils": "*",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",

@@ -45,7 +45,6 @@
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
-    "@trg_package/pg-orm": "*",
     "@trg_package/utils": "*",
     "child-process": "^1.0.2",
     "dotenv": "^16.4.5",
