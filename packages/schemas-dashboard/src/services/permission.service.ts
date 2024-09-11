@@ -25,7 +25,7 @@ export class PermissionService extends BaseServiceNew<
     await this.PermissionActionService.createOne({ permission_id, action_id });
   }
 
-  public async findMany(data: Partial<typeof this.schema.$inferSelect>) {
+  public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const permissions = await super.findMany(data, {
       with: {
         module: {

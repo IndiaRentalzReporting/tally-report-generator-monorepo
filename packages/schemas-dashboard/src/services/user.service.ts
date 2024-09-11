@@ -22,7 +22,7 @@ export class UserService extends BaseServiceNew<
     return user;
   }
 
-  public async findMany(data: Partial<typeof this.schema.$inferSelect>) {
+  public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const users = await super.findMany(data, {
       with: {
         role: {
