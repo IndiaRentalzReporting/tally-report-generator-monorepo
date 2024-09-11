@@ -4,7 +4,7 @@ import {
   UserSelect,
   UserInsert,
   SafeUserSelect
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 import { NotFoundError } from '@trg_package/errors';
 
 export const createOne = async (

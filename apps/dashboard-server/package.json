@@ -29,7 +29,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@trg_package/auth-schemas": "*",
+    "@trg_package/schemas-auth": "*",
     "@trg_package/dashboard-schemas": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",

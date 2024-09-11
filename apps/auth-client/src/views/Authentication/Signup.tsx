@@ -10,7 +10,7 @@ import {
   Input,
   Label
 } from '@trg_package/components';
-import { RegisterUser, TenantInsert } from '@trg_package/auth-schemas/types';
+import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const SignupForm = () => {

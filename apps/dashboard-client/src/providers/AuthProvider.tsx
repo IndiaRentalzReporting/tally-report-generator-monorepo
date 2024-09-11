@@ -12,7 +12,7 @@ import {
   UserRole
 } from '@trg_package/dashboard-schemas/types';
 import { AxiosResponse } from 'axios';
-import { RegisterUser, SafeUserSelect } from '@trg_package/auth-schemas/types';
+import { RegisterUser, SafeUserSelect } from '@trg_package/schemas-auth/types';
 
 interface AuthProviderState {
   isAuthenticated: boolean;

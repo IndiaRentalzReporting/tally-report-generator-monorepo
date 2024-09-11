@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '../services/TenantService';
-import { TenantSelect, TenantInsert } from '@trg_package/auth-schemas/types';
+import { TenantSelect, TenantInsert } from '@trg_package/schemas-auth/types';
 
 export const createOne = async (
   req: Request<object, object, TenantInsert>,

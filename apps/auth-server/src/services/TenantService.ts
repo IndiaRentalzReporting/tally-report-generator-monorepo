@@ -1,11 +1,11 @@
 import postgres from 'postgres';
 import db from '../models/auth';
-import { TenantInsert, TenantSelect } from '@trg_package/auth-schemas/types';
+import { TenantInsert, TenantSelect } from '@trg_package/schemas-auth/types';
 import {
   UserInsert as DashboardUserInsert,
   UserSelect
 } from '@trg_package/dashboard-schemas/types';
-import { TenantService as BaseTenantService } from '@trg_package/auth-schemas/services';
+import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';
 import config from '../config';

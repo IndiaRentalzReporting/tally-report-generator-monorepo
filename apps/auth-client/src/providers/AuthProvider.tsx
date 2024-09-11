@@ -11,7 +11,7 @@ import {
   RegisterUser,
   SafeUserSelect,
   TenantInsert
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 
 interface AuthProviderState {

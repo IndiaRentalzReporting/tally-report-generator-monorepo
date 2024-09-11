@@ -1,7 +1,7 @@
 import { AxiosPromise } from 'axios';
 import { createAuthAxiosInstance } from './client';
 import { DetailedUser } from '@trg_package/dashboard-schemas/types';
-import { RegisterUser, SafeUserSelect } from '@trg_package/auth-schemas/types';
+import { RegisterUser, SafeUserSelect } from '@trg_package/schemas-auth/types';
 
 const authAxios = createAuthAxiosInstance({
   baseURL: '/v1/auth',

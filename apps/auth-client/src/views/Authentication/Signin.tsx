@@ -10,7 +10,7 @@ import {
   Input,
   Label
 } from '@trg_package/components';
-import { LoginUser } from '@trg_package/auth-schemas/types';
+import { LoginUser } from '@trg_package/schemas-auth/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const SigninForm = () => {

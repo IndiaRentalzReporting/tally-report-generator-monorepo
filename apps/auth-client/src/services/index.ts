@@ -6,7 +6,7 @@ import {
   TenantInsert,
   UserInsert,
   UserSelect
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 
 const authAxios = createAxiosInstance({
   baseURL: '/v1/auth',

@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios';
-import { UserSelect } from '@trg_package/auth-schemas/types';
+import { UserSelect } from '@trg_package/schemas-auth/types';
 import createAxiosInstance from '@/services/client';
 
 const authAxios = createAxiosInstance({

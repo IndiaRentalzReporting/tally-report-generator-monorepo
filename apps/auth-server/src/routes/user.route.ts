@@ -7,7 +7,7 @@ import {
   createOne
 } from '../controller/user.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { UserInsertSchema } from '@trg_package/auth-schemas/types';
+import { UserInsertSchema } from '@trg_package/schemas-auth/types';
 
 const userRouter = Router();
 

@@ -1,7 +1,7 @@
 import config from '../config';
 import axios, { AxiosResponse } from 'axios';
 import { NextFunction, Response, Request } from 'express';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
