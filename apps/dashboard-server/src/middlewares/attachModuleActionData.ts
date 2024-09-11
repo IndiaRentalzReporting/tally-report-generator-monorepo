@@ -15,6 +15,13 @@ export const attachModuleActionData = async (
     name: module?.toUpperCase()
   });
 
+  console.log({
+    module,
+    action,
+    Y,
+    X
+  });
+
   req.action = action?.toUpperCase();
   req.module = module?.toUpperCase();
 

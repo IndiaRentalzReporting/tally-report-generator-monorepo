@@ -12,7 +12,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await req.permissionService.findMany({});
+    const permissions = await req.permissionService.findMany();
     res.json({ permissions });
   } catch (e) {
     return next(e);

@@ -10,7 +10,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await req.actionService.findMany({});
+    const actions = await req.actionService.findMany();
     return res.json({ actions });
   } catch (e) {
     return next(e);

@@ -7,7 +7,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = await req.roleService.findMany({});
+    const roles = await req.roleService.findMany();
     return res.json({ roles });
   } catch (e) {
     return next(e);

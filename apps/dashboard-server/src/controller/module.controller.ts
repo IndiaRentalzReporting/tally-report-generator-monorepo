@@ -49,7 +49,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await req.moduleService.findMany({});
+    const modules = await req.moduleService.findMany();
     return res.json({ modules });
   } catch (e) {
     return next(e);

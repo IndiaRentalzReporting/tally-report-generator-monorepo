@@ -11,7 +11,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const apiKeys = await req.apiKeyService.findMany({});
+    const apiKeys = await req.apiKeyService.findMany();
     return res.json({ apiKeys });
   } catch (e) {
     return next(e);
