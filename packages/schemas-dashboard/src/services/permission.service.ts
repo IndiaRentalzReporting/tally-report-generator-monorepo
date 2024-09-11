@@ -2,7 +2,7 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { PermissionSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as dashboardSchemas from '../schemas';
-import { PermissionActionService } from './permissionAction.service';
+import { PermissionActionService } from './permission_action.service';
 
 export class PermissionService extends BaseServiceNew<
   typeof dashboardSchemas,
