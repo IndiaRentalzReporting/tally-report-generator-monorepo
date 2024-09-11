@@ -4,7 +4,7 @@ import {
   UserSelect,
   DetailedUser,
   UserInsert
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { NotFoundError } from '@trg_package/errors';
 
 export const readAll = async (

@@ -1,6 +1,6 @@
 import expressLoader from './loaders/express';
 import config from './config';
-import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
+import * as dashboardSchemas from '@trg_package/schemas-dashboard/schemas';
 import type {
   UserService,
   RoleService,
@@ -8,7 +8,7 @@ import type {
   ActionService,
   PermissionService,
   ApiKeyService
-} from '@trg_package/dashboard-schemas/services';
+} from '@trg_package/schemas-dashboard/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
 

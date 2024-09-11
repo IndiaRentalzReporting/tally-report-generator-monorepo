@@ -13,7 +13,7 @@
     "@tanstack/react-query": "^5.40.1",
     "@trg_package/schemas-auth": "*",
     "@trg_package/components": "*",
-    "@trg_package/dashboard-schemas": "*",
+    "@trg_package/schemas-dashboard": "*",
     "@trg_package/errors": "*",
     "axios": "^1.7.2",
     "lucide-react": "^0.439.0",

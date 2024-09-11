@@ -3,7 +3,7 @@ import { PGColumnDataTypeValue } from '@trg_package/pg-orm';
 import {
   ModuleInsert,
   ModuleSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 export const createOne = async (
   req: Request<

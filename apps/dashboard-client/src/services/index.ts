@@ -1,6 +1,6 @@
 import { AxiosPromise } from 'axios';
 import { createAuthAxiosInstance } from './client';
-import { DetailedUser } from '@trg_package/dashboard-schemas/types';
+import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { RegisterUser, SafeUserSelect } from '@trg_package/schemas-auth/types';
 
 const authAxios = createAuthAxiosInstance({

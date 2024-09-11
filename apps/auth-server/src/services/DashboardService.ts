@@ -2,7 +2,7 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import superUserRole from '../models/dashboard/seed/Roles/data.json';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
+import * as dashboardSchema from '@trg_package/schemas-dashboard/schemas';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
 import {
@@ -10,12 +10,12 @@ import {
   ModuleService,
   RoleService,
   UserService
-} from '@trg_package/dashboard-schemas/services';
+} from '@trg_package/schemas-dashboard/services';
 import {
   UserInsert,
   RoleSelect,
   UserSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/create-pg-client';
 
 class DashboardService {

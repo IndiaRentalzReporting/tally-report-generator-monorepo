@@ -4,7 +4,7 @@ import {
   ActionSelect,
   RoleSelect,
   PermissionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
   req: Request,

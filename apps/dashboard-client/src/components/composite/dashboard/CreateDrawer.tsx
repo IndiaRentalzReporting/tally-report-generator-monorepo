@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle
 } from '@trg_package/components';
-import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
+import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import { When } from '@/components/utility';
 import { useIsAllowed } from '@/lib/hooks';
 

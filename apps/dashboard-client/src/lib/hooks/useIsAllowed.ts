@@ -1,7 +1,7 @@
 import {
   ActionSelect,
   ModuleSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { useAuth } from '@/providers/AuthProvider';
 
 export const useIsAllowed = (data: {

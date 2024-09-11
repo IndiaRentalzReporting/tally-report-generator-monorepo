@@ -1,5 +1,5 @@
 {
-  "name": "@trg_package/dashboard-schemas",
+  "name": "@trg_package/schemas-dashboard",
   "version": "1.0.0",
   "description": "",
   "exports": {

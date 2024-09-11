@@ -7,7 +7,7 @@ import {
   deleteOne
 } from '../controller/role.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { RoleInsertSchema } from '@trg_package/dashboard-schemas/types';
+import { RoleInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const roleRouter = Router();
 

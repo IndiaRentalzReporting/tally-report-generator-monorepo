@@ -4,7 +4,7 @@ import { TenantInsert, TenantSelect } from '@trg_package/schemas-auth/types';
 import {
   UserInsert as DashboardUserInsert,
   UserSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
 import DashboardService from './DashboardService';
 import crypto from 'crypto';

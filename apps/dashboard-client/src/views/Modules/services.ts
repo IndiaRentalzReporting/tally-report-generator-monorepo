@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios';
-import { ModuleSelect } from '@trg_package/dashboard-schemas/types';
+import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import { createDashboardAxiosInstance } from '@/services/client';
 import { IColumnDetails } from './TableCreation';
 

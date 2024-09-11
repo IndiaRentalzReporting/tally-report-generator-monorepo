@@ -5,7 +5,7 @@ import {
   DetailedPermission,
   PermissionSelect,
   RoleSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { createDashboardAxiosInstance } from '@/services/client';
 
 const permissionsAxios = createDashboardAxiosInstance({

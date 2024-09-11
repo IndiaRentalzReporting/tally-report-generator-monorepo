@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { RoleInsert, RoleSelect } from '@trg_package/dashboard-schemas/types';
+import { RoleInsert, RoleSelect } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
   req: Request,

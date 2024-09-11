@@ -5,7 +5,7 @@ import {
   ActionSelect,
   ModuleSelect,
   Permissions
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import { toTitleCase } from '@/lib/utils';
 
 interface NavItem {

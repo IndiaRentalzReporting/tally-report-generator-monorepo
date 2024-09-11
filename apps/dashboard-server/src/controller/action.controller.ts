@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   ActionInsert,
   ActionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
   req: Request,

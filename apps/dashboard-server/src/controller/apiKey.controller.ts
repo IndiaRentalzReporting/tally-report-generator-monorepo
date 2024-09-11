@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   ApiKeyInsert,
   ApiKeySelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import crypto from 'crypto';
 
 export const readAll = async (
