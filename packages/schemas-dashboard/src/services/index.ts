@@ -4,6 +4,6 @@ export * from './permission.service';
 export * from './permission_action.service';
 export * from './module.service';
 export * from './action.service';
-export * from './apiKeys.service';
-export * from './companies.service';
+export * from './apiKey.service';
+export * from './company.service';
 export * from './user_company.service';
