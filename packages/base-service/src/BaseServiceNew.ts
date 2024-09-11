@@ -1,8 +1,6 @@
 import {
-  BadRequestError,
   CreateError,
   DeleteError,
-  NotFoundError,
   ReadError,
   UpdateError
 } from '@trg_package/errors';
@@ -45,6 +43,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (e) {
+      console.error(e);
       throw new CreateError(this.entity, data);
     }
   }
@@ -81,6 +80,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new ReadError(this.entity, data);
     }
   }
@@ -118,6 +118,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new ReadError(this.entity, data);
     }
   }
@@ -137,6 +138,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new UpdateError(this.entity, data);
     }
   }
@@ -154,6 +156,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new DeleteError(this.entity, id);
     }
   }
