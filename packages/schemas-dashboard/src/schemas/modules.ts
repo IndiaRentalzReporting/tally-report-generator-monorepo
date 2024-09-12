@@ -7,7 +7,6 @@ import { CompanySchema } from './companies';
 
 export const ModuleSchema = pgTable('modules', {
   ...BaseEntitySchema,
-  isPrivate: boolean('isPrivate').notNull().default(false),
   icon: text('icon'),
   company_id: uuid('company_id').references(() => CompanySchema.id, {
     onDelete: 'cascade',
