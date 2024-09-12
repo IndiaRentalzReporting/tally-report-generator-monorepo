@@ -14,12 +14,7 @@ export class RoleService extends BaseServiceNew<
   public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const roles = await super.findMany(data, {
       with: {
-        permission: {
-          columns: {
-            //@ts-ignore
-            id: true
-          }
-        }
+        permission: true
       }
     });
     return roles;
@@ -29,36 +24,13 @@ export class RoleService extends BaseServiceNew<
     const role = await super.findOne(data, {
       with: {
         permission: {
-          columns: {
-            //@ts-ignore
-            module_id: false,
-            updatedAt: false,
-            role_id: false,
-            createdAt: false,
-
-            id: false
-          },
           with: {
             permissionAction: {
-              columns: {
-                permission_id: false,
-                action_id: false
-              },
               with: {
-                action: {
-                  columns: {
-                    name: true,
-                    id: true
-                  }
-                }
+                action: true
               }
             },
-            module: {
-              columns: {
-                name: true,
-                id: true
-              }
-            }
+            module: true
           }
         }
       }
