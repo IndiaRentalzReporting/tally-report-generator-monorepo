@@ -13,6 +13,9 @@ import {
   TenantInsert
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
+import { ToastAction } from '@trg_package/components';
+import { useToast } from '@/lib/hooks';
+import { useNavigate } from 'react-router';
 
 interface AuthProviderState {
   user: SafeUserSelect | null;
@@ -61,6 +64,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [state, setState] =
     useState<Omit<AuthProviderState, 'signIn' | 'signUp'>>(initialState);
@@ -76,12 +81,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
     mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
       services.signUp(data),
-    mutationKey: ['auth', 'signUp']
+    mutationKey: ['auth', 'signUp'],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      toast({
+        variant: 'default',
+        title: `Sign up successful`,
+        description: `You have successfully signed up!`,
+        action: (
+          <ToastAction
+            altText="Okay!"
+            onClick={() => {
+              navigate('/sign-in');
+            }}
+          >
+            Okay!
+          </ToastAction>
+        )
+      });
+    }
   });
 
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
-    mutationKey: ['auth', 'signUp'],
+    mutationKey: ['auth', 'signIn'],
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
     }

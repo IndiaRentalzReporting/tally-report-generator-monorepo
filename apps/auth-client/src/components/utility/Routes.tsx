@@ -32,6 +32,7 @@ export const PublicRoutes: React.FC = () => {
       window.location.href = `${PROTOCOL}://${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
   }, [isAuthenticated]);
+
   return (
     <When condition={!isAuthenticated}>
       <Outlet />

@@ -4,7 +4,10 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 import { useAuth } from '@/providers/AuthProvider';
 
-export const useIsAllowed = (data: {
+export const useIsAllowed = ({
+  module,
+  action
+}: {
   module: ModuleSelect['name'];
   action: ActionSelect['name'];
 }): boolean => {
@@ -12,8 +15,8 @@ export const useIsAllowed = (data: {
 
   const isAllowed = permissions.find(
     (permission) =>
-      permission.actions.includes(data.action.toUpperCase()) &&
-      permission.module.name === data.module.toUpperCase()
+      permission.actions.includes(action.toUpperCase()) &&
+      permission.module.name === module.toUpperCase()
   );
 
   if (isAllowed) return true;
