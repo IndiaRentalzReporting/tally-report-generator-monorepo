@@ -1,5 +1,5 @@
 {
-  "id": "921373b0-0df1-4cf2-8deb-0d0783311b72",
+  "id": "ff2b3d90-b2a8-4761-94d1-c7a521a74aed",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -31,6 +31,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -95,6 +102,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -178,6 +192,13 @@
           "notNull": true,
           "default": false
         },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -242,6 +263,13 @@
           "notNull": true,
           "default": false
         },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -267,13 +295,6 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
-        },
-        "isPrivate": {
-          "name": "isPrivate",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "icon": {
           "name": "icon",
@@ -321,6 +342,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -431,6 +459,13 @@
           "notNull": true,
           "default": false
         },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -534,6 +569,13 @@
           "notNull": true,
           "default": false
         },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -600,6 +642,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -705,6 +754,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
