@@ -11,18 +11,18 @@ import {
 import { services } from './services';
 import Fields from './Fields';
 import { State, initialState } from './interface';
-import TableCreation, { IColumnDetails } from './TableCreation';
+// import TableCreation, { IColumnDetails } from './TableCreation';
 
 const CreateModule: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
-  const [columnDetails, setColumnDetails] = React.useState<
-    Array<IColumnDetails>
-  >([]);
+  // const [columnDetails, setColumnDetails] = React.useState<
+  //   Array<IColumnDetails>
+  // >([]);
 
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } =
     useMutation({
-      mutationFn: () => services.createOne({ moduleDetails, columnDetails }),
+      mutationFn: () => services.createOne({ moduleDetails }),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
         setModuleDetails(initialState);
@@ -47,7 +47,7 @@ const CreateModule: React.FC = () => {
           <Fields moduleData={moduleDetails} setModuleData={setModuleDetails} />
         </CardContent>
       </Card>
-      <Card>
+      {/*<Card>
         <CardHeader>
           <CardTitle>Column Details</CardTitle>
           <CardDescription>
@@ -60,11 +60,11 @@ const CreateModule: React.FC = () => {
             setColumnDetails={setColumnDetails}
           />
         </CardContent>
-      </Card>
+      </Card>*/}
       <Button
         type="submit"
         isLoading={loadingCreateModule}
-        disabled={!columnDetails.length}
+        disabled={!!moduleDetails}
       >
         Create Module
       </Button>

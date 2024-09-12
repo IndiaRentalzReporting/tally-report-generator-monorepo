@@ -1,7 +1,6 @@
 import { AxiosPromise } from 'axios';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import { createDashboardAxiosInstance } from '@/services/client';
-import { IColumnDetails } from './TableCreation';
 
 const modulesAxios = createDashboardAxiosInstance({
   baseURL: '/v1/modules',
@@ -21,7 +20,6 @@ export const services = {
   },
   createOne: async (data: {
     moduleDetails: Partial<ModuleSelect>;
-    columnDetails: Array<IColumnDetails>;
   }): AxiosPromise<{ module: ModuleSelect }> => {
     return modulesAxios.post('/create', data);
   },
