@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { Menu, Package2, Search, ChevronDown } from 'lucide-react';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { When } from '@/components/utility';
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +11,8 @@ import {
   Input,
   Sheet,
   SheetContent,
-  SheetTrigger
+  SheetTrigger,
+  When
 } from '@trg_package/components';
 import { useNav } from '@/providers/NavigationProvider';
 import ToggleThemeDropdown from '../ToggleThemeDropdown';

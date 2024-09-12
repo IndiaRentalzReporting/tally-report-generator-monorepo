@@ -12,10 +12,10 @@ import {
   CardContent,
   Skeleton,
   CardHeader,
-  CardTitle
+  CardTitle,
+  When
 } from '@trg_package/components';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
-import { When } from '@/components/utility';
 import { useIsAllowed } from '@/lib/hooks';
 
 interface ICreateDrawerProps {

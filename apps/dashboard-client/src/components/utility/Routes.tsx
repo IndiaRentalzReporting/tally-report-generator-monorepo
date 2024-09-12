@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
-import { When } from './Conditionals';
+import { When } from '@trg_package/components';
 import config from '@/config';
 
 export const PrivateRoutes: React.FC = () => {

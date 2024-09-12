@@ -7,9 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-  Button
+  Button,
+  When
 } from '@trg_package/components';
-import { When } from '@/components/utility';
 import { useNav } from '@/providers/NavigationProvider';
 
 const DashboardSidebar: React.FC = () => {

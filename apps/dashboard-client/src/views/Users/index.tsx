@@ -1,6 +1,6 @@
 import React from 'react';
 import Read from './Read';
-import { When } from '@/components/utility';
+import { When } from '@trg_package/components';
 import { useIsAllowed } from '@/lib/hooks';
 import AssignRole from './AssignRole';
 

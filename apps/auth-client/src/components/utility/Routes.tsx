@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
-import { Else, If, Then, When } from './Conditionals';
+import { Else, If, Then, When } from '@trg_package/components';
 import config from '@/config';
 
 export const PrivateRoutes: React.FC = () => {

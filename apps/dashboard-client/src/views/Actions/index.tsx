@@ -1,5 +1,5 @@
 import React from 'react';
-import { When } from '@/components/utility';
+import { When } from '@trg_package/components';
 import { useIsAllowed } from '@/lib/hooks';
 import Read from './Read';
 
