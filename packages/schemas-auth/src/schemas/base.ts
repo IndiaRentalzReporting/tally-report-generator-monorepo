@@ -21,5 +21,6 @@ export const BaseEntitySchema = {
   name: varchar('name', { length: 200 }).notNull(),
   status: EntityStatus('status').default('active').notNull(),
   isReadonly: boolean('isReadonly').notNull().default(false),
+  isPrivate: boolean('isPrivate').notNull().default(false),
   ...EntityTimestamps
 };

@@ -6,6 +6,7 @@ import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
 import { PermissionActionSchema } from './permission_action';
 import { CompanySchema } from './companies';
+import { UserCompanySchema } from './user_company';
 
 export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({
   role: one(RoleSchema, {
@@ -73,3 +74,17 @@ export const companySchemaRelation = relations(CompanySchema, ({ many }) => ({
   module: many(ModuleSchema),
   user: many(UserSchema)
 }));
+
+export const userCompanySchemaRelation = relations(
+  UserCompanySchema,
+  ({ one }) => ({
+    user: one(UserSchema, {
+      fields: [UserCompanySchema.user_id],
+      references: [UserSchema.id]
+    }),
+    company: one(CompanySchema, {
+      fields: [UserCompanySchema.company_id],
+      references: [CompanySchema.id]
+    })
+  })
+);
