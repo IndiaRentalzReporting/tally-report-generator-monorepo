@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosInstance } from 'axios';
-import { toast } from '@/lib/hooks';
+import { toast } from '@/hooks';
 import config from '@/config';
 
 export const createDashboardAxiosInstance = (defaults: {

@@ -6,7 +6,7 @@ import {
   ToastTitle,
   ToastViewport
 } from './toast';
-import { useToast } from '@/lib/hooks/useToast';
+import { useToast } from '@/hooks/useToast';
 
 export const Toaster = () => {
   const { toasts } = useToast();

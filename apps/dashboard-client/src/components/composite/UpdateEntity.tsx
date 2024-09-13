@@ -1,6 +1,6 @@
 import { Edit, Minus } from 'lucide-react';
 import React, { Suspense, lazy } from 'react';
-import { useIsAllowed } from '@/lib/hooks';
+import { useIsAllowed } from '@/hooks';
 import {
   Drawer,
   DrawerTrigger,

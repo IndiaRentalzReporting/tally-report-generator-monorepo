@@ -16,6 +16,7 @@
     "@trg_package/components": "*",
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/pg-orm": "*",
+    "@trg_package/utils": "*",
     "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",
     "react": "^18.2.0",

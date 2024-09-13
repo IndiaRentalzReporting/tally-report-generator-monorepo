@@ -16,7 +16,7 @@ import {
   When
 } from '@trg_package/components';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
-import { useIsAllowed } from '@/lib/hooks';
+import { useIsAllowed } from '@/hooks';
 
 interface ICreateDrawerProps {
   module: ModuleSelect['name'];

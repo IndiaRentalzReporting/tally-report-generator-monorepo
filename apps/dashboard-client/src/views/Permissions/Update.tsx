@@ -8,7 +8,7 @@ import {
   ModulePermissions
 } from '@trg_package/schemas-dashboard/types';
 import Fields from './Fields';
-import { createPermissionsUsingModulePermissions } from '@/lib/utils/convertPermissionsUsingModulePermissions';
+import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');

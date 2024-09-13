@@ -5,7 +5,7 @@ import {
   ModuleSelect,
   Permissions
 } from '@trg_package/schemas-dashboard/types';
-import { toTitleCase } from '@/lib/utils';
+import { toTitleCase } from '@trg_package/utils';
 
 interface NavItem {
   to: string;

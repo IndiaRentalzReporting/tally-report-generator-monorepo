@@ -13,8 +13,7 @@ import {
   TenantInsert
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
-import { ToastAction } from '@trg_package/components';
-import { useToast } from '@/lib/hooks';
+import { ToastAction, useToast } from '@trg_package/components';
 import { useNavigate } from 'react-router';
 
 interface AuthProviderState {
