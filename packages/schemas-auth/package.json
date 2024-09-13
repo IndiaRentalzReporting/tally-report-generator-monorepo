@@ -28,6 +28,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@trg_package/schemas-base": "*",
     "@trg_package/base-service": "*",
     "@trg_package/utils": "^1.0.0",
     "drizzle-orm": "^0.31.2",

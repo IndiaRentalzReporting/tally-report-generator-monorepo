@@ -1,0 +1,22 @@
+{
+  "name": "@trg_package/schemas-base",
+  "version": "1.0.0",
+  "description": "",
+  "exports": {
+    "./schemas": "./src/schemas/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "drizzle-orm": "^0.31.2"
+  },
+  "devDependencies": {
+    "@trg_package/config-eslint": "*",
+    "@trg_package/config-typescript": "*",
+    "tsup": "^8.2.4"
+  }
+}
