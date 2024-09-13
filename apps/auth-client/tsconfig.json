@@ -9,5 +9,6 @@
     }
   },
   "include": ["src", "*.js", "*.ts", ".eslint.cjs"],
-  "exclude": ["node_modules", "dist", ".turbo"]
+  "exclude": ["node_modules", "dist", ".turbo"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
