@@ -1,0 +1,10 @@
+{
+  "extends": "@trg_package/config-typescript/base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}

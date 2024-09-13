@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.40.1",
+    "@trg_package/config-env": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/components": "*",
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/errors": "*",
+    "@tanstack/react-query": "^5.40.1",
     "axios": "^1.7.2",
     "lucide-react": "^0.439.0",
     "react": "^18.2.0",

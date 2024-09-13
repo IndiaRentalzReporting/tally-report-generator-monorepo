@@ -1,0 +1,21 @@
+{
+  "name": "@trg_package/config-env",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@trg_package/config-typescript": "*",
+    "@trg_package/config-eslint": "*",
+    "@types/node": "^22.5.4",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}
