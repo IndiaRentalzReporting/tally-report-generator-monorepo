@@ -1,1 +1,1 @@
-export * from '@trg_package/schemas-base/schemas';
+export { EntityStatus } from '@trg_package/schemas-base/schemas';

@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "exports": {
-    "./schemas": "./src/schemas/index.ts"
+    "./schemas": {
+      "types": "./dist/node/index.d.ts",
+      "require": "./dist/node/index.js",
+      "import": "./dist/node/index.mjs"
+    }
   },
   "scripts": {
-    "lint": "eslint . --ext ts --fix --max-warnings 0"
+    "build": "tsup",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",

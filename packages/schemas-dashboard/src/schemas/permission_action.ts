@@ -2,7 +2,7 @@ import { pgTable, uuid, primaryKey } from 'drizzle-orm/pg-core';
 import { ActionSchema } from './actions';
 import { PermissionSchema } from './permissions';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { BaseEntitySchema } from './base';
+import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
 const { id, name, ...BaseEntitySchemaWithoutIdAndName } = BaseEntitySchema;
 export const PermissionActionSchema = pgTable(

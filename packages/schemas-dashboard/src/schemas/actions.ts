@@ -1,6 +1,6 @@
 import { pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { BaseEntitySchema } from './base';
+import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
 export const ActionSchema = pgTable('actions', {
   ...BaseEntitySchema
