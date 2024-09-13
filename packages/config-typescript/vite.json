@@ -1,26 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "React",
+  "display": "Vite",
   "extends": "./base.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "target": "ESNext",
     "module": "ESNext",
-    "skipLibCheck": true,
-    "allowJs": true,
-    "noImplicitReturns": true,
-
     "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
+    "allowJs": true,
     "jsx": "react-jsx",
-
-    "strict": true,
+    "useDefineForClassFields": true,
+    "lib": ["ESNext", "DOM"],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noImplicitReturns": true
   }
 }
