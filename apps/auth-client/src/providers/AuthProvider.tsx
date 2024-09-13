@@ -74,7 +74,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     queryFn: () => services.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'status'],
-    refetchOnMount: true,
     staleTime: 1000 * 60 * 15
   });
 
