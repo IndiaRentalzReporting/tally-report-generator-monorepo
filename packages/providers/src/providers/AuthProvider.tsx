@@ -5,26 +5,28 @@ import {
   useQuery,
   useQueryClient
 } from '@tanstack/react-query';
-import services from '@/services';
+import services from '../services';
 import {
   LoginUser,
   RegisterUser,
-  SafeUserSelect,
   TenantInsert
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { ToastAction, useToast } from '@trg_package/components';
 import { useNavigate } from 'react-router';
+import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
+import { DetailedUser } from '../models';
 
 interface AuthProviderState {
-  user: SafeUserSelect | null;
+  user: DetailedUser | null;
   isAuthenticated: boolean;
   loading: boolean;
+  permissions: Permissions[];
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
       AxiosResponse<{
-        user: SafeUserSelect;
+        user: DetailedUser;
       }>,
       Error,
       { user: RegisterUser; tenant: TenantInsert }
@@ -34,10 +36,19 @@ interface AuthProviderState {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
       AxiosResponse<{
-        user: SafeUserSelect;
+        user: DetailedUser;
       }>,
       Error,
       LoginUser
+    >;
+  };
+  signOut: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        message: string;
+      }>,
+      Error
     >;
   };
 }
@@ -46,12 +57,19 @@ const initialState: AuthProviderState = {
   user: null,
   isAuthenticated: false,
   loading: true,
+  permissions: JSON.parse(
+    localStorage.getItem('permissions') ?? '[]'
+  ) as AuthProviderState['permissions'],
   signUp: {
     mutation: () => Promise.reject('SignUp Mutation does not exist'),
     isLoading: false
   },
   signIn: {
     mutation: () => Promise.reject('SignIn Mutation does not exist'),
+    isLoading: false
+  },
+  signOut: {
+    mutation: () => Promise.reject('SignOut Mutation does not exist'),
     isLoading: false
   }
 };
@@ -67,7 +85,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [state, setState] =
-    useState<Omit<AuthProviderState, 'signIn' | 'signUp'>>(initialState);
+    useState<Omit<AuthProviderState, 'signIn' | 'signUp' | 'signOut'>>(
+      initialState
+    );
 
   const { data: authData, isFetching } = useQuery({
     queryFn: () => services.status(),
@@ -108,19 +128,47 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   });
 
+  const { mutateAsync: signOutMutation, isPending: isSigningOut } = useMutation(
+    {
+      mutationFn: () => services.signOut(),
+      mutationKey: ['auth', 'signOut'],
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
+    }
+  );
+
+  const createPermissions = (
+    permissions: UserRole['permission'] | undefined
+  ): Permissions[] => {
+    const p =
+      permissions?.map(({ module, permissionAction }) => {
+        const { name, icon } = module;
+        return {
+          module: { name, icon },
+          actions: permissionAction.map(({ action }) => action.name)
+        };
+      }) ?? [];
+    localStorage.setItem('permissions', JSON.stringify(p));
+    return p;
+  };
+
   useEffect(() => {
     if (!authData || !authData.user || !authData.isAuthenticated) {
       setState({
-        ...initialState
+        ...initialState,
+        permissions: []
       });
       return;
     }
 
     const { user, isAuthenticated } = authData;
+    const permissions = createPermissions(user.role?.permission);
 
     setState({
       user,
       isAuthenticated,
+      permissions,
       loading: false
     });
   }, [authData]);
@@ -137,7 +185,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         ...state,
         signIn: { mutation: signInMutation, isLoading: isSigningIn },
-        signUp: { mutation: signUpMutation, isLoading: isSigningUp }
+        signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+        signOut: { mutation: signOutMutation, isLoading: isSigningOut }
       }}
     >
       {children}

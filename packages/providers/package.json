@@ -1,0 +1,30 @@
+{
+  "name": "@trg_package/providers",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.tsx",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.40.1",
+    "@trg_package/schemas-auth": "*",
+    "@trg_package/schemas-dashboard": "*",
+    "@trg_package/axios-client": "*",
+    "@trg_package/components": "*",
+    "react": "^18.3.0",
+    "axios": "^1.7.2",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.23.0",
+    "react-router-dom": "^6.23.1"
+  },
+  "devDependencies": {
+    "@trg_package/config-eslint": "*",
+    "@trg_package/config-typescript": "*",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.1"
+  }
+}
