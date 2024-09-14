@@ -1,14 +1,7 @@
 {
-  "extends": "@trg_package/config-typescript/vite.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
-  "include": ["src", "*.js", "*.ts", ".eslint.cjs"],
-  "exclude": ["node_modules", "dist", ".turbo"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

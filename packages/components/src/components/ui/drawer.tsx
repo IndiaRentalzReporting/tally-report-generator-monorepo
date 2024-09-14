@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 
 import { DialogCloseProps } from '@radix-ui/react-dialog';
-import { cn } from '@/lib/utils';
+import { cn } from '$/lib/utils';
 
 const Drawer = ({
   shouldScaleBackground = true,
