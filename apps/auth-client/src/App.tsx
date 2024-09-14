@@ -10,9 +10,9 @@ import {
   SigninForm,
   ForgotPassword,
   ResetPassword
-} from './views/Authentication';
-import { PublicRoutes } from './components/utility/Routes';
-import { RootLayout } from './components/composite/RootLayout';
+} from '@/views/Authentication';
+import { PublicRoutes } from '@/components/utility/Routes';
+import { RootLayout } from '@/components/composite/RootLayout';
 
 const App = () => {
   const router = createBrowserRouter(

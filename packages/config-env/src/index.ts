@@ -10,7 +10,7 @@ export class ConfigError extends Error {
 export function createConfig<T extends z.ZodObject<any>>(
   schema: T,
   env: Record<string, unknown>
-): z.infer<T> & { PROTOCOL: string } {
+): z.infer<T> & { PROTOCOL: 'https' | 'http' } {
   try {
     let parsedEnv = schema.parse(env);
     return {

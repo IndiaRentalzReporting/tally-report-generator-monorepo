@@ -5,7 +5,6 @@ import {
   ModuleSelect,
   Permissions
 } from '@trg_package/schemas-dashboard/types';
-import { toTitleCase } from '@trg_package/utils';
 
 interface NavItem {
   to: string;
@@ -74,7 +73,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: toTitleCase(location.pathname.split('/')[2] ?? '')
+      currentModule: location.pathname.split('/')[2]
     }));
   }, [location, permissions]);
 

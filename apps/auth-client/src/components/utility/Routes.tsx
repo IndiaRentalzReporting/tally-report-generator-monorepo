@@ -16,11 +16,11 @@ export const PublicRoutes: React.FC = () => {
   }, [isAuthenticated]);
 
   return (
-    <If condition={false}>
+    <If condition={!isAuthenticated}>
       <Then>
         <Outlet />
       </Then>
-      <ElseIf condition={true}>
+      <ElseIf condition={!loading && isAuthenticated}>
         <RedirectingSkeleton />
       </ElseIf>
     </If>

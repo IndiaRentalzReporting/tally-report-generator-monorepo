@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosInstance } from 'axios';
-import { toast } from '@/hooks';
+import { toast } from '@trg_package/components';
 import config from '@/config';
 
 export const createDashboardAxiosInstance = (defaults: {
