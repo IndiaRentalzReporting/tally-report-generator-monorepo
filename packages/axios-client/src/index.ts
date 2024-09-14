@@ -3,46 +3,6 @@ import { toast } from '@trg_package/components';
 import config from './config';
 import z from 'zod';
 
-const axios = Axios.create();
-axios.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (e: AxiosError<any>) => {
-    // add logger
-    return Promise.reject(e);
-  }
-);
-
-axios.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error: AxiosError<any>) => {
-    // add logger
-    if (error.response?.status === 422) {
-      const errors = JSON.parse(
-        error.response?.data.error
-      ) as Array<z.ZodIssue>;
-
-      errors.forEach((error) =>
-        toast({
-          variant: 'destructive',
-          title: `Type Error in ${error.path}`,
-          description: error.message
-        })
-      );
-    } else {
-      toast({
-        variant: 'destructive',
-        title: error.message,
-        description: error.response?.data.error.toUpperCase()
-      });
-    }
-    return Promise.reject(error);
-  }
-);
-
 const createAxiosClient = (
   type: Record<'auth', true> | Record<'dashboard', true>,
   defaults: {
@@ -50,6 +10,46 @@ const createAxiosClient = (
     withCredentials: boolean;
   }
 ): AxiosInstance => {
+  const axios = Axios.create();
+  axios.interceptors.request.use(
+    (config) => {
+      return config;
+    },
+    (e: AxiosError<any>) => {
+      // add logger
+      return Promise.reject(e);
+    }
+  );
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error: AxiosError<any>) => {
+      // add logger
+      if (error.response?.status === 422) {
+        const errors = JSON.parse(
+          error.response?.data.error
+        ) as Array<z.ZodIssue>;
+
+        errors.forEach((error) =>
+          toast({
+            variant: 'destructive',
+            title: `Type Error in ${error.path}`,
+            description: error.message
+          })
+        );
+      } else {
+        toast({
+          variant: 'destructive',
+          title: error.message,
+          description: error.response?.data.error.toUpperCase()
+        });
+      }
+      return Promise.reject(error);
+    }
+  );
+
   const {
     PROTOCOL,
     VITE_AUTH_SUBDOMAIN,
@@ -60,11 +60,18 @@ const createAxiosClient = (
 
   let subdomain;
 
-  if ('auth' in type) {
+  if ('auth' in type && type.auth === true) {
     subdomain = VITE_AUTH_SUBDOMAIN;
-  } else if ('dashboard' in type) {
+  } else if ('dashboard' in type && type.dashboard === true) {
     subdomain = VITE_DASH_SUBDOMAIN;
   }
+
+  console.log({
+    subdomain,
+    VITE_AUTH_SUBDOMAIN,
+    VITE_DASH_SUBDOMAIN,
+    type
+  });
 
   axios.defaults.baseURL =
     `${PROTOCOL}://${subdomain}.${VITE_DOMAIN}.${VITE_TLD}/api` +
