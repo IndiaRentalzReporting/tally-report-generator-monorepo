@@ -9,10 +9,10 @@ import {
   CardContent,
   Button,
   Input,
-  ToastAction
+  ToastAction,
+  useToast
 } from '@trg_package/components';
 import { services } from './services';
-import { useToast } from '@/lib/hooks';
 
 export const ForgotPassword: FC = () => {
   const { toast } = useToast();

@@ -131,7 +131,7 @@ export class BaseServiceNew<
       const [entity] = await this.dbClient
         .update(this.schema)
         .set({ ...data })
-        .where(eq(this.schema.id, id))
+        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
         .returning();
 
       if (!entity) throw new UpdateError(this.entity, data);
@@ -149,7 +149,7 @@ export class BaseServiceNew<
     try {
       const [entity] = await this.dbClient
         .delete(this.schema)
-        .where(eq(this.schema.id, id))
+        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
         .returning();
 
       if (!entity) throw new DeleteError(this.entity, id);

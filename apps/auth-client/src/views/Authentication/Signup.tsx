@@ -11,22 +11,27 @@ import {
   Label
 } from '@trg_package/components';
 import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
+
+const initialTenantState: TenantInsert = {
+  name: ''
+};
+
+const initialUserState: RegisterUser = {
+  email: '',
+  password: '',
+  first_name: '',
+  last_name: ''
+};
 
 export const SignupForm = () => {
   const {
     signUp: { isLoading, mutation: signUp }
   } = useAuth();
 
-  const [tenantData, setTenantData] = useState<TenantInsert>({
-    name: ''
-  });
-  const [userData, setUserData] = useState<RegisterUser>({
-    email: '',
-    password: '',
-    first_name: '',
-    last_name: ''
-  });
+  const [tenantData, setTenantData] =
+    useState<TenantInsert>(initialTenantState);
+  const [userData, setUserData] = useState<RegisterUser>(initialUserState);
 
   const handleFormChange = <T extends Object>(
     e: ChangeEvent<HTMLInputElement>,
@@ -45,6 +50,8 @@ export const SignupForm = () => {
       tenant: tenantData,
       user: userData
     });
+    setTenantData(initialTenantState);
+    setUserData(initialUserState);
   };
 
   return (

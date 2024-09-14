@@ -17,10 +17,10 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue
+  SelectValue,
+  When
 } from '@trg_package/components';
 import { DataTable } from '@/components/composite';
-import { When } from '@/components/utility';
 
 export interface ColumnData {
   [key: string]: string;

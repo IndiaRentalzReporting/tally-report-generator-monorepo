@@ -9,7 +9,8 @@ export default ({ mode }: { mode: string }) => {
     plugins: [react()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src')
+        '@': path.resolve(__dirname, './src'),
+        $: path.resolve(__dirname, '../../packages/components/src')
       }
     },
     server: {

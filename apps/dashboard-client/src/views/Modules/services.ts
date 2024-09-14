@@ -1,12 +1,14 @@
 import { AxiosPromise } from 'axios';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
-import { createDashboardAxiosInstance } from '@/services/client';
-import { IColumnDetails } from './TableCreation';
+import createAxiosClient from '@trg_package/axios-client';
 
-const modulesAxios = createDashboardAxiosInstance({
-  baseURL: '/v1/modules',
-  withCredentials: true
-});
+const modulesAxios = createAxiosClient(
+  { dashboard: true },
+  {
+    baseURL: '/v1/modules',
+    withCredentials: true
+  }
+);
 
 export const services = {
   getAll: async (): AxiosPromise<{
@@ -21,7 +23,6 @@ export const services = {
   },
   createOne: async (data: {
     moduleDetails: Partial<ModuleSelect>;
-    columnDetails: Array<IColumnDetails>;
   }): AxiosPromise<{ module: ModuleSelect }> => {
     return modulesAxios.post('/create', data);
   },

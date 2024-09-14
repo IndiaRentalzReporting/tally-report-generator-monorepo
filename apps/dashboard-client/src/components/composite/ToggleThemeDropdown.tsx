@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@trg_package/components';
-import { useTheme } from '@/providers/ThemeProvider';
+import { useTheme } from '@trg_package/providers';
 
 const ToggleThemeDropdown = () => {
   const { setTheme } = useTheme();

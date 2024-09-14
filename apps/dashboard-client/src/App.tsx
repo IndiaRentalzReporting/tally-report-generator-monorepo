@@ -6,15 +6,15 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { PrivateRoutes, ModuleMapper } from './components/utility';
-import { DashboardLayout } from './components/composite';
-import { useAuth } from './providers/AuthProvider';
+import { DashboardLayout, RootLayout } from './components/composite';
+import { useAuth } from '@trg_package/providers';
 
 const App = () => {
   const { permissions } = useAuth();
 
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route path="/">
+      <Route path="/" element={<RootLayout />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/dashboard" element={<DashboardLayout />}>

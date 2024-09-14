@@ -28,35 +28,13 @@ export class PermissionService extends BaseServiceNew<
   public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const permissions = await super.findMany(data, {
       with: {
-        module: {
-          columns: {
-            //@ts-ignore
-            name: true,
-            id: true
-          }
-        },
+        module: true,
         permissionAction: {
-          columns: {
-            //@ts-ignore
-            action_id: false,
-            permission_id: false
-          },
           with: {
-            action: {
-              columns: {
-                name: true,
-                id: true
-              }
-            }
+            action: true
           }
         },
-        role: {
-          columns: {
-            //@ts-ignore
-            name: true,
-            id: true
-          }
-        }
+        role: true
       }
     });
 

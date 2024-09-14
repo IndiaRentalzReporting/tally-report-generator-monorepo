@@ -5,8 +5,10 @@ export const attachModuleActionData = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { url } = req;
-  const [module, action] = url.split('/').splice(-2);
+  const { path } = req;
+  const pathParams = path.split('/');
+  const module = pathParams[3];
+  const action = pathParams[4];
 
   const Y = await req.actionService.findOne({
     name: action?.toUpperCase()

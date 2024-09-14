@@ -1,6 +1,6 @@
 import React from 'react';
-import { When } from '@/components/utility';
-import { useIsAllowed } from '@/lib/hooks';
+import { When } from '@trg_package/components';
+import { useIsAllowed } from '@/hooks';
 import Read from './Read';
 
 const Roles: React.FC = () => {

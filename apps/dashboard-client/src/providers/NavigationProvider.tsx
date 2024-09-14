@@ -1,11 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '@trg_package/providers';
 import {
   ModuleSelect,
   Permissions
 } from '@trg_package/schemas-dashboard/types';
-import { toTitleCase } from '@/lib/utils';
 
 interface NavItem {
   to: string;
@@ -74,7 +73,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: toTitleCase(location.pathname.split('/')[2] ?? '')
+      currentModule: location.pathname.split('/')[2]
     }));
   }, [location, permissions]);
 

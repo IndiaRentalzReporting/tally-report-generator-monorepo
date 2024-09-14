@@ -1,11 +1,14 @@
 import { AxiosPromise } from 'axios';
 import { DetailedUser, UserSelect } from '@trg_package/schemas-dashboard/types';
-import { createDashboardAxiosInstance } from '@/services/client';
+import createAxiosClient from '@trg_package/axios-client';
 
-const usersAxios = createDashboardAxiosInstance({
-  baseURL: '/v1/users',
-  withCredentials: true
-});
+const usersAxios = createAxiosClient(
+  { dashboard: true },
+  {
+    baseURL: '/v1/users',
+    withCredentials: true
+  }
+);
 
 export const services = {
   getAll: async (): AxiosPromise<{

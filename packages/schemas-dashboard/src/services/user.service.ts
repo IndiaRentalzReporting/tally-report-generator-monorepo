@@ -26,38 +26,15 @@ export class UserService extends BaseServiceNew<
     const users = await super.findMany(data, {
       with: {
         role: {
-          columns: {
-            //@ts-ignore
-            name: true
-          },
           with: {
             permission: {
-              columns: {
-                role_id: false,
-                createdAt: false,
-                updatedAt: false,
-                module_id: false
-              },
               with: {
                 permissionAction: {
-                  columns: {
-                    permission_id: false,
-                    action_id: false
-                  },
                   with: {
-                    action: {
-                      columns: {
-                        name: true
-                      }
-                    }
+                    action: true
                   }
                 },
-                module: {
-                  columns: {
-                    name: true,
-                    id: true
-                  }
-                }
+                module: true
               }
             }
           }
@@ -74,38 +51,15 @@ export class UserService extends BaseServiceNew<
     const user = await super.findOne(data, {
       with: {
         role: {
-          columns: {
-            //@ts-ignore
-            name: true
-          },
           with: {
             permission: {
-              columns: {
-                role_id: false,
-                createdAt: false,
-                updatedAt: false,
-                module_id: false
-              },
               with: {
                 permissionAction: {
-                  columns: {
-                    permission_id: false,
-                    action_id: false
-                  },
                   with: {
-                    action: {
-                      columns: {
-                        name: true
-                      }
-                    }
+                    action: true
                   }
                 },
-                module: {
-                  columns: {
-                    name: true,
-                    id: true
-                  }
-                }
+                module: true
               }
             }
           }

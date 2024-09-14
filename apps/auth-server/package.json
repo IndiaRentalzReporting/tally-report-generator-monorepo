@@ -39,6 +39,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@trg_package/config-env": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/create-pg-client": "*",
     "@trg_package/schemas-dashboard": "*",

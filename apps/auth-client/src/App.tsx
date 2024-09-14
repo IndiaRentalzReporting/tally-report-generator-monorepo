@@ -10,13 +10,14 @@ import {
   SigninForm,
   ForgotPassword,
   ResetPassword
-} from './views/Authentication';
-import { PublicRoutes } from './components/utility/Routes';
+} from '@/views/Authentication';
+import { PublicRoutes } from '@/components/utility/Routes';
+import { RootLayout } from '@/components/composite/RootLayout';
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route path="/">
+      <Route path="/" element={<RootLayout />}>
         <Route index element={<Navigate to="/sign-up" />} />
         <Route element={<PublicRoutes />}>
           <Route path="sign-up" element={<SignupForm />} />

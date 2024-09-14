@@ -1,7 +1,7 @@
 import React from 'react';
 import ReadModule from './Read';
-import { When } from '@/components/utility';
-import { useIsAllowed } from '@/lib/hooks';
+import { When } from '@trg_package/components';
+import { useIsAllowed } from '@/hooks';
 
 const Modules: React.FC = () => {
   const isReadAllowed = useIsAllowed({

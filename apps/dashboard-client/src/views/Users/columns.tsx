@@ -3,8 +3,7 @@ import { ArrowUpDown } from 'lucide-react';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { services } from './services';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { When } from '@/components/utility';
-import { Button, Checkbox } from '@trg_package/components';
+import { Button, Checkbox, When } from '@trg_package/components';
 
 export const columns: ColumnDef<DetailedUser>[] = [
   {

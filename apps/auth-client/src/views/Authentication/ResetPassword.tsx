@@ -10,11 +10,13 @@ import {
   CardContent,
   Button,
   Input,
-  ToastAction
+  ToastAction,
+  If,
+  Then,
+  Else,
+  useToast
 } from '@trg_package/components';
 import { services } from './services';
-import { useToast } from '@/lib/hooks';
-import { Else, If, Then } from '@/components/utility';
 
 export const ResetPassword: FC = () => {
   const { token: unvalidatedToken } = useParams<{ token: string }>();
