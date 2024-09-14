@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from 'react';
 import { Button } from '@trg_package/components';
 import Fields from './Fields';
 import { State, initialState } from './interface';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 
 const Create: React.FC = () => {
   const {

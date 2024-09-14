@@ -1,7 +1,6 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-import { AuthProvider } from '@/providers/AuthProvider';
+import { ThemeProvider, AuthProvider } from '@trg_package/providers';
 import { Toaster } from '@trg_package/components';
 import { Outlet } from 'react-router';
 

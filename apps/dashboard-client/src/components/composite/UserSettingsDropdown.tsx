@@ -1,4 +1,4 @@
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 import {
   DropdownMenu,
   DropdownMenuTrigger,

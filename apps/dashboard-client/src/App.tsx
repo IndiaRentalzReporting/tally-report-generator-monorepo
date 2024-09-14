@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import { PrivateRoutes, ModuleMapper } from './components/utility';
 import { DashboardLayout, RootLayout } from './components/composite';
-import { useAuth } from './providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 
 const App = () => {
   const { permissions } = useAuth();
