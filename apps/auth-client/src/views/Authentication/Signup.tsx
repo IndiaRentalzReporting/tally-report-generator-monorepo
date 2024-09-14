@@ -11,7 +11,7 @@ import {
   Label
 } from '@trg_package/components';
 import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 
 const initialTenantState: TenantInsert = {
   name: ''

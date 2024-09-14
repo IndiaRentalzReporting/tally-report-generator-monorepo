@@ -11,7 +11,7 @@ import {
   Label
 } from '@trg_package/components';
 import { LoginUser } from '@trg_package/schemas-auth/types';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 
 export const SigninForm = () => {
   const {

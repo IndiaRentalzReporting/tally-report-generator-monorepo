@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '@/providers/AuthProvider';
+import { useAuth } from '@trg_package/providers';
 import { ElseIf, If, Then } from '@trg_package/components';
 import config from '@/config';
 import RedirectingSkeleton from '../composite/RedirectingSkeleton';
