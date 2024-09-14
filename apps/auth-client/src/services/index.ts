@@ -1,5 +1,4 @@
 import { AxiosPromise } from 'axios';
-import createAxiosInstance from './client';
 import {
   LoginUser,
   SafeUserSelect,
@@ -7,11 +6,15 @@ import {
   UserInsert,
   UserSelect
 } from '@trg_package/schemas-auth/types';
+import createAxiosClient from '@trg_package/axios-client';
 
-const authAxios = createAxiosInstance({
-  baseURL: '/v1/auth',
-  withCredentials: true
-});
+const authAxios = createAxiosClient(
+  { auth: true },
+  {
+    baseURL: '/v1/auth',
+    withCredentials: true
+  }
+);
 
 const services = {
   status: (): AxiosPromise<{

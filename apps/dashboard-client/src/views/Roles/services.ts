@@ -1,6 +1,5 @@
 import { AxiosPromise } from 'axios';
 import Module from 'module';
-import { createDashboardAxiosInstance } from '@/services/client';
 import { services as permissionsServices } from '../Permissions/services';
 import {
   RoleSelect,
@@ -8,11 +7,15 @@ import {
   RoleWithPermission,
   ActionSelect
 } from '@trg_package/schemas-dashboard/types';
+import createAxiosClient from '@trg_package/axios-client';
 
-const rolesAxios = createDashboardAxiosInstance({
-  baseURL: '/v1/roles',
-  withCredentials: true
-});
+const rolesAxios = createAxiosClient(
+  { dashboard: true },
+  {
+    baseURL: '/v1/roles',
+    withCredentials: true
+  }
+);
 
 export const services = {
   createOne: async (data: {

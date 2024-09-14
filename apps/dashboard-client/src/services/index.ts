@@ -1,12 +1,15 @@
 import { AxiosPromise } from 'axios';
-import { createAuthAxiosInstance } from './client';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { RegisterUser, SafeUserSelect } from '@trg_package/schemas-auth/types';
+import createAxiosClient from '@trg_package/axios-client';
 
-const authAxios = createAuthAxiosInstance({
-  baseURL: '/v1/auth',
-  withCredentials: true
-});
+const authAxios = createAxiosClient(
+  { auth: true },
+  {
+    baseURL: '/v1/auth',
+    withCredentials: true
+  }
+);
 
 const services = {
   Authentication: {
