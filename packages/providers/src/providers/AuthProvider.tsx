@@ -22,6 +22,7 @@ interface AuthProviderState {
   isAuthenticated: boolean;
   loading: boolean;
   permissions: Permissions[];
+  tenant: TenantInsert['name'] | null;
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
@@ -60,6 +61,7 @@ const initialState: AuthProviderState = {
   permissions: JSON.parse(
     localStorage.getItem('permissions') ?? '[]'
   ) as AuthProviderState['permissions'],
+  tenant: null,
   signUp: {
     mutation: () => Promise.reject('SignUp Mutation does not exist'),
     isLoading: false
@@ -89,7 +91,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       initialState
     );
 
-  const { data: authData, isFetching } = useQuery({
+  const { data: authStatus, isFetching } = useQuery({
     queryFn: () => services.status(),
     select: (data) => data.data,
     queryKey: ['auth', 'status'],
@@ -154,7 +156,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   useEffect(() => {
-    if (!authData || !authData.user || !authData.isAuthenticated) {
+    if (!authStatus || !authStatus.user || !authStatus.isAuthenticated) {
       setState({
         ...initialState,
         permissions: []
@@ -162,16 +164,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    const { user, isAuthenticated } = authData;
+    const { user, isAuthenticated } = authStatus;
     const permissions = createPermissions(user.role?.permission);
+    const tenant = user.tenant?.name;
 
     setState({
       user,
       isAuthenticated,
       permissions,
+      tenant,
       loading: false
     });
-  }, [authData]);
+  }, [authStatus]);
 
   useEffect(() => {
     setState((prev) => ({

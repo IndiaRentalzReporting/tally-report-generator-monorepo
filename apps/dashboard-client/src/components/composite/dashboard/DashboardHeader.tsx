@@ -18,8 +18,10 @@ import { useNav } from '@/providers/NavigationProvider';
 import ToggleThemeDropdown from '../ToggleThemeDropdown';
 import ApiKeyDropdown from '../ApiKeyDropdown';
 import UserSettingsDropdown from '../UserSettingsDropdown';
+import { useAuth } from '@trg_package/providers';
 
 const DashboardHeader: React.FC = () => {
+  const { tenant } = useAuth();
   const { navigation } = useNav();
 
   return (
@@ -37,7 +39,7 @@ const DashboardHeader: React.FC = () => {
             className="flex items-center gap-2 text-lg font-semibold"
           >
             <Package2 className="h-6 w-6" />
-            <span className="sr-only">Acme Inc</span>
+            <span className="sr-only">{tenant}</span>
           </NavLink>
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
