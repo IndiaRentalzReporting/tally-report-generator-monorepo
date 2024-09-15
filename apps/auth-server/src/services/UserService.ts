@@ -5,7 +5,7 @@ import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/type
 import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
-import { createUrl, createClient } from '@trg_package/create-pg-client';
+import { createUrl, createClient } from '@trg_package/pg-client';
 import * as dashboardSchema from '@trg_package/schemas-dashboard/schemas';
 
 class UserService extends BaseUserService {

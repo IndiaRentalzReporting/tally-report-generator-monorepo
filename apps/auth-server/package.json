@@ -41,7 +41,7 @@
   "dependencies": {
     "@trg_package/config-env": "*",
     "@trg_package/schemas-auth": "*",
-    "@trg_package/create-pg-client": "*",
+    "@trg_package/pg-client": "*",
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",

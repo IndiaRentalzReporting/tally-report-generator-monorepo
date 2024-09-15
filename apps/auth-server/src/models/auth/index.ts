@@ -1,5 +1,5 @@
 import * as authSchemas from '@trg_package/schemas-auth/schemas';
-import { createClient } from '@trg_package/create-pg-client';
+import { createClient } from '@trg_package/pg-client';
 import config from '../../config';
 
 export const { AUTH_PG_URL, DB_MIGRATING, DB_SEEDING } = config;
