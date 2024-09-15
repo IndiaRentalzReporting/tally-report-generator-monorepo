@@ -16,6 +16,7 @@ import { ToastAction, useToast } from '@trg_package/components';
 import { useNavigate } from 'react-router';
 import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
 import { DetailedUser } from '../models';
+import { setCookie, getCookie, removeCookie } from '../cookies';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -59,7 +60,7 @@ const initialState: AuthProviderState = {
   isAuthenticated: false,
   loading: true,
   permissions: JSON.parse(
-    localStorage.getItem('permissions') ?? '[]'
+    getCookie('permissions') ?? '[]'
   ) as AuthProviderState['permissions'],
   tenant: null,
   signUp: {
@@ -151,12 +152,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           actions: permissionAction.map(({ action }) => action.name)
         };
       }) ?? [];
-    localStorage.setItem('permissions', JSON.stringify(p));
+    setCookie('permissions', JSON.stringify(p), {
+      dashboard: true
+    });
     return p;
   };
 
   useEffect(() => {
     if (!authStatus || !authStatus.user || !authStatus.isAuthenticated) {
+      removeCookie('permissions', {
+        dashboard: true
+      });
       setState({
         ...initialState,
         permissions: []

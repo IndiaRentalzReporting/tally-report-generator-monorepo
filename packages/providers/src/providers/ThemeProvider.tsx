@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { getCookie, setCookie } from '../cookies';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -26,7 +27,7 @@ export const ThemeProvider = ({
   storageKey = 'vite-ui-theme'
 }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => (getCookie(storageKey) as Theme) || defaultTheme
   );
 
   useEffect(() => {
@@ -51,7 +52,9 @@ export const ThemeProvider = ({
     () => ({
       theme,
       setTheme: (theme: Theme) => {
-        localStorage.setItem(storageKey, theme);
+        setCookie(storageKey, theme, {
+          dashboard: false
+        });
         setTheme(theme);
       }
     }),
