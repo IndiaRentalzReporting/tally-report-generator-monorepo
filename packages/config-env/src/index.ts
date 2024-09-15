@@ -1,11 +1,5 @@
 import { z } from 'zod';
-
-export class ConfigError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ConfigError';
-  }
-}
+import { ConfigError } from '@trg_package/errors';
 
 export function createConfig<T extends z.ZodObject<any>>(
   schema: T,
