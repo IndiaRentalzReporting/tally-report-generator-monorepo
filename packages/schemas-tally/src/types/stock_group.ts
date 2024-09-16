@@ -1,6 +1,6 @@
 export {
-    type StockGroupInsertSchema,
-    type StockGroupSelectSchema,
-    StockGroupZodInsertSchema,
-    StockGroupZodSelectSchema
+    type StockGroupInsertSchema as InsertSchema,
+    type StockGroupSelectSchema as SelectSchema,
+    StockGroupZodInsertSchema as ZodInsertSchema,
+    StockGroupZodSelectSchema as ZodSelectSchema
 } from "../schemas/stock_group";

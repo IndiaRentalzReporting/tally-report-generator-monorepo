@@ -1,6 +1,6 @@
 export {
-    type CompanyInsertSchema,
-    type CompanySelectSchema,
-    CompanyZodInsertSchema,
-    CompanyZodSelectSchema
+    type CompanyInsertSchema as InsertSchema,
+    type CompanySelectSchema as SelectSchema,
+    CompanyZodInsertSchema as ZodInsertSchema,
+    CompanyZodSelectSchema as ZodSelectSchema
 } from "../schemas/company";
