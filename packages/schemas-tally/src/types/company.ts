@@ -1,6 +1,11 @@
-export {
-    type CompanyInsertSchema as InsertSchema,
-    type CompanySelectSchema as SelectSchema,
-    CompanyZodInsertSchema as ZodInsertSchema,
-    CompanyZodSelectSchema as ZodSelectSchema
+import {
+    CompanySchema,
+    CompanyZodInsertSchema,
+    CompanyZodSelectSchema 
 } from "../schemas/company";
+
+
+export type InsertSchema = typeof CompanySchema['$inferInsert'];
+export type SelectSchema = typeof CompanySchema['$inferSelect'];
+export const ZodInsertSchema = CompanyZodInsertSchema;
+export const ZodSelectSchema = CompanyZodSelectSchema;
