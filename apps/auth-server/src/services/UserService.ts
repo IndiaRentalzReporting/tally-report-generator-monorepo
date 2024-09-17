@@ -6,7 +6,7 @@ import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/pg-client';
-import * as dashboardSchema from '@trg_package/schemas-dashboard/schemas';
+import * as dashboardSchemas from '../models/dashboard/schema';
 
 class UserService extends BaseUserService {
   constructor() {
@@ -37,7 +37,7 @@ class UserService extends BaseUserService {
         db_name
       });
       const { client: dashboardDb, connection: dashboardConnection } =
-        createClient(DASHBOARD_PG_URL, dashboardSchema, {
+        createClient(DASHBOARD_PG_URL, dashboardSchemas, {
           DB_MIGRATING: false,
           DB_SEEDING: false
         });

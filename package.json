@@ -6,6 +6,7 @@
     "dev": "dotenv -- turbo dev --concurrency=13",
     "lint": "dotenv -- turbo lint --concurrency=13",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean:window": "find . -type d \\( -name 'node_modules' -o -name 'dist' -o -name '.turbo' \\) -prune -exec rm -rf {} +",
     "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json"
   },
   "dependencies": {
