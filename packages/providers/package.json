@@ -9,12 +9,12 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.40.1",
-    "@trg_package/schemas-auth": "*",
-    "@trg_package/schemas-dashboard": "*",
     "@trg_package/axios-client": "*",
     "@trg_package/components": "*",
-    "react": "^18.3.0",
+    "@trg_package/schemas-auth": "*",
+    "@trg_package/schemas-dashboard": "*",
     "axios": "^1.7.2",
+    "react": "^18.3.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.23.0",
     "react-router-dom": "^6.23.1"
@@ -22,9 +22,13 @@
   "devDependencies": {
     "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "js-cookie": "^3.0.5"
   }
 }

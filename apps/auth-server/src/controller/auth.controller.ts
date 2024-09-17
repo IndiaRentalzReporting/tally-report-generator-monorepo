@@ -49,7 +49,8 @@ export const handleLogout = (
     req.session.destroy((err) => {
       if (err) return next(err);
 
-      res.clearCookie('connect.sid', { path: '/' }); // 'connect.sid' is the default session cookie name
+      res.clearCookie('connect.sid', { path: '/' });
+      res.clearCookie('permissions', { path: '/' });
       return res.json({ message: 'Logged Out' });
     });
   });
@@ -71,6 +72,8 @@ export const handleStatusCheck = (
         isAuthenticated: true
       });
     }
+    res.clearCookie('connect.sid', { path: '/' });
+    res.clearCookie('permissions', { path: '/' });
     return res.json({
       user: null,
       isAuthenticated: false

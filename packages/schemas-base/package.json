@@ -3,16 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "exports": {
-    "./schemas": {
-      "types": "./dist/node/index.d.ts",
-      "require": "./dist/node/index.js",
-      "import": "./dist/node/index.mjs"
-    }
+    "./schemas": "./src/schemas/index.ts"
   },
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
-    "dev": "tsup --watch"
+    "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +16,6 @@
   },
   "devDependencies": {
     "@trg_package/config-eslint": "*",
-    "@trg_package/config-typescript": "*",
-    "tsup": "^8.2.4"
+    "@trg_package/config-typescript": "*"
   }
 }

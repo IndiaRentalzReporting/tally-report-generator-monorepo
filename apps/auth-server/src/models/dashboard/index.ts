@@ -1,6 +1,6 @@
 import * as dashboard_schema from './schema';
 import config, { DashboardPgUrlKey } from '../../config';
-import { createClient } from '@trg_package/create-pg-client';
+import { createClient } from '@trg_package/pg-client';
 import { BadRequestError } from '@trg_package/errors';
 
 const DASHBOARD_PG_URL = config[DashboardPgUrlKey];

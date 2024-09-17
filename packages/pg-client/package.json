@@ -1,5 +1,5 @@
 {
-  "name": "@trg_package/create-pg-client",
+  "name": "@trg_package/pg-client",
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
