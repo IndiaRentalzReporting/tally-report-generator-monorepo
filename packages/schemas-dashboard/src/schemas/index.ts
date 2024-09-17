@@ -7,5 +7,3 @@ export { ActionSchema } from './actions';
 export { ModuleSchema } from './modules';
 export * from './base';
 export { ApiKeySchema } from './apiKeys';
-export { CompanySchema } from './companies';
-export { UserCompanySchema } from './user_company';

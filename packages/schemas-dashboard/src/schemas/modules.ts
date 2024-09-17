@@ -1,17 +1,11 @@
-import { text, boolean, pgTable } from 'drizzle-orm/pg-core';
+import { text, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import * as z from 'zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
-import { uuid } from 'drizzle-orm/pg-core';
-import { CompanySchema } from './companies';
 
 export const ModuleSchema = pgTable('modules', {
   ...BaseEntitySchema,
-  icon: text('icon'),
-  company_id: uuid('company_id').references(() => CompanySchema.id, {
-    onDelete: 'cascade',
-    onUpdate: 'cascade'
-  })
+  icon: text('icon')
 });
 
 export type ModuleInsert = typeof ModuleSchema.$inferInsert;

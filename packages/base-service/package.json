@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@trg_package/components": "*",
     "@trg_package/errors": "*",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1"
