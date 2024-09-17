@@ -7,7 +7,7 @@ import {
   readOne
 } from '../controller/module.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { ModuleInsertSchema } from '@trg_package/dashboard-schemas/types';
+import { ModuleInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const moduleRouter = Router();
 

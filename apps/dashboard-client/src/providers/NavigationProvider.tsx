@@ -1,12 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '@trg_package/providers';
 import {
-  ActionSelect,
   ModuleSelect,
   Permissions
-} from '@trg_package/dashboard-schemas/types';
-import { toTitleCase } from '@/lib/utils';
+} from '@trg_package/schemas-dashboard/types';
 
 interface NavItem {
   to: string;
@@ -44,23 +42,23 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   ): NavItemWithChildren[] => {
     return permissions.map((permission) => {
       const {
-        module: { name, icon },
-        actions
+        module: { name, icon }
+        // actions
       } = permission;
       const moduleName = name.toLowerCase();
-      const children: NavItem[] = actions.map((action) => {
-        const moduleAction = action.toLowerCase() as Lowercase<
-          ActionSelect['name']
-        >;
-        return {
-          to: `/dashboard/${moduleName}/${moduleAction}`,
-          name: action
-        };
-      });
+      // const children: NavItem[] = actions.map((action) => {
+      //   const moduleAction = action.toLowerCase() as Lowercase<
+      //     ActionSelect['name']
+      //   >;
+      //   return {
+      //     to: `/dashboard/${moduleName}/${moduleAction}`,
+      //     name: action
+      //   };
+      // });
       return {
         to: `/dashboard/${moduleName}`,
         name,
-        children: [] ?? children,
+        children: [],
         icon
       };
     });
@@ -75,7 +73,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: toTitleCase(location.pathname.split('/')[2] ?? '')
+      currentModule: location.pathname.split('/')[2]
     }));
   }, [location, permissions]);
 

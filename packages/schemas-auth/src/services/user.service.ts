@@ -1,7 +1,7 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { UserInsert, UserSelect } from '../schemas/user';
+import { UserInsert, UserSelect } from '../schemas/users';
 import * as authSchemas from '../schemas';
 import { hashPassword } from '@trg_package/utils';
 export class UserService extends BaseServiceNew<

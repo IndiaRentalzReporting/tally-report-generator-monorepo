@@ -10,7 +10,7 @@ import type {
   ActionService,
   PermissionService,
   ApiKeyService
-} from '@trg_package/dashboard-schemas/services';
+} from '@trg_package/schemas-dashboard/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
 
@@ -42,7 +42,7 @@ declare global {
       apiKeyService: ApiKeyService;
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
       dashboardConnection: Sql<{}>;
+      attacheDBandServices: boolean;
     }
-    interface User extends AuthDetailedUser, DashDetailedUser {}
   }
 }

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { ChangeEvent, useState, FormEvent } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -11,24 +10,17 @@ import {
   Input,
   Label
 } from '@trg_package/components';
-import { services } from './services';
-import { LoginUser } from '@trg_package/auth-schemas/types';
+import { LoginUser } from '@trg_package/schemas-auth/types';
+import { useAuth } from '@trg_package/providers';
 
 export const SigninForm = () => {
-  const queryClient = useQueryClient();
-  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    signIn: { mutation: signIn, isLoading }
+  } = useAuth();
 
   const [loginData, setLoginData] = useState<LoginUser>({
     email: '',
     password: ''
-  });
-
-  const { mutateAsync: signInMutation } = useMutation({
-    mutationFn: (data: LoginUser) => services.signIn(data),
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      setLoading(false);
-    }
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +33,7 @@ export const SigninForm = () => {
 
   const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    signInMutation(loginData);
+    signIn(loginData);
   };
 
   return (
@@ -88,7 +79,7 @@ export const SigninForm = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" isLoading={loading}>
+            <Button type="submit" className="w-full" isLoading={isLoading}>
               Login
             </Button>
           </form>

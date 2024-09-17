@@ -18,9 +18,9 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
+  When
 } from '@trg_package/components';
-import { When } from '@/components/utility';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

@@ -1,3 +1,4 @@
+import { createConfig } from '@trg_package/config-env';
 import { BadRequestError } from '@trg_package/errors';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
@@ -16,7 +17,7 @@ const EnvSchema = z.object({
   NODE_ENV: z
     .enum(['production', 'development', 'staging'])
     .default('development'),
-  PORT: z.coerce.number().default(4000),
+  PORT: z.coerce.number(),
 
   AUTH_SUBDOMAIN: z.string().default('auth'),
   DASH_SUBDOMAIN: z.string().default('dashboard'),
@@ -46,47 +47,12 @@ const EnvSchema = z.object({
   DASHBOARD_PG_USER: z.string().optional(),
   DASHBOARD_PG_DATABASE: z.string().optional(),
 
-  SESSION_SECRET: z.string(),
-
-  MONGO_USER: z.string(),
-  MONGO_DATABASE: z.string(),
-  MONGO_PASSWORD: z.string(),
-  MONGO_URL: z.string(),
-
   DB_MIGRATING: stringBoolean,
   DB_SEEDING: stringBoolean
 });
 
 expand(config());
 
-const logError = (error: ZodError) => {
-  let m = '';
-  error.issues.forEach((issue) => {
-    m += issue.path[0] + '\n';
-  });
-  return m;
-};
+const env = createConfig(EnvSchema, process.env);
 
-try {
-  EnvSchema.parse(process.env);
-} catch (error) {
-  if (error instanceof ZodError) {
-    let message = 'Missing required values in .env:\n';
-    message += logError(error);
-    const e = new BadRequestError(message);
-    e.stack = '';
-    throw e;
-  } else {
-    console.error(error);
-  }
-}
-
-const env = EnvSchema.parse(process.env);
-let finalEnv: z.infer<typeof EnvSchema> & {
-  PROTOCOL: string;
-} = {
-  ...env,
-  PROTOCOL: env.NODE_ENV === 'production' ? 'https' : 'http'
-};
-
-export default finalEnv;
+export default env;

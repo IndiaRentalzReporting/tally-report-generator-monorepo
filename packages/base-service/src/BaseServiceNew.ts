@@ -1,8 +1,6 @@
 import {
-  BadRequestError,
   CreateError,
   DeleteError,
-  NotFoundError,
   ReadError,
   UpdateError
 } from '@trg_package/errors';
@@ -45,6 +43,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (e) {
+      console.error(e);
       throw new CreateError(this.entity, data);
     }
   }
@@ -81,6 +80,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new ReadError(this.entity, data);
     }
   }
@@ -118,6 +118,7 @@ export class BaseServiceNew<
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new ReadError(this.entity, data);
     }
   }
@@ -130,13 +131,14 @@ export class BaseServiceNew<
       const [entity] = await this.dbClient
         .update(this.schema)
         .set({ ...data })
-        .where(eq(this.schema.id, id))
+        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
         .returning();
 
       if (!entity) throw new UpdateError(this.entity, data);
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new UpdateError(this.entity, data);
     }
   }
@@ -147,13 +149,14 @@ export class BaseServiceNew<
     try {
       const [entity] = await this.dbClient
         .delete(this.schema)
-        .where(eq(this.schema.id, id))
+        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
         .returning();
 
       if (!entity) throw new DeleteError(this.entity, id);
 
       return entity;
     } catch (error) {
+      console.error(error);
       throw new DeleteError(this.entity, id);
     }
   }

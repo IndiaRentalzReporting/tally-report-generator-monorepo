@@ -5,7 +5,12 @@
     "DOMAIN",
     "TLD",
     "AUTH_SUBDOMAIN",
-    "DASH_SUBDOMAIN"
+    "DASH_SUBDOMAIN",
+    "MONGO_USER",
+    "MONGO_DATABASE",
+    "MONGO_PASSWORD",
+    "MONGO_URL",
+    "SESSION_SECRET"
   ],
   "tasks": {
     "@trg_app/auth-client#build": {
@@ -28,7 +33,14 @@
         "SUPERUSER_PG_PASSWORD",
         "SUPERUSER_PG_USER",
         "SUPERUSER_PG_DATABASE",
-        "SUPERUSER_PG_URL"
+        "SUPERUSER_PG_URL",
+
+        "AUTH_PG_HOST",
+        "AUTH_PG_PORT",
+        "AUTH_PG_PASSWORD",
+        "AUTH_PG_USER",
+        "AUTH_PG_DATABASE",
+        "AUTH_PG_URL"
       ]
     },
     "@trg_app/dashboard-server#build": {

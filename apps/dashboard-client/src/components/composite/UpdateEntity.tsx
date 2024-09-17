@@ -1,7 +1,6 @@
 import { Edit, Minus } from 'lucide-react';
 import React, { Suspense, lazy } from 'react';
-import { If, Then, Else } from '../utility';
-import { useIsAllowed } from '@/lib/hooks';
+import { useIsAllowed } from '@/hooks';
 import {
   Drawer,
   DrawerTrigger,
@@ -12,7 +11,10 @@ import {
   DrawerClose,
   Card,
   CardContent,
-  Skeleton
+  Skeleton,
+  If,
+  Then,
+  Else
 } from '@trg_package/components';
 
 interface IUpdateEntityProps {
@@ -26,7 +28,7 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
     action: 'Update'
   });
 
-  const Component = lazy(() => import(`../../views/${module}/Update`));
+  const Component = lazy(() => import(`../../views/${module}/Update.tsx`));
   return (
     <If condition={!!isEditAllowed}>
       <Then>

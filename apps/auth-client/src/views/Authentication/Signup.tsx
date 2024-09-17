@@ -1,6 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -11,42 +10,28 @@ import {
   Input,
   Label
 } from '@trg_package/components';
-import { services } from './services';
-import { RegisterUser, TenantInsert } from '@trg_package/auth-schemas/types';
-import { useToast } from '@/lib/hooks';
+import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
+import { useAuth } from '@trg_package/providers';
+
+const initialTenantState: TenantInsert = {
+  name: ''
+};
+
+const initialUserState: RegisterUser = {
+  email: '',
+  password: '',
+  first_name: '',
+  last_name: ''
+};
 
 export const SignupForm = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    signUp: { isLoading, mutation: signUp }
+  } = useAuth();
 
-  const [tenantData, setTenantData] = useState<TenantInsert>({
-    name: ''
-  });
-  const [userData, setUserData] = useState<RegisterUser>({
-    email: '',
-    password: '',
-    first_name: '',
-    last_name: ''
-  });
-
-  const { mutateAsync: signUpMutation } = useMutation({
-    mutationFn: () =>
-      services.signUp({
-        tenant: tenantData,
-        user: userData
-      }),
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      setLoading(false);
-      toast({
-        title: 'Success',
-        description: 'Account created successfully'
-      });
-      navigate('/sign-in');
-    }
-  });
+  const [tenantData, setTenantData] =
+    useState<TenantInsert>(initialTenantState);
+  const [userData, setUserData] = useState<RegisterUser>(initialUserState);
 
   const handleFormChange = <T extends Object>(
     e: ChangeEvent<HTMLInputElement>,
@@ -60,9 +45,13 @@ export const SignupForm = () => {
   };
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
-    setLoading(true);
     e.preventDefault();
-    signUpMutation();
+    signUp({
+      tenant: tenantData,
+      user: userData
+    });
+    setTenantData(initialTenantState);
+    setUserData(initialUserState);
   };
 
   return (
@@ -134,7 +123,7 @@ export const SignupForm = () => {
                 placeholder="********"
               />
             </div>
-            <Button type="submit" className="w-full" isLoading={loading}>
+            <Button type="submit" className="w-full" isLoading={isLoading}>
               Create an Account
             </Button>
           </form>

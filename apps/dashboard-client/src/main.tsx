@@ -5,12 +5,9 @@ import App from './App';
 import '@trg_package/components/styles.css';
 import './globals.css';
 // maintain precedence of tailwindcss
-import { RootLayout } from './components/composite';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RootLayout>
-      <App />
-    </RootLayout>
+    <App />
   </React.StrictMode>
 );

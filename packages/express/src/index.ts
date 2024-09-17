@@ -5,17 +5,18 @@ import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
 import config from './config';
+import { sessionsLoader } from './loaders/sessions';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 
 const { NODE_ENV, DOMAIN, TLD } = config;
 
 export const expressLoader = async ({
   routesLoader,
-  passportLoader,
-  sessionsLoader
+  passportLoader
 }: {
   routesLoader: (app: Express) => void;
   passportLoader?: (app: Express) => void;
-  sessionsLoader?: (app: Express) => void;
 }): Promise<Express> => {
   const app = express();
 
@@ -30,7 +31,7 @@ export const expressLoader = async ({
     })
   );
 
-  sessionsLoader && sessionsLoader(app);
+  sessionsLoader(app);
   passportLoader && passportLoader(app);
 
   routesLoader(app);
@@ -40,3 +41,9 @@ export const expressLoader = async ({
 
   return app;
 };
+
+declare global {
+  namespace Express {
+    interface User extends AuthDetailedUser, DashDetailedUser {}
+  }
+}

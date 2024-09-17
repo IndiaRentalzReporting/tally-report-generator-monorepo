@@ -1,20 +1,18 @@
-import { BadRequestError } from '@trg_package/errors';
+import z from 'zod';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
-import { ZodError, z } from 'zod';
+import { createConfig } from '@trg_package/config-env';
 
 const EnvSchema = z.object({
-  NODE_ENV: z
-    .enum(['production', 'development', 'staging'])
-    .default('development'),
+  NODE_ENV: z.enum(['production', 'development', 'staging']),
 
-  AUTH_SUBDOMAIN: z.string().default('auth'),
-  DASH_SUBDOMAIN: z.string().default('dashboard'),
+  AUTH_SUBDOMAIN: z.string(),
+  DASH_SUBDOMAIN: z.string(),
 
-  DOMAIN: z.string().default('trg'),
-  TLD: z.string().default('local'),
+  DOMAIN: z.string(),
+  TLD: z.string(),
 
-  PORT: z.coerce.number().default(4000),
+  PORT: z.coerce.number(),
 
   MAIL_FROM: z.string(),
   SMTP_SECRET: z.string(),
@@ -26,34 +24,6 @@ const EnvSchema = z.object({
 
 expand(config());
 
-const logError = (error: ZodError) => {
-  let m = '';
-  error.issues.forEach((issue) => {
-    m += issue.path[0] + '\n';
-  });
-  return m;
-};
+const env = createConfig(EnvSchema, process.env);
 
-try {
-  EnvSchema.parse(process.env);
-} catch (error) {
-  if (error instanceof ZodError) {
-    let message = 'Missing required values in .env:\n';
-    message += logError(error);
-    const e = new BadRequestError(message);
-    e.stack = '';
-    throw e;
-  } else {
-    console.error(error);
-  }
-}
-
-const env = EnvSchema.parse(process.env);
-let finalEnv: z.infer<typeof EnvSchema> & {
-  PROTOCOL: string;
-} = {
-  ...env,
-  PROTOCOL: env.NODE_ENV === 'production' ? 'https' : 'http'
-};
-
-export default finalEnv;
+export default env;

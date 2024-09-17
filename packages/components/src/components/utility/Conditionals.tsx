@@ -70,7 +70,7 @@ export const Case: React.FC<CaseProps> = ({
   return render({ value, isDefault, children });
 };
 
-export const Switch: React.FC<SwitchProps> = ({ control, children }) => {
+export const SwitchCase: React.FC<SwitchProps> = ({ control, children }) => {
   if (children == null) {
     return null;
   }

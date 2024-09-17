@@ -1,5 +1,5 @@
 {
-  "name": "@trg_package/dashboard-schemas",
+  "name": "@trg_package/schemas-dashboard",
   "version": "1.0.0",
   "description": "",
   "exports": {
@@ -28,6 +28,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@trg_package/schemas-base": "*",
     "@trg_package/base-service": "*",
     "@trg_package/errors": "*",
     "@trg_package/utils": "^1.0.0",

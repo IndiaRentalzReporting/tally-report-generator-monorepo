@@ -1,5 +1,5 @@
 {
-  "id": "d30f8acc-e7c5-41ae-8fa5-666302baf4c0",
+  "id": "1e901ec9-f319-4ea4-9aa3-aa619cc0fdbc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -31,6 +31,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -129,6 +136,13 @@
         },
         "isReadonly": {
           "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,

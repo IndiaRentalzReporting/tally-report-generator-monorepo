@@ -1,7 +1,7 @@
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import { NextFunction, Response, Request } from 'express';
 import * as dashboardSchemas from '../models/schemas';
-import { createUrl, createClient } from '@trg_package/create-pg-client';
+import { createUrl, createClient } from '@trg_package/pg-client';
 
 export const attachPGDashboard = async (
   req: Request,

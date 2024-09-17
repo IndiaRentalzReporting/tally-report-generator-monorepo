@@ -1,4 +1,5 @@
 {
   "name": "SUPERUSER",
-  "isReadonly": true
+  "isReadonly": true,
+  "isPrivate": true
 }

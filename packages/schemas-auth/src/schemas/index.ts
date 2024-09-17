@@ -1,4 +1,4 @@
-export { UserSchema } from './user';
-export { TenantSchema } from './tenant';
+export { UserSchema } from './users';
+export { TenantSchema } from './tenants';
 export * from './relations';
 export * from './base';

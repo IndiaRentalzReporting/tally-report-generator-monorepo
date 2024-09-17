@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
-import { UserSchema } from './user';
-import { TenantSchema } from './tenant';
+import { UserSchema } from './users';
+import { TenantSchema } from './tenants';
 
 export const userRelation = relations(UserSchema, ({ one }) => ({
   tenant: one(TenantSchema, {

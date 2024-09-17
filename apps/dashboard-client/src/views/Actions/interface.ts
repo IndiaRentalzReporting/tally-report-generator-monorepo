@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ActionSelect } from '@trg_package/dashboard-schemas/types';
+import { ActionSelect } from '@trg_package/schemas-dashboard/types';
 
 export interface State extends Pick<ActionSelect, 'id'> {
   name: string;

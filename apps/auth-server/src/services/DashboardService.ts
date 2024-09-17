@@ -10,13 +10,13 @@ import {
   ModuleService,
   RoleService,
   UserService
-} from '@trg_package/dashboard-schemas/services';
+} from '@trg_package/schemas-dashboard/services';
 import {
   UserInsert,
   RoleSelect,
   UserSelect
-} from '@trg_package/dashboard-schemas/types';
-import { createUrl, createClient } from '@trg_package/create-pg-client';
+} from '@trg_package/schemas-dashboard/types';
+import { createUrl, createClient } from '@trg_package/pg-client';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;

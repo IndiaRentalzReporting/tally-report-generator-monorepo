@@ -1,5 +1,4 @@
 import { Express } from 'express';
-import authRouter from '../routes/auth.route';
 import roleRouter from '../routes/role.route';
 import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
@@ -14,7 +13,6 @@ import {
 } from '../middlewares';
 
 const routesLoader = (app: Express) => {
-  app.use('/api/v1/auth', authRouter);
   app.use(attachUser);
   app.use(attachPGDashboard);
   app.use(attachServices);

@@ -1,9 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
 import { services } from './services';
-import { Else, If, Then } from '@/components/utility';
+import { Button, Else, If, Then } from '@trg_package/components';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { Button } from '@trg_package/components';
 import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [

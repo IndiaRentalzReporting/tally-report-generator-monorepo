@@ -1,11 +1,8 @@
 {
+  "extends": "@trg_package/config-typescript/express.json",
   "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "strict": true
+    "outDir": "dist",
+    "rootDir": "."
   },
   "include": ["vite.config.ts"]
 }

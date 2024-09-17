@@ -5,7 +5,7 @@ import {
   TenantInsert,
   TenantSelect,
   UserInsert
-} from '@trg_package/auth-schemas/types';
+} from '@trg_package/schemas-auth/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
 export const handleSignUp = async (
@@ -49,7 +49,8 @@ export const handleLogout = (
     req.session.destroy((err) => {
       if (err) return next(err);
 
-      res.clearCookie('connect.sid', { path: '/' }); // 'connect.sid' is the default session cookie name
+      res.clearCookie('connect.sid', { path: '/' });
+      res.clearCookie('permissions', { path: '/' });
       return res.json({ message: 'Logged Out' });
     });
   });
@@ -71,6 +72,8 @@ export const handleStatusCheck = (
         isAuthenticated: true
       });
     }
+    res.clearCookie('connect.sid', { path: '/' });
+    res.clearCookie('permissions', { path: '/' });
     return res.json({
       user: null,
       isAuthenticated: false

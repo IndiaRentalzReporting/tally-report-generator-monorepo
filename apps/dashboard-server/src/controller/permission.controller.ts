@@ -4,7 +4,7 @@ import {
   ActionSelect,
   RoleSelect,
   PermissionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
   req: Request,
@@ -12,7 +12,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await req.permissionService.findMany({});
+    const permissions = await req.permissionService.findMany();
     res.json({ permissions });
   } catch (e) {
     return next(e);

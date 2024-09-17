@@ -1,12 +1,21 @@
 import { AxiosPromise } from 'axios';
 import Module from 'module';
-import axios from '@/services/client';
+import { services as permissionsServices } from '../Permissions/services';
 import {
   RoleSelect,
   PermissionSelect,
   RoleWithPermission,
   ActionSelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
+import createAxiosClient from '@trg_package/axios-client';
+
+const rolesAxios = createAxiosClient(
+  { dashboard: true },
+  {
+    baseURL: '/v1/roles',
+    withCredentials: true
+  }
+);
 
 export const services = {
   createOne: async (data: {
@@ -16,35 +25,35 @@ export const services = {
       action_ids: ActionSelect['id'][];
     }[];
   }): AxiosPromise<{ permissions: PermissionSelect[] }> => {
-    const { role } = (await axios.post(`/roles/create`, data.role)).data;
+    const { role } = (await rolesAxios.post(`/create`, data.role)).data;
 
-    return axios.post('/permissions/create/many', {
-      permissions: data.permissions,
-      role_id: role.id
+    return permissionsServices.createMany({
+      role_id: role.id,
+      permissions: data.permissions
     });
   },
   createOneX: async (
     data: Partial<RoleSelect>
   ): AxiosPromise<{ permissions: PermissionSelect[] }> => {
-    return axios.post(`/roles/create`, data);
+    return rolesAxios.post(`/create`, data);
   },
   getAll: async (): AxiosPromise<{
     roles: RoleWithPermission[];
   }> => {
-    return axios.get('/roles/read');
+    return rolesAxios.get('/read');
   },
   getOne: async (
     id: RoleSelect['id']
   ): AxiosPromise<{
     role: RoleSelect;
   }> => {
-    return axios.get(`/roles/read/${id}`);
+    return rolesAxios.get(`/read/${id}`);
   },
   updateOneX: async (
     id: string,
     data: Partial<RoleSelect>
   ): AxiosPromise<{ permissions: PermissionSelect[] }> => {
-    return axios.patch(`/roles/update/${id}`, data);
+    return rolesAxios.patch(`/update/${id}`, data);
   },
   updateOne: async (data: {
     id: string;
@@ -56,14 +65,14 @@ export const services = {
     }[];
   }): AxiosPromise<{ permissions: PermissionSelect[] }> => {
     const { role } = (
-      await axios.patch(`/roles/update/${data.id}`, {
+      await rolesAxios.patch(`/update/${data.id}`, {
         name: data.role.name
       })
     ).data;
 
-    return axios.post('/permissions/update/many', {
-      permissions: data.permissions,
-      role_id: role.id
+    return permissionsServices.updateMany({
+      role_id: role.id,
+      permissions: data.permissions
     });
   },
   deleteOne: async (
@@ -71,6 +80,6 @@ export const services = {
   ): AxiosPromise<{
     role: RoleSelect;
   }> => {
-    return axios.delete(`/roles/delete/${id}`);
+    return rolesAxios.delete(`/delete/${id}`);
   }
 };

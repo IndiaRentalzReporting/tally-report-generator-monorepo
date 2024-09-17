@@ -1,13 +1,12 @@
-import { UserService as BaseUserService } from '@trg_package/auth-schemas/services';
-import { UserService as DashboardUserService } from '@trg_package/dashboard-schemas/services';
+import { UserService as BaseUserService } from '@trg_package/schemas-auth/services';
+import { UserService as DashboardUserService } from '@trg_package/schemas-dashboard/services';
 import { authDb } from '../models/auth/index';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
-import { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
-import { createUrl, createClient } from '@trg_package/create-pg-client';
+import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import { createUrl, createClient } from '@trg_package/pg-client';
 import * as dashboardSchemas from '../models/dashboard/schema';
-
 
 class UserService extends BaseUserService {
   constructor() {

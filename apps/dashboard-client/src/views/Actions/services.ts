@@ -1,26 +1,34 @@
 import { AxiosPromise } from 'axios';
-import { ActionSelect } from '@trg_package/dashboard-schemas/types';
-import axios from '@/services/client';
+import { ActionSelect } from '@trg_package/schemas-dashboard/types';
+import createAxiosClient from '@trg_package/axios-client';
+
+const actionsAxios = createAxiosClient(
+  { dashboard: true },
+  {
+    baseURL: '/v1/actions',
+    withCredentials: true
+  }
+);
 
 export const services = {
   getAll: async (): AxiosPromise<{
     actions: ActionSelect[];
   }> => {
-    return axios.get('/actions/read');
+    return actionsAxios.get('/read');
   },
   getOne: async (
     id: ActionSelect['id']
   ): AxiosPromise<{
     action: ActionSelect;
   }> => {
-    return axios.get(`/actions/read/${id}`);
+    return actionsAxios.get(`/read/${id}`);
   },
   createOne: async (
     data: Partial<ActionSelect>
   ): AxiosPromise<{
     action: ActionSelect;
   }> => {
-    return axios.post(`/actions/create/`, data);
+    return actionsAxios.post(`/create/`, data);
   },
   updateOne: async (
     id: ActionSelect['id'],
@@ -28,13 +36,13 @@ export const services = {
   ): AxiosPromise<{
     action: ActionSelect;
   }> => {
-    return axios.patch(`/actions/update/${id}`, data);
+    return actionsAxios.patch(`/update/${id}`, data);
   },
   deleteOne: async (
     id: ActionSelect['id']
   ): AxiosPromise<{
     action: ActionSelect;
   }> => {
-    return axios.delete(`/actions/delete/${id}`);
+    return actionsAxios.delete(`/delete/${id}`);
   }
 };

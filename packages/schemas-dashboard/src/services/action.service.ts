@@ -4,7 +4,7 @@ import * as dashboardSchemas from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ActionInsert, ActionSelect } from '../types';
 import { RoleService } from './role.service';
-import { PermissionActionService } from './permissionAction.service';
+import { PermissionActionService } from './permission_action.service';
 import { PermissionService } from './permission.service';
 import { ReadError } from '@trg_package/errors';
 

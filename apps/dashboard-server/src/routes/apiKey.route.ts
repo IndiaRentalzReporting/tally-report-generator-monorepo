@@ -7,7 +7,7 @@ import {
   readOne
 } from '../controller/apiKey.controller';
 import { validateSchema } from '@trg_package/middlewares';
-import { ApiKeyInsertSchema } from '@trg_package/dashboard-schemas/types';
+import { ApiKeyInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const apiKeyRouter = Router();
 

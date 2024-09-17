@@ -4,18 +4,25 @@ import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
-import { PermissionActionSchema } from './permissionAction';
+import { PermissionActionSchema } from './permission_action';
+import { CompanySchema } from './companies';
+import { UserCompanySchema } from './user_company';
 
-export const userSchemaRelation = relations(UserSchema, ({ one }) => ({
+export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({
   role: one(RoleSchema, {
     fields: [UserSchema.role_id],
     references: [RoleSchema.id]
-  })
+  }),
+  company: many(CompanySchema)
 }));
 
-export const roleSchemaRelation = relations(RoleSchema, ({ many }) => ({
+export const roleSchemaRelation = relations(RoleSchema, ({ one, many }) => ({
   user: many(UserSchema),
-  permission: many(PermissionSchema)
+  permission: many(PermissionSchema),
+  company: one(CompanySchema, {
+    fields: [RoleSchema.company_id],
+    references: [CompanySchema.id]
+  })
 }));
 
 export const permissionSchemaRelation = relations(
@@ -33,9 +40,16 @@ export const permissionSchemaRelation = relations(
   })
 );
 
-export const moduleSchemaRelation = relations(ModuleSchema, ({ many }) => ({
-  permission: many(PermissionSchema)
-}));
+export const moduleSchemaRelation = relations(
+  ModuleSchema,
+  ({ one, many }) => ({
+    permission: many(PermissionSchema),
+    company: one(CompanySchema, {
+      fields: [ModuleSchema.company_id],
+      references: [CompanySchema.id]
+    })
+  })
+);
 
 export const permissionActionSchemaRelation = relations(
   PermissionActionSchema,
@@ -54,3 +68,23 @@ export const permissionActionSchemaRelation = relations(
 export const actionSchemaRelation = relations(ActionSchema, ({ many }) => ({
   permissionAction: many(PermissionActionSchema)
 }));
+
+export const companySchemaRelation = relations(CompanySchema, ({ many }) => ({
+  role: many(RoleSchema),
+  module: many(ModuleSchema),
+  user: many(UserSchema)
+}));
+
+export const userCompanySchemaRelation = relations(
+  UserCompanySchema,
+  ({ one }) => ({
+    user: one(UserSchema, {
+      fields: [UserCompanySchema.user_id],
+      references: [UserSchema.id]
+    }),
+    company: one(CompanySchema, {
+      fields: [UserCompanySchema.company_id],
+      references: [CompanySchema.id]
+    })
+  })
+);

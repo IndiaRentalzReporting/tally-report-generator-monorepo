@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   ApiKeyInsert,
   ApiKeySelect
-} from '@trg_package/dashboard-schemas/types';
+} from '@trg_package/schemas-dashboard/types';
 import crypto from 'crypto';
 
 export const readAll = async (
@@ -11,7 +11,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const apiKeys = await req.apiKeyService.findMany({});
+    const apiKeys = await req.apiKeyService.findMany();
     return res.json({ apiKeys });
   } catch (e) {
     return next(e);
