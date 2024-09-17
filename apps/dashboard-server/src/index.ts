@@ -2,7 +2,7 @@ import expressLoader from './loaders/express';
 import config from './config';
 import type { DetailedUser as AuthDetailedUser } from '@trg_package/auth-schemas/types';
 import type { DetailedUser as DashDetailedUser } from '@trg_package/dashboard-schemas/types';
-import * as dashboardSchemas from '@trg_package/dashboard-schemas/schemas';
+import * as dashboardSchemas from './models/schemas';
 import type {
   UserService,
   RoleService,
