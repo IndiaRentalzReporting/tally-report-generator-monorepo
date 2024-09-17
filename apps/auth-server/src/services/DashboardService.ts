@@ -2,7 +2,7 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import superUserRole from '../models/dashboard/seed/Roles/data.json';
-import * as dashboardSchema from '@trg_package/dashboard-schemas/schemas';
+import * as dashboardSchemas from '../models/dashboard/schema';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
 import {
@@ -20,7 +20,7 @@ import { createUrl, createClient } from '@trg_package/create-pg-client';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
-  private dashboardClient: PostgresJsDatabase<typeof dashboardSchema>;
+  private dashboardClient: PostgresJsDatabase<typeof dashboardSchemas>;
   public URL: string;
 
   constructor(db_username: string, db_password: string, db_name: string) {
@@ -31,7 +31,7 @@ class DashboardService {
     });
     const { client, connection } = createClient(
       DASHBOARD_PG_URL,
-      dashboardSchema,
+      dashboardSchemas,
       {
         DB_MIGRATING: true,
         DB_SEEDING: true

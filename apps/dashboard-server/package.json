@@ -31,6 +31,7 @@
   "dependencies": {
     "@trg_package/auth-schemas": "*",
     "@trg_package/dashboard-schemas": "*",
+    "@trg_package/tally-schemas": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
