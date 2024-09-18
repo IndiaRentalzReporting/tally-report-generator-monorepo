@@ -1,5 +1,5 @@
 {
-  "name": "@trg_package/tally-schemas",
+  "name": "@trg_package/schemas-tally",
   "version": "1.0.0",
   "description": "",
   "exports": {

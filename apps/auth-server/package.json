@@ -39,7 +39,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@trg_package/tally-schemas": "*",
+    "@trg_package/schemas-tally": "*",
     "@trg_package/config-env": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/pg-client": "*",
