@@ -60,13 +60,8 @@ export const readAll = async (
 ) => {
   try {
     const service = new CompanyService(req.dashboardDb);
-    const companies = await service.findCompanies(
-      {},
-      {
-        id: true,
-        companyName: true
-      }
-    );
+    const companies = await service.findMany();
+
     return res.json({ companies });
   } catch (e) {
     console.error("Couldn't fetch all Companies");
