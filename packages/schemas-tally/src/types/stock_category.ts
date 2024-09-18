@@ -1,6 +1,6 @@
 export {
-    type StockCategoryInsertSchema as InsertSchema,
-    type StockCategorySelectSchema as SelectSchema,
-    StockCategoryZodInsertSchema as ZodInsertSchema,
-    StockCategoryZodSelectSchema as ZodSelectSchema
-} from "../schemas/stock_category";
+  type StockCategoryInsert,
+  StockCategoryInsertSchema,
+  type StockCategorySelect,
+  StockCategorySelectSchema
+} from '../schemas/stock_category';

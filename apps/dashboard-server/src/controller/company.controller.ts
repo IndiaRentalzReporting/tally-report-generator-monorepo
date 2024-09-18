@@ -4,6 +4,14 @@ import { TallySchemas, TallyTypes } from '../schemas/tally.schemas';
 import { NotFoundError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import { CompanyService } from '@trg_package/schemas-tally/services';
+import {
+  CompanySelect,
+  GroupInsert,
+  LedgerInsert,
+  StockCategoryInsert,
+  StockGroupInsert,
+  StockItemInsert
+} from '@trg_package/schemas-tally/types';
 
 const getSchemas = async (name: keyof typeof TallyTypes) => {
   const model = TallySchemas[name];
@@ -70,10 +78,21 @@ export const readAll = async (
 };
 
 export const syncData = async <DataKey extends keyof typeof TallyTypes>(
-  req: Request,
+  req: Request<
+    Pick<CompanySelect, 'guid'>,
+    object,
+    {
+      group: Array<GroupInsert>;
+      stockCategory: Array<StockCategoryInsert>;
+      stockGroup: Array<StockGroupInsert>;
+      stockItem: Array<StockItemInsert>;
+      ledger: Array<LedgerInsert>;
+    }
+  >,
   res: Response,
   next: NextFunction
 ) => {
+  req.body.
   //validate company
   let company: any;
   try {

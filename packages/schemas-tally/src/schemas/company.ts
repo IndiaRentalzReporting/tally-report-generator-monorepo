@@ -23,7 +23,7 @@ export const CompanyTempSchema = pgTable('temp_tally_company', {
   ...CompanyColumns
 });
 
-export type CompanyInsertSchema = typeof CompanySchema.$inferInsert;
-export const CompanyZodInsertSchema = createInsertSchema(CompanySchema);
-export type CompanySelectSchema = typeof CompanySchema.$inferSelect;
-export const CompanyZodSelectSchema = createSelectSchema(CompanySchema);
+export type CompanyInsert = typeof CompanySchema.$inferInsert;
+export const CompanyInsertSchema = createInsertSchema(CompanySchema);
+export type CompanySelect = typeof CompanySchema.$inferSelect;
+export const CompanySelectSchema = createSelectSchema(CompanySchema);

@@ -25,7 +25,7 @@ export const GroupTempSchema = pgTable('temp_tally_group', {
   ...GroupColumns
 });
 
-export type GroupInsertSchema = typeof GroupSchema.$inferInsert;
-export const GroupZodInsertSchema = createInsertSchema(GroupSchema);
-export type GroupSelectSchema = typeof GroupSchema.$inferSelect;
-export const GroupZodSelectSchema = createSelectSchema(GroupSchema);
+export type GroupInsert = typeof GroupSchema.$inferInsert;
+export const GroupInsertSchema = createInsertSchema(GroupSchema);
+export type GroupSelect = typeof GroupSchema.$inferSelect;
+export const GroupSelectSchema = createSelectSchema(GroupSchema);

@@ -23,9 +23,9 @@ export const StockCategoryTempSchema = pgTable('temp_tally_stock_category', {
   ...StockCatgoryColumns
 });
 
-export type StockCategoryInsertSchema = typeof StockCategorySchema.$inferInsert;
-export const StockCategoryZodInsertSchema =
+export type StockCategoryInsert = typeof StockCategorySchema.$inferInsert;
+export const StockCategoryInsertSchema =
   createInsertSchema(StockCategorySchema);
-export type StockCategorySelectSchema = typeof StockCategorySchema.$inferSelect;
-export const StockCategoryZodSelectSchema =
+export type StockCategorySelect = typeof StockCategorySchema.$inferSelect;
+export const StockCategorySelectSchema =
   createSelectSchema(StockCategorySchema);

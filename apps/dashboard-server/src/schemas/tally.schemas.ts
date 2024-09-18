@@ -1,32 +1,50 @@
-import * as Schemas from '@trg_package/schemas-tally/schemas';
-import * as Types from '@trg_package/schemas-tally/types';
+import {
+  GroupSchema,
+  GroupTempSchema,
+  LedgerSchema,
+  LedgerTempSchema,
+  StockCategorySchema,
+  StockCategoryTempSchema,
+  StockGroupSchema,
+  StockGroupTempSchema,
+  StockItemSchema,
+  StockItemTempSchema
+} from '@trg_package/schemas-tally/schemas';
+import {
+  GroupInsert,
+  LedgerInsert,
+  StockCategoryInsert,
+  StockGroupInsert,
+  StockItemInsert
+} from '@trg_package/schemas-tally/types';
 
 export const TallySchemas = {
   group: {
-    schema: Schemas.GroupSchema,
-    tempSchema: Schemas.GroupTempSchema
+    schema: GroupSchema,
+    tempSchema: GroupTempSchema
   },
   stockCategory: {
-    schema: Schemas.StockCategorySchema,
-    tempSchema: Schemas.StockCategoryTempSchema
+    schema: StockCategorySchema,
+    tempSchema: StockCategoryTempSchema
   },
   stockGroup: {
-    schema: Schemas.StockGroupSchema,
-    tempSchema: Schemas.StockGroupTempSchema
+    schema: StockGroupSchema,
+    tempSchema: StockGroupTempSchema
   },
   stockItem: {
-    schema: Schemas.StockItemSchema,
-    tempSchema: Schemas.StockItemTempSchema
+    schema: StockItemSchema,
+    tempSchema: StockItemTempSchema
   },
   ledger: {
-    schema: Schemas.LedgerSchema,
-    tempSchema: Schemas.LedgerTempSchema
+    schema: LedgerSchema,
+    tempSchema: LedgerTempSchema
   }
 };
-export const TallyTypes = {
-  ledger: Types.ledger,
-  group: Types.group,
-  stockCategory: Types.stock_category,
-  stockItem: Types.stock_item,
-  stockGroup: Types.stock_group
+
+export type TallyTypes = {
+  ledger: LedgerInsert;
+  group: GroupInsert;
+  stockCategory: StockCategoryInsert;
+  stockItem: StockItemInsert;
+  stockGroup: StockGroupInsert;
 };

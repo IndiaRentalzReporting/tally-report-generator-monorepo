@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { company as CompanySchemas } from '@trg_package/schemas-tally/types';
+import {
+  CompanyInsertSchema,
+  GroupInsertSchema,
+  LedgerInsertSchema,
+  StockCategoryInsertSchema,
+  StockGroupInsertSchema,
+  StockItemInsertSchema
+} from '@trg_package/schemas-tally/types';
 import {
   createOne,
   readAll,
@@ -8,15 +15,13 @@ import {
   syncData
 } from '../controller/company.controller';
 import z, { any, AnyZodObject, ZodArray } from 'zod';
-import { TallyTypes } from '../schemas/tally.schemas';
-import * as Types from '@trg_package/schemas-tally/types';
 
 const companyRouter = Router();
 
 companyRouter.post(
   '/create',
   validateSchema({
-    body: CompanySchemas['ZodInsertSchema']
+    body: CompanyInsertSchema
   }),
   createOne
 );
@@ -25,7 +30,7 @@ companyRouter.get('/read', readAll);
 companyRouter.get(
   '/verify/:guid',
   validateSchema({
-    params: CompanySchemas['ZodSelectSchema'].pick({ guid: true })
+    params: CompanyInsertSchema.pick({ guid: true })
   }),
   readOne
 );
@@ -34,17 +39,16 @@ companyRouter.post(
   '/sync/:guid',
   validateSchema({
     body: z
-      .object(
-        Object.fromEntries(
-          Object.entries(Types).map(([key, model]) => [
-            key,
-            z.array(model['ZodInsertSchema'].strict())
-          ])
-        ) as Record<string, ZodArray<AnyZodObject>>
-      )
+      .object({
+        group: z.array(GroupInsertSchema.strict()),
+        stockCategory: z.array(StockCategoryInsertSchema.strict()),
+        stockGroup: z.array(StockGroupInsertSchema.strict()),
+        stockItem: z.array(StockItemInsertSchema.strict()),
+        ledger: z.array(LedgerInsertSchema.strict())
+      })
       .partial(),
 
-    params: CompanySchemas['ZodSelectSchema'].pick({ guid: true })
+    params: CompanyInsertSchema.pick({ guid: true })
   }),
   syncData
 );

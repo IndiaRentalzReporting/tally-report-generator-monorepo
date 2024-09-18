@@ -29,7 +29,7 @@ export const StockItemTempSchema = pgTable('temp_tally_stock_item', {
   ...StockItemColumns
 });
 
-export type StockItemInsertSchema = typeof StockItemSchema.$inferInsert;
-export const StockItemZodInsertSchema = createInsertSchema(StockItemSchema);
-export type StockItemSelectSchema = typeof StockItemSchema.$inferSelect;
-export const StockItemZodSelectSchema = createSelectSchema(StockItemSchema);
+export type StockItemInsert = typeof StockItemSchema.$inferInsert;
+export const StockItemInsertSchema = createInsertSchema(StockItemSchema);
+export type StockItemSelect = typeof StockItemSchema.$inferSelect;
+export const StockItemSelectSchema = createSelectSchema(StockItemSchema);
