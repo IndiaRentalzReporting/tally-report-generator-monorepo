@@ -39,14 +39,12 @@ export const LedgerSchema = pgTable('tally_ledger', {
   ...LedgerColumns
 });
 
-export type LedgerInsertSchema = typeof LedgerSchema.$inferInsert;
-export const LedgerZodInsertSchema = createInsertSchema(LedgerSchema).omit({
-  id: true
-});
-export type LedgerSelectSchema = typeof LedgerSchema.$inferSelect;
-export const LedgerZodSelectSchema = createSelectSchema(LedgerSchema);
-
 export const LedgerTempSchema = pgTable('temp_tally_ledger', {
   ...TallyCommonSchema,
   ...LedgerColumns
 });
+
+export type LedgerInsertSchema = typeof LedgerSchema.$inferInsert;
+export const LedgerZodInsertSchema = createInsertSchema(LedgerSchema);
+export type LedgerSelectSchema = typeof LedgerSchema.$inferSelect;
+export const LedgerZodSelectSchema = createSelectSchema(LedgerSchema);

@@ -18,15 +18,14 @@ export const StockCategorySchema = pgTable('tally_stock_category', {
   ...StockCatgoryColumns
 });
 
-export type StockCategoryInsertSchema = typeof StockCategorySchema.$inferInsert;
-export const StockCategoryZodInsertSchema = createInsertSchema(
-  StockCategorySchema
-).omit({ id: true });
-export type StockCategorySelectSchema = typeof StockCategorySchema.$inferSelect;
-export const StockCategoryZodSelectSchema =
-  createSelectSchema(StockCategorySchema);
-
 export const StockCategoryTempSchema = pgTable('temp_tally_stock_category', {
   ...TallyCommonSchema,
   ...StockCatgoryColumns
 });
+
+export type StockCategoryInsertSchema = typeof StockCategorySchema.$inferInsert;
+export const StockCategoryZodInsertSchema =
+  createInsertSchema(StockCategorySchema);
+export type StockCategorySelectSchema = typeof StockCategorySchema.$inferSelect;
+export const StockCategoryZodSelectSchema =
+  createSelectSchema(StockCategorySchema);

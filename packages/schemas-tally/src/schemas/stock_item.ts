@@ -24,14 +24,12 @@ export const StockItemSchema = pgTable('tally_stock_item', {
   ...StockItemColumns
 });
 
-export type StockItemInsertSchema = typeof StockItemSchema.$inferInsert;
-export const StockItemZodInsertSchema = createInsertSchema(
-  StockItemSchema
-).omit({ companyId: true });
-export type StockItemSelectSchema = typeof StockItemSchema.$inferSelect;
-export const StockItemZodSelectSchema = createSelectSchema(StockItemSchema);
-
 export const StockItemTempSchema = pgTable('temp_tally_stock_item', {
   ...TallyCommonSchema,
   ...StockItemColumns
 });
+
+export type StockItemInsertSchema = typeof StockItemSchema.$inferInsert;
+export const StockItemZodInsertSchema = createInsertSchema(StockItemSchema);
+export type StockItemSelectSchema = typeof StockItemSchema.$inferSelect;
+export const StockItemZodSelectSchema = createSelectSchema(StockItemSchema);

@@ -20,14 +20,12 @@ export const GroupSchema = pgTable('tally_group', {
   ...GroupColumns
 });
 
-export type GroupInsertSchema = typeof GroupSchema.$inferInsert;
-export const GroupZodInsertSchema = createInsertSchema(GroupSchema).omit({
-  id: true
-});
-export type GroupSelectSchema = typeof GroupSchema.$inferSelect;
-export const GroupZodSelectSchema = createSelectSchema(GroupSchema);
-
 export const GroupTempSchema = pgTable('temp_tally_group', {
   ...TallyCommonSchema,
   ...GroupColumns
 });
+
+export type GroupInsertSchema = typeof GroupSchema.$inferInsert;
+export const GroupZodInsertSchema = createInsertSchema(GroupSchema);
+export type GroupSelectSchema = typeof GroupSchema.$inferSelect;
+export const GroupZodSelectSchema = createSelectSchema(GroupSchema);
