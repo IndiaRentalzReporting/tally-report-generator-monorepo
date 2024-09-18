@@ -12,4 +12,3 @@ http://master.trg.local {
 	reverse_proxy /api/* localhost:4002
 	reverse_proxy /* localhost:3002
 }
- 
