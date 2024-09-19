@@ -1,15 +1,15 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { CompanySchema,CompanyTempSchema } from '../schemas';
+import { LedgerSchema,LedgerTempSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as tallySchemas from '../schemas';
 import { TallyService } from './tally.service';
 
-export class CompanyService extends TallyService<
+export class LedgerService extends TallyService<
   typeof tallySchemas,
-  typeof CompanySchema,
-  typeof CompanyTempSchema
+  typeof LedgerSchema,
+  typeof LedgerTempSchema
 > {
   constructor(db: PostgresJsDatabase<typeof tallySchemas>) {
-    super(db, CompanySchema,CompanyTempSchema,db.query.CompanySchema);
+    super(db, LedgerSchema,LedgerTempSchema,db.query.LedgerSchema);
   }
 }

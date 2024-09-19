@@ -1,15 +1,16 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { CompanySchema,CompanyTempSchema } from '../schemas';
+import { GroupSchema,GroupTempSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as tallySchemas from '../schemas';
 import { TallyService } from './tally.service';
 
-export class CompanyService extends TallyService<
+export class GroupService extends TallyService<
   typeof tallySchemas,
-  typeof CompanySchema,
-  typeof CompanyTempSchema
+  typeof GroupSchema,
+  typeof GroupTempSchema
 > {
   constructor(db: PostgresJsDatabase<typeof tallySchemas>) {
-    super(db, CompanySchema,CompanyTempSchema,db.query.CompanySchema);
+    super(db, GroupSchema,GroupTempSchema,db.query.GroupSchema);
+    const d = GroupSchema['$inferInsert'];
   }
 }

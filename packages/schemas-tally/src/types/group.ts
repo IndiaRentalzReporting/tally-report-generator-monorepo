@@ -3,4 +3,4 @@ export {
   GroupInsertSchema,
   type GroupSelect,
   GroupSelectSchema
-} from '../schemas/group';
+} from '../schemas/groups';

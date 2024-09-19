@@ -1,24 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { CompanySchema } from '@trg_package/schemas-tally/schemas';
-import { TallySchemas, TallyTypes } from '../schemas/tally.schemas';
+import {  TallyServices } from '../schemas/tally.schemas';
 import { NotFoundError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
-import { CompanyService } from '@trg_package/schemas-tally/services';
-import {
-  CompanySelect,
-  GroupInsert,
-  LedgerInsert,
-  StockCategoryInsert,
-  StockGroupInsert,
-  StockItemInsert
-} from '@trg_package/schemas-tally/types';
+import { CompanyService, GroupService } from '@trg_package/schemas-tally/services';
+import * as Schemas from '@trg_package/schemas-tally/schemas';
+import { CompanySelect, GroupInsert, LedgerInsert, StockCategoryInsert, StockGroupInsert, StockItemInsert } from '@trg_package/schemas-tally/types';
 
-const getSchemas = async (name: keyof typeof TallyTypes) => {
-  const model = TallySchemas[name];
+const getService = <T extends keyof typeof TallyServices>(name : T) : typeof TallyServices[T] => {
+  const model = TallyServices[name];
   return model;
 };
-
-const getClient = async () => {};
 
 export const readOne = async (
   req: Request,
@@ -76,23 +68,21 @@ export const readAll = async (
     return next(e);
   }
 };
-
-export const syncData = async <DataKey extends keyof typeof TallyTypes>(
+export const syncData = async <DataKey extends keyof typeof TallyServices>(
   req: Request<
-    Pick<CompanySelect, 'guid'>,
-    object,
-    {
-      group: Array<GroupInsert>;
-      stockCategory: Array<StockCategoryInsert>;
-      stockGroup: Array<StockGroupInsert>;
-      stockItem: Array<StockItemInsert>;
-      ledger: Array<LedgerInsert>;
-    }
-  >,
+    Pick<CompanySelect,"guid">,
+    any,
+    Partial<{
+      ledger :typeof Schemas['LedgerSchema']['$inferInsert'][],
+      group : typeof Schemas['GroupSchema']['$inferInsert'][],
+      stockCategory : typeof Schemas['StockCategorySchema']['$inferInsert'][],
+      stockGroup : typeof Schemas['StockGroupSchema']['$inferInsert'][],
+      stockItem : any
+    }>
+    >,
   res: Response,
   next: NextFunction
 ) => {
-  req.body.
   //validate company
   let company: any;
   try {
@@ -102,38 +92,12 @@ export const syncData = async <DataKey extends keyof typeof TallyTypes>(
     throw new Error('Company is not registered');
   }
 
-  Object.keys(req.body).map(async (k) => {
+  Object.keys(req.body).map(async(k) => {
     const db = req.dashboardDb;
-    const entitySchemas = await getSchemas(k as DataKey);
-    const tableSchema = entitySchemas.schema;
-    const tempSchema = entitySchemas.tempSchema;
-    const rows = req.body[k as DataKey].map(
-      <ObjType extends (typeof tableSchema)['$inferInsert']>(
-        obj: ObjType
-      ): ObjType => {
-        return { ...obj, companyId: company.id };
-      }
-    );
-    try {
-      await db.transaction(async (tx) => {
-        await tx.execute(
-          sql`DELETE FROM ${tempSchema} WHERE ${tempSchema.companyId} = ${company.id} `
-        );
-        await tx.insert(tempSchema).values(rows);
-        await tx.execute(sql`DELETE FROM ${tableSchema} WHERE ${tableSchema.masterID} IN(
-          SELECT ${tempSchema.masterID} FROM ${tempSchema}
-          INNER JOIN ${tableSchema} on ${tableSchema.masterID} = ${tempSchema.masterID} 
-          WHERE ${tableSchema.alterID} != ${tempSchema.alterID})
-          `);
-        const query = sql`
-          INSERT INTO ${tableSchema} 
-          SELECT * FROM ${tempSchema} 
-          WHERE ${tempSchema.masterID} NOT IN (
-            SELECT ${tableSchema.masterID} FROM ${tableSchema}
-          );  
-        `;
-        await tx.execute(query);
-      });
+    const entityService = getService(k as DataKey);
+    try{
+      const service = new entityService(db);
+      service.sync(req.body[k as keyof typeof req.body], company.id);
     } catch (err) {
       throw err;
     }

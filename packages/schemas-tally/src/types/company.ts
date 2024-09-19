@@ -3,4 +3,4 @@ export {
   CompanyInsertSchema,
   type CompanySelect,
   CompanySelectSchema
-} from '../schemas/company';
+} from '../schemas/companies';

@@ -3,4 +3,4 @@ export {
   LedgerInsertSchema,
   type LedgerSelect,
   LedgerSelectSchema
-} from '../schemas/ledger';
+} from '../schemas/ledgers';
