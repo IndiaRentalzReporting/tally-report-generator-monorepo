@@ -7,7 +7,7 @@ import { TableRelationalConfig } from 'drizzle-orm';
 import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 
 export class TallyService<
-H extends typeof tallySchemas,
+H extends Record<string, unknown>,
 T extends PgTableWithColumns<{
   name: string;
   schema: undefined;
@@ -35,11 +35,11 @@ extends BaseServiceNew<H,T>{
 
 
 
-    public sync = async<DataType extends T['$inferInsert']>(data : DataType[],companyId : string)=>{
+    public sync = async(data : Array<T['$inferInsert']>,companyId : string)=>{
         const tableSchema = this.schema;
         const tempSchema = this.tempSchema;
         const rows = data.map(
-            <ObjType extends (typeof tableSchema)['$inferInsert']>(
+            <ObjType extends T['$inferInsert']>(
             obj: ObjType
             ): ObjType => {
             return { ...obj, companyId: companyId };

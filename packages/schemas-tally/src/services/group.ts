@@ -11,5 +11,6 @@ export class GroupService extends TallyService<
 > {
   constructor(db: PostgresJsDatabase<typeof tallySchemas>) {
     super(db, GroupSchema,GroupTempSchema,db.query.GroupSchema);
+    const d = GroupSchema['$inferInsert'];
   }
 }
