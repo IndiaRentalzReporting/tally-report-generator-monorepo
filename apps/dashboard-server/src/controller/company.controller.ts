@@ -1,24 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { CompanySchema } from '@trg_package/schemas-tally/schemas';
-import { NotFoundError } from '@trg_package/errors';
 import {
-  CompanyService,
   GroupService,
   LedgerService,
   StockCategoryService,
   StockGroupService,
   StockItemService
 } from '@trg_package/schemas-tally/services';
-import { CompanySelect } from '@trg_package/schemas-tally/types';
+import { CompanyInsert, CompanySelect } from '@trg_package/schemas-tally/types';
 
 export const readOne = async (
-  req: Request,
+  req: Request<Pick<CompanySelect, 'guid'>>,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const service = new CompanyService(req.dashboardDb);
-    const company = await service.findOne({
+    const company = await req.companyService.findOne({
       guid: req.params.guid
     });
     return res.json({ company });
@@ -29,37 +25,26 @@ export const readOne = async (
 };
 
 export const createOne = async (
-  req: Request,
-  res: Response,
+  req: Request<object, object, CompanyInsert>,
+  res: Response<{ company: CompanySelect }>,
   next: NextFunction
 ) => {
   try {
-    const service = new CompanyService(req.dashboardDb);
-    try {
-      const c = await service.findOne({ guid: req.body.guid });
-      throw new Error('Company already Exists');
-    } catch (err) {
-      if (!(err instanceof NotFoundError)) {
-        throw err;
-      }
-    }
-
-    const result = await service.createOne(req.body);
-    return res.json({ result });
-  } catch (err) {
-    console.log(err);
-    return next(err);
+    const data = req.body;
+    const company = await req.companyService.createOne(data);
+    return res.json({ company });
+  } catch (e) {
+    return next(e);
   }
 };
 
 export const readAll = async (
   req: Request,
-  res: Response<{ companies: Partial<typeof CompanySchema.$inferInsert>[] }>,
+  res: Response<{ companies: Array<CompanySelect> }>,
   next: NextFunction
 ) => {
   try {
-    const service = new CompanyService(req.dashboardDb);
-    const companies = await service.findMany();
+    const companies = await req.companyService.findMany();
 
     return res.json({ companies });
   } catch (e) {
@@ -91,8 +76,7 @@ export const syncData = async (
   res: Response,
   next: NextFunction
 ) => {
-  const service = new CompanyService(req.dashboardDb);
-  const company = await service.findOne({ guid: req.params.guid });
+  const company = await req.companyService.findOne({ guid: req.params.guid });
 
   for (const [key, data] of Object.entries(req.body)) {
     const typedKey = key as keyof typeof req.body;

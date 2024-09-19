@@ -8,6 +8,7 @@ import {
 } from '@trg_package/schemas-dashboard/services';
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
+import { CompanyService } from '@trg_package/schemas-tally/services';
 
 export const attachServices = (
   req: Request,
@@ -23,5 +24,6 @@ export const attachServices = (
   req.actionService = new ActionService(dashboardDb);
   req.permissionService = new PermissionService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
+  req.companyService = new CompanyService(dashboardDb);
   next();
 };
