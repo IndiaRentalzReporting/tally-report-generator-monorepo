@@ -3,4 +3,4 @@ export {
   StockCategoryInsertSchema,
   type StockCategorySelect,
   StockCategorySelectSchema
-} from '../schemas/stock_category';
+} from '../schemas/stockCategories';

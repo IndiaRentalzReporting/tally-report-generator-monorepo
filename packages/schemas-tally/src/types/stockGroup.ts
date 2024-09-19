@@ -3,4 +3,4 @@ export {
   StockGroupInsertSchema,
   type StockGroupSelect,
   StockGroupSelectSchema
-} from '../schemas/stock_group';
+} from '../schemas/stockGroups';
