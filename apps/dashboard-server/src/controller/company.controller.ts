@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { CompanySchema } from '@trg_package/schemas-tally/schemas';
-import {  TallyServices } from '../schemas/tally.schemas';
 import { NotFoundError } from '@trg_package/errors';
-import { sql } from 'drizzle-orm';
-import { CompanyService, GroupService } from '@trg_package/schemas-tally/services';
-import * as Schemas from '@trg_package/schemas-tally/schemas';
-import { CompanySelect, GroupInsert, LedgerInsert, StockCategoryInsert, StockGroupInsert, StockItemInsert } from '@trg_package/schemas-tally/types';
-
-const getService = <T extends keyof typeof TallyServices>(name : T) : typeof TallyServices[T] => {
-  const model = TallyServices[name];
-  return model;
-};
+import {
+  CompanyService,
+  GroupService,
+  LedgerService,
+  StockCategoryService,
+  StockGroupService,
+  StockItemService
+} from '@trg_package/schemas-tally/services';
+import { CompanySelect } from '@trg_package/schemas-tally/types';
 
 export const readOne = async (
   req: Request,
@@ -68,39 +67,42 @@ export const readAll = async (
     return next(e);
   }
 };
-export const syncData = async <DataKey extends keyof typeof TallyServices>(
-  req: Request<
-    Pick<CompanySelect,"guid">,
-    any,
-    Partial<{
-      ledger :typeof Schemas['LedgerSchema']['$inferInsert'][],
-      group : typeof Schemas['GroupSchema']['$inferInsert'][],
-      stockCategory : typeof Schemas['StockCategorySchema']['$inferInsert'][],
-      stockGroup : typeof Schemas['StockGroupSchema']['$inferInsert'][],
-      stockItem : any
-    }>
-    >,
+
+const TallyServices = {
+  ledger: LedgerService,
+  group: GroupService,
+  stockCategory: StockCategoryService,
+  stockGroup: StockGroupService,
+  stockItem: StockItemService
+};
+
+type ServiceKey = keyof typeof TallyServices;
+
+type SyncData = {
+  [K in ServiceKey]?: InstanceType<(typeof TallyServices)[K]> extends {
+    sync(data: infer D, companyId: string): Promise<any>;
+  }
+    ? D
+    : never;
+};
+
+export const syncData = async (
+  req: Request<Pick<CompanySelect, 'guid'>, object, SyncData>,
   res: Response,
   next: NextFunction
 ) => {
-  //validate company
-  let company: any;
-  try {
-    const service = new CompanyService(req.dashboardDb);
-    company = await service.findOne({ guid: req.params.guid });
-  } catch (err) {
-    throw new Error('Company is not registered');
+  const service = new CompanyService(req.dashboardDb);
+  const company = await service.findOne({ guid: req.params.guid });
+
+  for (const [key, data] of Object.entries(req.body)) {
+    const typedKey = key as keyof typeof req.body;
+
+    const EntityService = TallyServices[typedKey];
+    const entityService = new EntityService(req.dashboardDb);
+
+    // Type assertion here is safe because we've checked the key
+    await entityService.sync(data as any, company.id);
   }
 
-  Object.keys(req.body).map(async(k) => {
-    const db = req.dashboardDb;
-    const entityService = getService(k as DataKey);
-    try{
-      const service = new entityService(db);
-      service.sync(req.body[k as keyof typeof req.body], company.id);
-    } catch (err) {
-      throw err;
-    }
-  });
   return res.json({ success: true });
 };
