@@ -1,15 +1,4 @@
-import {
-  GroupSchema,
-  GroupTempSchema,
-  LedgerSchema,
-  LedgerTempSchema,
-  StockCategorySchema,
-  StockCategoryTempSchema,
-  StockGroupSchema,
-  StockGroupTempSchema,
-  StockItemSchema,
-  StockItemTempSchema
-} from '@trg_package/schemas-tally/schemas';
+import { GroupService, LedgerService, StockCategoryService, StockGroupService, StockItemService } from '@trg_package/schemas-tally/services';
 import {
   GroupInsert,
   LedgerInsert,
@@ -18,27 +7,12 @@ import {
   StockItemInsert
 } from '@trg_package/schemas-tally/types';
 
-export const TallySchemas = {
-  group: {
-    schema: GroupSchema,
-    tempSchema: GroupTempSchema
-  },
-  stockCategory: {
-    schema: StockCategorySchema,
-    tempSchema: StockCategoryTempSchema
-  },
-  stockGroup: {
-    schema: StockGroupSchema,
-    tempSchema: StockGroupTempSchema
-  },
-  stockItem: {
-    schema: StockItemSchema,
-    tempSchema: StockItemTempSchema
-  },
-  ledger: {
-    schema: LedgerSchema,
-    tempSchema: LedgerTempSchema
-  }
+export const TallyServices = {
+  group: GroupService,
+  stockCategory: StockCategoryService,
+  stockGroup: StockGroupService,
+  stockItem: StockItemService,
+  ledger: LedgerService
 };
 
 export type TallyTypes = {
