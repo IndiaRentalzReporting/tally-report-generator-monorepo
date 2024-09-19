@@ -31,7 +31,6 @@ export const attachUser = async (
     const cachedUser = cache.get(cookie);
     if (cachedUser && cachedUser.expires > Date.now()) {
       req.user = cachedUser.user;
-      req.attacheDBandServices = false;
       return next();
     }
 
@@ -52,7 +51,6 @@ export const attachUser = async (
           : Date.now() + CACHE_TTL // Default TTL if no cookie expiry
       });
       req.user = user;
-      req.attacheDBandServices = true;
       return next();
     } else {
       req.user = undefined;
@@ -60,7 +58,6 @@ export const attachUser = async (
     }
   } catch (e) {
     req.user = undefined;
-    req.attacheDBandServices = true;
     return next(e);
   }
 };
