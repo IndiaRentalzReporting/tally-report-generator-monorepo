@@ -3,7 +3,7 @@ import {
   ApiKeyInsert,
   ApiKeySelect
 } from '@trg_package/schemas-dashboard/types';
-import crypto from 'crypto';
+import { encrypt } from '../utils/crypto';
 
 export const readAll = async (
   req: Request,
@@ -63,8 +63,11 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const key = crypto.randomBytes(32).toString('hex');
     const data = req.body;
+    const { tenant } = req.user!;
+    const encryptedData = encrypt(JSON.stringify({ tenant }));
+    const key = Buffer.from(encryptedData).toString('base64');
+
     const apiKey = await req.apiKeyService.createOne({
       ...data,
       key

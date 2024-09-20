@@ -9,5 +9,8 @@
     }
   },
   "include": ["src", "*.js", "*.ts", ".eslint.js"],
-  "exclude": ["node_modules", "dist", ".turbo"]
+  "exclude": ["node_modules", "dist", ".turbo"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }
