@@ -1,7 +1,5 @@
 import expressLoader from './loaders/express';
 import config from './config';
-import type { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import type { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import * as dashboardSchemas from './models/schemas';
 import type {
   UserService,
@@ -13,6 +11,7 @@ import type {
 } from '@trg_package/schemas-dashboard/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
+import { CompanyService } from '@trg_package/schemas-tally/services';
 
 const { PORT, NODE_ENV } = config;
 
@@ -40,9 +39,10 @@ declare global {
       actionService: ActionService;
       permissionService: PermissionService;
       apiKeyService: ApiKeyService;
+      companyService: CompanyService;
+
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
       dashboardConnection: Sql<{}>;
-      attacheDBandServices: boolean;
     }
   }
 }
