@@ -27,7 +27,7 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
     action: 'Create'
   });
 
-  const Component = lazy(() => import(`../../../views/${module}/Create.tsx`));
+  const Component = lazy(() => import(`../../../views/${module}/Create`));
 
   return (
     <When condition={!!isCreateAllowed}>
