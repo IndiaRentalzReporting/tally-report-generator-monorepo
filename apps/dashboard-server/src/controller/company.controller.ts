@@ -82,7 +82,7 @@ export const syncData = async (
     const typedKey = key as keyof typeof req.body;
 
     const EntityService = TallyServices[typedKey];
-    const entityService = new EntityService(req.dashboardDb);
+    const entityService = new EntityService(req.dashboardDb as any);
 
     // Type assertion here is safe because we've checked the key
     await entityService.sync(data as any, company.id);

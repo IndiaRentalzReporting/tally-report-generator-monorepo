@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyCompanies" (
 	"ledgerAlterID" integer NOT NULL,
 	"stockItemAlterID" integer NOT NULL,
 	"voucherMasterID" integer NOT NULL,
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyCompanies_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tallyGroups" (
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS "tallyGroups" (
 	"parentId" integer,
 	"primaryGroup" varchar(200),
 	"natureofGroup" varchar(200),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tallyGroups_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tempTallyGroups" (
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyGroups" (
 	"parentId" integer,
 	"primaryGroup" varchar(200),
 	"natureofGroup" varchar(200),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyGroups_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tallyLedgers" (
@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS "tallyLedgers" (
 	"emailCC" varchar(100),
 	"website" varchar(100),
 	"openingBalance" double precision,
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tallyLedgers_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tempTallyLedgers" (
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyLedgers" (
 	"emailCC" varchar(100),
 	"website" varchar(100),
 	"openingBalance" double precision,
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyLedgers_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tallyStockCategories" (
@@ -251,7 +251,7 @@ CREATE TABLE IF NOT EXISTS "tallyStockCategories" (
 	"lastSyncDate" date NOT NULL,
 	"stockCategoryName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tallyStockCategories_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tempTallyStockCategories" (
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyStockCategories" (
 	"lastSyncDate" date NOT NULL,
 	"stockCategoryName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyStockCategories_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tallyStockGroups" (
@@ -277,7 +277,7 @@ CREATE TABLE IF NOT EXISTS "tallyStockGroups" (
 	"lastSyncDate" date NOT NULL,
 	"stockGroupName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tallyStockGroups_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tempTallyStockGroups" (
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyStockGroups" (
 	"lastSyncDate" date NOT NULL,
 	"stockGroupName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyStockGroups_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tallyStockItems" (
@@ -309,7 +309,7 @@ CREATE TABLE IF NOT EXISTS "tallyStockItems" (
 	"openingRate" double precision NOT NULL,
 	"openingValue" double precision NOT NULL,
 	"baseUnits" varchar(200) NOT NULL,
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tallyStockItems_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tempTallyStockItems" (
@@ -328,7 +328,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyStockItems" (
 	"openingRate" double precision NOT NULL,
 	"openingValue" double precision NOT NULL,
 	"baseUnits" varchar(200) NOT NULL,
-	CONSTRAINT "tallyCompanies_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tempTallyStockItems_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 DO $$ BEGIN

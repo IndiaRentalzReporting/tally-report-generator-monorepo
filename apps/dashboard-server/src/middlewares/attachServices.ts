@@ -24,6 +24,6 @@ export const attachServices = (
   req.actionService = new ActionService(dashboardDb);
   req.permissionService = new PermissionService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
-  req.companyService = new CompanyService(dashboardDb);
+  req.companyService = new CompanyService(dashboardDb as any);
   next();
 };
