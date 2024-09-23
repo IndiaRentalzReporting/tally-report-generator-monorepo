@@ -13,11 +13,11 @@ export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({
     fields: [UserSchema.role_id],
     references: [RoleSchema.id]
   }),
-  company: many(CompanySchema)
+  userCompany: many(UserTallyCompanySchema)
 }));
 
 export const CompanySchemaRelation = relations(CompanySchema, ({ many }) => ({
-  user: many(UserSchema)
+  userCompany: many(UserTallyCompanySchema)
 }));
 
 export const UserTallyCompanySchemaRelation = relations(
