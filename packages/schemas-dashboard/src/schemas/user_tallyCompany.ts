@@ -4,7 +4,7 @@ import { UserSchema } from './users';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
-const { id, name, ...BaseEntitySchemaWithoutIdAndName } = BaseEntitySchema;
+const { id, name, ...BaseEntitySchemaWithoutIdAndName } = BaseEntitySchema();
 export const UserTallyCompanySchema = pgTable(
   'user_tallyCompany',
   {

@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
 export const ModuleSchema = pgTable('modules', {
-  ...BaseEntitySchema,
+  ...BaseEntitySchema(),
   icon: text('icon')
 });
 
