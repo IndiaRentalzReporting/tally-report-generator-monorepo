@@ -15,12 +15,12 @@ const GroupColumns = {
   primaryGroup: varchar('primaryGroup', { length: 200 }),
   natureofGroup: varchar('natureofGroup', { length: 200 }) //
 };
-export const GroupSchema = pgTable('tally_group', {
+export const GroupSchema = pgTable('tallyGroups', {
   ...TallyCommonSchema,
   ...GroupColumns
 });
 
-export const GroupTempSchema = pgTable('temp_tally_group', {
+export const GroupTempSchema = pgTable('tempTallyGroups', {
   ...TallyCommonSchema,
   ...GroupColumns
 });

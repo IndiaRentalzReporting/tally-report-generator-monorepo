@@ -13,12 +13,12 @@ const CompanyColumns = {
   voucherMasterID: integer('voucherMasterID').notNull()
 };
 
-export const CompanySchema = pgTable('tally_company', {
+export const CompanySchema = pgTable('tallyCompanies', {
   ...SchemaWithoutCompany,
   ...CompanyColumns
 });
 
-export const CompanyTempSchema = pgTable('temp_tally_company', {
+export const CompanyTempSchema = pgTable('tempTallyCompanies', {
   ...SchemaWithoutCompany,
   ...CompanyColumns
 });

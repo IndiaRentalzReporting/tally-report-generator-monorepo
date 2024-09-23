@@ -19,12 +19,12 @@ const StockItemColumns = {
   openingValue: doublePrecision('openingValue').notNull(),
   baseUnits: varchar('baseUnits', { length: 200 }).notNull()
 };
-export const StockItemSchema = pgTable('tally_stock_item', {
+export const StockItemSchema = pgTable('tallyStockItems', {
   ...TallyCommonSchema,
   ...StockItemColumns
 });
 
-export const StockItemTempSchema = pgTable('temp_tally_stock_item', {
+export const StockItemTempSchema = pgTable('tempTallyStockItems', {
   ...TallyCommonSchema,
   ...StockItemColumns
 });

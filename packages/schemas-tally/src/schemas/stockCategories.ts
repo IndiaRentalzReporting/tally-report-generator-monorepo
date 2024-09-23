@@ -13,12 +13,12 @@ const StockCatgoryColumns = {
   parent: varchar('parent', { length: 500 })
 };
 
-export const StockCategorySchema = pgTable('tally_stock_category', {
+export const StockCategorySchema = pgTable('tallyStockCategories', {
   ...TallyCommonSchema,
   ...StockCatgoryColumns
 });
 
-export const StockCategoryTempSchema = pgTable('temp_tally_stock_category', {
+export const StockCategoryTempSchema = pgTable('tempTallyStockCategories', {
   ...TallyCommonSchema,
   ...StockCatgoryColumns
 });

@@ -12,12 +12,12 @@ const StockGroupColumns = {
   stockGroupName: varchar('stockGroupName', { length: 200 }).notNull(),
   parent: varchar('parent', { length: 500 })
 };
-export const StockGroupSchema = pgTable('tally_stock_group', {
+export const StockGroupSchema = pgTable('tallyStockGroups', {
   ...TallyCommonSchema,
   ...StockGroupColumns
 });
 
-export const StockGroupTempSchema = pgTable('temp_tally_stock_group', {
+export const StockGroupTempSchema = pgTable('tempTallyStockGroups', {
   ...TallyCommonSchema,
   ...StockGroupColumns
 });
