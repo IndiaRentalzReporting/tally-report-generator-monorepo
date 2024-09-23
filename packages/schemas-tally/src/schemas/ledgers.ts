@@ -35,12 +35,12 @@ const LedgerColumns = {
 };
 
 export const LedgerSchema = pgTable('tallyLedgers', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...LedgerColumns
 });
 
 export const LedgerTempSchema = pgTable('tempTallyLedgers', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...LedgerColumns
 });
 

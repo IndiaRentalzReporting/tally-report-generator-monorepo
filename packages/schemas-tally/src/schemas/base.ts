@@ -3,7 +3,7 @@ import { date } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { uuid } from 'drizzle-orm/pg-core';
 
-export const TallyCommonSchema = {
+export const TallyCommonSchema = () => ({
   id: uuid('id').primaryKey().defaultRandom(),
   guid: varchar('guid', { length: 200 }).notNull(),
   companyId: varchar('companyId'),
@@ -11,4 +11,4 @@ export const TallyCommonSchema = {
   alterID: integer('alterID').notNull(),
   sortOrder: integer('sortOrder').notNull(),
   lastSyncDate: date('lastSyncDate').notNull()
-};
+});

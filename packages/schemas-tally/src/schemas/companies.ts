@@ -1,8 +1,6 @@
 import { pgTable, varchar, integer } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-
-const { companyId, ...SchemaWithoutCompany } = TallyCommonSchema;
+import { TallyCommonSchema } from './base';
 
 const CompanyColumns = {
   companyName: varchar('companyName', { length: 200 }).notNull(),
@@ -14,12 +12,18 @@ const CompanyColumns = {
 };
 
 export const CompanySchema = pgTable('tallyCompanies', {
-  ...SchemaWithoutCompany,
+  ...(() => {
+    const { companyId, ...rest } = TallyCommonSchema();
+    return rest;
+  })(),
   ...CompanyColumns
 });
 
 export const CompanyTempSchema = pgTable('tempTallyCompanies', {
-  ...SchemaWithoutCompany,
+  ...(() => {
+    const { companyId, ...rest } = TallyCommonSchema();
+    return rest;
+  })(),
   ...CompanyColumns
 });
 

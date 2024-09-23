@@ -13,12 +13,12 @@ const StockGroupColumns = {
   parent: varchar('parent', { length: 500 })
 };
 export const StockGroupSchema = pgTable('tallyStockGroups', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...StockGroupColumns
 });
 
 export const StockGroupTempSchema = pgTable('tempTallyStockGroups', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...StockGroupColumns
 });
 

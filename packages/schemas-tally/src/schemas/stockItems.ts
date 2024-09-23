@@ -20,12 +20,12 @@ const StockItemColumns = {
   baseUnits: varchar('baseUnits', { length: 200 }).notNull()
 };
 export const StockItemSchema = pgTable('tallyStockItems', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...StockItemColumns
 });
 
 export const StockItemTempSchema = pgTable('tempTallyStockItems', {
-  ...TallyCommonSchema,
+  ...TallyCommonSchema(),
   ...StockItemColumns
 });
 
