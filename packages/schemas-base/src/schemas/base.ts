@@ -7,20 +7,20 @@ export const EntityStatus = pgEnum('status', [
   'inactive'
 ]);
 
-export const EntityTimestamps = {
+export const EntityTimestamps = () => ({
   createdAt: timestamp('createdAt').notNull().defaultNow(),
   updatedAt: timestamp('updatedAt')
     .defaultNow()
     .$onUpdate(() => new Date()),
   deletedAt: timestamp('deletedAt'),
   approvedAt: timestamp('approvedAt')
-};
+});
 
-export const BaseEntitySchema = {
+export const BaseEntitySchema = () => ({
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   name: varchar('name', { length: 200 }).notNull(),
   status: EntityStatus('status').default('active').notNull(),
   isReadonly: boolean('isReadonly').notNull().default(false),
   isPrivate: boolean('isPrivate').notNull().default(false),
-  ...EntityTimestamps
-};
+  ...EntityTimestamps()
+});
