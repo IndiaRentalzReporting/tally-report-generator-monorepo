@@ -5,13 +5,34 @@ import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
 import { PermissionActionSchema } from './permission_action';
+import { CompanySchema } from '@trg_package/schemas-tally/schemas';
+import { UserTallyCompanySchema } from './user_tallyCompany';
 
 export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({
   role: one(RoleSchema, {
     fields: [UserSchema.role_id],
     references: [RoleSchema.id]
-  })
+  }),
+  company: many(CompanySchema)
 }));
+
+export const CompanySchemaRelation = relations(CompanySchema, ({ many }) => ({
+  user: many(UserSchema)
+}));
+
+export const UserTallyCompanySchemaRelation = relations(
+  UserTallyCompanySchema,
+  ({ one }) => ({
+    company: one(CompanySchema, {
+      fields: [UserTallyCompanySchema.tallyCompany_id],
+      references: [CompanySchema.id]
+    }),
+    user: one(UserSchema, {
+      fields: [UserTallyCompanySchema.user_id],
+      references: [UserSchema.id]
+    })
+  })
+);
 
 export const roleSchemaRelation = relations(RoleSchema, ({ one, many }) => ({
   user: many(UserSchema),

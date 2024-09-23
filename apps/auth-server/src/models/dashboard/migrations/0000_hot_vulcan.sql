@@ -98,6 +98,19 @@ CREATE TABLE IF NOT EXISTS "users" (
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user_tallyCompany" (
+	"status" "status" DEFAULT 'active' NOT NULL,
+	"isReadonly" boolean DEFAULT false NOT NULL,
+	"isPrivate" boolean DEFAULT false NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	"updatedAt" timestamp DEFAULT now(),
+	"deletedAt" timestamp,
+	"approvedAt" timestamp,
+	"user_id" uuid NOT NULL,
+	"tallyCompany_id" uuid NOT NULL,
+	CONSTRAINT "user_tallyCompany_user_id_tallyCompany_id_pk" PRIMARY KEY("user_id","tallyCompany_id")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_company" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"guid" varchar(200) NOT NULL,
@@ -127,7 +140,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_company" (
 	"ledgerAlterID" integer NOT NULL,
 	"stockItemAlterID" integer NOT NULL,
 	"voucherMasterID" integer NOT NULL,
-	CONSTRAINT "temp_tally_company_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_group" (
@@ -143,7 +156,7 @@ CREATE TABLE IF NOT EXISTS "tally_group" (
 	"parentId" integer,
 	"primaryGroup" varchar(200),
 	"natureofGroup" varchar(200),
-	CONSTRAINT "tally_group_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "temp_tally_group" (
@@ -159,7 +172,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_group" (
 	"parentId" integer,
 	"primaryGroup" varchar(200),
 	"natureofGroup" varchar(200),
-	CONSTRAINT "temp_tally_group_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_ledger" (
@@ -192,7 +205,7 @@ CREATE TABLE IF NOT EXISTS "tally_ledger" (
 	"emailCC" varchar(100),
 	"website" varchar(100),
 	"openingBalance" double precision,
-	CONSTRAINT "tally_ledger_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "temp_tally_ledger" (
@@ -225,7 +238,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_ledger" (
 	"emailCC" varchar(100),
 	"website" varchar(100),
 	"openingBalance" double precision,
-	CONSTRAINT "temp_tally_ledger_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_stock_category" (
@@ -238,7 +251,7 @@ CREATE TABLE IF NOT EXISTS "tally_stock_category" (
 	"lastSyncDate" date NOT NULL,
 	"stockCategoryName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tally_stock_category_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "temp_tally_stock_category" (
@@ -251,7 +264,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_stock_category" (
 	"lastSyncDate" date NOT NULL,
 	"stockCategoryName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "temp_tally_stock_category_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_stock_group" (
@@ -264,7 +277,7 @@ CREATE TABLE IF NOT EXISTS "tally_stock_group" (
 	"lastSyncDate" date NOT NULL,
 	"stockGroupName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "tally_stock_group_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "temp_tally_stock_group" (
@@ -277,7 +290,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_stock_group" (
 	"lastSyncDate" date NOT NULL,
 	"stockGroupName" varchar(200) NOT NULL,
 	"parent" varchar(500),
-	CONSTRAINT "temp_tally_stock_group_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tally_stock_item" (
@@ -296,7 +309,7 @@ CREATE TABLE IF NOT EXISTS "tally_stock_item" (
 	"openingRate" double precision NOT NULL,
 	"openingValue" double precision NOT NULL,
 	"baseUnits" varchar(200) NOT NULL,
-	CONSTRAINT "tally_stock_item_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "temp_tally_stock_item" (
@@ -315,7 +328,7 @@ CREATE TABLE IF NOT EXISTS "temp_tally_stock_item" (
 	"openingRate" double precision NOT NULL,
 	"openingValue" double precision NOT NULL,
 	"baseUnits" varchar(200) NOT NULL,
-	CONSTRAINT "temp_tally_stock_item_masterID_unique" UNIQUE("masterID")
+	CONSTRAINT "tally_company_masterID_unique" UNIQUE("masterID")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -344,6 +357,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "users" ADD CONSTRAINT "users_role_id_roles_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."roles"("id") ON DELETE set null ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_tallyCompany" ADD CONSTRAINT "user_tallyCompany_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_tallyCompany" ADD CONSTRAINT "user_tallyCompany_tallyCompany_id_tally_company_id_fk" FOREIGN KEY ("tallyCompany_id") REFERENCES "public"."tally_company"("id") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
