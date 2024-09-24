@@ -18,8 +18,8 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [dataUpdated, setDataUpdated] = useState<boolean>(false);
 
   const { data: userData, isFetching: loadingUser } = useQuery({
-    queryFn: () => services.getOne(id),
-    select: (data) => data.data.user,
+    queryFn: () => services.read({ id }),
+    select: (data) => data.data.users[0],
     queryKey: ['users', 'getOne', id]
   });
 

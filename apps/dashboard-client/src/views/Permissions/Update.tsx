@@ -1,6 +1,8 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
-import { services } from '@/services/permission';
+import { services as permissionService } from '@/services/permission';
+import { services as actionService } from '@/services/action';
+import { services as permission_actionService } from '@/services/permission_action';
 import { Button, Skeleton } from '@trg_package/components';
 import {
   PermissionSelect,
@@ -11,12 +13,12 @@ import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
-  const [selectedRole, setSelectedRole] = React.useState<string>('');
+  const [selectedRole, setSelectedRole] = React.useState<string>(id);
   const [modulePermissions, setModulePermission] =
     React.useState<ModulePermissions>({});
 
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
-    queryFn: () => services.getAllOfRole(id),
+    queryFn: () => permissionService.read({ role_id: id }),
     select: (data) => data.data.permissions,
     queryKey: ['roles', 'getOne', id]
   });
@@ -61,17 +63,33 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
     useMutation({
-      mutationFn: () => {
+      mutationFn: async () => {
         const prettyPermissions: Array<
           ModuleAction & { permission_id: string }
         > = addPermissionId(
           createPermissionsUsingModulePermissions(modulePermissions)
         );
 
-        return services.updateMany({
-          role_id: selectedRole,
-          permissions: prettyPermissions
-        });
+        for (let {
+          module_id,
+          action_ids,
+          permission_id
+        } of prettyPermissions) {
+          await permissionService.deleteOne(permission_id);
+          const {
+            data: { permission }
+          } = await permissionService.createOne({
+            module_id,
+            role_id: selectedRole
+          });
+          for (let action_id of action_ids) {
+            await actionService.read({ id: action_id });
+            await permission_actionService.createOne({
+              permission_id: permission.id,
+              action_id
+            });
+          }
+        }
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['permission', 'getAll'] });

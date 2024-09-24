@@ -1,5 +1,9 @@
 import { AxiosPromise } from 'axios';
-import { RoleInsert, RoleSelect } from '@trg_package/schemas-dashboard/types';
+import {
+  RoleInsert,
+  RoleSelect,
+  RoleWithPermission
+} from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/axios-client';
 
 const rolesAxios = createAxiosClient(
@@ -11,18 +15,18 @@ const rolesAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
-    roles: RoleSelect[];
+  read: async (
+    query: Partial<RoleSelect> = {}
+  ): AxiosPromise<{
+    roles: RoleWithPermission[];
   }> => {
-    return rolesAxios.get('/read');
+    const queryString = new URLSearchParams(query as any).toString();
+    return rolesAxios.get(`/read?${queryString}`);
   },
-  getOne: async (id: RoleSelect['id']): AxiosPromise<{ role: RoleSelect }> => {
-    return rolesAxios.get(`/read/${id}`);
-  },
-  createOne: async (data: {
-    roleDetails: RoleInsert;
-  }): AxiosPromise<{ role: RoleSelect }> => {
-    return rolesAxios.post('/create', data);
+  createOne: async (
+    roleDetails: RoleInsert
+  ): AxiosPromise<{ role: RoleSelect }> => {
+    return rolesAxios.post('/create', roleDetails);
   },
   updateOne: async (
     id: RoleSelect['id'],

@@ -14,7 +14,7 @@ import { columns } from './columns';
 
 const Create: React.FC = () => {
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => services.getAll(),
+    queryFn: () => services.read(),
     select: (data) => data.data.users,
     queryKey: ['users', 'getAll']
   });

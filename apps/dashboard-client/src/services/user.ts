@@ -15,17 +15,13 @@ const usersAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
+  read: async (
+    query: Partial<UserSelect> = {}
+  ): AxiosPromise<{
     users: DetailedUser[];
   }> => {
-    return usersAxios.get('/read');
-  },
-  getOne: async (
-    id: UserSelect['id']
-  ): AxiosPromise<{
-    user: DetailedUser;
-  }> => {
-    return usersAxios.get(`/read/${id}`);
+    const queryString = new URLSearchParams(query as any).toString();
+    return usersAxios.get(`/read?${queryString}`);
   },
   createOne: async (
     data: UserInsert

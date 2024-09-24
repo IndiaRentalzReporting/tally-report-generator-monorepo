@@ -43,8 +43,8 @@ declare global {
       apiKeyService: ApiKeyService;
       companyService: CompanyService;
 
-      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
-      dashboardConnection: Sql<{}>;
+      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
+      dashboardConnection: Sql<{}> | null;
     }
   }
 }

@@ -14,24 +14,18 @@ const permissionActionsAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
+  read: async (
+    query: Partial<PermissionActionSelect> = {}
+  ): AxiosPromise<{
     permissionActions: PermissionActionSelect[];
   }> => {
-    return permissionActionsAxios.get('/read');
+    const queryString = new URLSearchParams(query as any).toString();
+    return permissionActionsAxios.get(`/read?${queryString}`);
   },
-  getOne: async ({
-    action_id,
-    permission_id
-  }: {
-    action_id: PermissionActionSelect['action_id'];
-    permission_id: PermissionActionSelect['permission_id'];
-  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
-    return permissionActionsAxios.get(`/read/${action_id}/${permission_id}`);
-  },
-  createOne: async (data: {
-    permissionActionDetails: PermissionActionInsert;
-  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
-    return permissionActionsAxios.post('/create', data);
+  createOne: async (
+    permissionActionDetails: PermissionActionInsert
+  ): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
+    return permissionActionsAxios.post('/create', permissionActionDetails);
   },
   updateOne: async (
     {

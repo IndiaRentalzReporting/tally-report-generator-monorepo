@@ -11,7 +11,7 @@ const Create: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createRole, isPending: loadingCreateRole } = useMutation(
     {
-      mutationFn: () => services.createOneX(roleData),
+      mutationFn: () => services.createOne(roleData),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
       },

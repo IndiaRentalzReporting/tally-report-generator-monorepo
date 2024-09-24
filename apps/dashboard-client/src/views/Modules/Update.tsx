@@ -15,8 +15,8 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [dataChanged, setDataChanged] = React.useState<boolean>(false);
 
   const { data: moduleData, isFetching: loadingModule } = useQuery({
-    queryFn: () => services.getOne(id),
-    select: (data) => data.data.module,
+    queryFn: () => services.read({ id }),
+    select: (data) => data.data.modules[0],
     queryKey: ['getOne', 'modules', id]
   });
 

@@ -17,7 +17,7 @@ const Read: React.FC = () => {
   const [grouping, setGrouping] = React.useState<GroupingState>(['Role Name']);
   const { data: allPermissions = [], isFetching: fetchingPermissions } =
     useQuery({
-      queryFn: () => services.getAll(),
+      queryFn: () => services.read(),
       select: (data) => data.data.permissions,
       queryKey: ['permissions', 'getAll']
     });
