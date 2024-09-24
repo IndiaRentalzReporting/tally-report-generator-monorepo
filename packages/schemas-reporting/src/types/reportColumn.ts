@@ -1,6 +1,6 @@
 import { ColumnTypeLiteral } from "./ColumnTypes"
-import { ColumnFormats } from "./format"
-import { ColumnOperation } from "./operation"
+import { ColumnFormats } from "./reportFormat"
+import { ColumnOperation } from "./reportOperation"
 
 
 //Select table.name as alias 
