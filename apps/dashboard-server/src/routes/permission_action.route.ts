@@ -17,7 +17,7 @@ const permissionActionRouter = Router();
 permissionActionRouter.get('/read', readAll);
 
 permissionActionRouter.get(
-  '/read/:id',
+  '/read/:action_id/:permission_id',
   validateSchema({
     params: PermissionActionSelectSchema.pick({
       action_id: true,
@@ -39,7 +39,7 @@ permissionActionRouter.post(
 );
 
 permissionActionRouter.post(
-  '/update/:id',
+  '/update/:action_id/:permission_id',
   validateSchema({
     body: PermissionActionSelectSchema.pick({
       action_id: true,
@@ -54,7 +54,7 @@ permissionActionRouter.post(
 );
 
 permissionActionRouter.delete(
-  '/delete/:id',
+  '/delete/:action_id/:permission_id',
   validateSchema({
     params: PermissionActionInsertSchema.pick({
       action_id: true,
