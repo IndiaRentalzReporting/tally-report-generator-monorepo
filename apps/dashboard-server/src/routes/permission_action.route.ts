@@ -3,7 +3,6 @@ import {
   createOne,
   readAll,
   updateOne,
-  readOne,
   deleteOne
 } from '../controller/permission_action.controller';
 import { validateSchema } from '@trg_package/middlewares';
@@ -14,19 +13,6 @@ import {
 
 const permissionActionRouter = Router();
 
-permissionActionRouter.get('/read', readAll);
-
-permissionActionRouter.get(
-  '/read/:action_id/:permission_id',
-  validateSchema({
-    params: PermissionActionSelectSchema.pick({
-      action_id: true,
-      permission_id: true
-    })
-  }),
-  readOne
-);
-
 permissionActionRouter.post(
   '/create',
   validateSchema({
@@ -36,6 +22,14 @@ permissionActionRouter.post(
     })
   }),
   createOne
+);
+
+permissionActionRouter.get(
+  '/read',
+  validateSchema({
+    query: PermissionActionSelectSchema.partial()
+  }),
+  readAll
 );
 
 permissionActionRouter.post(

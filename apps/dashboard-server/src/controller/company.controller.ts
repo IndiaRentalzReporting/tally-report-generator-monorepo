@@ -8,18 +8,19 @@ import {
 } from '@trg_package/schemas-tally/services';
 import { CompanyInsert, CompanySelect } from '@trg_package/schemas-tally/types';
 
-export const readOne = async (
-  req: Request<Pick<CompanySelect, 'guid'>>,
-  res: Response,
+export const readAll = async (
+  req: Request<object, Partial<CompanySelect>>,
+  res: Response<{ companies: Array<CompanySelect> }>,
   next: NextFunction
 ) => {
   try {
-    const company = await req.companyService.findOne({
-      guid: req.params.guid
+    const companies = await req.companyService.findMany({
+      ...req.query
     });
-    return res.json({ company });
+
+    return res.json({ companies });
   } catch (e) {
-    console.error("Couldn't fetch Company, Register It First");
+    console.error("Couldn't fetch all Companies");
     return next(e);
   }
 };
@@ -34,21 +35,6 @@ export const createOne = async (
     const company = await req.companyService.createOne(data);
     return res.json({ company });
   } catch (e) {
-    return next(e);
-  }
-};
-
-export const readAll = async (
-  req: Request,
-  res: Response<{ companies: Array<CompanySelect> }>,
-  next: NextFunction
-) => {
-  try {
-    const companies = await req.companyService.findMany();
-
-    return res.json({ companies });
-  } catch (e) {
-    console.error("Couldn't fetch all Companies");
     return next(e);
   }
 };

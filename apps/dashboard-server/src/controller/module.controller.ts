@@ -17,6 +17,21 @@ export const createOne = async (
   }
 };
 
+export const readAll = async (
+  req: Request<object, Partial<ModuleSelect>>,
+  res: Response<{ modules: ModuleSelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const modules = await req.moduleService.findMany({
+      ...req.query
+    });
+    return res.json({ modules });
+  } catch (e) {
+    return next(e);
+  }
+};
+
 export const updateOne = async (
   req: Request<Pick<ModuleSelect, 'id'>, object, ModuleInsert>,
   res: Response<{ module: ModuleSelect }>,
@@ -37,34 +52,6 @@ export const deleteOne = async (
 ) => {
   try {
     const module = await req.moduleService.deleteOne(req.params.id);
-    return res.json({ module });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readAll = async (
-  req: Request,
-  res: Response<{ modules: ModuleSelect[] }>,
-  next: NextFunction
-) => {
-  try {
-    const modules = await req.moduleService.findMany();
-    return res.json({ modules });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<ModuleSelect, 'id'>>,
-  res: Response<{ module: ModuleSelect }>,
-  next: NextFunction
-) => {
-  try {
-    const module = await req.moduleService.findOne({
-      id: req.params.id
-    });
     return res.json({ module });
   } catch (e) {
     return next(e);

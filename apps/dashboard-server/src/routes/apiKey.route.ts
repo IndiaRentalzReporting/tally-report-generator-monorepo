@@ -3,8 +3,7 @@ import {
   createOne,
   deleteOne,
   readAll,
-  updateOne,
-  readOne
+  updateOne
 } from '../controller/apiKey.controller';
 import { validateSchema } from '@trg_package/middlewares';
 import { ApiKeyInsertSchema } from '@trg_package/schemas-dashboard/types';
@@ -20,15 +19,12 @@ apiKeyRouter.post(
   }),
   createOne
 );
-apiKeyRouter.get('/read', readAll);
 apiKeyRouter.get(
-  '/read/:id',
+  '/read',
   validateSchema({
-    params: ApiKeyInsertSchema.pick({
-      id: true
-    })
+    query: ApiKeyInsertSchema.partial()
   }),
-  readOne
+  readAll
 );
 apiKeyRouter.patch(
   '/update/:id',

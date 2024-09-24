@@ -13,14 +13,6 @@ import {
 
 const permissionRouter = Router();
 
-permissionRouter.get(
-  '/read',
-  validateSchema({
-    query: PermissionSelectSchema.partial()
-  }),
-  readAll
-);
-
 permissionRouter.post(
   '/create',
   validateSchema({
@@ -30,6 +22,14 @@ permissionRouter.post(
     })
   }),
   createOne
+);
+
+permissionRouter.get(
+  '/read',
+  validateSchema({
+    query: PermissionSelectSchema.partial()
+  }),
+  readAll
 );
 
 permissionRouter.post(

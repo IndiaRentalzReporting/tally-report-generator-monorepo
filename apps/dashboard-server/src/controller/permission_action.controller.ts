@@ -4,36 +4,6 @@ import {
   PermissionActionInsert
 } from '@trg_package/schemas-dashboard/types';
 
-export const readAll = async (
-  req: Request,
-  res: Response<{ permissionActions: PermissionActionSelect[] }>,
-  next: NextFunction
-) => {
-  try {
-    const permissionActions = await req.permissionActionService.findMany();
-    res.json({ permissionActions });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<PermissionActionSelect, 'action_id' | 'permission_id'>>,
-  res: Response<{ permissionActions: PermissionActionSelect[] }>,
-  next: NextFunction
-) => {
-  try {
-    const { action_id, permission_id } = req.params;
-    const permissionActions = await req.permissionActionService.findMany({
-      action_id,
-      permission_id
-    });
-    res.json({ permissionActions });
-  } catch (e) {
-    return next(e);
-  }
-};
-
 export const createOne = async (
   req: Request<object, object, PermissionActionInsert>,
   res: Response<{ permissionAction: PermissionActionSelect }>,
@@ -46,6 +16,21 @@ export const createOne = async (
       permission_id
     });
     res.json({ permissionAction });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const readAll = async (
+  req: Request<object, Partial<PermissionActionSelect>>,
+  res: Response<{ permissionActions: PermissionActionSelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const permissionActions = await req.permissionActionService.findMany({
+      ...req.query
+    });
+    res.json({ permissionActions });
   } catch (e) {
     return next(e);
   }

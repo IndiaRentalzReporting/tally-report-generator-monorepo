@@ -3,8 +3,7 @@ import {
   createOne,
   deleteOne,
   readAll,
-  updateOne,
-  readOne
+  updateOne
 } from '../controller/action.controller';
 import { validateSchema } from '@trg_package/middlewares';
 import { ActionInsertSchema } from '@trg_package/schemas-dashboard/types';
@@ -20,15 +19,12 @@ actionRouter.post(
   }),
   createOne
 );
-actionRouter.get('/read', readAll);
 actionRouter.get(
-  '/read/:id',
+  '/read',
   validateSchema({
-    params: ActionInsertSchema.pick({
-      id: true
-    })
+    query: ActionInsertSchema.partial()
   }),
-  readOne
+  readAll
 );
 actionRouter.patch(
   '/update/:id',

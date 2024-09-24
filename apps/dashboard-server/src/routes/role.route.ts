@@ -3,7 +3,6 @@ import {
   createOne,
   readAll,
   updateOne,
-  readOne,
   deleteOne
 } from '../controller/role.controller';
 import { validateSchema } from '@trg_package/middlewares';
@@ -11,16 +10,6 @@ import { RoleInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const roleRouter = Router();
 
-roleRouter.get('/read', readAll);
-roleRouter.get(
-  '/read/:id',
-  validateSchema({
-    params: RoleInsertSchema.pick({
-      id: true
-    })
-  }),
-  readOne
-);
 roleRouter.post(
   '/create',
   validateSchema({
@@ -30,6 +19,15 @@ roleRouter.post(
   }),
   createOne
 );
+
+roleRouter.get(
+  '/read',
+  validateSchema({
+    query: RoleInsertSchema.partial()
+  }),
+  readAll
+);
+
 roleRouter.patch(
   '/update/:id',
   validateSchema({
@@ -42,6 +40,7 @@ roleRouter.patch(
   }),
   updateOne
 );
+
 roleRouter.delete(
   '/delete/:id',
   validateSchema({
