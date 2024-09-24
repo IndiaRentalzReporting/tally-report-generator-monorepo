@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { services } from './services';
+import { services } from '@/services/user';
 import {
   Card,
   CardContent,

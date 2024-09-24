@@ -17,6 +17,12 @@ const Create: React.FC = () => {
       mutationFn: () => {
         const permissions =
           createPermissionsUsingModulePermissions(modulePermissions);
+        permissions.map(({ module_id, action_ids }) =>
+          services.createOne({
+            module_id,
+            role_id: selectedRole
+          })
+        );
         return services.createMany({
           role_id: selectedRole,
           permissions

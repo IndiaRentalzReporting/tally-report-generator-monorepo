@@ -9,7 +9,7 @@ import {
   CardContent,
   Skeleton
 } from '@trg_package/components';
-import { services } from './services';
+import { services } from '@/services/permission';
 import { columns } from './columns';
 import { GroupingDataTable } from '@/components/composite/table/grouping-data-table';
 

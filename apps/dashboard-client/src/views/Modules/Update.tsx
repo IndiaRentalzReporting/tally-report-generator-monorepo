@@ -7,7 +7,7 @@ import React, {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Skeleton } from '@trg_package/components';
 import Fields from './Fields';
-import { services } from './services';
+import { services } from '@/services/module';
 import { State, initialState } from './interface';
 
 const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {

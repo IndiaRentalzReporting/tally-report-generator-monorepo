@@ -17,8 +17,8 @@ import {
   CardDescription,
   Card
 } from '@trg_package/components';
-import { services } from './services';
-import { services as roleServices } from '../Roles/services';
+import { services } from '@/services/user';
+import { services as roleServices } from '@/services/role';
 import { columnsWithSelection as columns } from './columns';
 
 const AssignRole: React.FC = () => {

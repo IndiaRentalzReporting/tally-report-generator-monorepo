@@ -17,9 +17,9 @@ import {
 } from '@trg_package/components';
 import { StateAsProps } from './interface';
 import { DataTable } from '@/components/composite';
-import { services as moduleService } from '../Modules/services';
-import { services as roleService } from '../Roles/services';
-import { services as actionService } from '../Actions/services';
+import { services as moduleService } from '@/services/module';
+import { services as roleService } from '@/services/role';
+import { services as actionService } from '@/services/action';
 
 interface ColumnData {
   module_name: ModuleSelect['name'];
