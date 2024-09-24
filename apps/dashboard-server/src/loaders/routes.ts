@@ -4,6 +4,7 @@ import userRouter from '../routes/user.route';
 import moduleRouter from '../routes/module.route';
 import actionRouter from '../routes/action.route';
 import permissionRouter from '../routes/permission.route';
+import permissionActionRouter from '../routes/permission_action.route';
 import {
   attachModuleActionData,
   attachPGDashboard,
@@ -23,6 +24,7 @@ const routesLoader = (app: Express) => {
   app.use('/api/v1/modules', moduleRouter);
   app.use('/api/v1/actions', actionRouter);
   app.use('/api/v1/permissions', permissionRouter);
+  app.use('/api/v1/permission_actions', permissionActionRouter);
 };
 
 export default routesLoader;
