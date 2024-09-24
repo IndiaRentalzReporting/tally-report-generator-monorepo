@@ -1,45 +1,24 @@
 import { Router } from 'express';
-import z from 'zod';
 import {
-  createMany,
   createOne,
+  deleteOne,
   readAll,
-  readAllOfRole,
-  updateMany,
-  updateOne,
-  readOne
+  updateOne
 } from '../controller/permission.controller';
 import { validateSchema } from '@trg_package/middlewares';
 import {
-  ModuleSelectSchema,
-  ActionSelectSchema,
-  RoleSelectSchema,
   PermissionSelectSchema,
   PermissionInsertSchema
 } from '@trg_package/schemas-dashboard/types';
 
 const permissionRouter = Router();
 
-permissionRouter.get('/read', readAll);
-
 permissionRouter.get(
-  '/read/:id',
+  '/read',
   validateSchema({
-    params: PermissionSelectSchema.pick({
-      id: true
-    })
+    query: PermissionSelectSchema.partial()
   }),
-  readOne
-);
-
-permissionRouter.get(
-  '/read/:role_id',
-  validateSchema({
-    params: PermissionSelectSchema.pick({
-      role_id: true
-    })
-  }),
-  readAllOfRole
+  readAll
 );
 
 permissionRouter.post(
@@ -51,22 +30,6 @@ permissionRouter.post(
     })
   }),
   createOne
-);
-
-permissionRouter.post(
-  '/create/many',
-  validateSchema({
-    body: z.object({
-      permissions: z.array(
-        z.object({
-          module_id: ModuleSelectSchema.shape.id,
-          action_ids: z.array(ActionSelectSchema.shape.id)
-        })
-      ),
-      role_id: RoleSelectSchema.shape.id
-    })
-  }),
-  createMany
 );
 
 permissionRouter.post(
@@ -83,21 +46,14 @@ permissionRouter.post(
   updateOne
 );
 
-permissionRouter.post(
-  '/update/many',
+permissionRouter.delete(
+  '/delete/:id',
   validateSchema({
-    body: z.object({
-      permissions: z.array(
-        z.object({
-          permission_id: PermissionSelectSchema.shape.id,
-          module_id: ModuleSelectSchema.shape.id,
-          action_ids: z.array(ActionSelectSchema.shape.id)
-        })
-      ),
-      role_id: RoleSelectSchema.shape.id
+    params: PermissionSelectSchema.pick({
+      id: true
     })
   }),
-  updateMany
+  deleteOne
 );
 
 export default permissionRouter;

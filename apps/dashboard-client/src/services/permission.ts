@@ -1,5 +1,6 @@
 import { AxiosPromise } from 'axios';
 import {
+  DetailedPermission,
   PermissionInsert,
   PermissionSelect
 } from '@trg_package/schemas-dashboard/types';
@@ -14,25 +15,23 @@ const permissionsAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
-    permissions: PermissionSelect[];
+  read: async (
+    query: Partial<PermissionSelect> = {}
+  ): AxiosPromise<{
+    permissions: DetailedPermission[];
   }> => {
-    return permissionsAxios.get('/read');
+    const queryString = new URLSearchParams(query as any).toString();
+    return permissionsAxios.get(`/read?${queryString}`);
   },
-  getOne: async (
-    id: PermissionSelect['id']
+  createOne: async (
+    permissionDetails: PermissionInsert
   ): AxiosPromise<{ permission: PermissionSelect }> => {
-    return permissionsAxios.get(`/read/${id}`);
-  },
-  createOne: async (data: {
-    permissionDetails: PermissionInsert;
-  }): AxiosPromise<{ permission: PermissionSelect }> => {
-    return permissionsAxios.post('/create', data);
+    return await permissionsAxios.post('/create', permissionDetails);
   },
   updateOne: async (
     id: PermissionSelect['id'],
     data: Partial<PermissionSelect>
-  ): AxiosPromise<PermissionSelect> => {
+  ): AxiosPromise<{ permission: PermissionSelect }> => {
     return permissionsAxios.patch(`/update/${id}`, data);
   },
   deleteOne: async (
