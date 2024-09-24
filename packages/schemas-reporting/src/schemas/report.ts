@@ -26,5 +26,5 @@ export const ReportSchema = pgTable("report",{
 
 export type ReportInsert = typeof ReportSchema.$inferInsert;
 export const ReportInsertSchema = createInsertSchema(ReportSchema);
-export const ReportSelectSchema = createSelectSchema(ReportSchema);
 export type ReportSelect = typeof ReportSchema.$inferSelect;
+export const ReportSelectSchema = createSelectSchema(ReportSchema);
