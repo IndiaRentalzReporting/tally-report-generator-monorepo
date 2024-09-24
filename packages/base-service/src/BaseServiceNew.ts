@@ -123,6 +123,36 @@ export class BaseServiceNew<
     }
   }
 
+  public async updateOneNew(
+    filterData: Partial<T['$inferSelect']>,
+    data: Partial<T['$inferInsert']>
+  ): Promise<T['$inferSelect']> {
+    try {
+      const keys = Object.keys(filterData) as Array<
+        keyof Partial<typeof this.schema.$inferSelect>
+      >;
+      const values = Object.values(filterData) as Array<any>;
+
+      const [entity] = await this.dbClient
+        .update(this.schema)
+        .set({ ...data })
+        .where(
+          and(
+            ...keys.map((key, index) => eq(this.schema[key], values[index])),
+            eq(this.schema.isReadonly, false)
+          )
+        )
+        .returning();
+
+      if (!entity) throw new UpdateError(this.entity, data);
+
+      return entity;
+    } catch (error) {
+      console.error(error);
+      throw new UpdateError(this.entity, data);
+    }
+  }
+
   public async updateOne(
     id: T['$inferSelect']['id'],
     data: Partial<T['$inferInsert']>
@@ -143,6 +173,34 @@ export class BaseServiceNew<
     }
   }
 
+  public async deleteOneNew(
+    filterData: Partial<T['$inferSelect']>
+  ): Promise<T['$inferSelect']> {
+    try {
+      const keys = Object.keys(filterData) as Array<
+        keyof Partial<typeof this.schema.$inferSelect>
+      >;
+      const values = Object.values(filterData) as Array<any>;
+
+      const [entity] = await this.dbClient
+        .delete(this.schema)
+        .where(
+          and(
+            ...keys.map((key, index) => eq(this.schema[key], values[index])),
+            eq(this.schema.isReadonly, false)
+          )
+        )
+        .returning();
+
+      if (!entity) throw new DeleteError(this.entity, filterData);
+
+      return entity;
+    } catch (error) {
+      console.error(error);
+      throw new DeleteError(this.entity, filterData);
+    }
+  }
+
   public async deleteOne(
     id: T['$inferSelect']['id']
   ): Promise<T['$inferSelect']> {
@@ -152,12 +210,12 @@ export class BaseServiceNew<
         .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
         .returning();
 
-      if (!entity) throw new DeleteError(this.entity, id);
+      if (!entity) throw new DeleteError(this.entity, { id });
 
       return entity;
     } catch (error) {
       console.error(error);
-      throw new DeleteError(this.entity, id);
+      throw new DeleteError(this.entity, { id });
     }
   }
 }
