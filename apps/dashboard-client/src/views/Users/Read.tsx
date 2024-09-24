@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { services } from './services';
+import { services } from '@/services/user';
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import { columns } from './columns';
 
 const Create: React.FC = () => {
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => services.getAll(),
+    queryFn: () => services.read(),
     select: (data) => data.data.users,
     queryKey: ['users', 'getAll']
   });

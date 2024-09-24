@@ -6,26 +6,15 @@ import {
 import crypto from 'crypto';
 
 export const readAll = async (
-  req: Request,
+  req: Request<object, Partial<ApiKeySelect>>,
   res: Response<{ apiKeys: ApiKeySelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const apiKeys = await req.apiKeyService.findMany();
+    const apiKeys = await req.apiKeyService.findMany({
+      ...req.query
+    });
     return res.json({ apiKeys });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<ApiKeySelect, 'id'>>,
-  res: Response<{ apiKey: ApiKeySelect }>,
-  next: NextFunction
-) => {
-  try {
-    const apiKey = await req.apiKeyService.findOne({ id: req.params.id });
-    return res.json({ apiKey });
   } catch (e) {
     return next(e);
   }

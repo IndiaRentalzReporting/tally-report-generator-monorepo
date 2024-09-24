@@ -34,13 +34,13 @@ const LedgerColumns = {
   openingBalance: doublePrecision('openingBalance')
 };
 
-export const LedgerSchema = pgTable('tally_ledger', {
-  ...TallyCommonSchema,
+export const LedgerSchema = pgTable('tallyLedgers', {
+  ...TallyCommonSchema(),
   ...LedgerColumns
 });
 
-export const LedgerTempSchema = pgTable('temp_tally_ledger', {
-  ...TallyCommonSchema,
+export const LedgerTempSchema = pgTable('tempTallyLedgers', {
+  ...TallyCommonSchema(),
   ...LedgerColumns
 });
 

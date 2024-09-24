@@ -8,6 +8,7 @@ export const attachPGDashboard = async (
   res: Response,
   next: NextFunction
 ) => {
+  if (req.dashboardConnection && req.dashboardDb) return next();
   try {
     if (!!req.user) {
       const { db_name, db_username, db_password } = req.user.tenant;

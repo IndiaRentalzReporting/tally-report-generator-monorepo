@@ -8,12 +8,7 @@ import {
   StockGroupInsertSchema,
   StockItemInsertSchema
 } from '@trg_package/schemas-tally/types';
-import {
-  createOne,
-  readAll,
-  readOne,
-  syncData
-} from '../controller/company.controller';
+import { createOne, readAll, syncData } from '../controller/company.controller';
 import z, { any, AnyZodObject, ZodArray } from 'zod';
 
 const companyRouter = Router();
@@ -26,13 +21,12 @@ companyRouter.post(
   createOne
 );
 
-companyRouter.get('/read', readAll);
 companyRouter.get(
-  '/verify/:guid',
+  '/read',
   validateSchema({
-    params: CompanyInsertSchema.pick({ guid: true })
+    query: CompanyInsertSchema.partial()
   }),
-  readOne
+  readAll
 );
 
 companyRouter.post(

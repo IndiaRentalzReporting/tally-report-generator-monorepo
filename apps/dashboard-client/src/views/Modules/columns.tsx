@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
-import { services } from './services';
+import { services } from '@/services/module';
 import { Button, Else, If, Then } from '@trg_package/components';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { State } from './interface';

@@ -4,7 +4,8 @@ import {
   ModuleService,
   ActionService,
   PermissionService,
-  ApiKeyService
+  ApiKeyService,
+  PermissionActionService
 } from '@trg_package/schemas-dashboard/services';
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
@@ -23,7 +24,8 @@ export const attachServices = (
   req.moduleService = new ModuleService(dashboardDb);
   req.actionService = new ActionService(dashboardDb);
   req.permissionService = new PermissionService(dashboardDb);
+  req.permissionActionService = new PermissionActionService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
-  req.companyService = new CompanyService(dashboardDb);
+  req.companyService = new CompanyService(dashboardDb as any);
   next();
 };

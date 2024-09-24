@@ -17,8 +17,8 @@ import {
   CardDescription,
   Card
 } from '@trg_package/components';
-import { services } from './services';
-import { services as roleServices } from '../Roles/services';
+import { services } from '@/services/user';
+import { services as roleServices } from '@/services/role';
 import { columnsWithSelection as columns } from './columns';
 
 const AssignRole: React.FC = () => {
@@ -26,13 +26,13 @@ const AssignRole: React.FC = () => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
   const { data: allUsers = [] } = useQuery({
-    queryFn: () => services.getAll(),
+    queryFn: () => services.read(),
     select: (data) => data.data.users.filter((user) => !user.role),
     queryKey: ['users', 'getAll']
   });
 
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
-    queryFn: async () => roleServices.getAll(),
+    queryFn: async () => roleServices.read(),
     select: (data) => data.data.roles,
     queryKey: ['roles', 'getAll']
   });

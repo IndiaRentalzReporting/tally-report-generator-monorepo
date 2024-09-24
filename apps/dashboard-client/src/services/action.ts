@@ -1,5 +1,8 @@
 import { AxiosPromise } from 'axios';
-import { ActionSelect } from '@trg_package/schemas-dashboard/types';
+import {
+  ActionInsert,
+  ActionSelect
+} from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/axios-client';
 
 const actionsAxios = createAxiosClient(
@@ -11,24 +14,20 @@ const actionsAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
+  read: async (
+    query: Partial<ActionSelect> = {}
+  ): AxiosPromise<{
     actions: ActionSelect[];
   }> => {
-    return actionsAxios.get('/read');
-  },
-  getOne: async (
-    id: ActionSelect['id']
-  ): AxiosPromise<{
-    action: ActionSelect;
-  }> => {
-    return actionsAxios.get(`/read/${id}`);
+    const queryString = new URLSearchParams(query as any).toString();
+    return actionsAxios.get(`/read?${queryString}`);
   },
   createOne: async (
-    data: Partial<ActionSelect>
+    data: ActionInsert
   ): AxiosPromise<{
     action: ActionSelect;
   }> => {
-    return actionsAxios.post(`/create/`, data);
+    return actionsAxios.post(`/create`, data);
   },
   updateOne: async (
     id: ActionSelect['id'],

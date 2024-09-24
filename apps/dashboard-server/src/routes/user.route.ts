@@ -1,24 +1,16 @@
 import { Router } from 'express';
-import {
-  readOne,
-  readAll,
-  deleteOne,
-  updateOne
-} from '../controller/user.controller';
+import { readAll, deleteOne, updateOne } from '../controller/user.controller';
 import { validateSchema } from '@trg_package/middlewares';
 import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const userRouter = Router();
 
-userRouter.get('/read', readAll);
 userRouter.get(
-  '/read/:id',
+  '/read',
   validateSchema({
-    params: UserInsertSchema.pick({
-      id: true
-    })
+    query: UserInsertSchema.partial()
   }),
-  readOne
+  readAll
 );
 userRouter.patch(
   '/update/:id',

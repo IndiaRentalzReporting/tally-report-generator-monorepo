@@ -1,10 +1,4 @@
-import {
-  pgTable,
-  uuid,
-  varchar,
-  integer,
-  timestamp
-} from 'drizzle-orm/pg-core';
+import { pgTable, varchar } from 'drizzle-orm/pg-core';
 import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
@@ -13,13 +7,13 @@ const StockCatgoryColumns = {
   parent: varchar('parent', { length: 500 })
 };
 
-export const StockCategorySchema = pgTable('tally_stock_category', {
-  ...TallyCommonSchema,
+export const StockCategorySchema = pgTable('tallyStockCategories', {
+  ...TallyCommonSchema(),
   ...StockCatgoryColumns
 });
 
-export const StockCategoryTempSchema = pgTable('temp_tally_stock_category', {
-  ...TallyCommonSchema,
+export const StockCategoryTempSchema = pgTable('tempTallyStockCategories', {
+  ...TallyCommonSchema(),
   ...StockCatgoryColumns
 });
 

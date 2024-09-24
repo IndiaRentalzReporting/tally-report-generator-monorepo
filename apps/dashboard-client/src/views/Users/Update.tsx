@@ -8,7 +8,7 @@ import React, {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
 import { Button, Input, Label, Skeleton } from '@trg_package/components';
-import { services } from './services';
+import { services } from '@/services/user';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 
@@ -18,8 +18,8 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const [dataUpdated, setDataUpdated] = useState<boolean>(false);
 
   const { data: userData, isFetching: loadingUser } = useQuery({
-    queryFn: () => services.getOne(id),
-    select: (data) => data.data.user,
+    queryFn: () => services.read({ id }),
+    select: (data) => data.data.users[0],
     queryKey: ['users', 'getOne', id]
   });
 

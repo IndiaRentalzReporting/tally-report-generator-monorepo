@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@trg_package/components';
-import { services } from './services';
+import { services } from '@/services/module';
 import Fields from './Fields';
 import { State, initialState } from './interface';
 // import TableCreation, { IColumnDetails } from './TableCreation';

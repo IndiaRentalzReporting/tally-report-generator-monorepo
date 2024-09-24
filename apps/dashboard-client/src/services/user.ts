@@ -1,5 +1,9 @@
 import { AxiosPromise } from 'axios';
-import { DetailedUser, UserSelect } from '@trg_package/schemas-dashboard/types';
+import {
+  DetailedUser,
+  UserInsert,
+  UserSelect
+} from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/axios-client';
 
 const usersAxios = createAxiosClient(
@@ -11,17 +15,20 @@ const usersAxios = createAxiosClient(
 );
 
 export const services = {
-  getAll: async (): AxiosPromise<{
+  read: async (
+    query: Partial<UserSelect> = {}
+  ): AxiosPromise<{
     users: DetailedUser[];
   }> => {
-    return usersAxios.get('/read');
+    const queryString = new URLSearchParams(query as any).toString();
+    return usersAxios.get(`/read?${queryString}`);
   },
-  getOne: async (
-    id: UserSelect['id']
+  createOne: async (
+    data: UserInsert
   ): AxiosPromise<{
-    user: DetailedUser;
+    user: UserSelect;
   }> => {
-    return usersAxios.get(`/read/${id}`);
+    return usersAxios.post(`/create`, data);
   },
   updateOne: async (
     id: UserSelect['id'],

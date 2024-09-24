@@ -9,12 +9,12 @@ import {
   CardTitle,
   Skeleton
 } from '@trg_package/components';
-import { services } from './services';
+import { services } from '@/services/module';
 import { columns } from './columns';
 
 const ReadModule: React.FC = () => {
   const { data: allModules = [], isFetching: fetchingModules } = useQuery({
-    queryFn: async () => services.getAll(),
+    queryFn: async () => services.read(),
     select: (data) => data.data.modules,
     queryKey: ['modules', 'getAll']
   });

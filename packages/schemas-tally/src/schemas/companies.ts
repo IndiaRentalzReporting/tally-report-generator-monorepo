@@ -1,8 +1,6 @@
 import { pgTable, varchar, integer } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-
-const { companyId, ...SchemaWithoutCompany } = TallyCommonSchema;
+import { TallyCommonSchema } from './base';
 
 const CompanyColumns = {
   companyName: varchar('companyName', { length: 200 }).notNull(),
@@ -13,13 +11,19 @@ const CompanyColumns = {
   voucherMasterID: integer('voucherMasterID').notNull()
 };
 
-export const CompanySchema = pgTable('tally_company', {
-  ...SchemaWithoutCompany,
+export const CompanySchema = pgTable('tallyCompanies', {
+  ...(() => {
+    const { companyId, ...rest } = TallyCommonSchema();
+    return rest;
+  })(),
   ...CompanyColumns
 });
 
-export const CompanyTempSchema = pgTable('temp_tally_company', {
-  ...SchemaWithoutCompany,
+export const CompanyTempSchema = pgTable('tempTallyCompanies', {
+  ...(() => {
+    const { companyId, ...rest } = TallyCommonSchema();
+    return rest;
+  })(),
   ...CompanyColumns
 });
 

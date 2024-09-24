@@ -9,12 +9,12 @@ import {
   CardContent,
   Skeleton
 } from '@trg_package/components';
-import { services } from './services';
+import { services } from '@/services/action';
 import { columns } from './columns';
 
 const Read: React.FC = () => {
   const { data: allActions = [], isFetching: fetchingActions } = useQuery({
-    queryFn: () => services.getAll(),
+    queryFn: () => services.read(),
     select: (data) => data.data.actions,
     queryKey: ['actions', 'getAll']
   });

@@ -3,7 +3,7 @@ import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 import { createInsertSchema } from 'drizzle-zod';
 
 export const ApiKeySchema = pgTable('apiKeys', {
-  ...BaseEntitySchema,
+  ...BaseEntitySchema(),
   key: varchar('key', { length: 64 }).unique().notNull()
 });
 

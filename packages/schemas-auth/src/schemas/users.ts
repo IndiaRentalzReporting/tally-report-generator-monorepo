@@ -3,7 +3,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 import { TenantSchema } from './tenants';
 
-const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
+const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema();
 
 export const UserSchema = pgTable('users', {
   ...BaseEntitySchemaWithoutName,

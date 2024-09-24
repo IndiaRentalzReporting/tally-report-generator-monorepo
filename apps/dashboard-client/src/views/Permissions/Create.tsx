@@ -1,6 +1,8 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler } from 'react';
-import { services } from './services';
+import { services } from '@/services/permission';
+import { services as actionService } from '@/services/action';
+import { services as permission_actionService } from '@/services/permission_action';
 import { Button } from '@trg_package/components';
 import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
 import Fields from './Fields';
@@ -14,13 +16,26 @@ const Create: React.FC = () => {
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
     useMutation({
-      mutationFn: () => {
+      mutationFn: async () => {
         const permissions =
           createPermissionsUsingModulePermissions(modulePermissions);
-        return services.createMany({
-          role_id: selectedRole,
-          permissions
-        });
+        for (let { module_id, action_ids } of permissions) {
+          const {
+            data: {
+              permission: { id: permission_id }
+            }
+          } = await services.createOne({
+            module_id,
+            role_id: selectedRole
+          });
+          for (let action_id of action_ids) {
+            await actionService.read({ id: action_id });
+            await permission_actionService.createOne({
+              permission_id,
+              action_id
+            });
+          }
+        }
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });

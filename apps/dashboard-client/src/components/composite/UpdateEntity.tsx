@@ -28,7 +28,7 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
     action: 'Update'
   });
 
-  const Component = lazy(() => import(`../../views/${module}/Update.tsx`));
+  const Component = lazy(() => import(`../../views/${module}/Update`));
   return (
     <If condition={!!isEditAllowed}>
       <Then>

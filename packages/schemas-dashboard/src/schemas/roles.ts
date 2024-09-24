@@ -3,7 +3,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
 export const RoleSchema = pgTable('roles', {
-  ...BaseEntitySchema
+  ...BaseEntitySchema()
 });
 
 export type RoleInsert = typeof RoleSchema.$inferInsert;
