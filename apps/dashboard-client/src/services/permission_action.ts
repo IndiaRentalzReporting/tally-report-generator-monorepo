@@ -5,19 +5,19 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/axios-client';
 
-const permissionActionAxios = createAxiosClient(
+const permissionActionsAxios = createAxiosClient(
   { dashboard: true },
   {
-    baseURL: '/v1/permissionAction',
+    baseURL: '/v1/permission_actions',
     withCredentials: true
   }
 );
 
 export const services = {
   getAll: async (): AxiosPromise<{
-    permissionAction: PermissionActionSelect[];
+    permissionActions: PermissionActionSelect[];
   }> => {
-    return permissionActionAxios.get('/read');
+    return permissionActionsAxios.get('/read');
   },
   getOne: async ({
     action_id,
@@ -25,18 +25,28 @@ export const services = {
   }: {
     action_id: PermissionActionSelect['action_id'];
     permission_id: PermissionActionSelect['permission_id'];
-  }): AxiosPromise<{
-    permissionAction: PermissionActionSelect[];
-  }> => {
-    return permissionActionAxios.get(`/read/${action_id}/${permission_id}`);
+  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
+    return permissionActionsAxios.get(`/read/${action_id}/${permission_id}`);
   },
   createOne: async (data: {
-    action_id: PermissionActionInsert['action_id'];
-    permission_id: PermissionActionInsert['permission_id'];
-  }): AxiosPromise<{
-    permission: PermissionActionSelect;
-  }> => {
-    return permissionActionAxios.post('/create', data);
+    permissionActionDetails: PermissionActionInsert;
+  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
+    return permissionActionsAxios.post('/create', data);
+  },
+  updateOne: async (
+    {
+      action_id,
+      permission_id
+    }: {
+      action_id: PermissionActionSelect['action_id'];
+      permission_id: PermissionActionSelect['permission_id'];
+    },
+    data: Partial<PermissionActionSelect>
+  ): AxiosPromise<PermissionActionSelect> => {
+    return permissionActionsAxios.patch(
+      `/update/${action_id}/${permission_id}`,
+      data
+    );
   },
   deleteOne: async ({
     action_id,
@@ -44,10 +54,8 @@ export const services = {
   }: {
     action_id: PermissionActionSelect['action_id'];
     permission_id: PermissionActionSelect['permission_id'];
-  }): AxiosPromise<{
-    permission: PermissionActionSelect;
-  }> => {
-    return permissionActionAxios.delete(
+  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => {
+    return permissionActionsAxios.delete(
       `/delete/${action_id}/${permission_id}`
     );
   }
