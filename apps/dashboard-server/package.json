@@ -36,6 +36,7 @@
     "@trg_package/middlewares": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
+    "@trg_package/schemas-reporting": "*",
     "@trg_package/schemas-tally": "*",
     "@trg_package/utils": "*",
     "axios": "^1.7.7",
