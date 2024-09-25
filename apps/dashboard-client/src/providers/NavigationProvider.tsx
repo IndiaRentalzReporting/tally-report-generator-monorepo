@@ -17,7 +17,7 @@ export interface NavItemWithChildren extends NavItem {
 
 export interface NavigationProviderState {
   navigation: NavItemWithChildren[];
-  currentModule: string;
+  currentModule: string | undefined;
 }
 
 const initialState: NavigationProviderState = {

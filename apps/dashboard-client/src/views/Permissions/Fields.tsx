@@ -17,9 +17,9 @@ import {
 } from '@trg_package/components';
 import { StateAsProps } from './interface';
 import { DataTable } from '@/components/composite';
-import { services as moduleService } from '../Modules/services';
-import { services as roleService } from '../Roles/services';
-import { services as actionService } from '../Actions/services';
+import { services as moduleService } from '@/services/module';
+import { services as roleService } from '@/services/role';
+import { services as actionService } from '@/services/action';
 
 interface ColumnData {
   module_name: ModuleSelect['name'];
@@ -36,7 +36,7 @@ const Fields: React.FC<StateAsProps> = ({
   const [tableData, setTableData] = React.useState<Array<ColumnData>>([]);
 
   const { data: modules, isFetching: fetchingModules } = useQuery({
-    queryFn: () => moduleService.getAll(),
+    queryFn: () => moduleService.read(),
     select(data) {
       return data.data.modules;
     },
@@ -55,7 +55,7 @@ const Fields: React.FC<StateAsProps> = ({
 
   const { data: allRolesWithNoPermission, isFetching: fetchingRoles } =
     useQuery({
-      queryFn: async () => roleService.getAll(),
+      queryFn: async () => roleService.read(),
       select: (data) =>
         data.data.roles.filter((r) =>
           !role ? r.permission.length === 0 : true
@@ -78,7 +78,7 @@ const Fields: React.FC<StateAsProps> = ({
   };
 
   const { data: actions, isFetching: fetchingActions } = useQuery({
-    queryFn: () => actionService.getAll(),
+    queryFn: () => actionService.read(),
     select(data) {
       return data.data.actions;
     },

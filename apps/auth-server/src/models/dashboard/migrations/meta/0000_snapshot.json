@@ -1,5 +1,5 @@
 {
-  "id": "57eb691c-0c14-4de1-a5e5-cdf6fd1fd56b",
+  "id": "4dd6e5c2-39ed-4fdf-9e6e-624474cdb3e9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -634,8 +634,113 @@
         }
       }
     },
-    "public.tally_company": {
-      "name": "tally_company",
+    "public.user_tallyCompany": {
+      "name": "user_tallyCompany",
+      "schema": "",
+      "columns": {
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "isReadonly": {
+          "name": "isReadonly",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "approvedAt": {
+          "name": "approvedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tallyCompany_id": {
+          "name": "tallyCompany_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_tallyCompany_user_id_users_id_fk": {
+          "name": "user_tallyCompany_user_id_users_id_fk",
+          "tableFrom": "user_tallyCompany",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "user_tallyCompany_tallyCompany_id_tallyCompanies_id_fk": {
+          "name": "user_tallyCompany_tallyCompany_id_tallyCompanies_id_fk",
+          "tableFrom": "user_tallyCompany",
+          "tableTo": "tallyCompanies",
+          "columnsFrom": [
+            "tallyCompany_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "user_tallyCompany_user_id_tallyCompany_id_pk": {
+          "name": "user_tallyCompany_user_id_tallyCompany_id_pk",
+          "columns": [
+            "user_id",
+            "tallyCompany_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.tallyCompanies": {
+      "name": "tallyCompanies",
       "schema": "",
       "columns": {
         "id": {
@@ -716,8 +821,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_company_masterID_unique": {
-          "name": "tally_company_masterID_unique",
+        "tallyCompanies_masterID_unique": {
+          "name": "tallyCompanies_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -725,8 +830,8 @@
         }
       }
     },
-    "public.temp_tally_company": {
-      "name": "temp_tally_company",
+    "public.tempTallyCompanies": {
+      "name": "tempTallyCompanies",
       "schema": "",
       "columns": {
         "id": {
@@ -807,8 +912,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_company_masterID_unique": {
-          "name": "temp_tally_company_masterID_unique",
+        "tempTallyCompanies_masterID_unique": {
+          "name": "tempTallyCompanies_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -816,8 +921,8 @@
         }
       }
     },
-    "public.tally_group": {
-      "name": "tally_group",
+    "public.tallyGroups": {
+      "name": "tallyGroups",
       "schema": "",
       "columns": {
         "id": {
@@ -898,8 +1003,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_group_masterID_unique": {
-          "name": "tally_group_masterID_unique",
+        "tallyGroups_masterID_unique": {
+          "name": "tallyGroups_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -907,8 +1012,8 @@
         }
       }
     },
-    "public.temp_tally_group": {
-      "name": "temp_tally_group",
+    "public.tempTallyGroups": {
+      "name": "tempTallyGroups",
       "schema": "",
       "columns": {
         "id": {
@@ -989,8 +1094,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_group_masterID_unique": {
-          "name": "temp_tally_group_masterID_unique",
+        "tempTallyGroups_masterID_unique": {
+          "name": "tempTallyGroups_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -998,8 +1103,8 @@
         }
       }
     },
-    "public.tally_ledger": {
-      "name": "tally_ledger",
+    "public.tallyLedgers": {
+      "name": "tallyLedgers",
       "schema": "",
       "columns": {
         "id": {
@@ -1182,8 +1287,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_ledger_masterID_unique": {
-          "name": "tally_ledger_masterID_unique",
+        "tallyLedgers_masterID_unique": {
+          "name": "tallyLedgers_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1191,8 +1296,8 @@
         }
       }
     },
-    "public.temp_tally_ledger": {
-      "name": "temp_tally_ledger",
+    "public.tempTallyLedgers": {
+      "name": "tempTallyLedgers",
       "schema": "",
       "columns": {
         "id": {
@@ -1375,8 +1480,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_ledger_masterID_unique": {
-          "name": "temp_tally_ledger_masterID_unique",
+        "tempTallyLedgers_masterID_unique": {
+          "name": "tempTallyLedgers_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1384,8 +1489,8 @@
         }
       }
     },
-    "public.tally_stock_category": {
-      "name": "tally_stock_category",
+    "public.tallyStockCategories": {
+      "name": "tallyStockCategories",
       "schema": "",
       "columns": {
         "id": {
@@ -1448,8 +1553,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_stock_category_masterID_unique": {
-          "name": "tally_stock_category_masterID_unique",
+        "tallyStockCategories_masterID_unique": {
+          "name": "tallyStockCategories_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1457,8 +1562,8 @@
         }
       }
     },
-    "public.temp_tally_stock_category": {
-      "name": "temp_tally_stock_category",
+    "public.tempTallyStockCategories": {
+      "name": "tempTallyStockCategories",
       "schema": "",
       "columns": {
         "id": {
@@ -1521,8 +1626,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_stock_category_masterID_unique": {
-          "name": "temp_tally_stock_category_masterID_unique",
+        "tempTallyStockCategories_masterID_unique": {
+          "name": "tempTallyStockCategories_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1530,8 +1635,8 @@
         }
       }
     },
-    "public.tally_stock_group": {
-      "name": "tally_stock_group",
+    "public.tallyStockGroups": {
+      "name": "tallyStockGroups",
       "schema": "",
       "columns": {
         "id": {
@@ -1594,8 +1699,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_stock_group_masterID_unique": {
-          "name": "tally_stock_group_masterID_unique",
+        "tallyStockGroups_masterID_unique": {
+          "name": "tallyStockGroups_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1603,8 +1708,8 @@
         }
       }
     },
-    "public.temp_tally_stock_group": {
-      "name": "temp_tally_stock_group",
+    "public.tempTallyStockGroups": {
+      "name": "tempTallyStockGroups",
       "schema": "",
       "columns": {
         "id": {
@@ -1667,8 +1772,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_stock_group_masterID_unique": {
-          "name": "temp_tally_stock_group_masterID_unique",
+        "tempTallyStockGroups_masterID_unique": {
+          "name": "tempTallyStockGroups_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1676,8 +1781,8 @@
         }
       }
     },
-    "public.tally_stock_item": {
-      "name": "tally_stock_item",
+    "public.tallyStockItems": {
+      "name": "tallyStockItems",
       "schema": "",
       "columns": {
         "id": {
@@ -1776,8 +1881,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "tally_stock_item_masterID_unique": {
-          "name": "tally_stock_item_masterID_unique",
+        "tallyStockItems_masterID_unique": {
+          "name": "tallyStockItems_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"
@@ -1785,8 +1890,8 @@
         }
       }
     },
-    "public.temp_tally_stock_item": {
-      "name": "temp_tally_stock_item",
+    "public.tempTallyStockItems": {
+      "name": "tempTallyStockItems",
       "schema": "",
       "columns": {
         "id": {
@@ -1885,8 +1990,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "temp_tally_stock_item_masterID_unique": {
-          "name": "temp_tally_stock_item_masterID_unique",
+        "tempTallyStockItems_masterID_unique": {
+          "name": "tempTallyStockItems_masterID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "masterID"

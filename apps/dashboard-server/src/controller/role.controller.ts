@@ -1,27 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { RoleInsert, RoleSelect } from '@trg_package/schemas-dashboard/types';
+import {
+  RoleInsert,
+  RoleSelect,
+  RoleWithPermission
+} from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request,
-  res: Response<{ roles: RoleSelect[] }>,
+  req: Request<object, Partial<RoleSelect>>,
+  res: Response<{ roles: RoleWithPermission[] }>,
   next: NextFunction
 ) => {
   try {
-    const roles = await req.roleService.findMany();
+    const roles = (await req.roleService.findMany({
+      ...req.query
+    })) as RoleWithPermission[];
     return res.json({ roles });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<RoleSelect, 'id'>>,
-  res: Response<{ role: any }>,
-  next: NextFunction
-) => {
-  try {
-    const role = await req.roleService.findOne({ id: req.params.id });
-    return res.json({ role });
   } catch (e) {
     return next(e);
   }

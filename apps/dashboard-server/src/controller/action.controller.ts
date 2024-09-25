@@ -5,26 +5,15 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request,
+  req: Request<object, Partial<ActionSelect>>,
   res: Response<{ actions: ActionSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const actions = await req.actionService.findMany();
+    const actions = await req.actionService.findMany({
+      ...req.query
+    });
     return res.json({ actions });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<ActionSelect, 'id'>>,
-  res: Response<{ action: ActionSelect }>,
-  next: NextFunction
-) => {
-  try {
-    const action = await req.actionService.findOne({ id: req.params.id });
-    return res.json({ action });
   } catch (e) {
     return next(e);
   }

@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
-import { services } from './services';
+import { services } from '@/services/user';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { Button, Checkbox, When } from '@trg_package/components';
 

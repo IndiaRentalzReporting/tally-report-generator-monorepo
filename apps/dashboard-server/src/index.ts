@@ -7,7 +7,8 @@ import type {
   ModuleService,
   ActionService,
   PermissionService,
-  ApiKeyService
+  ApiKeyService,
+  PermissionActionService
 } from '@trg_package/schemas-dashboard/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
@@ -38,11 +39,12 @@ declare global {
       moduleService: ModuleService;
       actionService: ActionService;
       permissionService: PermissionService;
+      permissionActionService: PermissionActionService;
       apiKeyService: ApiKeyService;
       companyService: CompanyService;
 
-      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas>;
-      dashboardConnection: Sql<{}>;
+      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
+      dashboardConnection: Sql<{}> | null;
     }
   }
 }

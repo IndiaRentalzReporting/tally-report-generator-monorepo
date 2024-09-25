@@ -3,29 +3,18 @@ import {
   ApiKeyInsert,
   ApiKeySelect
 } from '@trg_package/schemas-dashboard/types';
-import crypto from 'crypto';
+import { encrypt } from '../utils/crypto';
 
 export const readAll = async (
-  req: Request,
+  req: Request<object, Partial<ApiKeySelect>>,
   res: Response<{ apiKeys: ApiKeySelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const apiKeys = await req.apiKeyService.findMany();
+    const apiKeys = await req.apiKeyService.findMany({
+      ...req.query
+    });
     return res.json({ apiKeys });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<ApiKeySelect, 'id'>>,
-  res: Response<{ apiKey: ApiKeySelect }>,
-  next: NextFunction
-) => {
-  try {
-    const apiKey = await req.apiKeyService.findOne({ id: req.params.id });
-    return res.json({ apiKey });
   } catch (e) {
     return next(e);
   }
@@ -63,8 +52,11 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const key = crypto.randomBytes(32).toString('hex');
     const data = req.body;
+    const { tenant } = req.user!;
+    const encryptedData = encrypt(JSON.stringify({ tenant }));
+    const key = Buffer.from(encryptedData).toString('base64');
+
     const apiKey = await req.apiKeyService.createOne({
       ...data,
       key

@@ -7,3 +7,4 @@ export { ActionSchema } from './actions';
 export { ModuleSchema } from './modules';
 export * from './base';
 export { ApiKeySchema } from './apiKeys';
+export { UserTallyCompanySchema } from './user_tallyCompany';

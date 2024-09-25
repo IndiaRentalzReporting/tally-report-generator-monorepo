@@ -4,7 +4,7 @@ import { RoleSchema } from './roles';
 import { ModuleSchema } from './modules';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 
-const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema;
+const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema();
 
 export const PermissionSchema = pgTable('permissions', {
   ...BaseEntitySchemaWithoutName,

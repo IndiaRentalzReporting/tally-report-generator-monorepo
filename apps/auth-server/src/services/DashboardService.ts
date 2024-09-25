@@ -44,39 +44,42 @@ class DashboardService {
 
   public async migrateAndSeed(userData: UserInsert) {
     migrateDashboardSchema(this.URL);
-    await this.seedDatabase(userData);
-  }
-
-  private async seedDatabase(userData: UserInsert) {
-    await this.createAdmin(userData);
-    await this.seedAction();
-    await this.seedModules();
+    await this.dashboardClient.transaction(async (trx) => {
+      await this.createAdmin(userData, trx);
+      await this.seedAction(trx);
+      await this.seedModules(trx);
+    });
     await this.terminateConnection();
   }
 
-  private async seedAction() {
-    const ASI = new ActionService(this.dashboardClient);
+  private async seedAction(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
+    const ASI = new ActionService(trx);
     for (const action of actions) {
       await ASI.createOne(action);
     }
   }
 
-  private async seedModules() {
-    const MSI = new ModuleService(this.dashboardClient);
+  private async seedModules(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
+    const MSI = new ModuleService(trx);
     for (const module of modules) {
       await MSI.createOne(module);
     }
   }
 
-  private async createAdmin(data: UserInsert): Promise<UserSelect> {
-    const role_id = await this.seedRole();
-    const USI = new UserService(this.dashboardClient);
+  private async createAdmin(
+    data: UserInsert,
+    trx: PostgresJsDatabase<typeof dashboardSchemas>
+  ): Promise<UserSelect> {
+    const role_id = await this.seedRole(trx);
+    const USI = new UserService(trx);
     const admin = await USI.createOne({ ...data, role_id, isReadonly: true });
     return admin;
   }
 
-  private async seedRole(): Promise<RoleSelect['id']> {
-    const RSI = new RoleService(this.dashboardClient);
+  private async seedRole(
+    trx: PostgresJsDatabase<typeof dashboardSchemas>
+  ): Promise<RoleSelect['id']> {
+    const RSI = new RoleService(trx);
     const role = await RSI.createOne(superUserRole);
     return role.id;
   }

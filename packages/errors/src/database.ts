@@ -42,8 +42,11 @@ export class UpdateError extends DatabaseError {
 }
 
 export class DeleteError extends DatabaseError {
-  constructor(entity: string, id: string) {
-    super(`Failed to delete ${entity} with id: ${id}`, StatusCodes.BAD_REQUEST);
+  constructor(entity: string, data: Object) {
+    super(
+      `Failed to delete ${entity} with data: ${JSON.stringify(data)}`,
+      StatusCodes.BAD_REQUEST
+    );
     Object.setPrototypeOf(this, DeleteError.prototype);
   }
 }
