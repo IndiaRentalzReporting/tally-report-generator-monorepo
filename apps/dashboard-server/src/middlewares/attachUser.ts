@@ -30,7 +30,9 @@ export const attachUser = async (
     const authResponse: AxiosResponse<{
       user: AuthDetailedUser & DashDetailedUser;
       isAuthenticated: boolean;
-    }> = await authAxios.get('/api/v1/auth/status');
+    }> = await authAxios.get('/api/v1/auth/status', {
+      headers: { cookie }
+    });
 
     const { user, isAuthenticated } = authResponse.data;
 

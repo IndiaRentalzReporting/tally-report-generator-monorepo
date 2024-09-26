@@ -6,6 +6,7 @@ import {
 import {
   onboard,
   handleSignIn,
+  handleSignUp,
   handleStatusCheck,
   handleLogout
 } from '../controller/auth.controller';
@@ -42,6 +43,21 @@ authRouter.post(
     })
   }),
   onboard
+);
+
+authRouter.post(
+  '/sign-up',
+  validateSchema({
+    body: UserInsertSchema.extend({
+      password: UserInsertSchema.shape.password.min(8)
+    }).pick({
+      first_name: true,
+      last_name: true,
+      email: true,
+      password: true
+    })
+  }),
+  handleSignUp
 );
 
 authRouter.post('/sign-out', handleLogout);

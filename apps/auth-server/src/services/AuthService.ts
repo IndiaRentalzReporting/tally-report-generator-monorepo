@@ -5,7 +5,8 @@ import {
   SafeUserSelect,
   TenantInsert,
   TenantSelect,
-  UserInsert
+  UserInsert,
+  UserSelect
 } from '@trg_package/schemas-auth/types';
 import UserService from './UserService';
 import TenantService from './TenantService';
@@ -47,6 +48,12 @@ class AuthService {
     });
 
     return { user, tenant };
+  }
+
+  public static async signUp(data: UserInsert): Promise<{ user: UserSelect }> {
+    const user = await UserService.createOne(data);
+
+    return { user };
   }
 
   public static async signIn(

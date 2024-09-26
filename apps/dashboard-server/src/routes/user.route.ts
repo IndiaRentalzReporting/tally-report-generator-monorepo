@@ -8,11 +8,10 @@ import {
 import { validateSchema } from '@trg_package/middlewares';
 import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
 import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
-import { createUserInAuth } from '@/middlewares';
 
 const userRouter = Router();
 
-userRouter.get(
+userRouter.post(
   '/create',
   validateSchema({
     body: UserInsertSchema.extend({
@@ -25,7 +24,6 @@ userRouter.get(
       tenant_id: true
     })
   }),
-  createUserInAuth,
   createOne
 );
 userRouter.get(
