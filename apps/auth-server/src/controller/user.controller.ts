@@ -5,7 +5,6 @@ import {
   UserInsert,
   SafeUserSelect
 } from '@trg_package/schemas-auth/types';
-import { NotFoundError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,

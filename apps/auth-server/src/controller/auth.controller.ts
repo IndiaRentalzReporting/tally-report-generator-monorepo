@@ -8,13 +8,13 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 
-export const handleSignUp = async (
+export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
   res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
-    const { user, tenant } = await AuthService.signUp(req.body);
+    const { user, tenant } = await AuthService.onboard(req.body);
     res.json({ user, tenant });
   } catch (err) {
     return next(err);

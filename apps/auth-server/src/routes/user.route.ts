@@ -14,11 +14,14 @@ const userRouter = Router();
 userRouter.post(
   '/create',
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: UserInsertSchema.extend({
+      tenant_id: UserInsertSchema.shape.tenant_id
+    }).pick({
       first_name: true,
       last_name: true,
       email: true,
-      password: true
+      password: true,
+      tenant_id: true
     })
   }),
   createOne

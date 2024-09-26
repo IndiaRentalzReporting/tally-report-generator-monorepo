@@ -12,7 +12,7 @@ import TenantService from './TenantService';
 import { Request } from 'express';
 
 class AuthService {
-  public static async signUp(data: {
+  public static async onboard(data: {
     user: UserInsert;
     tenant: TenantInsert;
   }): Promise<{ user: SafeUserSelect; tenant: TenantSelect }> {

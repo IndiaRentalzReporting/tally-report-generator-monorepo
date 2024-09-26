@@ -4,7 +4,7 @@ import {
   UserInsertSchema
 } from '@trg_package/schemas-auth/types';
 import {
-  handleSignUp,
+  onboard,
   handleSignIn,
   handleStatusCheck,
   handleLogout
@@ -25,7 +25,7 @@ authRouter.post(
 );
 
 authRouter.post(
-  '/sign-up',
+  '/onboard',
   validateSchema({
     body: z.object({
       tenant: TenantInsertSchema.pick({
@@ -41,7 +41,7 @@ authRouter.post(
       })
     })
   }),
-  handleSignUp
+  onboard
 );
 
 authRouter.post('/sign-out', handleLogout);
