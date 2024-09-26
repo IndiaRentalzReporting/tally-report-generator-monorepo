@@ -7,7 +7,7 @@ import { ReportColumnInsert } from "./reportColumn"
 //WHERE table.name like "%abc"
 //WHERE table.name between (from,to)
 export type ConditionInsert = {
-    column : Pick<ReportColumnInsert, 'name'>,
+    column : Pick<ReportColumnInsert, 'alias'>,
     table : Pick<ReportColumnInsert, 'table'>,
     operator :OperatorType,
     value : string[],
@@ -15,7 +15,7 @@ export type ConditionInsert = {
 }
 
 export type ConditionSelect = {
-    column : Pick<ReportColumnInsert, 'name'>,
+    column : Pick<ReportColumnInsert, 'alias'>,
     table : Pick<ReportColumnInsert, 'table'>,
     operator :OperatorType,
     value : string[],
