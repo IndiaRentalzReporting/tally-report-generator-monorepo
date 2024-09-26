@@ -13,6 +13,7 @@ import type {
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
 import { CompanyService } from '@trg_package/schemas-tally/services';
+import { ColumnService, ReportService, TableService } from '@trg_package/schemas-reporting/services';
 
 const { PORT, NODE_ENV } = config;
 
@@ -42,6 +43,9 @@ declare global {
       permissionActionService: PermissionActionService;
       apiKeyService: ApiKeyService;
       companyService: CompanyService;
+      tableService : TableService;
+      columnService :ColumnService;
+      reportService : ReportService;
 
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
       dashboardConnection: Sql<{}> | null;

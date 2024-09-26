@@ -10,6 +10,7 @@ import {
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 import { CompanyService } from '@trg_package/schemas-tally/services';
+import { ColumnService, ReportService, TableService } from '@trg_package/schemas-reporting/services';
 
 export const attachServices = (
   req: Request,
@@ -27,5 +28,8 @@ export const attachServices = (
   req.permissionActionService = new PermissionActionService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
   req.companyService = new CompanyService(dashboardDb as any);
+  req.tableService = new TableService(dashboardDb as any);
+  req.columnService = new ColumnService(dashboardDb as any);
+  req.reportService = new ReportService(dashboardDb as any);
   next();
 };
