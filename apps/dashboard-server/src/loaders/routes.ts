@@ -15,6 +15,9 @@ import {
   isRoleAllowed,
   decryptApiKey
 } from '@/middlewares';
+import columnRouter from '@/routes/column.route';
+import tableRouter from '@/routes/table.route';
+import reportRouter from '@/routes/report.route';
 
 const routesLoader = (app: Express) => {
   app.use(attachUser);
@@ -31,6 +34,9 @@ const routesLoader = (app: Express) => {
   app.use('/api/v1/permissions', permissionRouter);
   app.use('/api/v1/permission_actions', permissionActionRouter);
   app.use('/api/v1/apiKeys', apiKeyRouter);
+  app.use("/api/v1/columns", columnRouter)
+  app.use("/api/v1/tables", tableRouter)
+  app.use("/api/v1/reports", reportRouter)
 };
 
 export default routesLoader;
