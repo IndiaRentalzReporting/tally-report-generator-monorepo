@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-  readOne,
   readAll,
   deleteOne,
   updateOne,
@@ -14,26 +13,23 @@ const userRouter = Router();
 userRouter.post(
   '/create',
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: UserInsertSchema.extend({
+      tenant_id: UserInsertSchema.shape.tenant_id
+    }).pick({
       first_name: true,
       last_name: true,
       email: true,
-      password: true
+      password: true,
+      tenant_id: true
     })
   }),
   createOne
 );
 
-userRouter.get('/read', readAll);
-
 userRouter.get(
-  '/read/:id',
-  validateSchema({
-    params: UserInsertSchema.pick({
-      id: true
-    })
-  }),
-  readOne
+  '/read',
+  validateSchema({ query: UserInsertSchema.partial() }),
+  readAll
 );
 
 userRouter.patch(

@@ -5,7 +5,23 @@ import {
   DetailedUser,
   UserInsert
 } from '@trg_package/schemas-dashboard/types';
-import { NotFoundError } from '@trg_package/errors';
+
+export const createOne = async (
+  req: Request<object, object, UserInsert>,
+  res: Response<{ user: Omit<DetailedUser, 'password'> }>,
+  next: NextFunction
+) => {
+  try {
+    const { password, ...user } = (await req.userService.createOne({
+      ...req.body
+    })) as DetailedUser;
+    return res.json({
+      user
+    });
+  } catch (e) {
+    return next(e);
+  }
+};
 
 export const readAll = async (
   req: Request<object, Partial<UserSelect>>,

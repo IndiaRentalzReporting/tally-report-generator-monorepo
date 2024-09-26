@@ -1,6 +1,7 @@
 import { type AxiosPromise } from 'axios';
 import {
   LoginUser,
+  RegisterUser,
   TenantInsert,
   UserInsert,
   UserSelect
@@ -26,11 +27,14 @@ const services = {
   signOut: (): AxiosPromise<{ message: string }> => {
     return authAxios.post(`/sign-out`);
   },
-  signUp: (data: {
+  onboard: (data: {
     tenant: TenantInsert;
     user: UserInsert;
   }): AxiosPromise<{ user: DetailedUser }> => {
-    return authAxios.post('/sign-up', data);
+    return authAxios.post('/onboard', data);
+  },
+  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => {
+    return authAxios.post(`/sign-up`, data);
   },
   signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => {
     return authAxios.post(`/sign-in`, data);

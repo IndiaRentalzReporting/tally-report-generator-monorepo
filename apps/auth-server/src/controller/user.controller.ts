@@ -5,7 +5,6 @@ import {
   UserInsert,
   SafeUserSelect
 } from '@trg_package/schemas-auth/types';
-import { NotFoundError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
@@ -22,34 +21,17 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request,
+  req: Request<object, Partial<UserSelect>>,
   res: Response<{ users: SafeUserSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await UserService.findMany();
+    const usersWithPassword = await UserService.findMany({
+      ...req.query
+    });
     const users = usersWithPassword.map(({ password, ...user }) => user);
     return res.json({
       users
-    });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<UserSelect, 'id'>>,
-  res: Response<{ user: SafeUserSelect }>,
-  next: NextFunction
-) => {
-  try {
-    const user = await UserService.findOne({
-      id: req.params.id
-    });
-
-    const { password, ...userWithoutPassword } = user;
-    return res.json({
-      user: userWithoutPassword
     });
   } catch (e) {
     return next(e);
@@ -62,8 +44,9 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.updateOne(
-      req.params.id,
+    const { id } = req.params;
+    const { password, ...user } = await UserService.updateOneNew(
+      { id },
       req.body
     );
 
@@ -79,7 +62,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await UserService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const { password, ...user } = await UserService.deleteOneNew({ id });
 
     return res.json({ user });
   } catch (e) {

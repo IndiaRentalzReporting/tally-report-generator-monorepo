@@ -15,7 +15,7 @@ const defaultCookieOptions: Omit<CookieOptions, 'domain'> = {
 const setCookie = (
   name: string,
   value: string,
-  options: Record<'dashboard', boolean>
+  options: Record<'dashboard', boolean> = { dashboard: false }
 ) => {
   const domain = !!options.dashboard
     ? `${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`
@@ -31,7 +31,10 @@ const getCookie = (name: string) => {
   return Cookies.get(name);
 };
 
-const removeCookie = (name: string, options: Record<'dashboard', boolean>) => {
+const removeCookie = (
+  name: string,
+  options: Record<'dashboard', boolean> = { dashboard: false }
+) => {
   const domain = !!options.dashboard
     ? `${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`
     : `.${VITE_DOMAIN}.${VITE_TLD}`;

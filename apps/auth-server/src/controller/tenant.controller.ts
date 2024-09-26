@@ -17,32 +17,16 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request,
+  req: Request<object, Partial<TenantSelect>>,
   res: Response<{ tenants: TenantSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const tenants = await TenantService.findMany();
+    const tenants = await TenantService.findMany({
+      ...req.query
+    });
     return res.json({
       tenants
-    });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readOne = async (
-  req: Request<Pick<TenantSelect, 'id'>>,
-  res: Response<{ tenant: TenantSelect }>,
-  next: NextFunction
-) => {
-  try {
-    const tenant = await TenantService.findOne({
-      id: req.params.id
-    });
-
-    return res.json({
-      tenant
     });
   } catch (e) {
     return next(e);
@@ -55,7 +39,8 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.updateOne(req.params.id, req.body);
+    const { id } = req.params;
+    const tenant = await TenantService.updateOneNew({ id }, req.body);
 
     return res.json({ tenant });
   } catch (e) {
@@ -69,7 +54,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const tenant = await TenantService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const tenant = await TenantService.deleteOneNew({ id });
 
     return res.json({ tenant });
   } catch (e) {

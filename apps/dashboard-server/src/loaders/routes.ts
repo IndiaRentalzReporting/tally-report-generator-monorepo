@@ -7,6 +7,7 @@ import permissionRouter from '@/routes/permission.route';
 import permissionActionRouter from '@/routes/permission_action.route';
 import apiKeyRouter from '@/routes/apiKey.route';
 import companyRouter from '@/routes/company.route';
+import userTallyCompanyRouter from '@/routes/user_tallyCompany.route';
 import {
   attachModuleActionData,
   attachPGDashboard,
@@ -30,7 +31,8 @@ const routesLoader = (app: Express) => {
   app.use('/api/v1/actions', actionRouter);
   app.use('/api/v1/modules', moduleRouter);
   app.use('/api/v1/permissions', permissionRouter);
-  app.use('/api/v1/permission_actions', permissionActionRouter);
+  app.use('/api/v1/permission_action', permissionActionRouter);
+  app.use('/api/v1/user_tallyCompany', userTallyCompanyRouter);
 };
 
 export default routesLoader;

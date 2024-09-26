@@ -52,9 +52,7 @@ export const ThemeProvider = ({
     () => ({
       theme,
       setTheme: (theme: Theme) => {
-        setCookie(storageKey, theme, {
-          dashboard: false
-        });
+        setCookie(storageKey, theme);
         setTheme(theme);
       }
     }),
