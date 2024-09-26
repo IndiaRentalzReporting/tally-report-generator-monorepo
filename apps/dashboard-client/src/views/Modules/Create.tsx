@@ -11,13 +11,9 @@ import {
 import { services } from '@/services/module';
 import Fields from './Fields';
 import { State, initialState } from './interface';
-// import TableCreation, { IColumnDetails } from './TableCreation';
 
 const CreateModule: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
-  // const [columnDetails, setColumnDetails] = React.useState<
-  //   Array<IColumnDetails>
-  // >([]);
 
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } =
@@ -47,20 +43,6 @@ const CreateModule: React.FC = () => {
           <Fields moduleData={moduleDetails} setModuleData={setModuleDetails} />
         </CardContent>
       </Card>
-      {/*<Card>
-        <CardHeader>
-          <CardTitle>Column Details</CardTitle>
-          <CardDescription>
-            Define all the column your module would have!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <TableCreation
-            columnDetails={columnDetails}
-            setColumnDetails={setColumnDetails}
-          />
-        </CardContent>
-      </Card>*/}
       <Button
         type="submit"
         isLoading={loadingCreateModule}
