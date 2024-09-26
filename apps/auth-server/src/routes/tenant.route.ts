@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { Router } from 'express';
 import {
-  readOne,
   readAll,
   deleteOne,
   updateOne,
@@ -10,12 +9,18 @@ import {
 import { validateSchema } from '@trg_package/middlewares';
 import {
   TenantInsertSchema,
-  UserInsertSchema
+  TenantSelectSchema
 } from '@trg_package/schemas-auth/types';
 
 const tenantRouter = Router();
 
-tenantRouter.get('/read', readAll);
+tenantRouter.get(
+  '/read',
+  validateSchema({
+    query: TenantSelectSchema.partial()
+  }),
+  readAll
+);
 
 tenantRouter.post(
   '/create',
@@ -27,16 +32,6 @@ tenantRouter.post(
     })
   }),
   createOne
-);
-
-tenantRouter.get(
-  '/read/:id',
-  validateSchema({
-    params: TenantInsertSchema.pick({
-      id: true
-    })
-  }),
-  readOne
 );
 
 tenantRouter.patch(

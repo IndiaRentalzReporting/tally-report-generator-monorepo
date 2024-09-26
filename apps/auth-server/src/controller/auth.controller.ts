@@ -69,7 +69,7 @@ export const handleSignUp = async (
   }
 };
 
-export const handleLogout = (
+export const handleSignOut = (
   req: Request,
   res: Response<{ message: string }>,
   next: NextFunction

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-  readOne,
   readAll,
   deleteOne,
   updateOne,
@@ -27,16 +26,10 @@ userRouter.post(
   createOne
 );
 
-userRouter.get('/read', readAll);
-
 userRouter.get(
-  '/read/:id',
-  validateSchema({
-    params: UserInsertSchema.pick({
-      id: true
-    })
-  }),
-  readOne
+  '/read',
+  validateSchema({ query: UserInsertSchema.partial() }),
+  readAll
 );
 
 userRouter.patch(
