@@ -1,16 +1,9 @@
-import config from '../config';
-import axios, { AxiosResponse } from 'axios';
 import { NextFunction, Response, Request } from 'express';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import { UnauthenticatedError } from '@trg_package/errors';
-
-const { PROTOCOL, AUTH_SUBDOMAIN, DOMAIN, TLD } = config;
-
-const authAxios = axios.create({
-  baseURL: `${PROTOCOL}://${AUTH_SUBDOMAIN}.${DOMAIN}.${TLD}`,
-  withCredentials: true
-});
+import { authAxios } from '@/utils/authAxios';
+import { AxiosResponse } from 'axios';
 
 const cache = new Map<
   string,
@@ -37,9 +30,7 @@ export const attachUser = async (
     const authResponse: AxiosResponse<{
       user: AuthDetailedUser & DashDetailedUser;
       isAuthenticated: boolean;
-    }> = await authAxios.get('/api/v1/auth/status', {
-      headers: { cookie }
-    });
+    }> = await authAxios.get('/api/v1/auth/status');
 
     const { user, isAuthenticated } = authResponse.data;
 
