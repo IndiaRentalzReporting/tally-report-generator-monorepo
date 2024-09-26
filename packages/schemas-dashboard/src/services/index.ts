@@ -5,3 +5,4 @@ export * from './permission_action.service';
 export * from './module.service';
 export * from './action.service';
 export * from './apiKey.service';
+export * from './user_tallyCompany.service';

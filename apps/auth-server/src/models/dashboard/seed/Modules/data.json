@@ -24,7 +24,7 @@
     "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-file-terminal'><path d='M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z'/><path d='M14 2v4a2 2 0 0 0 2 2h4'/><path d='m8 16 2-2-2-2'/><path d='M12 18h4'/></svg>"
   },
   {
-    "name": "PERMISSION_ACTIONS",
+    "name": "PERMISSION_ACTION",
     "isReadonly": true,
     "isPrivate": true,
     "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-merge'><path d='m8 6 4-4 4 4'/><path d='M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22'/><path d='m20 22-5-5'/></svg>"
@@ -34,5 +34,11 @@
     "isReadonly": true,
     "isPrivate": true,
     "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-waypoints'><circle cx='12' cy='4.5' r='2.5'/><path d='m10.2 6.3-3.9 3.9'/><circle cx='4.5' cy='12' r='2.5'/><path d='M7 12h10'/><circle cx='19.5' cy='12' r='2.5'/><path d='m13.8 17.7 3.9-3.9'/><circle cx='12' cy='19.5' r='2.5'/></svg>"
+  },
+  {
+    "name": "USER_TALLYCOMPANY",
+    "isReadonly": true,
+    "isPrivate": true,
+    "icon": "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-merge'><path d='m8 6 4-4 4 4'/><path d='M12 2v10.3a4 4 0 0 1-1.172 2.872L4 22'/><path d='m20 22-5-5'/></svg>"
   }
 ]
