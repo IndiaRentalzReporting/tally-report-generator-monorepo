@@ -1,6 +1,6 @@
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import { NextFunction, Response, Request } from 'express';
-import * as dashboardSchemas from '../models/schemas';
+import * as dashboardSchemas from '@/models/schemas';
 import { createUrl, createClient } from '@trg_package/pg-client';
 
 export const attachPGDashboard = async (
@@ -22,6 +22,7 @@ export const attachPGDashboard = async (
         db_password,
         db_name
       });
+
       const { client: dashboardDb, connection: dashboardConnection } =
         createClient(DASHBOARD_PG_URL, dashboardSchemas, {
           DB_MIGRATING: false,
@@ -30,6 +31,7 @@ export const attachPGDashboard = async (
 
       req.dashboardDb = dashboardDb;
       req.dashboardConnection = dashboardConnection;
+
       next();
     } else {
       throw new UnauthenticatedError('User not found!');

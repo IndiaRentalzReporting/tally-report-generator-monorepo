@@ -12,25 +12,25 @@ import {
   attachPGDashboard,
   attachServices,
   attachUser,
-  isRoleAllowed,
-  decryptApiKey
+  isRoleAllowed
 } from '@/middlewares';
 
 const routesLoader = (app: Express) => {
+  app.use('/api/v1/companies', companyRouter);
+
   app.use(attachUser);
   app.use(attachPGDashboard);
   app.use(attachServices);
   app.use(attachModuleActionData);
   app.use(isRoleAllowed);
-  app.use(decryptApiKey);
+
   app.use('/api/v1/roles', roleRouter);
-  app.use('/api/v1/companies', companyRouter);
   app.use('/api/v1/users', userRouter);
-  app.use('/api/v1/modules', moduleRouter);
+  app.use('/api/v1/apiKeys', apiKeyRouter);
   app.use('/api/v1/actions', actionRouter);
+  app.use('/api/v1/modules', moduleRouter);
   app.use('/api/v1/permissions', permissionRouter);
   app.use('/api/v1/permission_actions', permissionActionRouter);
-  app.use('/api/v1/apiKeys', apiKeyRouter);
 };
 
 export default routesLoader;
