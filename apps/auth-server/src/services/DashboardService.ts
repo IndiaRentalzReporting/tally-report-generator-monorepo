@@ -17,6 +17,8 @@ import {
   UserSelect
 } from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/pg-client';
+import { TableSelect } from '@trg_package/schemas-reporting/types';
+import { ColumnService, TableService } from '@trg_package/schemas-reporting/services';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
@@ -48,6 +50,7 @@ class DashboardService {
       await this.createAdmin(userData, trx);
       await this.seedAction(trx);
       await this.seedModules(trx);
+      await this.seedTable(trx);
     });
     await this.terminateConnection();
   }
@@ -83,6 +86,20 @@ class DashboardService {
     const role = await RSI.createOne(superUserRole);
     return role.id;
   }
+
+  private async seedTable(
+    trx : PostgresJsDatabase<typeof dashboardSchemas>
+  ){
+    const TSI = new TableService(trx);
+    await TSI.seed();
+  }
+
+  private async seedColumn(
+    trx : PostgresJsDatabase<typeof dashboardSchemas>
+  ){
+    const CSI = new ColumnService(trx);
+  }
+
 
   private async terminateConnection() {
     await this.dashboardConnection.end();

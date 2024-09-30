@@ -7,8 +7,8 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const TableSchema = pgTable("table",{
     id : uuid("id").primaryKey().defaultRandom(),
-    name : varchar("name",{ length : 255 }).unique(),
-    displayName : varchar("displayName")
+    name : varchar("name",{ length : 255 }).unique().notNull(),
+    displayName : varchar("displayName").notNull()
 })
 
 export type TableInsert = typeof TableSchema.$inferInsert;
