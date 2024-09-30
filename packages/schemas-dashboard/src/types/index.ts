@@ -5,3 +5,4 @@ export * from './roles';
 export * from './users';
 export * from './permission_action';
 export * from './apiKeys';
+export * from './user_tallyCompany';

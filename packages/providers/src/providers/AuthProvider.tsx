@@ -9,14 +9,12 @@ import services from '../services';
 import {
   LoginUser,
   RegisterUser,
-  TenantInsert
+  TenantInsert,
+  UserSelect
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
-import { ToastAction, useToast } from '@trg_package/components';
-import { useNavigate } from 'react-router';
 import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
 import { DetailedUser } from '../models';
-import { setCookie, getCookie, removeCookie } from '../cookies';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -24,7 +22,7 @@ interface AuthProviderState {
   loading: boolean;
   permissions: Permissions[];
   tenant: TenantInsert['name'] | null;
-  signUp: {
+  onboard: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
       AxiosResponse<{
@@ -44,6 +42,16 @@ interface AuthProviderState {
       LoginUser
     >;
   };
+  signUp: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<
+      AxiosResponse<{
+        user: UserSelect;
+      }>,
+      Error,
+      RegisterUser
+    >;
+  };
   signOut: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
@@ -60,15 +68,19 @@ const initialState: AuthProviderState = {
   isAuthenticated: false,
   loading: true,
   permissions: JSON.parse(
-    getCookie('permissions') ?? '[]'
+    localStorage.getItem('permissions') ?? '[]'
   ) as AuthProviderState['permissions'],
   tenant: null,
-  signUp: {
-    mutation: () => Promise.reject('SignUp Mutation does not exist'),
+  onboard: {
+    mutation: () => Promise.reject('Onboard Mutation does not exist'),
     isLoading: false
   },
   signIn: {
     mutation: () => Promise.reject('SignIn Mutation does not exist'),
+    isLoading: false
+  },
+  signUp: {
+    mutation: () => Promise.reject('SignUp Mutation does not exist'),
     isLoading: false
   },
   signOut: {
@@ -84,13 +96,11 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [state, setState] =
-    useState<Omit<AuthProviderState, 'signIn' | 'signUp' | 'signOut'>>(
-      initialState
-    );
+    useState<
+      Omit<AuthProviderState, 'signIn' | 'signUp' | 'onboard' | 'signOut'>
+    >(initialState);
 
   const { data: authStatus, isFetching } = useQuery({
     queryFn: () => services.status(),
@@ -99,33 +109,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     staleTime: 1000 * 60 * 15
   });
 
-  const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
-    mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
-      services.signUp(data),
-    mutationKey: ['auth', 'signUp'],
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      toast({
-        variant: 'default',
-        title: `Sign up successful`,
-        description: `You have successfully signed up!`,
-        action: (
-          <ToastAction
-            altText="Okay!"
-            onClick={() => {
-              navigate('/sign-in');
-            }}
-          >
-            Okay!
-          </ToastAction>
-        )
-      });
+  const { mutateAsync: onboardMutation, isPending: isOnboarding } = useMutation(
+    {
+      mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
+        services.onboard(data),
+      mutationKey: ['auth', 'onboard'],
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
     }
-  });
+  );
 
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
+  });
+
+  const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
+    mutationFn: (data: RegisterUser) => services.signUp(data),
+    mutationKey: ['auth', 'signUp'],
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
     }
@@ -152,17 +157,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           actions: permissionAction.map(({ action }) => action.name)
         };
       }) ?? [];
-    setCookie('permissions', JSON.stringify(p), {
-      dashboard: true
-    });
+    localStorage.setItem('permissions', JSON.stringify(p));
     return p;
   };
 
   useEffect(() => {
     if (!authStatus || !authStatus.user || !authStatus.isAuthenticated) {
-      removeCookie('permissions', {
-        dashboard: true
-      });
+      localStorage.removeItem('permissions');
       setState({
         ...initialState,
         permissions: []
@@ -196,6 +197,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         ...state,
         signIn: { mutation: signInMutation, isLoading: isSigningIn },
         signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+        onboard: { mutation: onboardMutation, isLoading: isOnboarding },
         signOut: { mutation: signOutMutation, isLoading: isSigningOut }
       }}
     >

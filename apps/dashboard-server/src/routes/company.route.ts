@@ -8,10 +8,13 @@ import {
   StockGroupInsertSchema,
   StockItemInsertSchema
 } from '@trg_package/schemas-tally/types';
-import { createOne, readAll, syncData } from '../controller/company.controller';
-import z, { any, AnyZodObject, ZodArray } from 'zod';
+import z from 'zod';
+import { decryptApiKey } from '@/middlewares';
+import { createOne, readAll, syncData } from '@/controller/company.controller';
 
 const companyRouter = Router();
+
+companyRouter.use(decryptApiKey);
 
 companyRouter.post(
   '/create',

@@ -79,6 +79,12 @@ class DashboardService {
     return admin;
   }
 
+  public async createUser(data: UserInsert): Promise<UserSelect> {
+    const USI = new UserService(this.dashboardClient);
+    const admin = await USI.createOne({ ...data });
+    return admin;
+  }
+
   private async seedRole(
     trx: PostgresJsDatabase<typeof dashboardSchemas>
   ): Promise<RoleSelect['id']> {

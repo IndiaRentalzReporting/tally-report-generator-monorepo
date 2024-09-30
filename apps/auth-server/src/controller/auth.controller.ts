@@ -1,20 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import AuthService from '../services/AuthService';
 import {
+  LoginUser,
   SafeUserSelect,
   TenantInsert,
   TenantSelect,
-  UserInsert
+  UserInsert,
+  UserSelect
 } from '@trg_package/schemas-auth/types';
-import { UnauthenticatedError } from '@trg_package/errors';
+import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
+import DashboardService from '@/services/DashboardService';
 
-export const handleSignUp = async (
+export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
   res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
-    const { user, tenant } = await AuthService.signUp(req.body);
+    const { user, tenant } = await AuthService.onboard(req.body);
     res.json({ user, tenant });
   } catch (err) {
     return next(err);
@@ -22,7 +25,7 @@ export const handleSignUp = async (
 };
 
 export const handleSignIn = async (
-  req: Request<object, object, UserInsert>,
+  req: Request<object, object, LoginUser>,
   res: Response<{
     user: Request['user'];
   }>,
@@ -39,7 +42,34 @@ export const handleSignIn = async (
   }
 };
 
-export const handleLogout = (
+export const handleSignUp = async (
+  req: Request<object, object, UserInsert>,
+  res: Response<{
+    user: UserSelect;
+  }>,
+  next: NextFunction
+) => {
+  try {
+    if (req.isAuthenticated()) {
+      const {
+        tenant_id,
+        tenant: { db_username, db_password, db_name }
+      } = req.user;
+      if (!db_username || !db_password || !db_name) {
+        throw new BadRequestError('Invalid Tenant');
+      }
+      const DSI = new DashboardService(db_username, db_password, db_name);
+      await DSI.createUser(req.body);
+      const { user } = await AuthService.signUp({ ...req.body, tenant_id });
+      return res.json({ user });
+    }
+    throw new UnauthenticatedError('Not logged in');
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const handleSignOut = (
   req: Request,
   res: Response<{ message: string }>,
   next: NextFunction
