@@ -23,3 +23,4 @@ export const createUserInAuth = async (
   } catch (e) {
     return next(e);
 };
+}
