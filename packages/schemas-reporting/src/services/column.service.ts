@@ -59,4 +59,22 @@ export class ColumnService extends BaseServiceNew
         }
 
     }
+
+    public updateForeignKeys(){
+        try{
+            this.dbClient.execute(sql`
+                UPDATE column AS c1
+                SET 
+                "referenceTable" = c2."tableId"
+                "referenceColumn" = c2."id"
+                FROM 
+                column c2  
+                WHERE c2.name = c1."referenceColumn"
+            `);
+        }
+        catch(error)
+        {
+            throw new CustomError("There was an error while updating seeded column table",400);
+        }
+    }
 }
