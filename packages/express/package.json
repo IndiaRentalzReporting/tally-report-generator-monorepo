@@ -19,6 +19,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@trg_package/middlewares": "*",
     "@trg_package/config-env": "^1.0.0",
     "@trg_package/schemas-auth": "^1.0.0",
     "@trg_package/schemas-dashboard": "^1.0.0",
