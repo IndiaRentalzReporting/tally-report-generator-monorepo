@@ -1,6 +1,7 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
+import columns from '../models/dashboard/seed/Columns/data.json';
 import superUserRole from '../models/dashboard/seed/Roles/data.json';
 import * as dashboardSchemas from '../models/dashboard/schema';
 import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
@@ -17,7 +18,7 @@ import {
   UserSelect
 } from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/pg-client';
-import { TableSelect } from '@trg_package/schemas-reporting/types';
+import { ColumnInsert, TableSelect } from '@trg_package/schemas-reporting/types';
 import { ColumnService, TableService } from '@trg_package/schemas-reporting/services';
 
 class DashboardService {
@@ -104,6 +105,20 @@ class DashboardService {
     trx : PostgresJsDatabase<typeof dashboardSchemas>
   ){
     const CSI = new ColumnService(trx);
+    const TSI = new TableService(trx);
+    const tables = await TSI.findMany();
+
+    type k = keyof typeof columns;
+    for(const {id,name} of tables)
+    {
+      const columData = columns[name as k];
+      for(const column of columData)
+      {
+        await CSI.createOne({...column as ColumnInsert,tableId : id});
+      }
+    }
+
+    await CSI.updateForeignKeys();
   }
 
 
