@@ -15,11 +15,11 @@ export const ColumnType = pgEnum('column_type', [
 
 export const ColumnSchema = pgTable("column",{
     id : uuid("id").primaryKey().defaultRandom(),
-    name : varchar("name",{ length : 255 }).unique().notNull(),
+    name : varchar("name",{ length : 255 }).notNull(),
     type : ColumnType("type").default("string").notNull(),
     tableId : uuid("tableId").references(()=>TableSchema.id,{onDelete : "restrict","onUpdate":"restrict"}).notNull(),
-    referenceTable : uuid("referenceTable").references(()=>TableSchema.id).default("Null"),
-    referenceColumn : uuid("referenceColumn").references(() : AnyPgColumn =>ColumnSchema.id).default("Null")
+    referenceTable : text("referenceTable"),
+    referenceColumn : text("referenceColumn")
 })
 
 export type ColumnInsert = typeof ColumnSchema.$inferInsert;

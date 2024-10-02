@@ -22,7 +22,7 @@ export class TableService extends BaseServiceNew
         const tables = await this.dbClient.execute(sql
             `SELECT 
                 table_name as name,
-                table_name as "displayName",
+                table_name as "displayName"
              FROM information_schema.tables 
              WHERE table_schema = 'public' 
              AND table_name LIKE 'tally%';`

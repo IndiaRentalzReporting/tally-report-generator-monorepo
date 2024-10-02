@@ -22,12 +22,12 @@ export class ColumnService extends BaseServiceNew
     {
         try{
             const columns : ColumnSelect[] = await this.dbClient.execute(sql`
-                WITH RECURSIVE cte(name, referenceTableId, tableId, tablealias, prefix, tablename, type) AS (
+              WITH RECURSIVE cte(name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
                     SELECT 
                     c.name,
-                    c."referenceTableId",
+                    c."referenceTable",
                     c."tableId",
-                    tb.name as tablealias,
+                    tb.name::TEXT as tablealias,
                     ''::TEXT as prefix,
                     tb.name as tablename,
                     c.type
@@ -39,15 +39,16 @@ export class ColumnService extends BaseServiceNew
                     
                     SELECT 
                     pc.name, 
-                    pc."referenceTableId",
+                    pc."referenceTable",
                     pc."tableId",
                     concat(cte.prefix,cte.name) as tablealias,
                     concat(cte.name,'_') as prefix,
                     tb.name as tablename,
                     pc.type
                     FROM public."column" pc 
-                    INNER JOIN cte ON pc."tableId" = cte.referencetableid
+                    INNER JOIN cte ON pc."tableId"::TEXT = cte.referencetable
                     INNER JOIN  public."table" tb on pc."tableId" = tb."id"
+	 				AND cte.tableid != pc."tableId" 
                 )
                 SELECT cte."name",cte."type",cte."tablename" as table,cte."tablealias" FROM cte;
              `);
@@ -60,16 +61,19 @@ export class ColumnService extends BaseServiceNew
 
     }
 
-    public updateForeignKeys(){
+    public async updateForeignKeys(){
         try{
-            this.dbClient.execute(sql`
-                UPDATE column AS c1
+            await this.dbClient.execute(sql`
+                UPDATE public."column" AS c1
                 SET 
-                "referenceTable" = c2."tableId"
+                "referenceTable" = t2."id",
                 "referenceColumn" = c2."id"
                 FROM 
-                column c2  
+                public."column" AS c2  
+                INNER JOIN public."table" as t2
+                on c2."tableId" = t2.id
                 WHERE c2.name = c1."referenceColumn"
+                and t2.name = c1."referenceTable"
             `);
         }
         catch(error)
