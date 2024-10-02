@@ -45,10 +45,10 @@ export class UserService extends BaseServiceNew<
     return users;
   }
 
-  public async findOneDetailedUser(
+  public async findOne(
     data: Partial<typeof this.schema.$inferSelect>
   ): Promise<DetailedUser> {
-    const user = await super.findOne(data, {
+    const user = (await super.findOne(data, {
       with: {
         role: {
           with: {
@@ -65,8 +65,8 @@ export class UserService extends BaseServiceNew<
           }
         }
       }
-    });
+    })) as DetailedUser;
 
-    return user as DetailedUser;
+    return user;
   }
 }
