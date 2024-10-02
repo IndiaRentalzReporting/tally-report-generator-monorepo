@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@trg_package/errors": "*",
-    "drizzle-orm": "^0.31.2",
+    "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
