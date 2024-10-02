@@ -96,7 +96,11 @@ export const handleStatusCheck = (
 ) => {
   try {
     if (req.isAuthenticated()) {
-      const { user } = req;
+      let { user } = req;
+      if (user.role)
+        user.role.permission = user.role.permission.filter(
+          (permission) => !permission.module.isPrivate
+        );
       return res.json({
         user,
         isAuthenticated: true
