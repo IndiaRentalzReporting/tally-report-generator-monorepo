@@ -10,8 +10,8 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { data: actionDataX, isFetching: loadingAction } = useQuery({
-    queryFn: () => services.getOne(id),
-    select: (data) => data.data.action,
+    queryFn: () => services.read({ id }),
+    select: (data) => data.data.actions[0],
     queryKey: ['actions', 'getOne', id]
   });
 
