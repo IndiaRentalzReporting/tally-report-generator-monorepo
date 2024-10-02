@@ -22,11 +22,6 @@ reportRouter.post(
 
 reportRouter.get(
     '/read',
-    validateSchema({
-      query: ReportSelectSchema.pick({
-        id : true
-      })
-    }),
     readAll
 );
 

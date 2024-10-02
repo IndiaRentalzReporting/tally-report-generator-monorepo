@@ -35,18 +35,20 @@ export const readOne = async(
     }
   };
 
-export const readAll = async(
-    req: Request<object,ReportResponse<true>,Partial<ReportSelect>>,
-    res: Response<ReportResponse<true>>,
-    next: NextFunction
-  ) => {
-    try {
-      const reports = await req.reportService.findMany();
-      return res.json({ reports });
-    } catch (e) {
-      return next(e);
+export const readAll = async <T extends {reports : ReportSelect[]}>(
+    req : Request<object,T>,
+    res : Response<T>,
+    next : NextFunction
+)  => {
+    try{
+        const reports = (await req.reportService.findMany());
+        return res.json({reports} as T);
     }
-  };
+    catch(e)
+    {   
+        return next(e);
+    }
+}
 
   export const updateOne = async (
     req: Request<Pick<ReportSelect, 'id'>, ReportResponse, ReportInsert>,
