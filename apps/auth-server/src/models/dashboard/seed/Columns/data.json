@@ -1,44 +1,12 @@
 {
     "tallyCompanies" : [
         {
-            "name" : "masterID", 
-            "type" : "number"
-        },
-        {
-            "name" : "guid", 
-            "type" : "string"
-        },
-        {
-            "name" : "voucherMasterID", 
-            "type" : "number"
-        },
-        {
-            "name" : "stockItemAlterID", 
-            "type" : "number"
-        },
-        {
-            "name" : "ledgerAlterID", 
-            "type" : "number"
-        },
-        {
             "name" : "companyNumber", 
             "type" : "string"
         },
         {
             "name" : "companyMailName", 
             "type" : "string"
-        },
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        },
-        {
-            "name" : "sortOrder", 
-            "type" : "number"
-        },
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
         },
         {
             "name" : "companyName", 
@@ -77,27 +45,7 @@
             "type" : "foreignKey",
             "referenceTable":"tallyCompanies",
             "referenceColumn":"id"
-        }, 
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
-        }, 
-        {
-            "name" : "sortOrder", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "masterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "guid", 
-            "type" : "string"
-        }, 
+        },  
         {
             "name" : "natureofGroup", 
             "type" : "string"
@@ -199,26 +147,6 @@
             "type" : "id"
         }, 
         {
-            "name" : "guid", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "masterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "sortOrder", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
-        }, 
-        {
             "name" : "companyId", 
             "type" : "foreignKey",
              "referenceTable":"tallyCompanies",
@@ -226,14 +154,6 @@
         }
     ],
     "tallyStockCategories" : [
-        {
-            "name" : "masterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        }, 
         {
             "name" : "id", 
             "type" : "id"
@@ -253,18 +173,10 @@
             "type" : "string"
         }, 
         {
-            "name" : "sortOrder", 
-            "type" : "number"
-        }, 
-        {
             "name" : "companyId", 
             "type" : "foreignKey",
              "referenceTable":"tallyCompanies",
             "referenceColumn":"id"
-        }, 
-        {
-            "name" : "guid", 
-            "type" : "string"
         }
     ],
     "tallyStockGroups" : [
@@ -281,26 +193,6 @@
             "referenceColumn":"id"
         }, 
         {
-            "name" : "guid", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "masterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "sortOrder", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
-        }, 
-        {
             "name" : "id", 
             "type" : "id"
         }, 
@@ -310,26 +202,6 @@
         }
     ],
     "tallyStockItems" : [
-        {
-            "name" : "guid", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "masterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "alterID", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "sortOrder", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
-        }, 
         {
             "name" : "parent", 
             "type" : "foreignKey",
