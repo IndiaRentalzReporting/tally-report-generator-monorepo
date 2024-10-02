@@ -30,8 +30,8 @@ export const attachServices = (
   req.userTallyCompanyService = new UserTallyCompanyService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
   req.companyService = new CompanyService(dashboardDb as any);
-  req.tableService = new TableService(dashboardDb as any);
-  req.columnService = new ColumnService(dashboardDb as any);
-  req.reportService = new ReportService(dashboardDb as any);
+  req.tableService = new TableService(dashboardDb);
+  req.columnService = new ColumnService(dashboardDb);
+  req.reportService = new ReportService(dashboardDb);
   next();
 };
