@@ -52,6 +52,7 @@ class DashboardService {
       await this.seedAction(trx);
       await this.seedModules(trx);
       await this.seedTable(trx);
+      await this.seedColumn(trx);
     });
     await this.terminateConnection();
   }
