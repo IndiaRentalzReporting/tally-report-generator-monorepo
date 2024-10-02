@@ -26,7 +26,7 @@ const initialUserState: RegisterUser = {
 
 export const SignupForm = () => {
   const {
-    signUp: { isLoading, mutation: signUp }
+    onboard: { isLoading, mutation: onboard }
   } = useAuth();
 
   const [tenantData, setTenantData] =
@@ -46,7 +46,7 @@ export const SignupForm = () => {
 
   const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    signUp({
+    onboard({
       tenant: tenantData,
       user: userData
     });
