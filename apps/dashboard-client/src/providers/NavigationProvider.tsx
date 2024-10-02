@@ -73,7 +73,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: location.pathname.split('/')[2]
+      currentModule: location.pathname.split('/')[2]?.toUpperCase()
     }));
   }, [location, permissions]);
 

@@ -8,23 +8,6 @@ import {
 } from '@trg_package/schemas-tally/services';
 import { CompanyInsert, CompanySelect } from '@trg_package/schemas-tally/types';
 
-export const readAll = async (
-  req: Request<object, Partial<CompanySelect>>,
-  res: Response<{ companies: Array<CompanySelect> }>,
-  next: NextFunction
-) => {
-  try {
-    const companies = await req.companyService.findMany({
-      ...req.query
-    });
-
-    return res.json({ companies });
-  } catch (e) {
-    console.error("Couldn't fetch all Companies");
-    return next(e);
-  }
-};
-
 export const createOne = async (
   req: Request<object, object, CompanyInsert>,
   res: Response<{ company: CompanySelect }>,
@@ -32,7 +15,50 @@ export const createOne = async (
 ) => {
   try {
     const data = req.body;
-    const company = await req.companyService.createOne(data);
+    const company = await req.companyService.createOne({
+      ...data
+    });
+    return res.json({ company });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const readAll = async (
+  req: Request<object, Partial<CompanySelect>>,
+  res: Response<{ companys: CompanySelect[] }>,
+  next: NextFunction
+) => {
+  try {
+    const companys = await req.companyService.findMany({
+      ...req.query
+    });
+    return res.json({ companys });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const updateOne = async (
+  req: Request<Pick<CompanySelect, 'id'>, object, Partial<CompanySelect>>,
+  res: Response<{ company: CompanySelect }>,
+  next: NextFunction
+) => {
+  try {
+    const company = await req.companyService.updateOne(req.params.id, req.body);
+    return res.json({ company });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const deleteOne = async (
+  req: Request<Pick<CompanySelect, 'id'>>,
+  res: Response<{ company: CompanySelect }>,
+  next: NextFunction
+) => {
+  try {
+    const company = await req.companyService.deleteOne(req.params.id);
     return res.json({ company });
   } catch (e) {
     return next(e);
