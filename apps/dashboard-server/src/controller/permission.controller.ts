@@ -11,7 +11,8 @@ export const readAll = async (
 ) => {
   try {
     const permissions = await req.permissionService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     res.json({ permissions });
   } catch (e) {
@@ -44,10 +45,13 @@ export const updateOne = async (
   try {
     const { id } = req.params;
     const { role_id, module_id } = req.body;
-    const permission = await req.permissionService.updateOne(id, {
-      module_id,
-      role_id
-    });
+    const permission = await req.permissionService.updateOne(
+      { id },
+      {
+        module_id,
+        role_id
+      }
+    );
     return res.json({
       permission
     });
@@ -63,7 +67,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const permission = await req.permissionService.deleteOne(id);
+    const permission = await req.permissionService.deleteOne({ id });
     return res.json({
       permission
     });

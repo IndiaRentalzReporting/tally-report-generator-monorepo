@@ -123,7 +123,7 @@ export class BaseServiceNew<
     }
   }
 
-  public async updateOneNew(
+  public async updateOne(
     filterData: Partial<T['$inferSelect']>,
     data: Partial<T['$inferInsert']>
   ): Promise<T['$inferSelect']> {
@@ -153,27 +153,7 @@ export class BaseServiceNew<
     }
   }
 
-  public async updateOne(
-    id: T['$inferSelect']['id'],
-    data: Partial<T['$inferInsert']>
-  ): Promise<T['$inferSelect']> {
-    try {
-      const [entity] = await this.dbClient
-        .update(this.schema)
-        .set({ ...data })
-        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
-        .returning();
-
-      if (!entity) throw new UpdateError(this.entity, data);
-
-      return entity;
-    } catch (error) {
-      console.error(error);
-      throw new UpdateError(this.entity, data);
-    }
-  }
-
-  public async deleteOneNew(
+  public async deleteOne(
     filterData: Partial<T['$inferSelect']>
   ): Promise<T['$inferSelect']> {
     try {
@@ -198,24 +178,6 @@ export class BaseServiceNew<
     } catch (error) {
       console.error(error);
       throw new DeleteError(this.entity, filterData);
-    }
-  }
-
-  public async deleteOne(
-    id: T['$inferSelect']['id']
-  ): Promise<T['$inferSelect']> {
-    try {
-      const [entity] = await this.dbClient
-        .delete(this.schema)
-        .where(and(eq(this.schema.id, id), eq(this.schema.isReadonly, false)))
-        .returning();
-
-      if (!entity) throw new DeleteError(this.entity, { id });
-
-      return entity;
-    } catch (error) {
-      console.error(error);
-      throw new DeleteError(this.entity, { id });
     }
   }
 }

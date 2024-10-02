@@ -11,7 +11,8 @@ export const readAll = async (
 ) => {
   try {
     const actions = await req.actionService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     return res.json({ actions });
   } catch (e) {
@@ -25,7 +26,8 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await req.actionService.updateOne(req.params.id, req.body);
+    const { id } = req.params;
+    const action = await req.actionService.updateOne({ id }, req.body);
     return res.json({ action });
   } catch (e) {
     return next(e);
@@ -38,7 +40,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const action = await req.actionService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const action = await req.actionService.deleteOne({ id });
     return res.json({ action });
   } catch (e) {
     return next(e);

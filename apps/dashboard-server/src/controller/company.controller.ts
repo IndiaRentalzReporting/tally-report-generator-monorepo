@@ -45,7 +45,8 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const company = await req.companyService.updateOne(req.params.id, req.body);
+    const { id } = req.params;
+    const company = await req.companyService.updateOne({ id }, req.body);
     return res.json({ company });
   } catch (e) {
     return next(e);
@@ -58,7 +59,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const company = await req.companyService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const company = await req.companyService.deleteOne({ id });
     return res.json({ company });
   } catch (e) {
     return next(e);

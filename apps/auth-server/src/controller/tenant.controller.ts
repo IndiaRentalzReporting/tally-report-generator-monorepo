@@ -40,7 +40,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const tenant = await TenantService.updateOneNew({ id }, req.body);
+    const tenant = await TenantService.updateOne({ id }, req.body);
 
     return res.json({ tenant });
   } catch (e) {
@@ -55,7 +55,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const tenant = await TenantService.deleteOneNew({ id });
+    const tenant = await TenantService.deleteOne({ id });
 
     return res.json({ tenant });
   } catch (e) {

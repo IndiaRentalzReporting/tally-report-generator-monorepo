@@ -13,7 +13,8 @@ export const createOne = async (
 ) => {
   try {
     const { password, ...user } = (await req.userService.createOne({
-      ...req.body
+      ...req.body,
+      isPrivate: false
     })) as DetailedUser;
     return res.json({
       user
@@ -55,9 +56,12 @@ export const updateRole = async (
   const { userIds, roleId } = req.body;
   try {
     const updatedUserIds = userIds.map(async (user_id) => {
-      const { id } = await req.userService.updateOne(user_id, {
-        role_id: roleId
-      });
+      const { id } = await req.userService.updateOne(
+        { id: user_id },
+        {
+          role_id: roleId
+        }
+      );
 
       return id;
     });
@@ -74,8 +78,9 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
+    const { id } = req.params;
     const { password, ...user } = await req.userService.updateOne(
-      req.params.id,
+      { id },
       req.body
     );
 
@@ -91,9 +96,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = await req.userService.deleteOne(
-      req.params.id
-    );
+    const { id } = req.params;
+    const { password, ...user } = await req.userService.deleteOne({ id });
 
     return res.json({ user });
   } catch (e) {
