@@ -48,7 +48,7 @@ export class ColumnService extends BaseServiceNew
                     FROM public."column" pc 
                     INNER JOIN cte ON pc."tableId"::TEXT = cte.referencetable
                     INNER JOIN  public."table" tb on pc."tableId" = tb."id"
-	 				AND cte.tableid != pc."tableId" 
+	 				WHERE cte.tableid != pc."tableId" 
                 )
                 SELECT cte."name",cte."type",cte."tablename" as table,cte."tablealias" FROM cte;
              `);
