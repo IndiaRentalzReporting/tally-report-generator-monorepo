@@ -1,5 +1,5 @@
 import 'express-async-errors';
-import express, { Express } from 'express';
+import express, { Request, Response, NextFunction, Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
@@ -8,6 +8,7 @@ import config from './config';
 import { sessionsLoader } from './loaders/sessions';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import { removePrivate } from './middleware/removePrivate';
 
 const { NODE_ENV, DOMAIN, TLD } = config;
 
@@ -31,10 +32,17 @@ export const expressLoader = async ({
     })
   );
 
+  app.use(removePrivate);
+
   sessionsLoader(app);
   passportLoader && passportLoader(app);
 
   routesLoader(app);
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    console.log(res.json);
+    next();
+  });
 
   app.use(notFound());
   app.use(errorHandler(NODE_ENV));
