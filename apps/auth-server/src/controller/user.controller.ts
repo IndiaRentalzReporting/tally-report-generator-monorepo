@@ -45,10 +45,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await UserService.updateOneNew(
-      { id },
-      req.body
-    );
+    const { password, ...user } = await UserService.updateOne({ id }, req.body);
 
     return res.json({ user });
   } catch (e) {
@@ -63,7 +60,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await UserService.deleteOneNew({ id });
+    const { password, ...user } = await UserService.deleteOne({ id });
 
     return res.json({ user });
   } catch (e) {

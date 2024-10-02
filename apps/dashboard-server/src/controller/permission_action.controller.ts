@@ -28,7 +28,8 @@ export const readAll = async (
 ) => {
   try {
     const permissionActions = await req.permissionActionService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     res.json({ permissionActions });
   } catch (e) {
@@ -49,7 +50,7 @@ export const updateOne = async (
     const { action_id: oldActionId, permission_id: oldPermissionId } =
       req.params;
     const { action_id, permission_id } = req.body;
-    const permissionAction = await req.permissionActionService.updateOneNew(
+    const permissionAction = await req.permissionActionService.updateOne(
       { action_id: oldActionId, permission_id: oldPermissionId },
       {
         action_id,
@@ -71,7 +72,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { action_id, permission_id } = req.params;
-    const permission = await req.permissionActionService.deleteOneNew({
+    const permission = await req.permissionActionService.deleteOne({
       action_id,
       permission_id
     });

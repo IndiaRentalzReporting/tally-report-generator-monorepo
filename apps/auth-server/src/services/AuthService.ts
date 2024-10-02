@@ -75,9 +75,12 @@ class AuthService {
     }
   ): Promise<SafeUserSelect> {
     const { email, password: pw } = data;
-    const { password, ...user } = await UserService.updateOne(email, {
-      password: pw
-    });
+    const { password, ...user } = await UserService.updateOne(
+      { email },
+      {
+        password: pw
+      }
+    );
 
     return user;
   }

@@ -12,7 +12,8 @@ export const readAll = async (
 ) => {
   try {
     const apiKeys = await req.apiKeyService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     return res.json({ apiKeys });
   } catch (e) {
@@ -26,7 +27,8 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const apiKey = await req.apiKeyService.updateOne(req.params.id, req.body);
+    const { id } = req.params;
+    const apiKey = await req.apiKeyService.updateOne({ id }, req.body);
     return res.json({ apiKey });
   } catch (e) {
     return next(e);
@@ -39,7 +41,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const apiKey = await req.apiKeyService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const apiKey = await req.apiKeyService.deleteOne({ id });
     return res.json({ apiKey });
   } catch (e) {
     return next(e);
