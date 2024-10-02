@@ -150,13 +150,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     permissions: UserRole['permission'] | undefined
   ): Permissions[] => {
     const p =
-      permissions?.map(({ module, permissionAction }) => {
-        const { name, icon } = module;
-        return {
-          module: { name, icon },
-          actions: permissionAction.map(({ action }) => action.name)
-        };
-      }) ?? [];
+      permissions
+        ?.filter(({ module }) => !!module)
+        .map(({ module, permissionAction }) => {
+          const { name, icon } = module;
+          return {
+            module: { name, icon },
+            actions: permissionAction.map(({ action }) => action.name)
+          };
+        }) ?? [];
     localStorage.setItem('permissions', JSON.stringify(p));
     return p;
   };

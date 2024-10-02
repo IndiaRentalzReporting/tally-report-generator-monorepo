@@ -18,7 +18,7 @@ const Read: React.FC = () => {
   const { data: allPermissions = [], isFetching: fetchingPermissions } =
     useQuery({
       queryFn: () => services.read(),
-      select: (data) => data.data.permissions,
+      select: (data) => data.data.permissions.filter(({ module }) => !!module),
       queryKey: ['permissions', 'getAll']
     });
 

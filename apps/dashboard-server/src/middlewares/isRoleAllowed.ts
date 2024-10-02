@@ -22,12 +22,14 @@ export const isRoleAllowed = async (
     if (module && action) {
       const { permission } = role;
 
-      const allowed = permission.find(
-        ({ permissionAction, module: { name: moduleName } }) =>
-          permissionAction.find(
-            ({ action: { name: actionName } }) => actionName === action
-          ) && moduleName === module
-      );
+      const allowed = permission
+        .filter(({ module }) => !!module)
+        .find(
+          ({ permissionAction, module: { name: moduleName } }) =>
+            permissionAction.find(
+              ({ action: { name: actionName } }) => actionName === action
+            ) && moduleName === module
+        );
 
       if (allowed) return next();
       throw new UnauthenticatedError(
