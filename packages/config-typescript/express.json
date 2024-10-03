@@ -4,7 +4,6 @@
   "extends": "./base.json",
   "compilerOptions": {
     "lib": ["es2020"],
-    "noEmit": false,
     "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": false,
     "removeComments": true

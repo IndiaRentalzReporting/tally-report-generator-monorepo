@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@trg_package/config-tailwind": "*",
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",

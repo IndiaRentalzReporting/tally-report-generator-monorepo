@@ -23,7 +23,6 @@
     "db-myTenant:studio": "drizzle-kit --config=drizzle.myTenant.config.ts studio --port 4893"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",

@@ -27,7 +27,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-tailwind": "*",
     "@trg_package/config-typescript": "*",
     "@types/node": "^20.12.12",

@@ -15,7 +15,6 @@
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
     "typescript": "^5.4.5",
     "tsup": "^8.2.4"

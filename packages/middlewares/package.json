@@ -6,7 +6,6 @@
     "lint": "eslint . --ext ts --fix --max-warnings 0"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
     "@types/node": "^20.14.2",
     "ts-node": "^10.9.2",
