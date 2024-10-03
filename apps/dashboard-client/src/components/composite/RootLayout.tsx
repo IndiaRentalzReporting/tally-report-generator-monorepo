@@ -2,7 +2,6 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider, AuthProvider } from '@trg_package/providers';
 import { Toaster } from '@trg_package/components';
-import { Outlet } from 'react-router';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,14 +13,14 @@ const queryClient = new QueryClient({
   }
 });
 
-export const RootLayout: React.FC = () => {
+export const RootLayout: React.FC<{ children: React.ReactNode }> = ({
+  children
+}) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-          <div className="flex flex-col h-screen">
-            <Outlet />
-          </div>
+          <div className="flex flex-col h-screen">{children}</div>
           <Toaster />
         </ThemeProvider>
       </AuthProvider>
