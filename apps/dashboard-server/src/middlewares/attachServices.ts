@@ -11,6 +11,7 @@ import {
 import { NotFoundError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 import { CompanyService } from '@trg_package/schemas-tally/services';
+import { ColumnService, ReportService, TableService } from '@trg_package/schemas-reporting/services';
 
 export const attachServices = (
   req: Request,
@@ -29,5 +30,8 @@ export const attachServices = (
   req.userTallyCompanyService = new UserTallyCompanyService(dashboardDb);
   req.apiKeyService = new ApiKeyService(dashboardDb);
   req.companyService = new CompanyService(dashboardDb as any);
+  req.tableService = new TableService(dashboardDb);
+  req.columnService = new ColumnService(dashboardDb);
+  req.reportService = new ReportService(dashboardDb);
   next();
 };

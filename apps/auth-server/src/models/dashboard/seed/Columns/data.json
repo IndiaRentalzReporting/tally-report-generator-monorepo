@@ -1,0 +1,251 @@
+{
+    "tallyCompanies" : [
+        {
+            "name" : "companyNumber", 
+            "type" : "string"
+        },
+        {
+            "name" : "companyMailName", 
+            "type" : "string"
+        },
+        {
+            "name" : "companyName", 
+            "type" : "string"
+        },
+        {
+            "name" : "id", 
+            "type" : "id"
+        }
+    ],
+    "tallyGroups" : [
+        {
+            "name" : "primaryGroup", 
+            "type" : "foreignKey",
+            "referenceTable" : "tallyGroups",
+            "referenceColumn":"groupName"
+        }, 
+        {
+            "name" : "id", 
+            "type" : "id"
+        }, 
+        {
+            "name" : "groupName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "aliasName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "parentId", 
+            "type" : "number"
+        }, 
+        {
+            "name" : "companyId", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyCompanies",
+            "referenceColumn":"id"
+        },  
+        {
+            "name" : "natureofGroup", 
+            "type" : "string"
+        }
+    ],
+    "tallyLedgers" : [
+        {
+            "name" : "PINCode", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "ledgerName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "aliasName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "parent", 
+            "type" : "foreignKey"
+        }, 
+        {
+            "name" : "primaryGroup", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyGroups",
+            "referenceColumn":"groupName"
+        }, 
+        {
+            "name" : "mailingName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "addressLine1", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "addressLine2", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "addressLine3", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "addressLine4", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "countryName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "stateName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "GSTIN", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "PANNo", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "contactPerson", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "mobile", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "phone", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "fax", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "email", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "emailCC", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "website", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "openingBalance", 
+            "type" : "number"
+        }, 
+        {
+            "name" : "id", 
+            "type" : "id"
+        }, 
+        {
+            "name" : "companyId", 
+            "type" : "foreignKey",
+             "referenceTable":"tallyCompanies",
+            "referenceColumn":"id"
+        }
+    ],
+    "tallyStockCategories" : [
+        {
+            "name" : "id", 
+            "type" : "id"
+        }, 
+        {
+            "name" : "parent", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyStockCategories",
+            "referenceColumn":"stockCategoryName"
+        }, 
+        {
+            "name" : "lastSyncDate", 
+            "type" : "date"
+        }, 
+        {
+            "name" : "stockCategoryName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "companyId", 
+            "type" : "foreignKey",
+             "referenceTable":"tallyCompanies",
+            "referenceColumn":"id"
+        }
+    ],
+    "tallyStockGroups" : [
+        {
+            "name" : "parent", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyStockGroups",
+            "referenceColumn":"stockGroupName"
+        }, 
+        {
+            "name" : "companyId", 
+            "type" : "foreignKey",
+             "referenceTable":"tallyCompanies",
+            "referenceColumn":"id"
+        }, 
+        {
+            "name" : "id", 
+            "type" : "id"
+        }, 
+        {
+            "name" : "stockGroupName", 
+            "type" : "string"
+        }
+    ],
+    "tallyStockItems" : [
+        {
+            "name" : "parent", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyStockGroups",
+            "referenceColumn":"stockGroupName"
+        }, 
+        {
+            "name" : "openingBalance", 
+            "type" : "number"
+        }, 
+        {
+            "name" : "openingRate", 
+            "type" : "number"
+        }, 
+        {
+            "name" : "companyId", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyCompanies",
+            "referenceColumn":"id"
+        }, 
+        {
+            "name" : "baseUnits", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "openingValue", 
+            "type" : "number"
+        }, 
+        {
+            "name" : "category", 
+            "type" : "foreignKey",
+            "referenceTable":"tallyStockCategories",
+            "referenceColumn":"stockCategoryName"
+        }, 
+        {
+            "name" : "id", 
+            "type" : "id"
+        }, 
+        {
+            "name" : "aliasName", 
+            "type" : "string"
+        }, 
+        {
+            "name" : "stockItemName", 
+            "type" : "string"
+        }]
+}

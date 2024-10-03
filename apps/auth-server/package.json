@@ -16,7 +16,11 @@
     "db-dashboard:generate": "drizzle-kit --config=drizzle.dashboard.config.ts generate",
     "db-dashboard:migrate": "cross-env DB_MIGRATING=true drizzle-kit --config=drizzle.dashboard.config.ts migrate",
     "db-dashboard:drop": "drizzle-kit --config=drizzle.dashboard.config.ts drop",
-    "db-dashboard:studio": "drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893"
+    "db-dashboard:studio": "drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893",
+    "db-myTenant:generate": "drizzle-kit --config=drizzle.myTenant.config.ts generate",
+    "db-myTenant:migrate": "cross-env DB_MIGRATING=true drizzle-kit --config=drizzle.myTenant.config.ts migrate",
+    "db-myTenant:drop": "drizzle-kit --config=drizzle.myTenant.config.ts drop",
+    "db-myTenant:studio": "drizzle-kit --config=drizzle.myTenant.config.ts studio --port 4893"
   },
   "devDependencies": {
     "@trg_package/config-eslint": "*",
@@ -40,14 +44,15 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@trg_package/schemas-tally": "*",
     "@trg_package/config-env": "*",
-    "@trg_package/schemas-auth": "*",
-    "@trg_package/pg-client": "*",
-    "@trg_package/schemas-dashboard": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
+    "@trg_package/pg-client": "*",
+    "@trg_package/schemas-auth": "*",
+    "@trg_package/schemas-dashboard": "*",
+    "@trg_package/schemas-reporting": "^1.0.0",
+    "@trg_package/schemas-tally": "*",
     "@trg_package/utils": "*",
     "child-process": "^1.0.2",
     "dotenv": "^16.4.5",
