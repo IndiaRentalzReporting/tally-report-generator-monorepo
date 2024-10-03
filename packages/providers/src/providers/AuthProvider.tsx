@@ -22,12 +22,13 @@ interface AuthProviderState {
   loading: boolean;
   permissions: Permissions[];
   tenant: TenantInsert['name'] | null;
+}
+
+interface AuthProviderMutation {
   onboard: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{
-        user: DetailedUser;
-      }>,
+      AxiosResponse<{ user: DetailedUser }>,
       Error,
       { user: RegisterUser; tenant: TenantInsert }
     >;
@@ -35,9 +36,7 @@ interface AuthProviderState {
   signIn: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{
-        user: DetailedUser;
-      }>,
+      AxiosResponse<{ user: DetailedUser }>,
       Error,
       LoginUser
     >;
@@ -45,21 +44,14 @@ interface AuthProviderState {
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{
-        user: UserSelect;
-      }>,
+      AxiosResponse<{ user: UserSelect }>,
       Error,
       RegisterUser
     >;
   };
   signOut: {
     isLoading: boolean;
-    mutation: UseMutateAsyncFunction<
-      AxiosResponse<{
-        message: string;
-      }>,
-      Error
-    >;
+    mutation: UseMutateAsyncFunction<AxiosResponse<{ message: string }>, Error>;
   };
 }
 
@@ -67,10 +59,11 @@ const initialState: AuthProviderState = {
   user: null,
   isAuthenticated: false,
   loading: true,
-  permissions: JSON.parse(
-    localStorage.getItem('permissions') ?? '[]'
-  ) as AuthProviderState['permissions'],
-  tenant: null,
+  permissions: [],
+  tenant: null
+};
+
+const initialMutation: AuthProviderMutation = {
   onboard: {
     mutation: () => Promise.reject('Onboard Mutation does not exist'),
     isLoading: false
@@ -89,7 +82,12 @@ const initialState: AuthProviderState = {
   }
 };
 
-const AuthContext = createContext<AuthProviderState>(initialState);
+interface AuthProviderContext extends AuthProviderState, AuthProviderMutation {}
+
+const AuthContext = createContext<AuthProviderContext>({
+  ...initialState,
+  ...initialMutation
+});
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -97,16 +95,15 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient();
-  const [state, setState] =
-    useState<
-      Omit<AuthProviderState, 'signIn' | 'signUp' | 'onboard' | 'signOut'>
-    >(initialState);
+  const onSuccess = () =>
+    queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+  const [state, setState] = useState<AuthProviderState>(initialState);
 
-  const { data: authStatus, isFetching } = useQuery({
-    queryFn: () => services.status(),
-    select: (data) => data.data,
+  const { data: authStatus } = useQuery({
+    queryFn: services.status,
     queryKey: ['auth', 'status'],
-    staleTime: 1000 * 60 * 15
+    staleTime: 1000 * 60 * 15,
+    select: (data) => data.data
   });
 
   const { mutateAsync: onboardMutation, isPending: isOnboarding } = useMutation(
@@ -114,106 +111,78 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
         services.onboard(data),
       mutationKey: ['auth', 'onboard'],
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      }
+      onSuccess
     }
   );
 
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-    }
+    onSuccess
   });
 
   const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
     mutationFn: (data: RegisterUser) => services.signUp(data),
     mutationKey: ['auth', 'signUp'],
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-    }
+    onSuccess
   });
 
   const { mutateAsync: signOutMutation, isPending: isSigningOut } = useMutation(
     {
-      mutationFn: () => services.signOut(),
+      mutationFn: services.signOut,
       mutationKey: ['auth', 'signOut'],
-      onSuccess() {
-        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
-      }
+      onSuccess
     }
   );
 
   const createPermissions = (
     permissions: UserRole['permission'] | undefined
   ): Permissions[] => {
-    const p =
+    return (
       permissions
         ?.filter(({ module }) => !!module)
-        .map(({ module, permissionAction }) => {
-          const { name, icon } = module;
-          return {
-            module: { name, icon },
-            actions: permissionAction.map(({ action }) => action.name)
-          };
-        }) ?? [];
-    localStorage.setItem('permissions', JSON.stringify(p));
-    return p;
+        .map(({ module, permissionAction }) => ({
+          module: { name: module.name, icon: module.icon },
+          actions: permissionAction.map(({ action }) => action.name)
+        })) ?? []
+    );
   };
 
   useEffect(() => {
-    if (!authStatus || !authStatus.user || !authStatus.isAuthenticated) {
-      localStorage.removeItem('permissions');
+    if (authStatus && authStatus.isAuthenticated && authStatus.user) {
+      const { user, isAuthenticated } = authStatus;
+      const permissions = createPermissions(user.role?.permission);
+      const tenant = user.tenant?.name;
+
       setState({
-        ...initialState,
-        permissions: []
+        user,
+        isAuthenticated,
+        permissions,
+        tenant,
+        loading: false
       });
-      return;
+    } else {
+      setState({ ...initialState, loading: false });
     }
-
-    const { user, isAuthenticated } = authStatus;
-    const permissions = createPermissions(user.role?.permission);
-    const tenant = user.tenant?.name;
-
-    setState({
-      user,
-      isAuthenticated,
-      permissions,
-      tenant,
-      loading: false
-    });
   }, [authStatus]);
 
-  useEffect(() => {
-    setState((prev) => ({
-      ...prev,
-      loading: isFetching
-    }));
-  }, [isFetching]);
+  const contextValue = {
+    ...state,
+    onboard: { mutation: onboardMutation, isLoading: isOnboarding },
+    signIn: { mutation: signInMutation, isLoading: isSigningIn },
+    signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+    signOut: { mutation: signOutMutation, isLoading: isSigningOut }
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        signIn: { mutation: signInMutation, isLoading: isSigningIn },
-        signUp: { mutation: signUpMutation, isLoading: isSigningUp },
-        onboard: { mutation: onboardMutation, isLoading: isOnboarding },
-        signOut: { mutation: signOutMutation, isLoading: isSigningOut }
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
+export const useAuth = (): AuthProviderContext => {
   const context = useContext(AuthContext);
-
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-
   return context;
 };

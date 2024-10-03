@@ -12,19 +12,16 @@ import {
   ResetPassword
 } from '@/views/Authentication';
 import { PublicRoutes } from '@/components/utility/Routes';
-import { RootLayout } from '@/components/composite/RootLayout';
 
 const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route path="/" element={<RootLayout />}>
+      <Route element={<PublicRoutes />}>
         <Route index element={<Navigate to="/sign-up" />} />
-        <Route element={<PublicRoutes />}>
-          <Route path="sign-up" element={<SignupForm />} />
-          <Route path="sign-in" element={<SigninForm />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password/:token" element={<ResetPassword />} />
-        </Route>
+        <Route path="sign-up" element={<SignupForm />} />
+        <Route path="sign-in" element={<SigninForm />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
       </Route>
     ])
   );

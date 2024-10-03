@@ -40,9 +40,7 @@ export const removePrivate = (
 ): void => {
   const originalJson = res.json;
   res.json = function (body: JsonValue): Response {
-    console.log('before', body);
     body = removePrivateData(body) as JsonValue;
-    console.log('after', body);
     return originalJson.call(this, body);
   };
   next();
