@@ -30,7 +30,6 @@
   "dependencies": {
     "@trg_package/base-service": "*",
     "@trg_package/errors": "*",
-    "@trg_package/utils": "^1.0.0",
     "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1"
   },

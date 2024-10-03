@@ -2,7 +2,7 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as dashboardSchemas from '../schemas';
-import { hashPassword } from '@trg_package/utils';
+import bcrypt from 'bcrypt';
 import { UserInsert, UserSelect } from '../schemas/users';
 import { DetailedUser } from '../types';
 
@@ -15,9 +15,11 @@ export class UserService extends BaseServiceNew<
   }
 
   public async createOne(data: UserInsert): Promise<UserSelect> {
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(data.password, salt);
     const user = await super.createOne({
       ...data,
-      password: await hashPassword(data.password)
+      password
     });
     return user;
   }

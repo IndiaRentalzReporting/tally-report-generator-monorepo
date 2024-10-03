@@ -1,6 +1,6 @@
 import { randomBytes } from 'crypto';
 import { BadRequestError, ReadError } from '@trg_package/errors';
-import { comparePassword } from '@trg_package/utils';
+import bcrypt from 'bcrypt';
 import {
   SafeUserSelect,
   TenantInsert,
@@ -41,9 +41,13 @@ class AuthService {
       throw new BadRequestError('Tenant Already Exists');
     }
 
-    const tenant = await TenantService.onboard(tenantData, userData);
+    const { tenant, user: dashboardUser } = await TenantService.onboard(
+      tenantData,
+      userData
+    );
     const { password, ...user } = await UserService.createOne({
       ...userData,
+      password: dashboardUser.password,
       tenant_id: tenant.id
     });
 
@@ -64,7 +68,10 @@ class AuthService {
       email
     });
 
-    await comparePassword(password, user.password);
+    const doesPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!doesPasswordMatch) {
+      throw new BadRequestError('Wrong Password');
+    }
 
     return user;
   }

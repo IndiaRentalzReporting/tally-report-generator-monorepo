@@ -52,7 +52,6 @@
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/schemas-reporting": "^1.0.0",
     "@trg_package/schemas-tally": "*",
-    "@trg_package/utils": "*",
     "child-process": "^1.0.2",
     "dotenv": "^16.4.5",
     "dotenv-expand": "^11.0.6",
