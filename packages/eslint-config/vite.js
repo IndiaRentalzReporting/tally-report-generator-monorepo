@@ -4,7 +4,7 @@ const project = resolve(process.cwd(), 'tsconfig.json');
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ['./base.js', 'airbnb', 'airbnb/hooks'],
+  extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', './base.js'],
   globals: {
     React: true,
     JSX: true
@@ -21,6 +21,12 @@ module.exports = {
     }
   },
   rules: {
+    'comma-dangle': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+    'import/extensions': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'import/prefer-default-export': 'off',
     'react/no-danger': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
