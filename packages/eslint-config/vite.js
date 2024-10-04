@@ -21,7 +21,6 @@ module.exports = {
     node: true,
     browser: true
   },
-  plugins: ['only-warn', 'turbo', '@typescript-eslint'],
   settings: {
     'import/resolver': {
       typescript: {
@@ -29,11 +28,22 @@ module.exports = {
       }
     }
   },
+  rules: {
+    '@typescript-eslint/comma-dangle': 'off',
+    '@typescript-eslint/comma-spacing': 'off',
+    'import/extensions': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'react/function-component-definition': [
+      'warn',
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function'
+      }
+    ],
+    'import/prefer-default-export': 'off'
+  },
+  plugins: ['only-warn', 'turbo', '@typescript-eslint'],
   parser: '@typescript-eslint/parser',
-  ignorePatterns: [
-    // Ignore dotfiles
-    '.*.js',
-    'node_modules/'
-  ],
+  ignorePatterns: ['.*.js', 'node_modules/'],
   overrides: [{ files: ['*.js?(x)', '*.ts?(x)'] }]
 };
