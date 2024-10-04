@@ -24,7 +24,7 @@ const initialUserState: RegisterUser = {
   last_name: ''
 };
 
-export function SignupForm() {
+export const SignupForm = () => {
   const {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
@@ -33,7 +33,7 @@ export function SignupForm() {
     useState<TenantInsert>(initialTenantState);
   const [userData, setUserData] = useState<RegisterUser>(initialUserState);
 
-  const handleFormChange = <T extends Object>(
+  const handleFormChange = <T extends object>(
     e: ChangeEvent<HTMLInputElement>,
     callback: React.Dispatch<React.SetStateAction<T>>
   ) => {
@@ -137,4 +137,4 @@ export function SignupForm() {
       </Card>
     </div>
   );
-}
+};

@@ -1,8 +1,4 @@
-import { Label } from '@trg_package/components';
-import { useState, FC, FormEvent } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import {
+import { Label ,
   Card,
   CardHeader,
   CardTitle,
@@ -16,6 +12,9 @@ import {
   Else,
   useToast
 } from '@trg_package/components';
+import { useState, FC, FormEvent } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { services } from './services';
 
 export const ResetPassword: FC = () => {
@@ -44,7 +43,7 @@ export const ResetPassword: FC = () => {
         setConfirmPassword('');
         toast({
           variant: 'default',
-          title: `Password Reset!`,
+          title: 'Password Reset!',
           description: data.data.message,
           action: (
             <ToastAction altText="Okay!" onClick={() => navigate('/sign-in')}>

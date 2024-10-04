@@ -13,7 +13,7 @@ import {
 import { LoginUser } from '@trg_package/schemas-auth/types';
 import { useAuth } from '@trg_package/providers';
 
-export function SigninForm() {
+export const SigninForm = () => {
   const {
     signIn: { mutation: signIn, isLoading }
   } = useAuth();
@@ -93,4 +93,4 @@ export function SigninForm() {
       </Card>
     </div>
   );
-}
+};

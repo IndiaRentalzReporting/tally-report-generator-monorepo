@@ -13,12 +13,8 @@ const authAxios = createAxiosClient(
 const services = {
   forgotPassword: (data: {
     email: UserSelect['email'];
-  }): AxiosPromise<{ message: string }> => {
-    return authAxios.post('/forgot-password', data);
-  },
-  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => {
-    return authAxios.post(`/check-reset-password/${token}`);
-  },
+  }): AxiosPromise<{ message: string }> => authAxios.post('/forgot-password', data),
+  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => authAxios.post(`/check-reset-password/${token}`),
   resetPassword: (data: {
     token: string;
     password: string;

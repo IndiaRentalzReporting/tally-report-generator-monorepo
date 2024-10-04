@@ -13,7 +13,7 @@ import {
 } from '@/views/Authentication';
 import { PublicRoutes } from '@/components/utility/Routes';
 
-function App() {
+const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route element={<PublicRoutes />}>
@@ -27,6 +27,6 @@ function App() {
   );
 
   return <RouterProvider router={router} />;
-}
+};
 
 export default App;

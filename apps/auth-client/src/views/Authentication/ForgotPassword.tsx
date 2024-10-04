@@ -1,7 +1,4 @@
-import { Label } from '@trg_package/components';
-import { useState, FC, FormEvent } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import {
+import { Label ,
   Card,
   CardHeader,
   CardTitle,
@@ -12,6 +9,8 @@ import {
   ToastAction,
   useToast
 } from '@trg_package/components';
+import { useState, FC, FormEvent } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { services } from './services';
 
 export const ForgotPassword: FC = () => {
@@ -25,7 +24,7 @@ export const ForgotPassword: FC = () => {
         setEmail('');
         toast({
           variant: 'default',
-          title: `Email Sent!`,
+          title: 'Email Sent!',
           description: data.data.message,
           action: <ToastAction altText="Okay!">Okay!</ToastAction>
         });
