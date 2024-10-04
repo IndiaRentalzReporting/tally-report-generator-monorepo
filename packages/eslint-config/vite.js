@@ -6,9 +6,12 @@ const project = resolve(process.cwd(), 'tsconfig.json');
 module.exports = {
   extends: [
     'eslint:recommended',
+    'turbo',
+    'airbnb',
     'prettier',
-    require.resolve('@vercel/style-guide/eslint/react'),
-    'turbo'
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended'
   ],
   globals: {
     React: true,
@@ -18,7 +21,7 @@ module.exports = {
     node: true,
     browser: true
   },
-  plugins: ['only-warn'],
+  plugins: ['only-warn', 'turbo', '@typescript-eslint'],
   settings: {
     'import/resolver': {
       typescript: {
@@ -26,6 +29,7 @@ module.exports = {
       }
     }
   },
+  parser: '@typescript-eslint/parser',
   ignorePatterns: [
     // Ignore dotfiles
     '.*.js',
