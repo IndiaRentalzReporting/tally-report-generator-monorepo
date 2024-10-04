@@ -1,15 +1,15 @@
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import {
+  PermissionActionSelectSchema,
+  PermissionActionInsertSchema
+} from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   readAll,
   updateOne,
   deleteOne
 } from '../controller/permission_action.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import {
-  PermissionActionSelectSchema,
-  PermissionActionInsertSchema
-} from '@trg_package/schemas-dashboard/types';
 
 const permissionActionRouter = Router();
 

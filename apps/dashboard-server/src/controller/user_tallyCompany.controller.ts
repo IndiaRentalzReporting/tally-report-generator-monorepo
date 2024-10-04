@@ -39,16 +39,15 @@ export const readAll = async (
 
 export const updateOne = async (
   req: Request<
-    Pick<UserTallyCompanySelect, 'user_id' | 'tallyCompany_id'>,
+  Pick<UserTallyCompanySelect, 'user_id' | 'tallyCompany_id'>,
     object,
-    UserTallyCompanySelect
+  UserTallyCompanySelect
   >,
   res: Response<{ userTallyCompany: UserTallyCompanySelect }>,
   next: NextFunction
 ) => {
   try {
-    const { user_id: oldActionId, tallyCompany_id: oldPermissionId } =
-      req.params;
+    const { user_id: oldActionId, tallyCompany_id: oldPermissionId } = req.params;
     const { user_id, tallyCompany_id } = req.body;
     const userTallyCompany = await req.userTallyCompanyService.updateOne(
       { user_id: oldActionId, tallyCompany_id: oldPermissionId },

@@ -1,8 +1,8 @@
 import { NotFoundError } from '@trg_package/errors';
 import { UserSelect } from '@trg_package/schemas-dashboard/types';
-import config from '../config';
 import jwt from 'jsonwebtoken';
 import { UserService } from '@trg_package/schemas-dashboard/services';
+import config from '../config';
 
 export const generateUserJWTToken = (user: UserSelect): string => {
   const { SMTP_SECRET } = config;
@@ -27,7 +27,9 @@ export const createResetPasswordLink = (
   user: UserSelect,
   isEmail: boolean = false
 ): string => {
-  const { PROTOCOL, DASH_SUBDOMAIN, DOMAIN, TLD } = config;
+  const {
+    PROTOCOL, DASH_SUBDOMAIN, DOMAIN, TLD
+  } = config;
   const FRONTEND_URL = `${PROTOCOL}://${DASH_SUBDOMAIN}.${DOMAIN}.${TLD}`;
   const token = generateUserJWTToken(user);
   const resetLink = `${isEmail ? FRONTEND_URL : ''}/reset-password/${token}`;

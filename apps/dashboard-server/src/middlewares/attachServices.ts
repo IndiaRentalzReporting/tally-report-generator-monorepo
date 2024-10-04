@@ -19,8 +19,7 @@ export const attachServices = (
   next: NextFunction
 ) => {
   const { dashboardDb } = req;
-  if (!dashboardDb)
-    throw new NotFoundError('Dashboard database client not found');
+  if (!dashboardDb) throw new NotFoundError('Dashboard database client not found');
   req.userService = new UserService(dashboardDb);
   req.roleService = new RoleService(dashboardDb);
   req.moduleService = new ModuleService(dashboardDb);

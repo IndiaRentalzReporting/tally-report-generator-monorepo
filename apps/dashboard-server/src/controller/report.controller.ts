@@ -5,15 +5,15 @@ import {
   TableSelect
 } from '@trg_package/schemas-reporting/types';
 
-type ReportResponse<isArray extends Boolean = false> = isArray extends true
+type ReportResponse<isArray extends boolean = false> = isArray extends true
   ? { reports: Partial<ReportSelect>[] }
   : { report: Partial<ReportSelect> };
 
 export const createOne = async (
   req: Request<
     object,
-    ReportResponse,
-    Pick<ReportInsert, 'name' | 'baseEntity' | 'description'>
+  ReportResponse,
+  Pick<ReportInsert, 'name' | 'baseEntity' | 'description'>
   >,
   res: Response<ReportResponse>,
   next: NextFunction

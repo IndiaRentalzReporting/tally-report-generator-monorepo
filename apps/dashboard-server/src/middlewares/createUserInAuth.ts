@@ -7,7 +7,7 @@ export const createUserInAuth = async (
   res: Response,
   next: NextFunction
 ) => {
-  const cookie = req.headers.cookie;
+  const { cookie } = req.headers;
   try {
     await authAxios.post(
       '/api/v1/users/create',
@@ -22,5 +22,5 @@ export const createUserInAuth = async (
     return next();
   } catch (e) {
     return next(e);
+  }
 };
-}

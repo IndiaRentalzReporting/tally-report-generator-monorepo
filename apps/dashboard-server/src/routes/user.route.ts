@@ -1,13 +1,13 @@
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   createOne,
   readAll,
   deleteOne,
   updateOne
 } from '../controller/user.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
-import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
 
 const userRouter = Router();
 

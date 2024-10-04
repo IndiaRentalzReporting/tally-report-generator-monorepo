@@ -1,15 +1,15 @@
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import {
+  UserTallyCompanySelectSchema,
+  UserTallyCompanyInsertSchema
+} from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   readAll,
   updateOne,
   deleteOne
 } from '../controller/user_tallyCompany.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import {
-  UserTallyCompanySelectSchema,
-  UserTallyCompanyInsertSchema
-} from '@trg_package/schemas-dashboard/types';
 
 const userTallyCompanyRouter = Router();
 

@@ -48,7 +48,7 @@ export const updateRole = async (
   req: Request<
     object,
     object,
-    { userIds: UserSelect['id'][]; roleId: RoleSelect['id'] }
+  { userIds: UserSelect['id'][]; roleId: RoleSelect['id'] }
   >,
   res: Response<{ userIds: string[] }>,
   next: NextFunction

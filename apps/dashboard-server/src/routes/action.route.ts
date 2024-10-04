@@ -1,12 +1,12 @@
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import { ActionInsertSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   deleteOne,
   readAll,
   updateOne
 } from '../controller/action.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import { ActionInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const actionRouter = Router();
 

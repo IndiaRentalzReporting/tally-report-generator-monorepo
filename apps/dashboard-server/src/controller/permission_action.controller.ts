@@ -39,16 +39,15 @@ export const readAll = async (
 
 export const updateOne = async (
   req: Request<
-    Pick<PermissionActionSelect, 'action_id' | 'permission_id'>,
+  Pick<PermissionActionSelect, 'action_id' | 'permission_id'>,
     object,
-    PermissionActionSelect
+  PermissionActionSelect
   >,
   res: Response<{ permissionAction: PermissionActionSelect }>,
   next: NextFunction
 ) => {
   try {
-    const { action_id: oldActionId, permission_id: oldPermissionId } =
-      req.params;
+    const { action_id: oldActionId, permission_id: oldPermissionId } = req.params;
     const { action_id, permission_id } = req.body;
     const permissionAction = await req.permissionActionService.updateOne(
       { action_id: oldActionId, permission_id: oldPermissionId },
