@@ -1,6 +1,5 @@
 import { Edit, Minus } from 'lucide-react';
 import React, { Suspense, lazy } from 'react';
-import { useIsAllowed } from '@/hooks';
 import {
   Drawer,
   DrawerTrigger,
@@ -16,6 +15,7 @@ import {
   Then,
   Else
 } from '@trg_package/components';
+import { useIsAllowed } from '@/hooks';
 
 interface IUpdateEntityProps {
   module: string;

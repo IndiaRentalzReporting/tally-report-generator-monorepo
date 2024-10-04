@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
-import { State, StateAsProps } from './interface';
 import { Button, Input, Label, Switch } from '@trg_package/components';
+import { State, StateAsProps } from './interface';
 
 const iconSchema = z
   .string()

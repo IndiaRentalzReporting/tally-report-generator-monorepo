@@ -15,8 +15,7 @@ const queryClient = new QueryClient({
 
 export const RootLayout: React.FC<{ children: React.ReactNode }> = ({
   children
-}) => {
-  return (
+}) => (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -25,5 +24,4 @@ export const RootLayout: React.FC<{ children: React.ReactNode }> = ({
         </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
-  );
-};
+);

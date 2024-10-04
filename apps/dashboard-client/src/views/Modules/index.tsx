@@ -1,6 +1,6 @@
 import React from 'react';
-import ReadModule from './Read';
 import { When } from '@trg_package/components';
+import ReadModule from './Read';
 import { useIsAllowed } from '@/hooks';
 
 const Modules: React.FC = () => {

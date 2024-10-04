@@ -10,8 +10,8 @@ import {
   Button,
   When
 } from '@trg_package/components';
-import { useNav } from '@/providers/NavigationProvider';
 import { useAuth } from '@trg_package/providers';
+import { useNav } from '@/providers/NavigationProvider';
 
 const DashboardSidebar: React.FC = () => {
   const { tenant } = useAuth();
@@ -33,8 +33,8 @@ const DashboardSidebar: React.FC = () => {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <Accordion type="single" collapsible className="w-full">
-              {navigation.map(({ name, to, children, icon }, index) => (
-                <AccordionItem value={`item-${index}`} key={index}>
+              {navigation.map(({ name, to, children, icon }) => (
+                <AccordionItem value={`item-${name}`} key={name}>
                   <NavLink
                     to={to}
                     className={({ isActive }) =>
@@ -65,10 +65,10 @@ const DashboardSidebar: React.FC = () => {
                   </NavLink>
                   <When condition={!!children?.length}>
                     <AccordionContent className="flex flex-col float-right pb-0 py-2 px-3 ps-6 w-full">
-                      {children?.map((child, index) => (
+                      {children?.map((child) => (
                         <NavLink
                           to={child.to}
-                          key={index}
+                          key={child.name}
                           className={({ isActive }) =>
                             clsx(
                               'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',

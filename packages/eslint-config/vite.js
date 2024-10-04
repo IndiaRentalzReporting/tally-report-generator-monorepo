@@ -31,6 +31,9 @@ module.exports = {
   rules: {
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/comma-spacing': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+    'react/no-danger': 'off',
+    'react/require-default-props': 'off',
     'import/extensions': 'off',
     'import/no-extraneous-dependencies': 'off',
     'react/function-component-definition': [

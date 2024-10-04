@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { DataTable } from '@/components/composite';
 import {
   Card,
   CardHeader,
@@ -9,6 +8,7 @@ import {
   CardContent,
   Skeleton
 } from '@trg_package/components';
+import { DataTable } from '@/components/composite';
 import { services } from '@/services/action';
 import { columns } from './columns';
 

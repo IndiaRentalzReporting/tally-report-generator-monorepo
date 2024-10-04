@@ -5,9 +5,9 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
+import { useAuth } from '@trg_package/providers';
 import { PrivateRoutes, ModuleMapper } from './components/utility';
 import { DashboardLayout } from './components/composite';
-import { useAuth } from '@trg_package/providers';
 
 const App = () => {
   const { permissions } = useAuth();
@@ -20,15 +20,13 @@ const App = () => {
           {permissions?.map(({ module: { name }, actions }) => (
             <Route path={name.toLowerCase()} key={name}>
               <Route index element={<ModuleMapper module={name} />} />
-              {actions.map<React.ReactNode>((action) => {
-                return (
+              {actions.map<React.ReactNode>((action) => (
                   <Route
                     path={`${action.toLowerCase()}`}
                     key={action}
                     element={<ModuleMapper module={name} action={action} />}
                   />
-                );
-              })}
+              ))}
             </Route>
           ))}
         </Route>

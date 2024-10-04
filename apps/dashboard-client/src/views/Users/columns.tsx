@@ -30,8 +30,7 @@ export const columns: ColumnDef<DetailedUser>[] = [
   },
   {
     accessorKey: 'first_name',
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -40,13 +39,11 @@ export const columns: ColumnDef<DetailedUser>[] = [
           First Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    }
+    )
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -55,13 +52,11 @@ export const columns: ColumnDef<DetailedUser>[] = [
           Last Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    }
+    )
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -70,8 +65,7 @@ export const columns: ColumnDef<DetailedUser>[] = [
           Email
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    }
+    )
   },
   {
     id: 'Actions',

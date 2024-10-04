@@ -1,10 +1,10 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler } from 'react';
+import { Button } from '@trg_package/components';
+import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
 import { services } from '@/services/permission';
 import { services as actionService } from '@/services/action';
 import { services as permission_actionService } from '@/services/permission_action';
-import { Button } from '@trg_package/components';
-import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
 
@@ -19,7 +19,7 @@ const Create: React.FC = () => {
       mutationFn: async () => {
         const permissions =
           createPermissionsUsingModulePermissions(modulePermissions);
-        for (let { module_id, action_ids } of permissions) {
+        for (const { module_id, action_ids } of permissions) {
           const {
             data: {
               permission: { id: permission_id }
@@ -28,7 +28,7 @@ const Create: React.FC = () => {
             module_id,
             role_id: selectedRole
           });
-          for (let action_id of action_ids) {
+          for (const action_id of action_ids) {
             await actionService.read({ id: action_id });
             await permission_actionService.createOne({
               permission_id,

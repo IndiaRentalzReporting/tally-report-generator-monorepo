@@ -2,8 +2,7 @@ import React from 'react';
 import { Input } from '@trg_package/components';
 import { StateAsProps } from './interface';
 
-const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => {
-  return (
+const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => (
     <div className="flex flex-col gap-4">
       <Input
         id="name"
@@ -19,7 +18,6 @@ const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => {
         required
       />
     </div>
-  );
-};
+);
 
 export default Fields;

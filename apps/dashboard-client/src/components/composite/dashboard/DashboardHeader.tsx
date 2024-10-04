@@ -14,11 +14,11 @@ import {
   SheetTrigger,
   When
 } from '@trg_package/components';
-import { useNav } from '@/providers/NavigationProvider';
-import ToggleThemeDropdown from '../ToggleThemeDropdown';
-import ApiKeyDropdown from '../ApiKeyDropdown';
-import UserSettingsDropdown from '../UserSettingsDropdown';
 import { useAuth } from '@trg_package/providers';
+import { useNav } from '@/providers/NavigationProvider';
+import { ToggleThemeDropdown } from '../ToggleThemeDropdown';
+import { ApiKeyDropdown } from '../ApiKeyDropdown';
+import UserSettingsDropdown from '../UserSettingsDropdown';
 
 const DashboardHeader: React.FC = () => {
   const { tenant } = useAuth();

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
@@ -63,19 +63,18 @@ const Fields: React.FC<StateAsProps> = ({
       queryKey: ['roles', 'getAll']
     });
 
-  const handlePermissionChange = (
-    checked: boolean,
-    module_id: string,
-    action_id: string
-  ) => {
-    setModulePermissions((prev) => ({
-      ...prev,
-      [module_id]: {
-        ...prev[module_id],
-        [action_id]: checked
-      }
-    }));
-  };
+  const handlePermissionChange = useCallback(
+    (checked: boolean, module_id: string, action_id: string) => {
+      setModulePermissions((prev) => ({
+        ...prev,
+        [module_id]: {
+          ...prev[module_id],
+          [action_id]: checked
+        }
+      }));
+    },
+    [setModulePermissions]
+  );
 
   const { data: actions, isFetching: fetchingActions } = useQuery({
     queryFn: () => actionService.read(),
@@ -118,7 +117,7 @@ const Fields: React.FC<StateAsProps> = ({
       },
       ...actionColumns
     ]);
-  }, [actions, modulePermissions]);
+  }, [actions, modulePermissions, handlePermissionChange]);
 
   return (
     <>
@@ -130,9 +129,9 @@ const Fields: React.FC<StateAsProps> = ({
           <SelectGroup>
             <SelectLabel>Roles</SelectLabel>
             <Skeleton isLoading={fetchingRoles}>
-              {allRolesWithNoPermission?.map((role, index) => (
-                <SelectItem key={index} value={role.id}>
-                  {role.name}
+              {allRolesWithNoPermission?.map((rwnp) => (
+                <SelectItem key={rwnp.id} value={rwnp.id}>
+                  {rwnp.name}
                 </SelectItem>
               ))}
             </Skeleton>

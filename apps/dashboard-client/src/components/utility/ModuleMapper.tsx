@@ -1,9 +1,13 @@
 import React, { Suspense, lazy } from 'react';
 import { Skeleton } from '@trg_package/components';
+import {
+  ActionSelect,
+  ModuleSelect
+} from '@trg_package/schemas-dashboard/types';
 
 interface IModuleMapperProps {
-  module: string;
-  action?: string;
+  module: ModuleSelect['name'];
+  action?: ActionSelect['name'];
 }
 
 export const ModuleMapper: React.FC<IModuleMapperProps> = ({

@@ -1,7 +1,7 @@
 import { Moon, Sun } from 'lucide-react';
 
-import { Button } from '@trg_package/components';
 import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -9,7 +9,7 @@ import {
 } from '@trg_package/components';
 import { useTheme } from '@trg_package/providers';
 
-const ToggleThemeDropdown = () => {
+export const ToggleThemeDropdown = () => {
   const { setTheme } = useTheme();
 
   return (
@@ -35,5 +35,3 @@ const ToggleThemeDropdown = () => {
     </DropdownMenu>
   );
 };
-
-export default ToggleThemeDropdown;
