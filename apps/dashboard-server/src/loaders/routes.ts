@@ -15,8 +15,6 @@ import {
   attachUser,
   isRoleAllowed
 } from '@/middlewares';
-import columnRouter from '@/routes/column.route';
-import tableRouter from '@/routes/table.route';
 import reportRouter from '@/routes/report.route';
 
 const routesLoader = (app: Express) => {
@@ -31,8 +29,6 @@ const routesLoader = (app: Express) => {
   app.use('/api/v1/roles', roleRouter);
   app.use('/api/v1/users', userRouter);
   app.use('/api/v1/apiKeys', apiKeyRouter);
-  app.use("/api/v1/columns", columnRouter);
-  app.use("/api/v1/tables", tableRouter);
   app.use("/api/v1/reports", reportRouter);
   app.use('/api/v1/actions', actionRouter);
   app.use('/api/v1/modules', moduleRouter);

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import {ReportInsert, ReportSelect, TableSelect} from "@trg_package/schemas-reporting/types"
+import {ColumnSelect, ReportInsert, ReportSelect, TableSelect} from "@trg_package/schemas-reporting/types"
 
 type ReportResponse<isArray extends Boolean = false> = isArray extends true ?  {reports : Partial<ReportSelect>[]} : {report : Partial<ReportSelect>};
 
@@ -75,3 +75,36 @@ export const readAll = async <T extends {reports : ReportSelect[]}>(
       return next(e);
     }
   };
+
+  
+export const getAllColumns = async <ResObject extends {columns : ColumnSelect[]}>(
+  req : Request<{tableId:TableSelect['id']},ResObject>,
+  res : Response<ResObject>,
+  next : NextFunction
+)  => {
+  try{
+      const table = await req.tableService.findOne({id : req.params.tableId});
+      const columns = await req.columnService.getAllColumns(req.params.tableId);
+      return res.json({columns} as ResObject)
+  }   
+  catch(e)
+  {
+      next(e);
+  } 
+}
+
+
+export const getAllTables = async <T extends {tables : TableSelect[]}>(
+  req : Request<object,T>,
+  res : Response<T>,
+  next : NextFunction
+)  => {
+  try{
+      const tables = (await req.tableService.findMany());
+      return res.json({tables} as T);
+  }
+  catch(e)
+  {   
+      return next(e);
+  }
+}

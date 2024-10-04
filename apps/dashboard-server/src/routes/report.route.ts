@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { createOne, deleteOne, readAll, updateOne } from '../controller/report.controller';
-import { ReportInsertSchema, ReportSelectSchema } from '@trg_package/schemas-reporting/types';
+import { createOne, deleteOne, getAllColumns, getAllTables, readAll, updateOne } from '../controller/report.controller';
+import { ReportInsertSchema, ReportSelectSchema, TableSelectSchema } from '@trg_package/schemas-reporting/types';
+import z from 'zod';
 
 
 const reportRouter = Router();
@@ -23,6 +24,22 @@ reportRouter.post(
 reportRouter.get(
     '/read',
     readAll
+);
+
+
+reportRouter.get(
+    '/read/getColumns/:tableId',
+    validateSchema({
+        params: z.object({
+            tableId : TableSelectSchema.shape.id
+        })
+    }),
+    getAllColumns
+);
+
+reportRouter.get(
+    '/read/getTables',
+    getAllTables,
 );
 
 
