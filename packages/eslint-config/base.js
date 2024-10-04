@@ -5,8 +5,8 @@ module.exports = {
     'eslint:recommended',
     'turbo',
     'prettier',
-    'airbnb-base/legacy',
-    'airbnb-typescript',
+    'airbnb-base',
+    'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended'
   ],
   plugins: ['only-warn', 'turbo', '@typescript-eslint'],

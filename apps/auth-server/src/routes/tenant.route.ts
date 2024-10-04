@@ -1,16 +1,16 @@
 import { z } from 'zod';
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import {
+  TenantInsertSchema,
+  TenantSelectSchema
+} from '@trg_package/schemas-auth/types';
 import {
   readAll,
   deleteOne,
   updateOne,
   createOne
 } from '../controller/tenant.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import {
-  TenantInsertSchema,
-  TenantSelectSchema
-} from '@trg_package/schemas-auth/types';
 
 const tenantRouter = Router();
 

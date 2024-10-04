@@ -1,10 +1,4 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import actions from '../models/dashboard/seed/Actions/data.json';
-import modules from '../models/dashboard/seed/Modules/data.json';
-import columns from '../models/dashboard/seed/Columns/data.json';
-import superUserRole from '../models/dashboard/seed/Roles/data.json';
-import * as dashboardSchemas from '../models/dashboard/schema';
-import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
 import {
   ActionService,
@@ -23,10 +17,18 @@ import {
   ColumnService,
   TableService
 } from '@trg_package/schemas-reporting/services';
+import actions from '../models/dashboard/seed/Actions/data.json';
+import modules from '../models/dashboard/seed/Modules/data.json';
+import columns from '../models/dashboard/seed/Columns/data.json';
+import superUserRole from '../models/dashboard/seed/Roles/data.json';
+import * as dashboardSchemas from '../models/dashboard/schema';
+import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
+
   private dashboardClient: PostgresJsDatabase<typeof dashboardSchemas>;
+
   public URL: string;
 
   constructor(db_username: string, db_password: string, db_name: string) {
@@ -55,7 +57,7 @@ class DashboardService {
       await this.seedModules(trx);
       await this.seedTable(trx);
       await this.seedColumn(trx);
-      return await this.createAdmin(userData, trx);
+      return this.createAdmin(userData, trx);
     });
     await this.terminateConnection();
     return admin;

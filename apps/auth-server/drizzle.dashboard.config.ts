@@ -1,6 +1,6 @@
 import { BadRequestError } from '@trg_package/errors';
-import config, { DashboardPgUrlKey } from './src/config';
 import { defineConfig } from 'drizzle-kit';
+import config, { DashboardPgUrlKey } from './src/config';
 
 let DASHBOARD_PG_URL = config[DashboardPgUrlKey];
 const { DB_MIGRATING } = config;

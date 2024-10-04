@@ -4,7 +4,7 @@ const project = resolve(process.cwd(), 'tsconfig.json');
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ['airbnb', 'airbnb/hooks', './base.js'],
+  extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', './base.js'],
   globals: {
     React: true,
     JSX: true

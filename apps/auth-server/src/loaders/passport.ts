@@ -17,7 +17,7 @@ export const passportLoader = (app: Express) => {
       const user = await AuthService.signIn({ email, password });
       return done(null, user);
     } catch (e) {
-      console.error(`Error while authenticating the User`);
+      console.error('Error while authenticating the User');
       return done(e);
     }
   };

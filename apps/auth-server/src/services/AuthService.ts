@@ -8,9 +8,9 @@ import {
   UserInsert,
   UserSelect
 } from '@trg_package/schemas-auth/types';
+import { Request } from 'express';
 import UserService from './UserService';
 import TenantService from './TenantService';
-import { Request } from 'express';
 
 class AuthService {
   public static async onboard(data: {

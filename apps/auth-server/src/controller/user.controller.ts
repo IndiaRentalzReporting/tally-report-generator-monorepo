@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import UserService from '../services/UserService';
 import {
   UserSelect,
   UserInsert,
   SafeUserSelect
 } from '@trg_package/schemas-auth/types';
+import UserService from '../services/UserService';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,

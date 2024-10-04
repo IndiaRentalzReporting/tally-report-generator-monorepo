@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import routesLoader from './routes';
 import { expressLoader } from '@trg_package/express';
+import routesLoader from './routes';
 import { passportLoader } from './passport';
 
 const appLoader = async (): Promise<Express> => {
