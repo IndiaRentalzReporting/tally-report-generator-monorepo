@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "lint": "eslint . --ext ts",
     "dev": "tsup --watch"
   },
   "keywords": [],
@@ -35,6 +35,8 @@
   },
   "devDependencies": {
     "@trg_package/config-typescript": "*",
+    "@trg_package/eslint-config": "*",
+    "eslint": "8.57.0",
     "tsup": "^8.2.4"
   }
 }

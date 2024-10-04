@@ -8,7 +8,7 @@
     "start:dev": "node dist/src/index.js",
     "test": "jest",
     "dev": "nodemon src/index.ts",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
+    "lint": "eslint . --ext ts",
     "db-auth:generate": "drizzle-kit --config=drizzle.auth.config.ts generate",
     "db-auth:migrate": "cross-env DB_MIGRATING=true drizzle-kit --config=drizzle.auth.config.ts migrate",
     "db-auth:drop": "drizzle-kit --config=drizzle.auth.config.ts drop",

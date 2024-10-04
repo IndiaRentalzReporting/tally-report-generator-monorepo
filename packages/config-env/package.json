@@ -12,6 +12,8 @@
   "devDependencies": {
     "@trg_package/errors": "*",
     "@trg_package/config-typescript": "*",
+    "@trg_package/eslint-config": "*",
+    "eslint": "8.57.0",
     "@types/node": "^22.5.4",
     "typescript": "^5.4.5"
   },

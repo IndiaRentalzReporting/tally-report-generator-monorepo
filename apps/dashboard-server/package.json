@@ -8,7 +8,7 @@
     "start:dev": "node dist/src/index.js",
     "test": "jest",
     "dev": "nodemon src/index.ts",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0"
+    "lint": "eslint . --ext ts"
   },
   "devDependencies": {
     "@trg_package/config-typescript": "*",

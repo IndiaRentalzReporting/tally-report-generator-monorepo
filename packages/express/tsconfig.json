@@ -1,11 +1,11 @@
 {
   "extends": "@trg_package/config-typescript/express.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", ".eslintrc"]
+  "include": ["src", "**/*.ts", "**/*.js", ".eslintrc.cjs"]
 }
