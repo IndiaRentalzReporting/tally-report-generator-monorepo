@@ -24,7 +24,7 @@ const initialUserState: RegisterUser = {
   last_name: ''
 };
 
-export const SignupForm = () => {
+export function SignupForm() {
   const {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
@@ -64,16 +64,16 @@ export const SignupForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignUp} className="grid gap-4">
+          <form className="grid gap-4" onSubmit={handleSignUp}>
             <div className="grid gap-2">
               <Label htmlFor="company_name">Comapny Name</Label>
               <Input
                 id="company_name"
                 name="name"
-                value={tenantData.name}
                 onChange={(e) => handleFormChange(e, setTenantData)}
                 placeholder="Max"
                 required
+                value={tenantData.name}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -82,10 +82,10 @@ export const SignupForm = () => {
                 <Input
                   id="first-name"
                   name="first_name"
-                  value={userData.first_name}
                   onChange={(e) => handleFormChange(e, setUserData)}
                   placeholder="Max"
                   required
+                  value={userData.first_name}
                 />
               </div>
               <div className="grid gap-2">
@@ -93,10 +93,10 @@ export const SignupForm = () => {
                 <Input
                   id="last-name"
                   name="last_name"
-                  value={userData.last_name}
                   onChange={(e) => handleFormChange(e, setUserData)}
                   placeholder="Robinson"
                   required
+                  value={userData.last_name}
                 />
               </div>
             </div>
@@ -104,12 +104,12 @@ export const SignupForm = () => {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                type="email"
                 name="email"
-                value={userData.email}
                 onChange={(e) => handleFormChange(e, setUserData)}
                 placeholder="m@example.com"
                 required
+                type="email"
+                value={userData.email}
               />
             </div>
             <div className="grid gap-2">
@@ -117,19 +117,19 @@ export const SignupForm = () => {
               <Input
                 id="password"
                 name="password"
-                value={userData.password}
                 onChange={(e) => handleFormChange(e, setUserData)}
-                type="password"
                 placeholder="********"
+                type="password"
+                value={userData.password}
               />
             </div>
-            <Button type="submit" className="w-full" isLoading={isLoading}>
+            <Button className="w-full" isLoading={isLoading} type="submit">
               Create an Account
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{' '}
-            <Link to="/sign-in" className="underline">
+            <Link className="underline" to="/sign-in">
               Sign in
             </Link>
           </div>
@@ -137,4 +137,4 @@ export const SignupForm = () => {
       </Card>
     </div>
   );
-};
+}

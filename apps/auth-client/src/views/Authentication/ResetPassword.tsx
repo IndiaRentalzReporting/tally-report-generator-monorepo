@@ -75,33 +75,33 @@ export const ResetPassword: FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleResetPassword} className="grid gap-4">
+              <form className="grid gap-4" onSubmit={handleResetPassword}>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Password</Label>
                   <Input
                     id="password"
                     name="password"
-                    type="password"
-                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="*********"
                     required
+                    type="password"
+                    value={password}
                   />
                   <Label htmlFor="email">ConfirmPassword</Label>
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="*********"
                     required
+                    type="password"
+                    value={confirmPassword}
                   />
                 </div>
                 <Button
-                  type="submit"
                   className="w-full"
                   isLoading={loadingMutation}
+                  type="submit"
                 >
                   Reset Password
                 </Button>

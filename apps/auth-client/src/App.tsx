@@ -13,20 +13,20 @@ import {
 } from '@/views/Authentication';
 import { PublicRoutes } from '@/components/utility/Routes';
 
-const App = () => {
+function App() {
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route element={<PublicRoutes />}>
-        <Route index element={<Navigate to="/sign-up" />} />
-        <Route path="sign-up" element={<SignupForm />} />
-        <Route path="sign-in" element={<SigninForm />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:token" element={<ResetPassword />} />
+        <Route element={<Navigate to="/sign-up" />} index />
+        <Route element={<SignupForm />} path="sign-up" />
+        <Route element={<SigninForm />} path="sign-in" />
+        <Route element={<ForgotPassword />} path="forgot-password" />
+        <Route element={<ResetPassword />} path="reset-password/:token" />
       </Route>
     ])
   );
 
   return <RouterProvider router={router} />;
-};
+}
 
 export default App;

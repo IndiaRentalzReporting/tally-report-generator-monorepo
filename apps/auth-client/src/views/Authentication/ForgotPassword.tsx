@@ -48,23 +48,23 @@ export const ForgotPassword: FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleForgotPassword} className="grid gap-4">
+          <form className="grid gap-4" onSubmit={handleForgotPassword}>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
-                type="email"
-                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="m@example.com"
                 required
+                type="email"
+                value={email}
               />
             </div>
             <Button
-              type="submit"
               className="w-full"
               isLoading={loadingMutation}
+              type="submit"
             >
               Send Email
             </Button>
