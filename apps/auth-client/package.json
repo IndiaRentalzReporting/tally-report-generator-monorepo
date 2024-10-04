@@ -6,18 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --fix --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@trg_package/providers": "*",
-    "@trg_package/axios-client": "*",
-    "@trg_package/config-env": "*",
-    "@trg_package/schemas-auth": "*",
-    "@trg_package/components": "*",
-    "@trg_package/schemas-dashboard": "*",
-    "@trg_package/errors": "*",
     "@tanstack/react-query": "^5.40.1",
+    "@trg_package/axios-client": "*",
+    "@trg_package/components": "*",
+    "@trg_package/config-env": "*",
+    "@trg_package/errors": "*",
+    "@trg_package/providers": "*",
+    "@trg_package/schemas-auth": "*",
+    "@trg_package/schemas-dashboard": "*",
     "axios": "^1.7.2",
     "lucide-react": "^0.439.0",
     "react": "^18.2.0",
@@ -27,6 +27,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@trg_package/eslint-config": "*",
     "@trg_package/config-tailwind": "*",
     "@trg_package/config-typescript": "*",
     "@types/node": "^20.12.12",
@@ -39,7 +40,7 @@
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
+    "typescript": "^5.4.5",
     "vite": "^5.4.1"
   }
 }
