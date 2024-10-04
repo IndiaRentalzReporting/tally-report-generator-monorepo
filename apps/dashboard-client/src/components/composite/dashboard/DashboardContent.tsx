@@ -15,10 +15,7 @@ const DashboardContent: React.FC = () => {
           <CreateDrawer module={currentModule!} />
         </div>
       </When>
-      <div
-        className="flex flex-col gap-6  rounded-lg shadow-sm w-full h-full relative"
-        x-chunk="dashboard-02-chunk-1"
-      >
+      <div className="flex flex-col gap-6  rounded-lg shadow-sm w-full h-full relative">
         <Outlet />
       </div>
     </main>

@@ -7,8 +7,8 @@ import { State as RoleState } from '../Roles/interface';
 
 export interface State
   extends Pick<
-    DetailedPermission,
-    'id' | 'module' | 'role' | 'permissionAction'
+  DetailedPermission,
+  'id' | 'module' | 'role' | 'permissionAction'
   > {}
 
 export const initialState: State = {

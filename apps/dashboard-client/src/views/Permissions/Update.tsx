@@ -1,14 +1,14 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler, useEffect } from 'react';
-import { services as permissionService } from '@/services/permission';
-import { services as actionService } from '@/services/action';
-import { services as permission_actionService } from '@/services/permission_action';
 import { Button, Skeleton } from '@trg_package/components';
 import {
   PermissionSelect,
   ModuleAction,
   ModulePermissions
 } from '@trg_package/schemas-dashboard/types';
+import { services as permissionService } from '@/services/permission';
+import { services as actionService } from '@/services/action';
+import { services as permission_actionService } from '@/services/permission_action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
 
@@ -45,32 +45,30 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
 
   const addPermissionId = (
     arr: Array<ModuleAction>
-  ): Array<ModuleAction & { permission_id: string }> => {
-    return arr.map((pP) => {
-      const permissionWithSameModuleId = permissions.find(
-        (permission) => permission.module_id === pP.module_id
-      );
-      if (!permissionWithSameModuleId) {
-        throw new Error();
-      }
-      return {
-        ...pP,
-        permission_id: permissionWithSameModuleId.id
-      };
-    });
-  };
+  ): Array<ModuleAction & { permission_id: string }> => arr.map((pP) => {
+    const permissionWithSameModuleId = permissions.find(
+      (permission) => permission.module_id === pP.module_id
+    );
+    if (!permissionWithSameModuleId) {
+      throw new Error();
+    }
+    return {
+      ...pP,
+      permission_id: permissionWithSameModuleId.id
+    };
+  });
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } =
     useMutation({
       mutationFn: async () => {
         const prettyPermissions: Array<
-          ModuleAction & { permission_id: string }
+        ModuleAction & { permission_id: string }
         > = addPermissionId(
           createPermissionsUsingModulePermissions(modulePermissions)
         );
 
-        for (let {
+        for (const {
           module_id,
           action_ids,
           permission_id
@@ -82,7 +80,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
             module_id,
             role_id: selectedRole
           });
-          for (let action_id of action_ids) {
+          for (const action_id of action_ids) {
             await actionService.read({ id: action_id });
             await permission_actionService.createOne({
               permission_id: permission.id,

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { useLocation } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import DashboardSidebar from './DashboardSidebar';

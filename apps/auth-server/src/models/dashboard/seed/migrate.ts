@@ -12,7 +12,7 @@ export function migrateDashboardSchema(PG_URL: string) {
         stdio: 'inherit'
       }
     );
-    console.log(`\n Migration Completed Successfully`);
+    console.log('\n Migration Completed Successfully');
   } catch (error) {
     console.error('\n Migration failed:', error);
     throw error;

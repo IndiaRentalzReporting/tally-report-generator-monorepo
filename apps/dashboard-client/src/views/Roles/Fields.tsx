@@ -2,8 +2,7 @@ import React from 'react';
 import { Input } from '@trg_package/components';
 import { StateAsProps } from './interface';
 
-const Fields: React.FC<StateAsProps> = ({ roleData, setRoleData }) => {
-  return (
+const Fields: React.FC<StateAsProps> = ({ roleData, setRoleData }) => (
     <div className="flex flex-col gap-4">
       <Input
         id="name"
@@ -16,7 +15,6 @@ const Fields: React.FC<StateAsProps> = ({ roleData, setRoleData }) => {
         required
       />
     </div>
-  );
-};
+);
 
 export default Fields;

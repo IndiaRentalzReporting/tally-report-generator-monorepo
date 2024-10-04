@@ -1,14 +1,11 @@
 import { createConfig } from '@trg_package/config-env';
-import { BadRequestError } from '@trg_package/errors';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 const stringBoolean = z.coerce
   .string()
-  .transform((val) => {
-    return val === 'true';
-  })
+  .transform((val) => val === 'true')
   .default('false');
 
 export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';

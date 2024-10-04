@@ -19,14 +19,15 @@ export const services = {
   ): AxiosPromise<{
     userTallyCompanys: UserTallyCompanySelect[];
   }> => {
-    const queryString = new URLSearchParams(query as any).toString();
+    const queryString = new URLSearchParams(
+      query as Record<string, string>
+    ).toString();
     return userTallyCompanysAxios.get(`/read?${queryString}`);
   },
   createOne: async (
     userTallyCompanyDetails: UserTallyCompanyInsert
-  ): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> => {
-    return userTallyCompanysAxios.post('/create', userTallyCompanyDetails);
-  },
+  ): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> =>
+    userTallyCompanysAxios.post('/create', userTallyCompanyDetails),
   updateOne: async (
     {
       user_id,
@@ -36,21 +37,14 @@ export const services = {
       tallyCompany_id: UserTallyCompanySelect['tallyCompany_id'];
     },
     data: Partial<UserTallyCompanySelect>
-  ): AxiosPromise<UserTallyCompanySelect> => {
-    return userTallyCompanysAxios.patch(
-      `/update/${user_id}/${tallyCompany_id}`,
-      data
-    );
-  },
+  ): AxiosPromise<UserTallyCompanySelect> =>
+    userTallyCompanysAxios.patch(`/update/${user_id}/${tallyCompany_id}`, data),
   deleteOne: async ({
     user_id,
     tallyCompany_id
   }: {
     user_id: UserTallyCompanySelect['user_id'];
     tallyCompany_id: UserTallyCompanySelect['tallyCompany_id'];
-  }): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> => {
-    return userTallyCompanysAxios.delete(
-      `/delete/${user_id}/${tallyCompany_id}`
-    );
-  }
+  }): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> =>
+    userTallyCompanysAxios.delete(`/delete/${user_id}/${tallyCompany_id}`)
 };

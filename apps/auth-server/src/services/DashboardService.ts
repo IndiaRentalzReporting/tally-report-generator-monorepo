@@ -1,10 +1,4 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import actions from '../models/dashboard/seed/Actions/data.json';
-import modules from '../models/dashboard/seed/Modules/data.json';
-import columns from '../models/dashboard/seed/Columns/data.json';
-import superUserRole from '../models/dashboard/seed/Roles/data.json';
-import * as dashboardSchemas from '../models/dashboard/schema';
-import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 import { Sql } from 'postgres';
 import {
   ActionService,
@@ -18,12 +12,23 @@ import {
   UserSelect
 } from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/pg-client';
-import { ColumnInsert, TableSelect } from '@trg_package/schemas-reporting/types';
-import { ColumnService, TableService } from '@trg_package/schemas-reporting/services';
+import { ColumnInsert } from '@trg_package/schemas-reporting/types';
+import {
+  ColumnService,
+  TableService
+} from '@trg_package/schemas-reporting/services';
+import actions from '../models/dashboard/seed/Actions/data.json';
+import modules from '../models/dashboard/seed/Modules/data.json';
+import columns from '../models/dashboard/seed/Columns/data.json';
+import superUserRole from '../models/dashboard/seed/Roles/data.json';
+import * as dashboardSchemas from '../models/dashboard/schema';
+import { migrateDashboardSchema } from '../models/dashboard/seed/migrate';
 
 class DashboardService {
   private dashboardConnection: Sql<{}>;
+
   private dashboardClient: PostgresJsDatabase<typeof dashboardSchemas>;
+
   public URL: string;
 
   constructor(db_username: string, db_password: string, db_name: string) {
@@ -45,16 +50,17 @@ class DashboardService {
     this.URL = DASHBOARD_PG_URL;
   }
 
-  public async migrateAndSeed(userData: UserInsert) {
+  public async migrateAndSeed(userData: UserInsert): Promise<UserSelect> {
     migrateDashboardSchema(this.URL);
-    await this.dashboardClient.transaction(async (trx) => {
-      await this.createAdmin(userData, trx);
+    const admin = await this.dashboardClient.transaction(async (trx) => {
       await this.seedAction(trx);
       await this.seedModules(trx);
       await this.seedTable(trx);
       await this.seedColumn(trx);
+      return this.createAdmin(userData, trx);
     });
     await this.terminateConnection();
+    return admin;
   }
 
   private async seedAction(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
@@ -95,33 +101,26 @@ class DashboardService {
     return role.id;
   }
 
-  private async seedTable(
-    trx : PostgresJsDatabase<typeof dashboardSchemas>
-  ){
+  private async seedTable(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
     const TSI = new TableService(trx);
     await TSI.seed();
   }
 
-  private async seedColumn(
-    trx : PostgresJsDatabase<typeof dashboardSchemas>
-  ){
+  private async seedColumn(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
     const CSI = new ColumnService(trx);
     const TSI = new TableService(trx);
     const tables = await TSI.findMany();
 
     type k = keyof typeof columns;
-    for(const {id,name} of tables)
-    {
+    for (const { id, name } of tables) {
       const columData = columns[name as k];
-      for(const column of columData)
-      {
-        await CSI.createOne({...column as ColumnInsert,tableId : id});
+      for (const column of columData) {
+        await CSI.createOne({ ...(column as ColumnInsert), tableId: id });
       }
     }
 
     await CSI.updateForeignKeys();
   }
-
 
   private async terminateConnection() {
     await this.dashboardConnection.end();

@@ -6,7 +6,7 @@ export const isRoleAllowed = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!!req.user) {
+  if (req.user) {
     const {
       user: { role },
       module,
@@ -18,20 +18,20 @@ export const isRoleAllowed = async (
         'You are not allowed to do anything, please get a role assigned to yourself'
       );
     }
-    if(role.name == "SUPERUSER")
-    {
+    if (role.name == 'SUPERUSER') {
       return next();
     }
 
     if (module && action) {
       const { permission } = role;
 
-      const allowed = permission.find(
-        ({ permissionAction, module: { name: moduleName } }) =>
-          permissionAction.find(
+      const allowed = permission
+        .filter(({ module }) => !!module)
+        .find(
+          ({ permissionAction, module: { name: moduleName } }) => permissionAction.find(
             ({ action: { name: actionName } }) => actionName === action
           ) && moduleName === module
-      );
+        );
 
       if (allowed) return next();
       throw new UnauthenticatedError(

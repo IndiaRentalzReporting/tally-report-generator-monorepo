@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
-import db from '../models/auth';
 import { DatabaseError } from '@trg_package/errors';
+import db from '../models/auth';
 
 export async function connectAndLog() {
   try {

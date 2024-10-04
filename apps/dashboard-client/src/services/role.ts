@@ -20,23 +20,19 @@ export const services = {
   ): AxiosPromise<{
     roles: RoleWithPermission[];
   }> => {
-    const queryString = new URLSearchParams(query as any).toString();
+    const queryString = new URLSearchParams(
+      query as Record<string, string>
+    ).toString();
     return rolesAxios.get(`/read?${queryString}`);
   },
   createOne: async (
     roleDetails: RoleInsert
-  ): AxiosPromise<{ role: RoleSelect }> => {
-    return rolesAxios.post('/create', roleDetails);
-  },
+  ): AxiosPromise<{ role: RoleSelect }> =>
+    rolesAxios.post('/create', roleDetails),
   updateOne: async (
     id: RoleSelect['id'],
     data: Partial<RoleSelect>
-  ): AxiosPromise<RoleSelect> => {
-    return rolesAxios.patch(`/update/${id}`, data);
-  },
-  deleteOne: async (
-    id: RoleSelect['id']
-  ): AxiosPromise<{ role: RoleSelect }> => {
-    return rolesAxios.delete(`/delete/${id}`);
-  }
+  ): AxiosPromise<RoleSelect> => rolesAxios.patch(`/update/${id}`, data),
+  deleteOne: async (id: RoleSelect['id']): AxiosPromise<{ role: RoleSelect }> =>
+    rolesAxios.delete(`/delete/${id}`)
 };

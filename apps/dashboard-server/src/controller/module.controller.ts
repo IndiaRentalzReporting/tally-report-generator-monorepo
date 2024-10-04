@@ -24,7 +24,8 @@ export const readAll = async (
 ) => {
   try {
     const modules = await req.moduleService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     return res.json({ modules });
   } catch (e) {
@@ -38,7 +39,8 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await req.moduleService.updateOne(req.params.id, req.body);
+    const { id } = req.params;
+    const module = await req.moduleService.updateOne({ id }, req.body);
     return res.json({ module });
   } catch (e) {
     return next(e);
@@ -51,7 +53,8 @@ export const deleteOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await req.moduleService.deleteOne(req.params.id);
+    const { id } = req.params;
+    const module = await req.moduleService.deleteOne({ id });
     return res.json({ module });
   } catch (e) {
     return next(e);

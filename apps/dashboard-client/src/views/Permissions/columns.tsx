@@ -9,8 +9,7 @@ export const columns: ColumnDef<State>[] = [
   {
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -19,15 +18,13 @@ export const columns: ColumnDef<State>[] = [
           Role Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    },
+    ),
     getGroupingValue: (row) => `${row.role.name}}`
   },
   {
     id: 'Module Name',
     accessorFn: (row) => row.module.name,
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -36,14 +33,12 @@ export const columns: ColumnDef<State>[] = [
           Module Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    }
+    )
   },
   {
     id: 'Actions on Modules',
     accessorKey: 'permissionActions',
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -52,8 +47,7 @@ export const columns: ColumnDef<State>[] = [
           Actions
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    },
+    ),
     cell: ({ row }) => {
       const { permissionAction } = row.original;
       const actions = permissionAction.map((p) => p.action.name);

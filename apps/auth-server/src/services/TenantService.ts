@@ -1,17 +1,17 @@
 import postgres from 'postgres';
-import db from '../models/auth';
 import { TenantInsert, TenantSelect } from '@trg_package/schemas-auth/types';
 import {
   UserInsert as DashboardUserInsert,
   UserSelect
 } from '@trg_package/schemas-dashboard/types';
 import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
-import DashboardService from './DashboardService';
 import crypto from 'crypto';
-import config from '../config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import { DatabaseError } from '@trg_package/errors';
+import config from '../config';
+import DashboardService from './DashboardService';
+import db from '../models/auth';
 
 class TenantService extends BaseTenantService {
   constructor() {
@@ -21,13 +21,13 @@ class TenantService extends BaseTenantService {
   async onboard(
     tenantData: TenantInsert,
     userData: DashboardUserInsert
-  ): Promise<TenantSelect> {
+  ): Promise<{ tenant: TenantSelect; user: UserSelect }> {
     const { db_name, db_username, db_password } = await this.createDatabase(
       tenantData.name
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    await DSI.migrateAndSeed(userData);
+    const user = await DSI.migrateAndSeed(userData);
 
     const tenant = await super.createOne({
       ...tenantData,
@@ -36,7 +36,7 @@ class TenantService extends BaseTenantService {
       db_password
     });
 
-    return tenant;
+    return { tenant, user };
   }
 
   private generateUniqueIdentifier(baseName: string) {
@@ -74,8 +74,7 @@ class TenantService extends BaseTenantService {
   }> {
     const { SUPERUSER_PG_URL } = config;
 
-    const { db_name, db_username, db_password } =
-      this.generateTenantDBCredentials(tenantName);
+    const { db_name, db_username, db_password } = this.generateTenantDBCredentials(tenantName);
 
     try {
       const client = postgres(SUPERUSER_PG_URL, {

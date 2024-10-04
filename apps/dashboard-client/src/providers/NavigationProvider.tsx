@@ -38,9 +38,9 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const { permissions } = useAuth();
 
   const createNavLinksUsingPermissions = (
-    permissions: Permissions[]
-  ): NavItemWithChildren[] => {
-    return permissions.map((permission) => {
+    p: Permissions[]
+  ): NavItemWithChildren[] =>
+    p.map((permission) => {
       const {
         module: { name, icon }
         // actions
@@ -62,7 +62,6 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
         icon
       };
     });
-  };
 
   useEffect(() => {
     if (!permissions) return;

@@ -19,23 +19,21 @@ export const services = {
   ): AxiosPromise<{
     modules: ModuleSelect[];
   }> => {
-    const queryString = new URLSearchParams(query as any).toString();
+    const queryString = new URLSearchParams(
+      query as Record<string, string>
+    ).toString();
     return modulesAxios.get(`/read?${queryString}`);
   },
   createOne: async (data: {
     moduleDetails: ModuleInsert;
-  }): AxiosPromise<{ module: ModuleSelect }> => {
-    return modulesAxios.post('/create', data);
-  },
+  }): AxiosPromise<{ module: ModuleSelect }> =>
+    modulesAxios.post('/create', data),
   updateOne: async (
     id: ModuleSelect['id'],
     data: Partial<ModuleSelect>
-  ): AxiosPromise<ModuleSelect> => {
-    return modulesAxios.patch(`/update/${id}`, data);
-  },
+  ): AxiosPromise<ModuleSelect> => modulesAxios.patch(`/update/${id}`, data),
   deleteOne: async (
     id: ModuleSelect['id']
-  ): AxiosPromise<{ module: ModuleSelect }> => {
-    return modulesAxios.delete(`/delete/${id}`);
-  }
+  ): AxiosPromise<{ module: ModuleSelect }> =>
+    modulesAxios.delete(`/delete/${id}`)
 };

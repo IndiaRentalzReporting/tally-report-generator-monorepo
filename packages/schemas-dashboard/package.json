@@ -21,24 +21,26 @@
   },
   "scripts": {
     "build": "tsup",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "lint": "eslint . --ext ts",
     "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@trg_package/schemas-tally": "*",
-    "@trg_package/schemas-base": "*",
     "@trg_package/base-service": "*",
     "@trg_package/errors": "*",
-    "@trg_package/utils": "^1.0.0",
-    "drizzle-orm": "^0.31.2",
+    "@trg_package/schemas-base": "*",
+    "@trg_package/schemas-tally": "*",
+    "bcrypt": "^5.1.1",
+    "drizzle-orm": "^0.33.0",
     "drizzle-zod": "^0.5.1"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
+    "@trg_package/eslint-config": "*",
+    "eslint": "8.57.0",
+    "@types/bcrypt": "^5.0.2",
     "tsup": "^8.2.4"
   }
 }

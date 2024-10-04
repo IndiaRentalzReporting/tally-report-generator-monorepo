@@ -7,27 +7,24 @@ import {
 import { ActionSelect } from '../schemas/actions';
 import { ModuleSelect } from '../schemas/modules';
 import { RoleSelect } from '../schemas/roles';
-import { PermissionSelect } from '../schemas/permissions';
+import { type PermissionSelect } from '../schemas/permissions';
+import { type PermissionActionSelect } from './permission_action';
 
 type UserRole = {
-  name: RoleSelect['name'];
-  permission: Array<{
-    id: PermissionSelect['id'];
-    permissionAction: Array<{
-      action: {
-        name: ActionSelect['name'];
-      };
-    }>;
-    module: {
-      id: ModuleSelect['id'];
-      name: ModuleSelect['name'];
-      icon: ModuleSelect['icon'];
-    };
-  }>;
+  permission: Array<
+    PermissionSelect & {
+      permissionAction: Array<
+        PermissionActionSelect & {
+          action: ActionSelect;
+        }
+      >;
+      module: ModuleSelect;
+    }
+  >;
 };
 
 type DetailedUser = UserSelect & {
-  role: UserRole | null;
+  role: (RoleSelect & UserRole) | null;
 };
 
 export {

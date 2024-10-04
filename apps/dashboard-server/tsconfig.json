@@ -8,7 +8,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "*.js", "*.ts", ".eslint.js"],
+  "include": ["src", "*.js", "*.ts", ".eslintrc.cjs"],
   "exclude": ["node_modules", "dist", ".turbo"],
   "ts-node": {
     "require": ["tsconfig-paths/register"]

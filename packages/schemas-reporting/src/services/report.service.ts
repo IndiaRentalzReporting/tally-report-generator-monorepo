@@ -1,5 +1,5 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import * as reportingSchemas from "../schemas"
+import * as reportingSchemas from '../schemas';
 import { ReportSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ReportInsert, ReportSelect } from '@/schemas/report';
@@ -7,21 +7,22 @@ import { CreateError, CustomError } from '@trg_package/errors';
 import { TableSelect } from '../types';
 import { SQL, sql } from 'drizzle-orm';
 
-export class ReportService extends BaseServiceNew
-<   
-    typeof reportingSchemas,
-    typeof ReportSchema
->
-{
-    constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
-        super(db, ReportSchema,db.query.ReportSchema);
-    }
+export class ReportService extends BaseServiceNew<
+  typeof reportingSchemas,
+  typeof ReportSchema
+> {
+  constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
+    super(db, ReportSchema, db.query.ReportSchema);
+  }
 
-    public async getTableQuery(tableId : Pick<typeof ReportSchema['$inferSelect'],'baseEntity'>, tableNames : String[] | null = null) : Promise<String>
-    {
-        const whereCondition = tableNames == null? "" : `WHERE tbe.tablealias IN ${tableNames}`
-        try{
-            const tableQuery = await this.dbClient.execute(sql`
+  public async getTableQuery(
+    tableId: Pick<(typeof ReportSchema)['$inferSelect'], 'baseEntity'>,
+    tableNames: String[] | null = null
+  ): Promise<String> {
+    const whereCondition =
+      tableNames == null ? '' : `WHERE tbe.tablealias IN ${tableNames}`;
+    try {
+      const tableQuery = await this.dbClient.execute(sql`
                 WITH RECURSIVE tbe(tablealias, tableid,tbe_query) AS (
                     SELECT 
                     c.name as tablealias,
@@ -49,77 +50,72 @@ export class ReportService extends BaseServiceNew
                 SELECT tbe.tablealias::TEXT, tbe.tbe_query::TEXT FROM tbe ${whereCondition};
             `);
 
-            let query = "";
-            tableQuery.forEach((ele) => {
-                query+=ele.tbe_query;
-            });
-            return query;
-        }
-        catch(error)
-        {
-            throw new CustomError("Unable to get the query for table",400);
-        }
+      let query = '';
+      tableQuery.forEach((ele) => {
+        query += ele.tbe_query;
+      });
+      return query;
+    } catch (error) {
+      throw new CustomError('Unable to get the query for table', 400);
     }
+  }
 
-    public getColumns(columns : typeof ReportSchema['$inferSelect']['columns'])
-    {
-        let str : any = [];
-        columns?.map((column)=>{
-            str.push(`${column.table}."${column.name}" as "${column.alias}"`);
-        })
-        return str.join(", ");
+  public getColumns(columns: (typeof ReportSchema)['$inferSelect']['columns']) {
+    let str: any = [];
+    columns?.map((column) => {
+      str.push(`${column.table}."${column.name}" as "${column.alias}"`);
+    });
+    return str.join(', ');
+  }
+
+  public getConditions(
+    conditions: (typeof ReportSchema)['$inferSelect']['conditons']
+  ) {
+    let str = ' WHERE ';
+    conditions?.map((condition) => {
+      str += ` ${condition.join} ${condition.column.alias} ${condition.operator} ${condition.value}`;
+    });
+    return str;
+  }
+
+  public getGroupBy(groupBy: (typeof ReportSchema)['$inferSelect']['groupBy']) {
+    let str: any[] = [];
+    groupBy?.map((ele) => {
+      str.push(`${ele.alias}`);
+    });
+    return str.join(', ');
+  }
+  public async updateConfig(report: (typeof ReportSchema)['$inferSelect']) {
+    //tables
+    const tables = await this.getTableQuery(
+      report.baseEntity as any,
+      report.tables
+    );
+    //columns
+    const columns = report.columns ? this.getColumns(report.columns) : '*';
+    //conditions
+    const conditions = report.conditons
+      ? this.getConditions(report.conditons)
+      : '';
+    //group by
+    const groupBy = report.groupBy ? this.getGroupBy(report.groupBy) : '';
+  }
+
+  public async saveReport(
+    data: (typeof ReportSchema)['$inferInsert'],
+    id: Pick<(typeof ReportSchema)['$inferSelect'], 'id'> | null = null
+  ): Promise<(typeof ReportSchema)['$inferSelect']> {
+    try {
+      let report;
+      if (id) {
+        report = await this.updateOne({ id: data.id }, data);
+      } else {
+        report = await this.createOne(data);
+      }
+      // this.updateConfig(report);
+      return report;
+    } catch (e) {
+      throw e;
     }
-
-    public getConditions(conditions : typeof ReportSchema['$inferSelect']['conditons'])
-    {
-        let str = " WHERE ";
-        conditions?.map((condition)=>{
-            str+=` ${condition.join} ${condition.column.alias} ${condition.operator} ${condition.value}`;
-        })
-        return str;
-    }
-
-    public getGroupBy(groupBy : typeof ReportSchema['$inferSelect']['groupBy'])
-    {
-        let str  : any[] = [];
-        groupBy?.map((ele)=>{
-            str.push(`${ele.alias}`);
-        })
-        return str.join(", ");
-    }
-    public async updateConfig(report : typeof ReportSchema['$inferSelect'])
-    {
-        //tables
-        const tables = await this.getTableQuery(report.baseEntity as any,report.tables);
-        //columns
-        const columns = report.columns ? this.getColumns(report.columns) :"*"
-        //conditions
-        const conditions = report.conditons ? this.getConditions(report.conditons) : "";
-        //group by
-        const groupBy = report.groupBy ? this.getGroupBy(report.groupBy) : "";
- 
-
-        
-
-    }  
-
-    public async saveReport(
-        data: typeof ReportSchema['$inferInsert'],
-        id : Pick<typeof ReportSchema['$inferSelect'],"id">| null = null
-    ): Promise<typeof ReportSchema['$inferSelect']>{
-        try {
-            let report;
-            if(id)
-            {
-                report = await this.updateOneNew({id : data.id},data)
-            }
-            else{
-               report = await this.createOne(data);
-            }
-            // this.updateConfig(report);
-            return report;
-        } catch (e) {
-          throw e;
-        }
-    }
+  }
 }

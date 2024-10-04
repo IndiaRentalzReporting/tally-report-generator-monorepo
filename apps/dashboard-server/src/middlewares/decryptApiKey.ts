@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { decrypt } from '../utils/crypto';
 import { BadRequestError } from '@trg_package/errors';
+import { decrypt } from '../utils/crypto';
 
 export const decryptApiKey = (
   req: Request & { decryptedApiKey?: { tenant: string } },

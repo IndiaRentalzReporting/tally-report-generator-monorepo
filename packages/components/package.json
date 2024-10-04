@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build": "tailwindcss -i ./src/global.css -o ./dist/index.css",
-    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx",
     "dev": "tailwindcss -i ./src/global.css -o ./dist/index.css --watch"
   },
   "keywords": [],
@@ -44,8 +44,9 @@
     "vaul": "^0.9.1"
   },
   "devDependencies": {
+    "eslint": "^8.57.0",
+    "@trg_package/eslint-config": "*",
     "@trg_package/config-tailwind": "*",
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",

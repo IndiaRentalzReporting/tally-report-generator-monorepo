@@ -6,8 +6,8 @@ import { authAxios } from '@/utils/authAxios';
 import { AxiosResponse } from 'axios';
 
 const cache = new Map<
-  string,
-  { user: AuthDetailedUser & DashDetailedUser; expires: number }
+string,
+{ user: AuthDetailedUser & DashDetailedUser; expires: number }
 >();
 const CACHE_TTL = 60 * 60 * 1000;
 
@@ -17,7 +17,7 @@ export const attachUser = async (
   next: NextFunction
 ) => {
   try {
-    const cookie = req.headers.cookie;
+    const { cookie } = req.headers;
 
     if (!cookie) throw new UnauthenticatedError('No cookie found');
 
@@ -45,10 +45,9 @@ export const attachUser = async (
       });
       req.user = user;
       return next();
-    } else {
-      req.user = undefined;
-      throw new UnauthenticatedError('User not found!');
     }
+    req.user = undefined;
+    throw new UnauthenticatedError('User not found!');
   } catch (e) {
     req.user = undefined;
     return next(e);
@@ -57,7 +56,7 @@ export const attachUser = async (
 
 setInterval(() => {
   const now = Date.now();
-  for (let [key, value] of cache.entries()) {
+  for (const [key, value] of cache.entries()) {
     if (value.expires <= now) {
       cache.delete(key);
     }

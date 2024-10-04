@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
+import { Button, Skeleton } from '@trg_package/components';
 import { services } from '@/services/action';
 import Fields from './Fields';
-import { Button, Skeleton } from '@trg_package/components';
 import { State, initialState } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
@@ -10,8 +10,8 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { data: actionDataX, isFetching: loadingAction } = useQuery({
-    queryFn: () => services.getOne(id),
-    select: (data) => data.data.action,
+    queryFn: () => services.read({ id }),
+    select: (data) => data.data.actions[0],
     queryKey: ['actions', 'getOne', id]
   });
 

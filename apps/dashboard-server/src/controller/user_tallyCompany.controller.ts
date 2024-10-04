@@ -28,7 +28,8 @@ export const readAll = async (
 ) => {
   try {
     const userTallyCompanys = await req.userTallyCompanyService.findMany({
-      ...req.query
+      ...req.query,
+      isPrivate: false
     });
     res.json({ userTallyCompanys });
   } catch (e) {
@@ -38,18 +39,17 @@ export const readAll = async (
 
 export const updateOne = async (
   req: Request<
-    Pick<UserTallyCompanySelect, 'user_id' | 'tallyCompany_id'>,
+  Pick<UserTallyCompanySelect, 'user_id' | 'tallyCompany_id'>,
     object,
-    UserTallyCompanySelect
+  UserTallyCompanySelect
   >,
   res: Response<{ userTallyCompany: UserTallyCompanySelect }>,
   next: NextFunction
 ) => {
   try {
-    const { user_id: oldActionId, tallyCompany_id: oldPermissionId } =
-      req.params;
+    const { user_id: oldActionId, tallyCompany_id: oldPermissionId } = req.params;
     const { user_id, tallyCompany_id } = req.body;
-    const userTallyCompany = await req.userTallyCompanyService.updateOneNew(
+    const userTallyCompany = await req.userTallyCompanyService.updateOne(
       { user_id: oldActionId, tallyCompany_id: oldPermissionId },
       {
         user_id,
@@ -71,7 +71,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { user_id, tallyCompany_id } = req.params;
-    const permission = await req.userTallyCompanyService.deleteOneNew({
+    const permission = await req.userTallyCompanyService.deleteOne({
       user_id,
       tallyCompany_id
     });

@@ -8,8 +8,7 @@ import { State } from './interface';
 export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
         <Button
           variant="ghost"
           className="translate-x-[-10px]"
@@ -18,8 +17,7 @@ export const columns: ColumnDef<State>[] = [
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
-    }
+    )
   },
   {
     id: 'Actions',

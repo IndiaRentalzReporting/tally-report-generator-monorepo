@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { services as userServices } from '@/services/user';
-import { services as roleServices } from '@/services/role';
 import {
   Button,
   Card,
@@ -19,6 +17,8 @@ import {
   Skeleton,
   When
 } from '@trg_package/components';
+import { services as userServices } from '@/services/user';
+import { services as roleServices } from '@/services/role';
 import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from './columns';
 import { useIsAllowed } from '@/hooks';
@@ -95,8 +95,8 @@ const Read: React.FC = () => {
                 <SelectGroup>
                   <SelectLabel>Roles</SelectLabel>
                   <Skeleton isLoading={fetchingRoles}>
-                    {allRoles.map((role, index) => (
-                      <SelectItem key={index} value={role.id}>
+                    {allRoles.map((role) => (
+                      <SelectItem key={role.id} value={role.id}>
                         {role.name}
                       </SelectItem>
                     ))}

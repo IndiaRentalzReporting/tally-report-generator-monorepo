@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import AuthService from '../services/AuthService';
 import {
   LoginUser,
   SafeUserSelect,
@@ -10,6 +9,7 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import DashboardService from '@/services/DashboardService';
+import AuthService from '../services/AuthService';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,

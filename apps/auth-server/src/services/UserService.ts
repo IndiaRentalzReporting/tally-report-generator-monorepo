@@ -1,11 +1,11 @@
 import { UserService as BaseUserService } from '@trg_package/schemas-auth/services';
 import { UserService as DashboardUserService } from '@trg_package/schemas-dashboard/services';
-import { authDb } from '../models/auth/index';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import TenantService from './TenantService';
 import { BadRequestError } from '@trg_package/errors';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import { createUrl, createClient } from '@trg_package/pg-client';
+import TenantService from './TenantService';
+import { authDb } from '../models/auth/index';
 import * as dashboardSchemas from '../models/dashboard/schema';
 
 class UserService extends BaseUserService {
@@ -43,7 +43,7 @@ class UserService extends BaseUserService {
         });
 
       const USI = new DashboardUserService(dashboardDb);
-      const { role_id, role } = await USI.findOneDetailedUser({ email });
+      const { role_id, role } = await USI.findOne({ email });
 
       dashboardConnection.end();
       user.role_id = role_id;

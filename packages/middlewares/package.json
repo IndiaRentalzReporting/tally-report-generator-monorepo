@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "./src/index.ts",
   "scripts": {
-    "lint": "eslint . --ext ts --fix --max-warnings 0"
+    "lint": "eslint . --ext ts"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
     "@trg_package/config-typescript": "*",
+    "@trg_package/eslint-config": "*",
+    "eslint": "8.57.0",
     "@types/node": "^20.14.2",
     "ts-node": "^10.9.2",
     "tsup": "^8.2.4",

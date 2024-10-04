@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useAuth } from '@trg_package/providers';
 import { ElseIf, If, Then } from '@trg_package/components';
 import config from '@/config';
-import RedirectingSkeleton from '../composite/RedirectingSkeleton';
+import { RedirectingSkeleton } from '../composite/RedirectingSkeleton';
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -13,7 +13,14 @@ export const PublicRoutes: React.FC = () => {
     if (!!isAuthenticated && !loading) {
       window.location.href = `${PROTOCOL}://${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
-  }, [isAuthenticated]);
+  }, [
+    isAuthenticated,
+    loading,
+    PROTOCOL,
+    VITE_DASH_SUBDOMAIN,
+    VITE_DOMAIN,
+    VITE_TLD
+  ]);
 
   return (
     <If condition={!isAuthenticated}>

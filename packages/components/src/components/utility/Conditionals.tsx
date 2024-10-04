@@ -14,21 +14,13 @@ type Props = {
   children?: React.ReactNode | any;
 };
 
-export const Then: React.FC<any> = (props) => {
-  return render(props);
-};
+export const Then: React.FC<any> = (props) => render(props);
 
-export const Else: React.FC<any> = (props) => {
-  return render(props);
-};
+export const Else: React.FC<any> = (props) => render(props);
 
-export const ElseIf: React.FC<Props> = ({ condition, children }) => {
-  return render({ condition, children });
-};
+export const ElseIf: React.FC<Props> = ({ condition, children }) => render({ condition, children });
 
-export const When: React.FC<Props> = ({ condition, children }) => {
-  return condition && children ? render({ condition, children }) : null;
-};
+export const When: React.FC<Props> = ({ condition, children }) => (condition && children ? render({ condition, children }) : null);
 
 export const If: React.FC<Props> = ({ condition, children }) => {
   if (children == null) {
@@ -44,10 +36,10 @@ export const If: React.FC<Props> = ({ condition, children }) => {
   }
   return (
     iteratable.find(
-      (c) => c.type === (<ElseIf condition />).type && !!c.props.condition
-    ) ||
-    iteratable.find((c) => c.type === (<Else />).type) ||
-    null
+      (c) => c.type === (<ElseIf condition />).type && !!c.props.condition,
+    )
+    || iteratable.find((c) => c.type === (<Else />).type)
+    || null
   );
 };
 
@@ -65,10 +57,8 @@ type CaseProps = {
 export const Case: React.FC<CaseProps> = ({
   value,
   isDefault = false,
-  children
-}) => {
-  return render({ value, isDefault, children });
-};
+  children,
+}) => render({ value, isDefault, children });
 
 export const SwitchCase: React.FC<SwitchProps> = ({ control, children }) => {
   if (children == null) {
@@ -81,15 +71,14 @@ export const SwitchCase: React.FC<SwitchProps> = ({ control, children }) => {
 
   return (
     iteratable.find(
-      (c) =>
-        c.type === (<Case value />).type &&
-        (Array.isArray(c.props.value)
+      (c) => c.type === (<Case value />).type
+        && (Array.isArray(c.props.value)
           ? c.props.value.includes(control)
-          : control === c.props.value)
-    ) ||
-    iteratable.find(
-      (c) => c.type === (<Case value />).type && c.props.isDefault
-    ) ||
-    null
+          : control === c.props.value),
+    )
+    || iteratable.find(
+      (c) => c.type === (<Case value />).type && c.props.isDefault,
+    )
+    || null
   );
 };

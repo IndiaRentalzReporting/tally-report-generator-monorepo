@@ -1,8 +1,8 @@
 import React, { FormEvent, useState } from 'react';
 import { Button } from '@trg_package/components';
+import { useAuth } from '@trg_package/providers';
 import Fields from './Fields';
 import { State, initialState } from './interface';
-import { useAuth } from '@trg_package/providers';
 
 const Create: React.FC = () => {
   const {

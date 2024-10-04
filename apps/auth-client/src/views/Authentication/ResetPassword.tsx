@@ -1,8 +1,4 @@
-import { Label } from '@trg_package/components';
-import { useState, FC, FormEvent } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import {
+import { Label ,
   Card,
   CardHeader,
   CardTitle,
@@ -16,6 +12,9 @@ import {
   Else,
   useToast
 } from '@trg_package/components';
+import { useState, FC, FormEvent } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { services } from './services';
 
 export const ResetPassword: FC = () => {
@@ -44,7 +43,7 @@ export const ResetPassword: FC = () => {
         setConfirmPassword('');
         toast({
           variant: 'default',
-          title: `Password Reset!`,
+          title: 'Password Reset!',
           description: data.data.message,
           action: (
             <ToastAction altText="Okay!" onClick={() => navigate('/sign-in')}>
@@ -75,33 +74,33 @@ export const ResetPassword: FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleResetPassword} className="grid gap-4">
+              <form className="grid gap-4" onSubmit={handleResetPassword}>
                 <div className="grid gap-2">
                   <Label htmlFor="email">Password</Label>
                   <Input
                     id="password"
                     name="password"
-                    type="password"
-                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="*********"
                     required
+                    type="password"
+                    value={password}
                   />
                   <Label htmlFor="email">ConfirmPassword</Label>
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
-                    value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="*********"
                     required
+                    type="password"
+                    value={confirmPassword}
                   />
                 </div>
                 <Button
-                  type="submit"
                   className="w-full"
                   isLoading={loadingMutation}
+                  type="submit"
                 >
                   Reset Password
                 </Button>

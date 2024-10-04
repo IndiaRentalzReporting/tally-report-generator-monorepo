@@ -10,7 +10,7 @@ export const attachPGDashboard = async (
 ) => {
   if (req.dashboardConnection && req.dashboardDb) return next();
   try {
-    if (!!req.user) {
+    if (req.user) {
       const { db_name, db_username, db_password } = req.user.tenant;
 
       if (!db_name || !db_username || !db_password) {
@@ -23,11 +23,10 @@ export const attachPGDashboard = async (
         db_name
       });
 
-      const { client: dashboardDb, connection: dashboardConnection } =
-        createClient(DASHBOARD_PG_URL, dashboardSchemas, {
-          DB_MIGRATING: false,
-          DB_SEEDING: false
-        });
+      const { client: dashboardDb, connection: dashboardConnection } = createClient(DASHBOARD_PG_URL, dashboardSchemas, {
+        DB_MIGRATING: false,
+        DB_SEEDING: false
+      });
 
       req.dashboardDb = dashboardDb;
       req.dashboardConnection = dashboardConnection;

@@ -1,12 +1,12 @@
 import { Router } from 'express';
+import { validateSchema } from '@trg_package/middlewares';
+import { ApiKeyInsertSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   deleteOne,
   readAll,
   updateOne
 } from '../controller/apiKey.controller';
-import { validateSchema } from '@trg_package/middlewares';
-import { ApiKeyInsertSchema } from '@trg_package/schemas-dashboard/types';
 
 const apiKeyRouter = Router();
 

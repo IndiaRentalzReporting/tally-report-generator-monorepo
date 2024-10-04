@@ -3,8 +3,8 @@ import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 
 export interface State
   extends Pick<
-    DetailedUser,
-    'id' | 'first_name' | 'last_name' | 'email' | 'role'
+  DetailedUser,
+  'id' | 'first_name' | 'last_name' | 'email' | 'role'
   > {
   password: string;
 }

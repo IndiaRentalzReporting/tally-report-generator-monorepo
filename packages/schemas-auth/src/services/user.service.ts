@@ -3,7 +3,7 @@ import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { UserInsert, UserSelect } from '../schemas/users';
 import * as authSchemas from '../schemas';
-import { hashPassword } from '@trg_package/utils';
+
 export class UserService extends BaseServiceNew<
   typeof authSchemas,
   typeof UserSchema
@@ -13,10 +13,7 @@ export class UserService extends BaseServiceNew<
   }
 
   public async createOne(data: UserInsert): Promise<UserSelect> {
-    const user = await super.createOne({
-      ...data,
-      password: await hashPassword(data.password)
-    });
+    const user = await super.createOne(data);
     return user;
   }
 }

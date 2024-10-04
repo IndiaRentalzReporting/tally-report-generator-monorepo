@@ -3,6 +3,8 @@ import {
   TenantInsertSchema,
   UserInsertSchema
 } from '@trg_package/schemas-auth/types';
+import { validateSchema } from '@trg_package/middlewares';
+import z from 'zod';
 import {
   onboard,
   handleSignIn,
@@ -11,8 +13,6 @@ import {
   handleSignOut
 } from '../controller/auth.controller';
 import { authenticate } from '../middlewares';
-import { validateSchema } from '@trg_package/middlewares';
-import z from 'zod';
 
 const authRouter = Router();
 

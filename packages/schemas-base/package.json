@@ -6,16 +6,17 @@
     "./schemas": "./src/schemas/index.ts"
   },
   "scripts": {
-    "lint": "eslint . --ext ts --fix --max-warnings 0"
+    "lint": "eslint . --ext ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "drizzle-orm": "^0.31.2"
+    "drizzle-orm": "^0.33.0"
   },
   "devDependencies": {
-    "@trg_package/config-eslint": "*",
-    "@trg_package/config-typescript": "*"
+    "@trg_package/config-typescript": "*",
+    "@trg_package/eslint-config": "*",
+    "eslint": "8.57.0"
   }
 }

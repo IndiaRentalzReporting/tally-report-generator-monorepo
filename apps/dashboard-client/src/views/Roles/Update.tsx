@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
+import { Button, Skeleton } from '@trg_package/components';
 import { services } from '@/services/role';
 import Fields from './Fields';
-import { Button, Skeleton } from '@trg_package/components';
 import { State, initialState } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {

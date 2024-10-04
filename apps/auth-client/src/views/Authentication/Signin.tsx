@@ -46,25 +46,25 @@ export const SigninForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignIn} className="grid gap-4">
+          <form className="grid gap-4" onSubmit={handleSignIn}>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
-                type="email"
-                value={loginData.email}
                 onChange={handleFormChange}
                 placeholder="m@example.com"
                 required
+                type="email"
+                value={loginData.email}
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
                 <Link
-                  to="/forgot-password"
                   className="ml-auto inline-block text-sm underline"
+                  to="/forgot-password"
                 >
                   Forgot your password?
                 </Link>
@@ -72,20 +72,20 @@ export const SigninForm = () => {
               <Input
                 id="password"
                 name="password"
+                onChange={handleFormChange}
+                placeholder="********"
+                required
                 type="password"
                 value={loginData.password}
-                placeholder="********"
-                onChange={handleFormChange}
-                required
               />
             </div>
-            <Button type="submit" className="w-full" isLoading={isLoading}>
+            <Button className="w-full" isLoading={isLoading} type="submit">
               Login
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{' '}
-            <Link to="/sign-up" className="underline">
+            <Link className="underline" to="/sign-up">
               Sign up
             </Link>
           </div>
