@@ -1,6 +1,5 @@
 import { BadRequestError } from '@trg_package/errors';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { drizzle , PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
 export const createUrl = ({
@@ -11,9 +10,7 @@ export const createUrl = ({
   db_username: string;
   db_password: string;
   db_name: string;
-}): string => {
-  return `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
-};
+}): string => `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
 
 export const createClient = <T extends Record<string, unknown>>(
   URL: string,
