@@ -16,6 +16,7 @@ module.exports = {
     }
   },
   rules: {
+    'unused-imports/no-unused-imports': 'error',
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/comma-spacing': 'off',
     '@typescript-eslint/naming-convention': 'off',
