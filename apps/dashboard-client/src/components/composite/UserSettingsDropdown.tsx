@@ -1,4 +1,4 @@
-import { useAuth } from '@trg_package/providers';
+import { useAuth } from '@trg_package/vite/providers';
 import {
   DropdownMenu,
   DropdownMenuTrigger,

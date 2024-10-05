@@ -5,8 +5,9 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
-import { useAuth } from '@trg_package/providers';
-import { PrivateRoutes, ModuleMapper } from './components/utility';
+import { useAuth } from '@trg_package/vite/providers';
+import { PrivateRoutes } from '@trg_package/vite/components';
+import { ModuleMapper } from './components/utility';
 import { DashboardLayout } from './components/composite';
 
 const App = () => {
@@ -21,11 +22,11 @@ const App = () => {
             <Route path={name.toLowerCase()} key={name}>
               <Route index element={<ModuleMapper module={name} />} />
               {actions.map<React.ReactNode>((action) => (
-                  <Route
-                    path={`${action.toLowerCase()}`}
-                    key={action}
-                    element={<ModuleMapper module={name} action={action} />}
-                  />
+                <Route
+                  path={`${action.toLowerCase()}`}
+                  key={action}
+                  element={<ModuleMapper module={name} action={action} />}
+                />
               ))}
             </Route>
           ))}

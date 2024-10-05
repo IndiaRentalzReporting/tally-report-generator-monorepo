@@ -5,13 +5,13 @@ import {
   Route,
   RouterProvider
 } from 'react-router-dom';
+import { PublicRoutes } from '@trg_package/vite/components';
 import {
   SignupForm,
   SigninForm,
   ForgotPassword,
   ResetPassword
 } from '@/views/Authentication';
-import { PublicRoutes } from '@/components/utility/Routes';
 
 const App = () => {
   const router = createBrowserRouter(

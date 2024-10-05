@@ -11,11 +11,10 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.40.1",
-    "@trg_package/axios-client": "*",
+    "@trg_package/vite": "*",
     "@trg_package/components": "*",
     "@trg_package/config-env": "*",
     "@trg_package/errors": "*",
-    "@trg_package/providers": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
     "axios": "^1.7.2",

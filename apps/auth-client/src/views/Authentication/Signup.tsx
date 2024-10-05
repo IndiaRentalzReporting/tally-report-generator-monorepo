@@ -11,7 +11,7 @@ import {
   Label
 } from '@trg_package/components';
 import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
-import { useAuth } from '@trg_package/providers';
+import { useAuth } from '@trg_package/vite/providers';
 
 const initialTenantState: TenantInsert = {
   name: ''
@@ -29,7 +29,8 @@ export const SignupForm = () => {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
 
-  const [tenantData, setTenantData] = useState<TenantInsert>(initialTenantState);
+  const [tenantData, setTenantData] =
+    useState<TenantInsert>(initialTenantState);
   const [userData, setUserData] = useState<RegisterUser>(initialUserState);
 
   const handleFormChange = <T extends object>(

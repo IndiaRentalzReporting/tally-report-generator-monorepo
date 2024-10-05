@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '@trg_package/providers';
+import { useAuth } from '@trg_package/vite/providers';
 import { ElseIf, If, Then } from '@trg_package/components';
 import config from '@/config';
 import { RedirectingSkeleton } from '../composite/RedirectingSkeleton';
 
 export const PublicRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
-  const {
-    PROTOCOL, VITE_DASH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD
-  } = config;
+  const { PROTOCOL, VITE_DASH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
 
   useEffect(() => {
     if (!!isAuthenticated && !loading) {

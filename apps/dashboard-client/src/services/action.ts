@@ -3,7 +3,7 @@ import {
   ActionInsert,
   ActionSelect
 } from '@trg_package/schemas-dashboard/types';
-import createAxiosClient from '@trg_package/axios-client';
+import createAxiosClient from '@trg_package/vite/client';
 
 const actionsAxios = createAxiosClient(
   { dashboard: true },
