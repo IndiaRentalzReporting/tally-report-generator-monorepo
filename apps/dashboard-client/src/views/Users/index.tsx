@@ -1,5 +1,5 @@
 import React from 'react';
-import { When } from '@trg_package/components';
+import { When } from '@trg_package/vite/components';
 import Read from './Read';
 import { useIsAllowed } from '@/hooks';
 
@@ -10,8 +10,8 @@ const Users: React.FC = () => {
   });
   return (
     <When condition={isReadAllowed}>
-        <Read />
-      </When>
+      <Read />
+    </When>
   );
 };
 

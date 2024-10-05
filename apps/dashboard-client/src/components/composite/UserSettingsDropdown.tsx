@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { CircleUser } from 'lucide-react';
 
 import React, { useMemo } from 'react';

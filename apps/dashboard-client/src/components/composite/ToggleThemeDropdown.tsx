@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { useTheme } from '@trg_package/vite/providers';
 
 export const ToggleThemeDropdown = () => {

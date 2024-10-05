@@ -12,7 +12,6 @@
   "dependencies": {
     "@tanstack/react-query": "^5.40.1",
     "@trg_package/vite": "*",
-    "@trg_package/components": "*",
     "@trg_package/config-env": "*",
     "@trg_package/errors": "*",
     "@trg_package/schemas-auth": "*",

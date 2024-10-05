@@ -13,7 +13,7 @@ import {
   SheetContent,
   SheetTrigger,
   When
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
 import { ToggleThemeDropdown } from '../ToggleThemeDropdown';

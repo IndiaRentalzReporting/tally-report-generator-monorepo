@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Skeleton } from '@trg_package/components';
+import { Skeleton } from '@trg_package/vite/components';
 import {
   ActionSelect,
   ModuleSelect

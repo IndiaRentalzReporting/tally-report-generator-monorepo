@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
   When
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -78,12 +78,12 @@ export const GroupingDataTable = <TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                    </TableHead>
+                  <TableHead key={header.id}>
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </TableHead>
                 ))}
               </TableRow>
             ))}
@@ -115,8 +115,8 @@ export const GroupingDataTable = <TData, TValue>({
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
                         flexRender(
-                          cell.column.columnDef.aggregatedCell
-                            ?? cell.column.columnDef.cell,
+                          cell.column.columnDef.aggregatedCell ??
+                            cell.column.columnDef.cell,
                           cell.getContext()
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null

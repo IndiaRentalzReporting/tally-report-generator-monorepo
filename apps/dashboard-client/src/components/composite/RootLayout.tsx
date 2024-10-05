@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider, AuthProvider } from '@trg_package/vite/providers';
-import { Toaster } from '@trg_package/components';
+import { Toaster } from '@trg_package/vite/components';
 
 const queryClient = new QueryClient({
   defaultOptions: {

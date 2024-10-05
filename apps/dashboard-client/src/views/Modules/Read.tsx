@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Skeleton
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { DataTable } from '@/components/composite/table/data-table';
 import { services } from '@/services/module';
 import { columns } from './columns';

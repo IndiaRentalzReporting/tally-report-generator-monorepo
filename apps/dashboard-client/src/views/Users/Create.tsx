@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from 'react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import Fields from './Fields';
 import { State, initialState } from './interface';

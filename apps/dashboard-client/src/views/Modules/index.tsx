@@ -1,5 +1,5 @@
 import React from 'react';
-import { When } from '@trg_package/components';
+import { When } from '@trg_package/vite/components';
 import ReadModule from './Read';
 import { useIsAllowed } from '@/hooks';
 

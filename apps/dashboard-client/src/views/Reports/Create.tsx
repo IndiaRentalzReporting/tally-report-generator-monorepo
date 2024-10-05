@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 
 export const Create = () => {
   const [columns, setColumns] = useState(['Column 1', 'Column2']);

@@ -8,18 +8,19 @@ import {
   CardDescription,
   CardContent,
   Skeleton
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { services } from '@/services/permission';
 import { columns } from './columns';
 import { GroupingDataTable } from '@/components/composite/table/grouping-data-table';
 
 const Read: React.FC = () => {
   const [grouping, setGrouping] = React.useState<GroupingState>(['Role Name']);
-  const { data: allPermissions = [], isFetching: fetchingPermissions } = useQuery({
-    queryFn: () => services.read(),
-    select: (data) => data.data.permissions.filter(({ module }) => !!module),
-    queryKey: ['permissions', 'getAll']
-  });
+  const { data: allPermissions = [], isFetching: fetchingPermissions } =
+    useQuery({
+      queryFn: () => services.read(),
+      select: (data) => data.data.permissions.filter(({ module }) => !!module),
+      queryKey: ['permissions', 'getAll']
+    });
 
   return (
     <Card>

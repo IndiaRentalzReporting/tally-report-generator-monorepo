@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
   When
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import { useIsAllowed } from '@/hooks';
 

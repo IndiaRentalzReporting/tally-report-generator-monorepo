@@ -11,7 +11,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuPortal
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 
 import { CopyIcon, KeyIcon, Trash2Icon } from 'lucide-react';
 

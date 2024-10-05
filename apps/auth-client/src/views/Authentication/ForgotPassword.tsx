@@ -7,9 +7,9 @@ import {
   CardContent,
   Button,
   Input,
-  ToastAction,
-  useToast
-} from '@trg_package/components';
+  ToastAction
+} from '@trg_package/vite/components';
+import { useToast } from '@trg_package/vite/hooks';
 import { useState, FC, FormEvent } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { services } from './services';
@@ -18,18 +18,19 @@ export const ForgotPassword: FC = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState<string>('');
 
-  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
-    mutationFn: () => services.forgotPassword({ email }),
-    onSuccess: (data) => {
-      setEmail('');
-      toast({
-        variant: 'default',
-        title: 'Email Sent!',
-        description: data.data.message,
-        action: <ToastAction altText="Okay!">Okay!</ToastAction>
-      });
-    }
-  });
+  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
+    useMutation({
+      mutationFn: () => services.forgotPassword({ email }),
+      onSuccess: (data) => {
+        setEmail('');
+        toast({
+          variant: 'default',
+          title: 'Email Sent!',
+          description: data.data.message,
+          action: <ToastAction altText="Okay!">Okay!</ToastAction>
+        });
+      }
+    });
 
   const handleForgotPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
