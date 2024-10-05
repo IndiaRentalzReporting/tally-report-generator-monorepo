@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
-import { Button, Input, Label, Switch } from '@trg_package/components';
+import {
+  Button, Input, Label, Switch
+} from '@trg_package/components';
 import { State, StateAsProps } from './interface';
 
 const iconSchema = z
@@ -36,8 +38,7 @@ const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
           minLength={3}
           placeholder="Module Name"
           value={moduleData.name}
-          onChange={(e) =>
-            setModuleData((prev) => ({ ...prev, name: e.target.value }))
+          onChange={(e) => setModuleData((prev) => ({ ...prev, name: e.target.value }))
           }
         />
         <span className="flex gap-4 items-center">
@@ -45,8 +46,7 @@ const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
           <Switch
             checked={moduleData.isPrivate}
             name="isPrivate"
-            onCheckedChange={(checked) =>
-              setModuleData((prev) => ({ ...prev, isPrivate: checked }))
+            onCheckedChange={(checked) => setModuleData((prev) => ({ ...prev, isPrivate: checked }))
             }
           />
         </span>

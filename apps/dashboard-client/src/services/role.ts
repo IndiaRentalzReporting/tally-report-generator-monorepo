@@ -27,12 +27,10 @@ export const services = {
   },
   createOne: async (
     roleDetails: RoleInsert
-  ): AxiosPromise<{ role: RoleSelect }> =>
-    rolesAxios.post('/create', roleDetails),
+  ): AxiosPromise<{ role: RoleSelect }> => rolesAxios.post('/create', roleDetails),
   updateOne: async (
     id: RoleSelect['id'],
     data: Partial<RoleSelect>
   ): AxiosPromise<RoleSelect> => rolesAxios.patch(`/update/${id}`, data),
-  deleteOne: async (id: RoleSelect['id']): AxiosPromise<{ role: RoleSelect }> =>
-    rolesAxios.delete(`/delete/${id}`)
+  deleteOne: async (id: RoleSelect['id']): AxiosPromise<{ role: RoleSelect }> => rolesAxios.delete(`/delete/${id}`)
 };

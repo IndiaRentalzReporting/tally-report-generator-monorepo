@@ -1,13 +1,10 @@
 import {
   pgTable,
-  uuid,
-  integer,
   varchar,
-  timestamp,
   doublePrecision
 } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { TallyCommonSchema } from './base';
 
 const StockItemColumns = {
   stockItemName: varchar('stockItemName', { length: 200 }).notNull(),

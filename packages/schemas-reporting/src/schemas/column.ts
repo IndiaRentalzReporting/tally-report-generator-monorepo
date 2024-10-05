@@ -1,9 +1,8 @@
-import { varchar } from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
-import { pgTable, pgEnum, AnyPgColumn } from 'drizzle-orm/pg-core';
-import { TableSchema } from './table';
+import {
+  varchar , uuid , pgTable, pgEnum, text
+} from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
-import { text } from 'drizzle-orm/pg-core';
+import { TableSchema } from './table';
 
 export const ColumnType = pgEnum('column_type', [
   'id',

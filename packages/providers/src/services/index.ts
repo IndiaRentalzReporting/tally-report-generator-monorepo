@@ -21,32 +21,18 @@ const services = {
   status: (): AxiosPromise<{
     user: DetailedUser | null;
     isAuthenticated: boolean;
-  }> => {
-    return authAxios.get(`/status`);
-  },
-  signOut: (): AxiosPromise<{ message: string }> => {
-    return authAxios.post(`/sign-out`);
-  },
+  }> => authAxios.get('/status'),
+  signOut: (): AxiosPromise<{ message: string }> => authAxios.post('/sign-out'),
   onboard: (data: {
     tenant: TenantInsert;
     user: UserInsert;
-  }): AxiosPromise<{ user: DetailedUser }> => {
-    return authAxios.post('/onboard', data);
-  },
-  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => {
-    return authAxios.post(`/sign-up`, data);
-  },
-  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => {
-    return authAxios.post(`/sign-in`, data);
-  },
+  }): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/onboard', data),
+  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
+  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/sign-in', data),
   forgotPassword: (data: {
     email: UserSelect['email'];
-  }): AxiosPromise<{ message: string }> => {
-    return authAxios.post('/forgot-password', data);
-  },
-  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => {
-    return authAxios.post(`/check-reset-password/${token}`);
-  },
+  }): AxiosPromise<{ message: string }> => authAxios.post('/forgot-password', data),
+  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => authAxios.post(`/check-reset-password/${token}`),
   resetPassword: (data: {
     token: string;
     password: string;

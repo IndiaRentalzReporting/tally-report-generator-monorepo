@@ -1,11 +1,12 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext, useContext, useEffect, useState
+} from 'react';
 import {
   UseMutateAsyncFunction,
   useMutation,
   useQuery,
   useQueryClient
 } from '@tanstack/react-query';
-import services from '../services';
 import {
   LoginUser,
   RegisterUser,
@@ -14,6 +15,7 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
+import services from '../services';
 import { DetailedUser } from '../models';
 
 interface AuthProviderState {
@@ -28,25 +30,25 @@ interface AuthProviderMutation {
   onboard: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: DetailedUser }>,
-      Error,
-      { user: RegisterUser; tenant: TenantInsert }
+    AxiosResponse<{ user: DetailedUser }>,
+    Error,
+    { user: RegisterUser; tenant: TenantInsert }
     >;
   };
   signIn: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: DetailedUser }>,
-      Error,
-      LoginUser
+    AxiosResponse<{ user: DetailedUser }>,
+    Error,
+    LoginUser
     >;
   };
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: UserSelect }>,
-      Error,
-      RegisterUser
+    AxiosResponse<{ user: UserSelect }>,
+    Error,
+    RegisterUser
     >;
   };
   signOut: {
@@ -95,8 +97,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient();
-  const onSuccess = () =>
-    queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+  const onSuccess = () => queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
   const [state, setState] = useState<AuthProviderState>(initialState);
 
   const { data: authStatus } = useQuery({
@@ -108,8 +109,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { mutateAsync: onboardMutation, isPending: isOnboarding } = useMutation(
     {
-      mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
-        services.onboard(data),
+      mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) => services.onboard(data),
       mutationKey: ['auth', 'onboard'],
       onSuccess
     }
@@ -137,16 +137,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const createPermissions = (
     permissions: UserRole['permission'] | undefined
-  ): Permissions[] => {
-    return (
-      permissions
-        ?.filter(({ module }) => !!module)
-        .map(({ module, permissionAction }) => ({
-          module: { name: module.name, icon: module.icon },
-          actions: permissionAction.map(({ action }) => action.name)
-        })) ?? []
-    );
-  };
+  ): Permissions[] => (
+    permissions
+      ?.filter(({ module }) => !!module)
+      .map(({ module, permissionAction }) => ({
+        module: { name: module.name, icon: module.icon },
+        actions: permissionAction.map(({ action }) => action.name)
+      })) ?? []
+  );
 
   useEffect(() => {
     if (authStatus && authStatus.isAuthenticated && authStatus.user) {

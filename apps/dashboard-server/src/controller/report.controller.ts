@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   ReportInsert,
-  ReportSelect,
-  TableSelect
+  ReportSelect
 } from '@trg_package/schemas-reporting/types';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true

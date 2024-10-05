@@ -16,14 +16,13 @@ const CreateModule: React.FC = () => {
   const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createModule, isPending: loadingCreateModule } =
-    useMutation({
-      mutationFn: () => services.createOne({ moduleDetails }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-        setModuleDetails(initialState);
-      }
-    });
+  const { mutateAsync: createModule, isPending: loadingCreateModule } = useMutation({
+    mutationFn: () => services.createOne({ moduleDetails }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
+      setModuleDetails(initialState);
+    }
+  });
 
   const handleCreateModule: React.FormEventHandler = (e) => {
     e.preventDefault();

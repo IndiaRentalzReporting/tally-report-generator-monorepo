@@ -7,8 +7,8 @@ import {
 import { TenantSelect } from './tenants';
 
 type RegisterUser = Pick<
-  UserInsert,
-  'email' | 'password' | 'first_name' | 'last_name'
+UserInsert,
+'email' | 'password' | 'first_name' | 'last_name'
 >;
 
 type LoginUser = Pick<UserInsert, 'email' | 'password'>;

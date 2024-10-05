@@ -7,7 +7,9 @@ import React, {
 } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
-import { Button, Input, Label, Skeleton } from '@trg_package/components';
+import {
+  Button, Input, Label, Skeleton
+} from '@trg_package/components';
 import { services } from '@/services/user';
 import Fields from './Fields';
 import { State, initialState } from './interface';
@@ -24,11 +26,10 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   });
 
   const { mutateAsync: deleteRole } = useMutation({
-    mutationFn: () =>
-      services.updateOne(id, {
-        ...userData,
-        role_id: null
-      }),
+    mutationFn: () => services.updateOne(id, {
+      ...userData,
+      role_id: null
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });

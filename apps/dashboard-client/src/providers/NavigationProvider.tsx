@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext, useContext, useEffect, useState
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@trg_package/providers';
 import {
@@ -33,35 +35,33 @@ const NavigationContext = createContext<NavigationProviderState>(initialState);
 
 export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   const location = useLocation();
-  const [navState, setNavState] =
-    useState<NavigationProviderState>(initialState);
+  const [navState, setNavState] = useState<NavigationProviderState>(initialState);
   const { permissions } = useAuth();
 
   const createNavLinksUsingPermissions = (
     p: Permissions[]
-  ): NavItemWithChildren[] =>
-    p.map((permission) => {
-      const {
-        module: { name, icon }
-        // actions
-      } = permission;
-      const moduleName = name.toLowerCase();
-      // const children: NavItem[] = actions.map((action) => {
-      //   const moduleAction = action.toLowerCase() as Lowercase<
-      //     ActionSelect['name']
-      //   >;
-      //   return {
-      //     to: `/dashboard/${moduleName}/${moduleAction}`,
-      //     name: action
-      //   };
-      // });
-      return {
-        to: `/dashboard/${moduleName}`,
-        name,
-        children: [],
-        icon
-      };
-    });
+  ): NavItemWithChildren[] => p.map((permission) => {
+    const {
+      module: { name, icon }
+      // actions
+    } = permission;
+    const moduleName = name.toLowerCase();
+    // const children: NavItem[] = actions.map((action) => {
+    //   const moduleAction = action.toLowerCase() as Lowercase<
+    //     ActionSelect['name']
+    //   >;
+    //   return {
+    //     to: `/dashboard/${moduleName}/${moduleAction}`,
+    //     name: action
+    //   };
+    // });
+    return {
+      to: `/dashboard/${moduleName}`,
+      name,
+      children: [],
+      icon
+    };
+  });
 
   useEffect(() => {
     if (!permissions) return;

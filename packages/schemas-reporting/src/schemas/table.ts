@@ -1,6 +1,4 @@
-import { varchar } from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
-import { pgTable } from 'drizzle-orm/pg-core';
+import { varchar , uuid , pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const TableSchema = pgTable('table', {

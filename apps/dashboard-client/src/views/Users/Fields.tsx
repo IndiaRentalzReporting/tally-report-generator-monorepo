@@ -10,8 +10,7 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => (
             id="first-name"
             name="first_name"
             value={userData.first_name}
-            onChange={(e) =>
-              setUserData((prev) => ({ ...prev, first_name: e.target.value }))
+            onChange={(e) => setUserData((prev) => ({ ...prev, first_name: e.target.value }))
             }
             placeholder="Max"
             required
@@ -22,8 +21,7 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => (
             id="last-name"
             name="last_name"
             value={userData.last_name}
-            onChange={(e) =>
-              setUserData((prev) => ({ ...prev, last_name: e.target.value }))
+            onChange={(e) => setUserData((prev) => ({ ...prev, last_name: e.target.value }))
             }
             placeholder="Robinson"
             required
@@ -35,8 +33,7 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => (
         type="email"
         name="email"
         value={userData.email}
-        onChange={(e) =>
-          setUserData((prev) => ({ ...prev, email: e.target.value }))
+        onChange={(e) => setUserData((prev) => ({ ...prev, email: e.target.value }))
         }
         placeholder="m@example.com"
         required
@@ -46,8 +43,7 @@ const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => (
         id="password"
         name="password"
         value={userData.password}
-        onChange={(e) =>
-          setUserData((prev) => ({ ...prev, password: e.target.value }))
+        onChange={(e) => setUserData((prev) => ({ ...prev, password: e.target.value }))
         }
         placeholder="********"
         required

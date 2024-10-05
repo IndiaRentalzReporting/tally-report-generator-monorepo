@@ -5,7 +5,9 @@ import {
 } from '@tanstack/react-query';
 import { Minus, Trash } from 'lucide-react';
 import React from 'react';
-import { ToastAction, If, Then, Else, useToast } from '@trg_package/components';
+import {
+  ToastAction, If, Then, Else, useToast
+} from '@trg_package/components';
 import { useIsAllowed } from '@/hooks';
 
 interface IDeleteEntityProps {

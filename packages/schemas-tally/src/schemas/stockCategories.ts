@@ -1,6 +1,6 @@
 import { pgTable, varchar } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { TallyCommonSchema } from './base';
 
 const StockCatgoryColumns = {
   stockCategoryName: varchar('stockCategoryName', { length: 200 }).notNull(),
@@ -18,8 +18,6 @@ export const StockCategoryTempSchema = pgTable('tempTallyStockCategories', {
 });
 
 export type StockCategoryInsert = typeof StockCategorySchema.$inferInsert;
-export const StockCategoryInsertSchema =
-  createInsertSchema(StockCategorySchema);
+export const StockCategoryInsertSchema = createInsertSchema(StockCategorySchema);
 export type StockCategorySelect = typeof StockCategorySchema.$inferSelect;
-export const StockCategorySelectSchema =
-  createSelectSchema(StockCategorySchema);
+export const StockCategorySelectSchema = createSelectSchema(StockCategorySchema);

@@ -26,8 +26,8 @@ const createAxiosClient = (
 
   const axios = Axios.create({
     baseURL:
-      `${PROTOCOL}://${subdomain}.${VITE_DOMAIN}.${VITE_TLD}/api` +
-      defaults.baseURL,
+      `${PROTOCOL}://${subdomain}.${VITE_DOMAIN}.${VITE_TLD}/api${
+        defaults.baseURL}`,
     withCredentials: defaults.withCredentials
   });
 

@@ -1,4 +1,3 @@
-import { NotFoundError } from '@trg_package/errors';
 import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import jwt from 'jsonwebtoken';
 import { UserService } from '@trg_package/schemas-dashboard/services';

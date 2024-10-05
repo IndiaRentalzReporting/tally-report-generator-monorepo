@@ -26,14 +26,12 @@ export const services = {
   },
   createOne: async (data: {
     moduleDetails: ModuleInsert;
-  }): AxiosPromise<{ module: ModuleSelect }> =>
-    modulesAxios.post('/create', data),
+  }): AxiosPromise<{ module: ModuleSelect }> => modulesAxios.post('/create', data),
   updateOne: async (
     id: ModuleSelect['id'],
     data: Partial<ModuleSelect>
   ): AxiosPromise<ModuleSelect> => modulesAxios.patch(`/update/${id}`, data),
   deleteOne: async (
     id: ModuleSelect['id']
-  ): AxiosPromise<{ module: ModuleSelect }> =>
-    modulesAxios.delete(`/delete/${id}`)
+  ): AxiosPromise<{ module: ModuleSelect }> => modulesAxios.delete(`/delete/${id}`)
 };

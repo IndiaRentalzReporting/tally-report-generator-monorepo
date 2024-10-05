@@ -7,7 +7,9 @@ import config from '@/config';
 
 export const PrivateRoutes: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
-  const { PROTOCOL, VITE_AUTH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD } = config;
+  const {
+    PROTOCOL, VITE_AUTH_SUBDOMAIN, VITE_DOMAIN, VITE_TLD
+  } = config;
 
   useEffect(() => {
     if (!isAuthenticated && !loading) {

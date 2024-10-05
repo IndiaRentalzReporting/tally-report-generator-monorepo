@@ -29,8 +29,7 @@ export const SignupForm = () => {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
 
-  const [tenantData, setTenantData] =
-    useState<TenantInsert>(initialTenantState);
+  const [tenantData, setTenantData] = useState<TenantInsert>(initialTenantState);
   const [userData, setUserData] = useState<RegisterUser>(initialUserState);
 
   const handleFormChange = <T extends object>(

@@ -1,13 +1,15 @@
 import 'express-async-errors';
-import express, { Request, Response, NextFunction, Express } from 'express';
+import express, {
+  Request, Response, NextFunction, Express
+} from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
-import config from './config';
-import { sessionsLoader } from './loaders/sessions';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import config from './config';
+import { sessionsLoader } from './loaders/sessions';
 import { removePrivate } from './middleware/removePrivate';
 
 const { NODE_ENV, DOMAIN, TLD } = config;

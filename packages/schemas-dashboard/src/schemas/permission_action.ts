@@ -1,8 +1,8 @@
 import { pgTable, uuid, primaryKey } from 'drizzle-orm/pg-core';
-import { ActionSchema } from './actions';
-import { PermissionSchema } from './permissions';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
+import { ActionSchema } from './actions';
+import { PermissionSchema } from './permissions';
 
 const { id, name, ...BaseEntitySchemaWithoutIdAndName } = BaseEntitySchema();
 

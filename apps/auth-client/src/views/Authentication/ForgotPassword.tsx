@@ -1,4 +1,5 @@
-import { Label ,
+import {
+  Label,
   Card,
   CardHeader,
   CardTitle,
@@ -17,19 +18,18 @@ export const ForgotPassword: FC = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState<string>('');
 
-  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
-    useMutation({
-      mutationFn: () => services.forgotPassword({ email }),
-      onSuccess: (data) => {
-        setEmail('');
-        toast({
-          variant: 'default',
-          title: 'Email Sent!',
-          description: data.data.message,
-          action: <ToastAction altText="Okay!">Okay!</ToastAction>
-        });
-      }
-    });
+  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
+    mutationFn: () => services.forgotPassword({ email }),
+    onSuccess: (data) => {
+      setEmail('');
+      toast({
+        variant: 'default',
+        title: 'Email Sent!',
+        description: data.data.message,
+        action: <ToastAction altText="Okay!">Okay!</ToastAction>
+      });
+    }
+  });
 
   const handleForgotPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

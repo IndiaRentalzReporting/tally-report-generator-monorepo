@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-import { Menu, Package2, Search, ChevronDown } from 'lucide-react';
+import {
+  Menu, Package2, Search, ChevronDown
+} from 'lucide-react';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
@@ -43,16 +45,17 @@ const DashboardHeader: React.FC = () => {
           </NavLink>
           <nav className="grid gap-2 text-lg font-medium">
             <Accordion type="single" collapsible className="w-full">
-              {navigation.map(({ to, name, children, icon }, index) => (
+              {navigation.map(({
+                to, name, children, icon
+              }, index) => (
                 <AccordionItem value={`item-${index}`} key={to}>
                   <NavLink
                     to={!children ? to : '#'}
-                    className={({ isActive }) =>
-                      clsx(
-                        'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
-                        isActive && !children && 'bg-muted text-primary',
-                        children || 'hover:text-primary'
-                      )
+                    className={({ isActive }) => clsx(
+                      'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
+                      isActive && !children && 'bg-muted text-primary',
+                      children || 'hover:text-primary'
+                    )
                     }
                   >
                     <AccordionTrigger
@@ -79,11 +82,10 @@ const DashboardHeader: React.FC = () => {
                         <NavLink
                           to={child.to}
                           key={child.to}
-                          className={({ isActive }) =>
-                            clsx(
-                              'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
-                              isActive && 'text-primary'
-                            )
+                          className={({ isActive }) => clsx(
+                            'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
+                            isActive && 'text-primary'
+                          )
                           }
                         >
                           {child.name}

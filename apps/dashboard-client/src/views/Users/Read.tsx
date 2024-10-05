@@ -44,27 +44,21 @@ const Read: React.FC = () => {
   });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: assignRoleMutation, isPending: assignRoleLoading } =
-    useMutation({
-      mutationFn: () => {
-        const keys = Object.keys(rowSelection);
-        const selectedUsers =
-          allUsers
-            ?.map((user, index) =>
-              keys.includes(String(index)) ? user.id : ''
-            )
-            .filter((id) => !!id) ?? [];
-        const promises = selectedUsers.map(async (id) =>
-          userServices.updateOne(id, { role_id: selectedRole })
-        );
-        return Promise.all(promises);
-      },
-      onSettled() {
-        setSelectedRole('');
-        setRowSelection({});
-        queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
-      }
-    });
+  const { mutateAsync: assignRoleMutation, isPending: assignRoleLoading } = useMutation({
+    mutationFn: () => {
+      const keys = Object.keys(rowSelection);
+      const selectedUsers = allUsers
+        ?.map((user, index) => (keys.includes(String(index)) ? user.id : ''))
+        .filter((id) => !!id) ?? [];
+      const promises = selectedUsers.map(async (id) => userServices.updateOne(id, { role_id: selectedRole }));
+      return Promise.all(promises);
+    },
+    onSettled() {
+      setSelectedRole('');
+      setRowSelection({});
+      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+    }
+  });
 
   return (
     <Card>

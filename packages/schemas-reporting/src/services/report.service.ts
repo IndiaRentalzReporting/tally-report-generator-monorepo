@@ -1,11 +1,9 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import * as reportingSchemas from '../schemas';
-import { ReportSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { ReportInsert, ReportSelect } from '@/schemas/report';
-import { CreateError, CustomError } from '@trg_package/errors';
-import { TableSelect } from '../types';
-import { SQL, sql } from 'drizzle-orm';
+import { CustomError } from '@trg_package/errors';
+import { sql } from 'drizzle-orm';
+import { ReportSchema } from '../schemas';
+import * as reportingSchemas from '../schemas';
 
 export class ReportService extends BaseServiceNew<
   typeof reportingSchemas,
@@ -17,10 +15,9 @@ export class ReportService extends BaseServiceNew<
 
   public async getTableQuery(
     tableId: Pick<(typeof ReportSchema)['$inferSelect'], 'baseEntity'>,
-    tableNames: String[] | null = null
-  ): Promise<String> {
-    const whereCondition =
-      tableNames == null ? '' : `WHERE tbe.tablealias IN ${tableNames}`;
+    tableNames: string[] | null = null
+  ): Promise<string> {
+    const whereCondition = tableNames == null ? '' : `WHERE tbe.tablealias IN ${tableNames}`;
     try {
       const tableQuery = await this.dbClient.execute(sql`
                 WITH RECURSIVE tbe(tablealias, tableid,tbe_query) AS (
@@ -61,7 +58,7 @@ export class ReportService extends BaseServiceNew<
   }
 
   public getColumns(columns: (typeof ReportSchema)['$inferSelect']['columns']) {
-    let str: any = [];
+    const str: any = [];
     columns?.map((column) => {
       str.push(`${column.table}."${column.name}" as "${column.alias}"`);
     });
@@ -79,25 +76,26 @@ export class ReportService extends BaseServiceNew<
   }
 
   public getGroupBy(groupBy: (typeof ReportSchema)['$inferSelect']['groupBy']) {
-    let str: any[] = [];
+    const str: any[] = [];
     groupBy?.map((ele) => {
       str.push(`${ele.alias}`);
     });
     return str.join(', ');
   }
+
   public async updateConfig(report: (typeof ReportSchema)['$inferSelect']) {
-    //tables
+    // tables
     const tables = await this.getTableQuery(
       report.baseEntity as any,
       report.tables
     );
-    //columns
+    // columns
     const columns = report.columns ? this.getColumns(report.columns) : '*';
-    //conditions
+    // conditions
     const conditions = report.conditons
       ? this.getConditions(report.conditons)
       : '';
-    //group by
+    // group by
     const groupBy = report.groupBy ? this.getGroupBy(report.groupBy) : '';
   }
 

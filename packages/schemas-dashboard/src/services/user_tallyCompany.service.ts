@@ -1,6 +1,6 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { UserTallyCompanySchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { UserTallyCompanySchema } from '../schemas';
 import * as dashboardSchemas from '../schemas';
 
 export class UserTallyCompanyService extends BaseServiceNew<

@@ -8,11 +8,10 @@ const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => (
         id="name"
         name="name"
         value={actionData.name}
-        onChange={(e) =>
-          setActionData((prev) => ({
-            ...prev,
-            name: e.target.value
-          }))
+        onChange={(e) => setActionData((prev) => ({
+          ...prev,
+          name: e.target.value
+        }))
         }
         placeholder="Action Name"
         required

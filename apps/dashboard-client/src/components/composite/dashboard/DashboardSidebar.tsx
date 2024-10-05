@@ -33,16 +33,17 @@ const DashboardSidebar: React.FC = () => {
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <Accordion type="single" collapsible className="w-full">
-              {navigation.map(({ name, to, children, icon }) => (
+              {navigation.map(({
+                name, to, children, icon
+              }) => (
                 <AccordionItem value={`item-${name}`} key={name}>
                   <NavLink
                     to={to}
-                    className={({ isActive }) =>
-                      clsx(
-                        'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
-                        isActive && 'bg-muted text-primary',
-                        children || 'hover:text-primary'
-                      )
+                    className={({ isActive }) => clsx(
+                      'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
+                      isActive && 'bg-muted text-primary',
+                      children || 'hover:text-primary'
+                    )
                     }
                   >
                     <AccordionTrigger
@@ -69,11 +70,10 @@ const DashboardSidebar: React.FC = () => {
                         <NavLink
                           to={child.to}
                           key={child.name}
-                          className={({ isActive }) =>
-                            clsx(
-                              'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
-                              isActive && 'text-primary'
-                            )
+                          className={({ isActive }) => clsx(
+                            'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
+                            isActive && 'text-primary'
+                          )
                           }
                         >
                           <div className="mt-2 w-full h-[1px] bg-border self-stretch flex-grow" />

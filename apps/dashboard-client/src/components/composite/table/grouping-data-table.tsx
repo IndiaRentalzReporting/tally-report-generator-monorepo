@@ -115,8 +115,8 @@ export const GroupingDataTable = <TData, TValue>({
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
                         flexRender(
-                          cell.column.columnDef.aggregatedCell ??
-                            cell.column.columnDef.cell,
+                          cell.column.columnDef.aggregatedCell
+                            ?? cell.column.columnDef.cell,
                           cell.getContext()
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null

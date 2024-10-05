@@ -1,4 +1,5 @@
-import { Label ,
+import {
+  Label,
   Card,
   CardHeader,
   CardTitle,
@@ -30,29 +31,27 @@ export const ResetPassword: FC = () => {
     queryKey: ['reset token', 'validation']
   });
 
-  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
-    useMutation({
-      mutationFn: () =>
-        services.resetPassword({
-          token: token?.token ?? '',
-          password,
-          confirmPassword
-        }),
-      onSuccess: (data) => {
-        setPassword('');
-        setConfirmPassword('');
-        toast({
-          variant: 'default',
-          title: 'Password Reset!',
-          description: data.data.message,
-          action: (
+  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
+    mutationFn: () => services.resetPassword({
+      token: token?.token ?? '',
+      password,
+      confirmPassword
+    }),
+    onSuccess: (data) => {
+      setPassword('');
+      setConfirmPassword('');
+      toast({
+        variant: 'default',
+        title: 'Password Reset!',
+        description: data.data.message,
+        action: (
             <ToastAction altText="Okay!" onClick={() => navigate('/sign-in')}>
               Okay!
             </ToastAction>
-          )
-        });
-      }
-    });
+        )
+      });
+    }
+  });
 
   const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

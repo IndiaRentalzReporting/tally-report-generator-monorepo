@@ -10,41 +10,38 @@ import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissi
 
 const Create: React.FC = () => {
   const [selectedRole, setSelectedRole] = React.useState<string>('');
-  const [modulePermissions, setModulePermission] =
-    React.useState<ModulePermissions>({});
+  const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createPermission, isPending: createPermissionLoading } =
-    useMutation({
-      mutationFn: async () => {
-        const permissions =
-          createPermissionsUsingModulePermissions(modulePermissions);
-        for (const { module_id, action_ids } of permissions) {
-          const {
-            data: {
-              permission: { id: permission_id }
-            }
-          } = await services.createOne({
-            module_id,
-            role_id: selectedRole
-          });
-          for (const action_id of action_ids) {
-            await actionService.read({ id: action_id });
-            await permission_actionService.createOne({
-              permission_id,
-              action_id
-            });
+  const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
+    mutationFn: async () => {
+      const permissions = createPermissionsUsingModulePermissions(modulePermissions);
+      for (const { module_id, action_ids } of permissions) {
+        const {
+          data: {
+            permission: { id: permission_id }
           }
+        } = await services.createOne({
+          module_id,
+          role_id: selectedRole
+        });
+        for (const action_id of action_ids) {
+          await actionService.read({ id: action_id });
+          await permission_actionService.createOne({
+            permission_id,
+            action_id
+          });
         }
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
-        queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
-        queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
-        setModulePermission({});
-        setSelectedRole('');
       }
-    });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
+      setModulePermission({});
+      setSelectedRole('');
+    }
+  });
 
   const handleCreatePermission: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();

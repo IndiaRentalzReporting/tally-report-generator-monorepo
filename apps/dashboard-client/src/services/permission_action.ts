@@ -26,8 +26,7 @@ export const services = {
   },
   createOne: async (
     permissionActionDetails: PermissionActionInsert
-  ): AxiosPromise<{ permissionAction: PermissionActionSelect }> =>
-    permissionActionsAxios.post('/create', permissionActionDetails),
+  ): AxiosPromise<{ permissionAction: PermissionActionSelect }> => permissionActionsAxios.post('/create', permissionActionDetails),
   updateOne: async (
     {
       action_id,
@@ -37,14 +36,12 @@ export const services = {
       permission_id: PermissionActionSelect['permission_id'];
     },
     data: Partial<PermissionActionSelect>
-  ): AxiosPromise<PermissionActionSelect> =>
-    permissionActionsAxios.patch(`/update/${action_id}/${permission_id}`, data),
+  ): AxiosPromise<PermissionActionSelect> => permissionActionsAxios.patch(`/update/${action_id}/${permission_id}`, data),
   deleteOne: async ({
     action_id,
     permission_id
   }: {
     action_id: PermissionActionSelect['action_id'];
     permission_id: PermissionActionSelect['permission_id'];
-  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> =>
-    permissionActionsAxios.delete(`/delete/${action_id}/${permission_id}`)
+  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> => permissionActionsAxios.delete(`/delete/${action_id}/${permission_id}`)
 };

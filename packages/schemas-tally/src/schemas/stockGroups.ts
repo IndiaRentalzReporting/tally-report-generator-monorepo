@@ -1,12 +1,9 @@
 import {
   pgTable,
-  uuid,
-  integer,
-  varchar,
-  timestamp
+  varchar
 } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { TallyCommonSchema } from './base';
 
 const StockGroupColumns = {
   stockGroupName: varchar('stockGroupName', { length: 200 }).notNull(),

@@ -1,11 +1,11 @@
 import { relations } from 'drizzle-orm';
+import { CompanySchema } from '@trg_package/schemas-tally/schemas';
 import { UserSchema } from './users';
 import { RoleSchema } from './roles';
 import { PermissionSchema } from './permissions';
 import { ModuleSchema } from './modules';
 import { ActionSchema } from './actions';
 import { PermissionActionSchema } from './permission_action';
-import { CompanySchema } from '@trg_package/schemas-tally/schemas';
 import { UserTallyCompanySchema } from './user_tallyCompany';
 
 export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({

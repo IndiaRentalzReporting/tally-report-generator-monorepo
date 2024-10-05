@@ -1,3 +1,3 @@
-import { ColumnType } from "../schemas/column";
+import { ColumnType } from '../schemas/column';
 
-export type ColumnTypeLiteral = typeof  ColumnType.enumValues[number];
+export type ColumnTypeLiteral = typeof ColumnType.enumValues[number];

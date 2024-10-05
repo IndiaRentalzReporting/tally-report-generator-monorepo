@@ -8,8 +8,7 @@ const Fields: React.FC<StateAsProps> = ({ roleData, setRoleData }) => (
         id="name"
         name="name"
         value={roleData.name}
-        onChange={(e) =>
-          setRoleData((prev) => ({ ...prev, name: e.target.value }))
+        onChange={(e) => setRoleData((prev) => ({ ...prev, name: e.target.value }))
         }
         placeholder="Role Name"
         required
