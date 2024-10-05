@@ -1,8 +1,0 @@
-{
-  "extends": "@trg_package/config-typescript/express.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "baseUrl": "."
-  },
-  "include": ["vite.config.ts"]
-}

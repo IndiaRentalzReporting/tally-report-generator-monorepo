@@ -1,8 +1,0 @@
-{
-  "extends": "@trg_package/config-typescript/vite.json",
-  "compilerOptions": {
-    "rootDir": ".",
-    "baseUrl": "."
-  },
-  "include": ["src"]
-}
