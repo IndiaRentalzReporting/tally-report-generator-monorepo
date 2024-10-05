@@ -10,16 +10,16 @@ export default ({ mode }: { mode: string }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        $: path.resolve(__dirname, '../../packages/components/src'),
-      },
+        $: path.resolve(__dirname, '../../packages/vite/src')
+      }
     },
     server: {
       port: Number(process.env.VITE_PORT),
-      host: true,
+      host: true
     },
     preview: {
       port: Number(process.env.VITE_PORT),
-      host: true,
-    },
+      host: true
+    }
   });
 };
