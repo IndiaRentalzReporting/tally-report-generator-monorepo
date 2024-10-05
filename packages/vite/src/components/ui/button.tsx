@@ -3,7 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '$/lib/utils';
-import { If, Then, Else } from '../utility';
+import { If, Then, Else } from '..';
 import { LoadingSpinner } from './loadingSpinner';
 
 const buttonVariants = cva(
@@ -19,25 +19,25 @@ const buttonVariants = cva(
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        link: 'text-primary underline-offset-4 hover:underline'
       },
       size: {
         default: 'h-10 px-4 py-2',
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
-      },
+        icon: 'h-10 w-10'
+      }
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
-    },
-  },
+      size: 'default'
+    }
+  }
 );
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   isLoading?: boolean;
 }
@@ -53,14 +53,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
         className={cn(
           buttonVariants({ variant, size, className }),
-          isLoading && 'cursor-default pointer-events-none',
+          isLoading && 'cursor-default pointer-events-none'
         )}
         ref={ref}
         {...props}
@@ -73,7 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         </If>
       </Comp>
     );
-  },
+  }
 );
 Button.displayName = 'Button';
 

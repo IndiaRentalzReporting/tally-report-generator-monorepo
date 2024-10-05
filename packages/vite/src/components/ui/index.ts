@@ -12,7 +12,6 @@ export * from './table';
 export * from './drawer';
 export * from './loadingSpinner';
 export * from './skeleton';
-export * from './accordion';
 export * from './toast';
 export * from './select';
 export * from './toaster';
