@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@trg_package/components';
+import { LoadingSpinner } from '.';
 
 export const RedirectingSkeleton = () => (
   <div className="flex flex-col items-center justify-center min-h-screen bg-background">

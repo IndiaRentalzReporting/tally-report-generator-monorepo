@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ElseIf, If, LoadingSpinner, Then } from '@trg_package/components';
+import { ElseIf, If, LoadingSpinner, Then } from '.';
 import { useAuth } from '../providers';
 import config from '../config';
 

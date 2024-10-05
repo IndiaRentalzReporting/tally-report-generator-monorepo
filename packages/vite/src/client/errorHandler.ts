@@ -1,6 +1,6 @@
-import { toast } from '@trg_package/components';
 import { type AxiosError } from 'axios';
 import z from 'zod';
+import { toast } from '../lib/hooks';
 
 export const responseErrorHandler = (error: AxiosError<any>) => {
   console.error(error);

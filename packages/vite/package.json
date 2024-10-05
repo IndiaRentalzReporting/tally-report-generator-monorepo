@@ -6,8 +6,16 @@
   "exports": {
     "./providers": "./src/providers/index.ts",
     "./client": "./src/client/index.ts",
-    "./components": "./src/components/index.ts"
+    "./components": "./src/components/index.ts",
+    "./hooks": "./src/lib/hooks/index.ts",
+    "./components/styles.css": "./dist/index.css"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tailwindcss -i ./src/global.css -o ./dist/index.css",
     "lint": "eslint . --ext ts,tsx",
@@ -15,7 +23,6 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.40.1",
-    "@trg_package/components": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
     "axios": "^1.7.2",
