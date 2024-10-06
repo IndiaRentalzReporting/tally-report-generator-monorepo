@@ -1,6 +1,4 @@
-import {
-  varchar , uuid , pgTable, pgEnum, text
-} from 'drizzle-orm/pg-core';
+import { varchar, uuid, pgTable, pgEnum, text } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { TableSchema } from './table';
 
@@ -12,7 +10,7 @@ export const ColumnType = pgEnum('column_type', [
   'foreignKey'
 ]);
 
-export const ColumnSchema = pgTable('rablee', {
+export const ColumnSchema = pgTable('column', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   type: ColumnType('type').default('string').notNull(),

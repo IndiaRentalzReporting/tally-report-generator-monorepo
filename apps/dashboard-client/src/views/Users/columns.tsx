@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
-import { Button, Checkbox } from '@trg_package/components';
+import { Button, Checkbox } from '@trg_package/vite/components';
 import { services } from '@/services/user';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 
@@ -11,8 +11,8 @@ export const columns: ColumnDef<DetailedUser>[] = [
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected()
-          || (table.getIsSomePageRowsSelected() && 'indeterminate')
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -31,40 +31,40 @@ export const columns: ColumnDef<DetailedUser>[] = [
   {
     accessorKey: 'first_name',
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          First Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        First Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     )
   },
   {
     accessorKey: 'last_name',
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Last Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Last Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     )
   },
   {
     accessorKey: 'email',
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Email
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     )
   },
   {

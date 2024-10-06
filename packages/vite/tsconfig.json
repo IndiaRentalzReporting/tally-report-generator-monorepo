@@ -1,0 +1,13 @@
+{
+  "extends": "@trg_package/config-typescript/vite.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "$/*": ["./src/*"]
+    }
+  },
+  "files": [],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": ["src"]
+}

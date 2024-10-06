@@ -1,0 +1,10 @@
+{
+  "extends": "@trg_package/config-typescript/express.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "composite": true,
+    "incremental": true
+  },
+  "include": ["vite.config.ts"]
+}

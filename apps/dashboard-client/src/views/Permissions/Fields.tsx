@@ -13,10 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
-  Switch
-} from '@trg_package/components';
+  Switch,
+  DataTable
+} from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
-import { DataTable } from '@/components/composite';
 import { services as moduleService } from '@/services/module';
 import { services as roleService } from '@/services/role';
 import { services as actionService } from '@/services/action';
@@ -53,11 +53,15 @@ const Fields: React.FC<StateAsProps> = ({
     setTableData(columnData);
   }, [modules]);
 
-  const { data: allRolesWithNoPermission, isFetching: fetchingRoles } = useQuery({
-    queryFn: async () => roleService.read(),
-    select: (data) => data.data.roles.filter((r) => (!role ? r.permission.length === 0 : true)),
-    queryKey: ['roles', 'getAll']
-  });
+  const { data: allRolesWithNoPermission, isFetching: fetchingRoles } =
+    useQuery({
+      queryFn: async () => roleService.read(),
+      select: (data) =>
+        data.data.roles.filter((r) =>
+          !role ? r.permission.length === 0 : true
+        ),
+      queryKey: ['roles', 'getAll']
+    });
 
   const handlePermissionChange = useCallback(
     (checked: boolean, module_id: string, action_id: string) => {
@@ -99,7 +103,8 @@ const Fields: React.FC<StateAsProps> = ({
         return (
           <Switch
             checked={!!isCheckedByDefault}
-            onCheckedChange={(checked) => handlePermissionChange(checked, module_id, action.id)
+            onCheckedChange={(checked) =>
+              handlePermissionChange(checked, module_id, action.id)
             }
           />
         );

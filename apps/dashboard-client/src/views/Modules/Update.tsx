@@ -5,7 +5,7 @@ import React, {
   useEffect
 } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Skeleton } from '@trg_package/components';
+import { Button, Skeleton } from '@trg_package/vite/components';
 import Fields from './Fields';
 import { services } from '@/services/module';
 import { State, initialState } from './interface';

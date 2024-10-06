@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/action';
 import Fields from './Fields';
 import { State, initialState } from './interface';
@@ -9,16 +9,17 @@ const Create: React.FC = () => {
   const [actionData, setActionData] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createAction, isPending: loadingCreateAction } = useMutation({
-    mutationFn: () => services.createOne(actionData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
-    },
-    onSettled: () => {
-      setActionData(initialState);
-    }
-  });
+  const { mutateAsync: createAction, isPending: loadingCreateAction } =
+    useMutation({
+      mutationFn: () => services.createOne(actionData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
+        queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
+      },
+      onSettled: () => {
+        setActionData(initialState);
+      }
+    });
 
   const handleCreateAction: React.FormEventHandler = (e) => {
     e.preventDefault();

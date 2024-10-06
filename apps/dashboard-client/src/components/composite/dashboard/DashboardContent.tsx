@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router';
+import { When } from '@trg_package/vite/components';
 import CreateDrawer from './CreateDrawer';
 import { useNav } from '@/providers/NavigationProvider';
-import { When } from '$/components/utility';
 
 const DashboardContent: React.FC = () => {
   const { currentModule } = useNav();

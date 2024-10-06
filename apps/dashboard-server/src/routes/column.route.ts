@@ -1,7 +1,6 @@
 import { validateSchema } from '@trg_package/middlewares';
 import { Router } from 'express';
-import { TableSelectSchema } from '@trg_package/schemas-reporting/types';
-import z from 'zod';
+import { ColumnInsertSchema } from '@trg_package/schemas-reporting/types';
 import { readAll } from '../controller/column.controller';
 
 const columnRouter = Router();
@@ -9,9 +8,8 @@ const columnRouter = Router();
 columnRouter.get(
   '/read/:tableId',
   validateSchema({
-    params: z.object({
-      tableId: TableSelectSchema.shape.id
-    })
+    query: ColumnInsertSchema.partial(),
+    params: ColumnInsertSchema.pick({ tableId: true })
   }),
   readAll
 );

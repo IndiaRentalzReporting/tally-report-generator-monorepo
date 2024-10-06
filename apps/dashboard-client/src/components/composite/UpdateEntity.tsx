@@ -14,7 +14,7 @@ import {
   If,
   Then,
   Else
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { useIsAllowed } from '@/hooks';
 
 interface IUpdateEntityProps {

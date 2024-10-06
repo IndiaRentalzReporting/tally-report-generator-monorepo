@@ -10,9 +10,9 @@ import {
   ToastAction,
   If,
   Then,
-  Else,
-  useToast
-} from '@trg_package/components';
+  Else
+} from '@trg_package/vite/components';
+import { useToast } from '@trg_package/vite/hooks';
 import { useState, FC, FormEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
@@ -31,27 +31,29 @@ export const ResetPassword: FC = () => {
     queryKey: ['reset token', 'validation']
   });
 
-  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
-    mutationFn: () => services.resetPassword({
-      token: token?.token ?? '',
-      password,
-      confirmPassword
-    }),
-    onSuccess: (data) => {
-      setPassword('');
-      setConfirmPassword('');
-      toast({
-        variant: 'default',
-        title: 'Password Reset!',
-        description: data.data.message,
-        action: (
+  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
+    useMutation({
+      mutationFn: () =>
+        services.resetPassword({
+          token: token?.token ?? '',
+          password,
+          confirmPassword
+        }),
+      onSuccess: (data) => {
+        setPassword('');
+        setConfirmPassword('');
+        toast({
+          variant: 'default',
+          title: 'Password Reset!',
+          description: data.data.message,
+          action: (
             <ToastAction altText="Okay!" onClick={() => navigate('/sign-in')}>
               Okay!
             </ToastAction>
-        )
-      });
-    }
-  });
+          )
+        });
+      }
+    });
 
   const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

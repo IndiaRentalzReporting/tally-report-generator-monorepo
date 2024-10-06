@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { services as roleServices } from '@/services/role';
 import { State } from './interface';
@@ -10,14 +10,14 @@ export const columns: ColumnDef<State>[] = [
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Role Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Role Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
     getGroupingValue: (row) => `${row.role.name}}`
   },
@@ -25,28 +25,28 @@ export const columns: ColumnDef<State>[] = [
     id: 'Module Name',
     accessorFn: (row) => row.module.name,
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Module Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Module Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     )
   },
   {
     id: 'Actions on Modules',
     accessorKey: 'permissionActions',
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Actions
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Actions
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
     cell: ({ row }) => {
       const { permissionAction } = row.original;

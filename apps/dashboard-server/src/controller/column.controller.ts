@@ -1,16 +1,19 @@
-import { ColumnSelect, TableSelect } from '@trg_package/schemas-reporting/types';
+import {
+  ColumnSelect,
+  TableSelect
+} from '@trg_package/schemas-reporting/types';
 import { NextFunction, Request, Response } from 'express';
 
-export const readAll = async <ResObject extends { columns : ColumnSelect[] }>(
-  req : Request<{ tableId:TableSelect['id'] },ResObject>,
-  res : Response<ResObject>,
-  next : NextFunction
+export const readAll = async (
+  req: Request<{ tableId: TableSelect['id'] }>,
+  res: Response<{ columns: ColumnSelect[] }>,
+  next: NextFunction
 ) => {
   try {
-    const table = await req.tableService.findOne({ id: req.params.tableId });
+    await req.tableService.findOne({ id: req.params.tableId });
     const columns = await req.columnService.getAllColumns(req.params.tableId);
-    return res.json({ columns } as ResObject);
+    return res.json({ columns });
   } catch (e) {
-    next(e);
+    return next(e);
   }
 };
