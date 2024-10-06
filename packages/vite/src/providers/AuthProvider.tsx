@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
   UseMutateAsyncFunction,
   useMutation,
@@ -165,13 +165,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setState((prev) => ({ ...prev, loading: isAuthStatusPending }));
   }, [isAuthStatusPending]);
 
-  const contextValue = {
-    ...state,
-    onboard: { mutation: onboardMutation, isLoading: isOnboarding },
-    signIn: { mutation: signInMutation, isLoading: isSigningIn },
-    signUp: { mutation: signUpMutation, isLoading: isSigningUp },
-    signOut: { mutation: signOutMutation, isLoading: isSigningOut }
-  };
+  const contextValue = useMemo(
+    () => ({
+      ...state,
+      onboard: { mutation: onboardMutation, isLoading: isOnboarding },
+      signIn: { mutation: signInMutation, isLoading: isSigningIn },
+      signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+      signOut: { mutation: signOutMutation, isLoading: isSigningOut }
+    }),
+    [
+      state,
+      isOnboarding,
+      isSigningIn,
+      isSigningUp,
+      isSigningOut,
+      onboardMutation,
+      signInMutation,
+      signOutMutation,
+      signUpMutation
+    ]
+  );
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

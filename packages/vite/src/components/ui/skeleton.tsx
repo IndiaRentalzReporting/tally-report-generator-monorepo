@@ -1,5 +1,5 @@
 import { cn } from '$/lib/utils';
-import { If, Then, Else } from '..';
+import { If, Then, Else } from '../Conditionals';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   isLoading: boolean;

@@ -6,12 +6,12 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { useAuth } from '@trg_package/vite/providers';
-import { PrivateRoutes } from '@trg_package/vite/components';
+import { Loading, PrivateRoutes } from '@trg_package/vite/components';
 import { ModuleMapper } from './components/utility';
 import { DashboardLayout } from './components/composite';
 
 const App = () => {
-  const { permissions } = useAuth();
+  const { permissions, loading } = useAuth();
 
   const router = createBrowserRouter(
     createRoutesFromElements([
@@ -35,7 +35,7 @@ const App = () => {
     ])
   );
 
-  return <RouterProvider router={router} />;
+  return loading ? <Loading /> : <RouterProvider router={router} />;
 };
 
 export default App;
