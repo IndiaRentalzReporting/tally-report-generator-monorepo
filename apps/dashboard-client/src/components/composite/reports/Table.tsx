@@ -31,7 +31,7 @@ const Table: React.FC = () => {
                 <TableHead key={index} className="relative">
                   {col.name}
                   <Button
-                    className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1"
+                    className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 h-auto"
                     onClick={() => removeColumn(col)}
                   >
                     <X size={12} />
