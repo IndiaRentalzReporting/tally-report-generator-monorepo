@@ -18,7 +18,7 @@ const App = () => {
       <Route element={<PrivateRoutes />}>
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          {permissions?.map(({ module: { name }, actions }) => (
+          {permissions.map(({ module: { name }, actions }) => (
             <Route path={name.toLowerCase()} key={name}>
               <Route index element={<ModuleMapper module={name} />} />
               {actions.map<React.ReactNode>((action) => (
