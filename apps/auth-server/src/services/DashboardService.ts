@@ -53,11 +53,16 @@ class DashboardService {
   public async migrateAndSeed(userData: UserInsert): Promise<UserSelect> {
     migrateDashboardSchema(this.URL);
     const admin = await this.dashboardClient.transaction(async (trx) => {
+      /**
+       * Do not change the order of the following
+       * statements as it will cause the seeding to fail
+       */
+      const user = await this.createAdmin(userData, trx);
       await this.seedAction(trx);
       await this.seedModules(trx);
       await this.seedTable(trx);
       await this.seedColumn(trx);
-      return this.createAdmin(userData, trx);
+      return user;
     });
     await this.terminateConnection();
     return admin;
