@@ -22,6 +22,7 @@ const App = () => {
         <Route element={<SigninForm />} path="sign-in" />
         <Route element={<ForgotPassword />} path="forgot-password" />
         <Route element={<ResetPassword />} path="reset-password/:token" />
+        <Route path="*" element={<Navigate to="/sign-up" />} />
       </Route>
     ])
   );

@@ -31,6 +31,7 @@ const App = () => {
             </Route>
           ))}
         </Route>
+        <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>
     ])
   );
