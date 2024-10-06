@@ -146,24 +146,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })) ?? [];
 
   useEffect(() => {
-    if (authStatus && authStatus.isAuthenticated && authStatus.user) {
-      const { user, isAuthenticated } = authStatus;
-      const permissions = createPermissions(user.role?.permission);
-      const tenant = user.tenant?.name;
-
-      setState({
-        user,
-        isAuthenticated,
-        permissions,
-        tenant,
-        loading: false
-      });
+    let user;
+    let isAuthenticated;
+    if (!authStatus) {
+      user = initialState.user;
+      isAuthenticated = initialState.isAuthenticated;
+    } else {
+      user = authStatus.user;
+      isAuthenticated = authStatus.isAuthenticated;
     }
-  }, [authStatus]);
+    const permissions = user ? createPermissions(user.role?.permission) : [];
+    const tenant = user ? user.tenant?.name : null;
 
-  useEffect(() => {
-    setState((prev) => ({ ...prev, loading: isAuthStatusPending }));
-  }, [isAuthStatusPending]);
+    setState({
+      user,
+      isAuthenticated,
+      permissions,
+      tenant,
+      loading: isAuthStatusPending
+    });
+  }, [authStatus, isAuthStatusPending]);
 
   const contextValue = useMemo(
     () => ({
