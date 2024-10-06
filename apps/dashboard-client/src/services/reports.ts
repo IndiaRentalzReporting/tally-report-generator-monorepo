@@ -1,5 +1,6 @@
 import { AxiosPromise } from 'axios';
 import {
+  ColumnSelect,
   ReportInsert,
   ReportSelect,
   TableSelect
@@ -40,48 +41,29 @@ export const services = {
     id: ReportSelect['id']
   ): AxiosPromise<{
     report: ReportSelect;
-  }> => reportsAxios.delete(`/delete/${id}`)
-};
-
-const columnsAxios = createAxiosClient(
-  { dashboard: true },
-  {
-    baseURL: '/v1/columns',
-    withCredentials: true
-  }
-);
-
-const columnServices = {
-  read: async (
-    tableId: TableSelect['id'],
-    query: Partial<ReportSelect> = {}
-  ): AxiosPromise<{
-    reports: ReportSelect[];
+  }> => reportsAxios.delete(`/delete/${id}`),
+  getColumns: async ({
+    tableId,
+    query = {}
+  }: {
+    tableId: TableSelect['id'];
+    query?: Partial<ReportSelect>;
+  }): AxiosPromise<{
+    columns: ColumnSelect[];
   }> => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
-    return columnsAxios.get(`/read/${tableId}?${queryString}`);
-  }
-};
-
-const tablesAxios = createAxiosClient(
-  { dashboard: true },
-  {
-    baseURL: '/v1/tables',
-    withCredentials: true
-  }
-);
-
-export const tableServices = {
-  read: async (
+    return reportsAxios.get(`/read/getColumns/${tableId}?${queryString}`);
+  },
+  getTables: async (
     query: Partial<ReportSelect> = {}
   ): AxiosPromise<{
-    reports: ReportSelect[];
+    tables: ReportSelect[];
   }> => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
-    return tablesAxios.get(`/read?${queryString}`);
+    return reportsAxios.get(`/read/getTables?${queryString}`);
   }
 };

@@ -1,8 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Edit } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
-import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { services } from '@/services/action';
+import { Link } from 'react-router-dom';
+import { DeleteEntity } from '@/components/composite';
+import { services } from '@/services/reports';
 import { State } from './interface';
 
 export const columns: ColumnDef<State>[] = [
@@ -23,19 +24,21 @@ export const columns: ColumnDef<State>[] = [
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
-      const action = row.original;
+      const report = row.original;
       return (
         <span className="flex gap-4 items-center">
           <DeleteEntity
             options={{
               mutation: {
-                mutationFn: () => services.deleteOne(action.id)
+                mutationFn: () => services.deleteOne(report.id)
               },
-              name: action.name,
-              module: 'Actions'
+              name: report.name,
+              module: 'Reports'
             }}
           />
-          <UpdateEntity module="Actions" id={action.id} />
+          <Link to={`/reports/${report.id}`}>
+            <Edit size={20} className="text-green-500" />
+          </Link>
         </span>
       );
     }
