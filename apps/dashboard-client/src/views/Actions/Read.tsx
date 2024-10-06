@@ -6,9 +6,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  Skeleton
+  Skeleton,
+  DataTable
 } from '@trg_package/vite/components';
-import { DataTable } from '@/components/composite';
 import { services } from '@/services/action';
 import { columns } from './columns';
 

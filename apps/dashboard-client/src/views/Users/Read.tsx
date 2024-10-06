@@ -15,11 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
-  When
+  When,
+  DataTable
 } from '@trg_package/vite/components';
 import { services as userServices } from '@/services/user';
 import { services as roleServices } from '@/services/role';
-import { DataTable } from '@/components/composite/table/data-table';
 import { columns } from './columns';
 import { useIsAllowed } from '@/hooks';
 
