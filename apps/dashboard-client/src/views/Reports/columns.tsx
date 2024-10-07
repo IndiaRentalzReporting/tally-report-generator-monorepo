@@ -1,10 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Edit } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
-import { Link } from 'react-router-dom';
-import { DeleteEntity } from '@/components/composite';
-import { services } from '@/services/reports';
+import { useMemo } from 'react';
 import { State } from './interface';
+import ActionCell from '@/components/composite/ActionCell';
 
 export const columns: ColumnDef<State>[] = [
   {
@@ -29,21 +28,17 @@ export const columns: ColumnDef<State>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const report = row.original;
-      return (
-        <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.deleteOne(report.id)
-              },
+      return useMemo(
+        () => (
+          <ActionCell
+            module={{
+              id: report.id,
               name: report.name,
-              module: 'Reports'
+              type: 'Reports'
             }}
           />
-          <Link to={`/reports/${report.id}`}>
-            <Edit size={20} className="text-green-500" />
-          </Link>
-        </span>
+        ),
+        [report]
       );
     }
   }

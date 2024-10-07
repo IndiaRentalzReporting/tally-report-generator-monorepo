@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
-import { DeleteEntity, UpdateEntity } from '@/components/composite';
-import { services as roleServices } from '@/services/role';
+import { useMemo } from 'react';
 import { State } from './interface';
+import ActionCell from '@/components/composite/ActionCell';
 
 export const columns: ColumnDef<State>[] = [
   {
@@ -67,20 +67,18 @@ export const columns: ColumnDef<State>[] = [
     accessorKey: 'Actions',
     header: 'Actions',
     aggregatedCell: ({ row }) => {
-      const role = row.original;
-      return (
-        <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => roleServices.deleteOne(role.role.id)
-              },
-              name: role.role.name,
-              module: 'Permissions'
+      const permission = row.original;
+      return useMemo(
+        () => (
+          <ActionCell
+            module={{
+              id: permission.id,
+              name: permission.id,
+              type: 'Permissions'
             }}
           />
-          <UpdateEntity module="Permissions" id={role.role.id} />
-        </span>
+        ),
+        [permission]
       );
     }
   }

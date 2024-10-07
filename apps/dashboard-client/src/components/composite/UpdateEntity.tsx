@@ -18,27 +18,37 @@ import {
 import { useIsAllowed } from '@/hooks';
 
 interface IUpdateEntityProps {
-  module: string;
-  id: string;
+  size?: number;
+  className?: string;
+  module: {
+    name: string;
+    id: string;
+    type: string;
+  };
 }
 
-export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
+export const UpdateEntity: React.FC<IUpdateEntityProps> = ({
+  module: { id, type },
+  className = '',
+  size = 20
+}) => {
   const isEditAllowed = useIsAllowed({
-    module,
+    module: type,
     action: 'Update'
   });
 
-  const Component = lazy(() => import(`../../views/${module}/Update`));
+  const Component = lazy(() => import(`../../views/${type}/Update`));
+
   return (
     <If condition={!!isEditAllowed}>
       <Then>
         <Drawer>
           <DrawerTrigger asChild>
-            <Edit size={20} className="text-green-500" />
+            <Edit size={size} className={`text-green-500 ${className}`} />
           </DrawerTrigger>
           <DrawerContent className="px-6">
             <DrawerHeader className="px-0">
-              <DrawerTitle>Update {module}</DrawerTitle>
+              <DrawerTitle>Update {type}</DrawerTitle>
             </DrawerHeader>
             <Card className="w-full relative">
               <CardContent className="pt-6">
@@ -49,11 +59,7 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({ module, id }) => {
             </Card>
 
             <DrawerFooter className="px-0">
-              <DrawerClose>
-                {/* <Button variant="outline" className="w-full"> */}
-                Cancel
-                {/* </Button> */}
-              </DrawerClose>
+              <DrawerClose>Cancel</DrawerClose>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
