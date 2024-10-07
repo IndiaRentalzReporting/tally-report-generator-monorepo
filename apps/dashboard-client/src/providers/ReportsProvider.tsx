@@ -12,7 +12,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/reports';
-import { UpdateEntity } from '@/components/composite';
+import { UpdateColumn } from '@/components/composite/reports/UpdateColumn';
 
 interface ReportsProviderProps {
   children: React.ReactNode;
@@ -80,14 +80,15 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       cell: ({ row }) => {
         const report = row.original;
         return (
-          <span className="flex items-center justify-center h-[30vh] hover:bg-muted/50 cursor-pointer rounded-md">
-            <UpdateEntity
-              module="Reports"
-              size={100}
-              id={report.name}
-              className="w-full grayscale opacity-5"
+          <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50  rounded-md">
+            <UpdateColumn
+              module={{
+                id: report.name,
+                name: report.name,
+                type: 'Reports'
+              }}
             />
-          </span>
+          </div>
         );
       }
     }),
