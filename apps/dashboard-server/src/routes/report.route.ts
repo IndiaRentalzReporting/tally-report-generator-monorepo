@@ -29,7 +29,13 @@ reportRouter.post(
   createOne
 );
 
-reportRouter.get('/read', readAll);
+reportRouter.get(
+  '/read',
+  validateSchema({
+    query: ReportSelectSchema.partial()
+  }),
+  readAll
+);
 
 reportRouter.patch(
   '/update/:id',
