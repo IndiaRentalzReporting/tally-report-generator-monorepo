@@ -10,6 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { ColumnSelect } from '@trg_package/schemas-reporting/types';
 import { ColumnDef } from '@tanstack/react-table';
+import { Trash } from 'lucide-react';
+import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/reports';
 
 interface ReportsProviderState {
@@ -38,33 +40,6 @@ export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
     ColumnDef<ColumnSelect>[]
   >([]);
 
-  const { data: report } = useQuery({
-    queryKey: ['reports', 'getOne', reportId],
-    queryFn: () => services.read({ id: reportId }),
-    select: (data) => data.data.reports[0],
-    enabled: !!reportId
-  });
-
-  const { data: allColumns } = useQuery({
-    queryKey: ['columns', 'getAll', report?.baseEntity],
-    queryFn: () => services.getColumns({ tableId: report?.baseEntity || '' }),
-    select: (data) => data.data.columns,
-    enabled: !!report?.baseEntity
-  });
-
-  useEffect(() => {
-    if (allColumns) {
-      const tableColumns = allColumns.map<ColumnDef<ColumnSelect>>(
-        (column) => ({
-          id: column.name,
-          accessorKey: column.name,
-          header: column.name
-        })
-      );
-      setAvailableColumns(tableColumns);
-    }
-  }, [allColumns]);
-
   const addColumn = useCallback((column: ColumnDef<ColumnSelect>) => {
     setColumns((prev) => [...prev, column]);
     setAvailableColumns((prev) => prev.filter((col) => col.id !== column.id));
@@ -74,6 +49,47 @@ export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
     setColumns((prev) => prev.filter((col) => col.id !== column.id));
     setAvailableColumns((prev) => [...prev, column]);
   }, []);
+
+  const { data: report } = useQuery({
+    queryKey: ['reports', 'getOne', reportId],
+    queryFn: () => services.read({ id: reportId }),
+    select: (data) => data.data.reports[0],
+    enabled: !!reportId
+  });
+
+  const { data: fetchedColumns } = useQuery({
+    queryKey: ['columns', 'getAll', report?.baseEntity],
+    queryFn: () => services.getColumns({ tableId: report?.baseEntity || '' }),
+    select: (data) => data.data.columns,
+    enabled: !!report?.baseEntity
+  });
+
+  const createColumnDef = useCallback(
+    (column: ColumnSelect): ColumnDef<ColumnSelect> => ({
+      id: column.name,
+      accessorKey: column.name,
+      header: ({ column: col }) => (
+        <Button className="translate-x-[-10px]" variant="ghost">
+          {column.name}
+          <Trash
+            color="red"
+            onClick={() =>
+              removeColumn(col.columnDef as ColumnDef<ColumnSelect>)
+            }
+            className="ml-2 h-4 w-4"
+          />
+        </Button>
+      )
+    }),
+    []
+  );
+
+  useEffect(() => {
+    if (fetchedColumns) {
+      const newColumnDefs = fetchedColumns.map(createColumnDef);
+      setAvailableColumns(newColumnDefs);
+    }
+  }, [fetchedColumns, createColumnDef]);
 
   const contextValue = useMemo(
     (): ReportsProviderState => ({

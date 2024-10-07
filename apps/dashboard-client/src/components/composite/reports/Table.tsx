@@ -28,7 +28,7 @@ const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
   });
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border m-6">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
