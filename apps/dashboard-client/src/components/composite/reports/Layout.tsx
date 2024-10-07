@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { useToast } from '@trg_package/vite/hooks';
+import { object } from 'zod';
 import Sidebar from './Sidebar';
 import DashboardHeader from '../dashboard/DashboardHeader';
 import DataTable from './Table';
@@ -31,7 +32,7 @@ const Layout = () => {
         <Sidebar />
         <div className="flex flex-col">
           <DashboardHeader />
-          <DataTable data={[]} />
+          <DataTable data={[object]} />
         </div>
       </div>
     </ReportsProvider>

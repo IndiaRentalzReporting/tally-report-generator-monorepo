@@ -47,11 +47,12 @@ const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {table.getRowModel().rows?.length && columns.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
+                className="hover:bg-muted/0"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
