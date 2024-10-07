@@ -21,6 +21,10 @@ export const columns: ColumnDef<State>[] = [
     )
   },
   {
+    accessorKey: 'description',
+    header: 'Description'
+  },
+  {
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {

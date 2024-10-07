@@ -48,13 +48,24 @@ const Fields: React.FC<StateAsProps> = ({ reportData, setReportData }) => {
               <Skeleton isLoading={fetchingTables}>
                 {baseEntities?.map((table) => (
                   <SelectItem key={table.id} value={table.id}>
-                    {table.name}
+                    {table.displayName}
                   </SelectItem>
                 ))}
               </Skeleton>
             </SelectGroup>
           </SelectContent>
         </Select>
+      </div>
+      <div className="flex gap-4 items-center">
+        <Input
+          required
+          minLength={3}
+          placeholder="Description"
+          value={reportData.description || ''}
+          onChange={(e) =>
+            setReportData((prev) => ({ ...prev, description: e.target.value }))
+          }
+        />
       </div>
     </div>
   );

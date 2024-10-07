@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useCallback,
   useContext,
@@ -6,11 +6,9 @@ import {
   useMemo,
   useState
 } from 'react';
-import {
-  ColumnSelect,
-  TableSelect
-} from '@trg_package/schemas-reporting/types';
 import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router';
+import { ColumnSelect } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
 
 interface ReportsProviderState {
@@ -29,47 +27,54 @@ const initialState: ReportsProviderState = {
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
 
-export const ReportsProvider = ({
-  children,
-  tableId
-}: {
-  children: React.ReactNode;
-  tableId: TableSelect['id'];
+export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children
 }) => {
-  const [state, setState] =
-    useState<Omit<ReportsProviderState, 'addColumn' | 'removeColumn'>>(
-      initialState
-    );
-  const { data: allColumns } = useQuery({
-    queryFn: () => services.getColumns({ tableId }),
-    select: (data) => data.data.columns,
-    queryKey: ['columns', 'getAll']
+  const { reportId } = useParams<{ reportId: string }>();
+
+  const [columns, setColumns] = useState<ColumnSelect[]>([]);
+  const [availableColumns, setAvailableColumns] = useState<ColumnSelect[]>([]);
+
+  const { data: report } = useQuery({
+    queryKey: ['reports', 'getOne', reportId],
+    queryFn: () => services.read({ id: reportId }),
+    select: (data) => data.data.reports[0],
+    enabled: !!reportId
   });
 
+  const { data: allColumns } = useQuery({
+    queryKey: ['columns', 'getAll', report?.baseEntity],
+    queryFn: () => services.getColumns({ tableId: report?.baseEntity || '' }),
+    select: (data) => data.data.columns,
+    enabled: !!report?.baseEntity
+  });
+
+  useEffect(() => {
+    if (allColumns) {
+      setAvailableColumns(allColumns);
+    }
+  }, [allColumns]);
+
   const addColumn = useCallback((column: ColumnSelect) => {
-    setState((prev) => ({
-      columns: [...prev.columns, column],
-      availableColumns: prev.availableColumns.filter(
-        (col) => col.name !== column.name
-      )
-    }));
+    setColumns((prev) => [...prev, column]);
+    setAvailableColumns((prev) =>
+      prev.filter((col) => col.name !== column.name)
+    );
   }, []);
 
   const removeColumn = useCallback((column: ColumnSelect) => {
-    setState((prev) => ({
-      columns: prev.columns.filter((col) => col.name !== column.name),
-      availableColumns: [...prev.availableColumns, column]
-    }));
+    setColumns((prev) => prev.filter((col) => col.name !== column.name));
+    setAvailableColumns((prev) => [...prev, column]);
   }, []);
 
-  useEffect(() => {
-    if (!allColumns) return;
-    setState((prev) => ({ ...prev, availableColumns: allColumns }));
-  }, [allColumns]);
-
   const contextValue = useMemo(
-    () => ({ ...state, addColumn, removeColumn }),
-    [state, addColumn, removeColumn]
+    (): ReportsProviderState => ({
+      columns,
+      availableColumns,
+      addColumn,
+      removeColumn
+    }),
+    [columns, availableColumns, addColumn, removeColumn]
   );
 
   return (
