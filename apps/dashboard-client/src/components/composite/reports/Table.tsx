@@ -23,12 +23,7 @@ const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
   const { columns } = useReports();
   const table = useReactTable({
     data,
-    columns: columns.map<ColumnDef<TData, TValue>>((column) => ({
-      id: column.name,
-      accessorKey: column.name,
-      header: column.name,
-      cell: ({ getValue }) => getValue() as string
-    })),
+    columns: columns as ColumnDef<TData, TValue>[],
     getCoreRowModel: getCoreRowModel()
   });
 

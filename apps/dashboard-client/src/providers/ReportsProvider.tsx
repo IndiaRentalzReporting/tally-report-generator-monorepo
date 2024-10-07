@@ -9,13 +9,14 @@ import React, {
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { ColumnSelect } from '@trg_package/schemas-reporting/types';
+import { ColumnDef } from '@tanstack/react-table';
 import { services } from '@/services/reports';
 
 interface ReportsProviderState {
-  columns: ColumnSelect[];
-  availableColumns: ColumnSelect[];
-  addColumn: (column: ColumnSelect) => void;
-  removeColumn: (column: ColumnSelect) => void;
+  columns: ColumnDef<ColumnSelect>[];
+  availableColumns: ColumnDef<ColumnSelect>[];
+  addColumn: (column: ColumnDef<ColumnSelect>) => void;
+  removeColumn: (column: ColumnDef<ColumnSelect>) => void;
 }
 
 const initialState: ReportsProviderState = {
@@ -32,8 +33,10 @@ export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { reportId } = useParams<{ reportId: string }>();
 
-  const [columns, setColumns] = useState<ColumnSelect[]>([]);
-  const [availableColumns, setAvailableColumns] = useState<ColumnSelect[]>([]);
+  const [columns, setColumns] = useState<ColumnDef<ColumnSelect>[]>([]);
+  const [availableColumns, setAvailableColumns] = useState<
+    ColumnDef<ColumnSelect>[]
+  >([]);
 
   const { data: report } = useQuery({
     queryKey: ['reports', 'getOne', reportId],
@@ -51,19 +54,24 @@ export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (allColumns) {
-      setAvailableColumns(allColumns);
+      const tableColumns = allColumns.map<ColumnDef<ColumnSelect>>(
+        (column) => ({
+          id: column.name,
+          accessorKey: column.name,
+          header: column.name
+        })
+      );
+      setAvailableColumns(tableColumns);
     }
   }, [allColumns]);
 
-  const addColumn = useCallback((column: ColumnSelect) => {
+  const addColumn = useCallback((column: ColumnDef<ColumnSelect>) => {
     setColumns((prev) => [...prev, column]);
-    setAvailableColumns((prev) =>
-      prev.filter((col) => col.name !== column.name)
-    );
+    setAvailableColumns((prev) => prev.filter((col) => col.id !== column.id));
   }, []);
 
-  const removeColumn = useCallback((column: ColumnSelect) => {
-    setColumns((prev) => prev.filter((col) => col.name !== column.name));
+  const removeColumn = useCallback((column: ColumnDef<ColumnSelect>) => {
+    setColumns((prev) => prev.filter((col) => col.id !== column.id));
     setAvailableColumns((prev) => [...prev, column]);
   }, []);
 
