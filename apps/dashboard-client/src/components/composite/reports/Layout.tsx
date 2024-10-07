@@ -1,6 +1,6 @@
 import Sidebar from './Sidebar';
 import DashboardHeader from '../dashboard/DashboardHeader';
-import Table from './Table';
+import DataTable from './Table';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 
 const Layout = () => (
@@ -9,7 +9,7 @@ const Layout = () => (
       <Sidebar />
       <div className="flex flex-col">
         <DashboardHeader />
-        <Table />
+        <DataTable data={[]} />
       </div>
     </div>
   </ReportsProvider>

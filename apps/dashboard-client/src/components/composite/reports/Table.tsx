@@ -1,50 +1,81 @@
-import React from 'react';
 import {
-  Table as TableComponent,
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table';
+
+import {
+  Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-  When,
-  Button
+  TableRow
 } from '@trg_package/vite/components';
-import { X } from 'lucide-react';
 import { useReports } from '@/providers/ReportsProvider';
-import { useNav } from '@/providers/NavigationProvider';
 
-const Table: React.FC = () => {
-  const { currentModule } = useNav();
-  const { columns, removeColumn } = useReports();
+interface DataTableProps<TData, TValue> {
+  data: TData[];
+}
+
+const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
+  const { columns } = useReports();
+  const table = useReactTable({
+    data,
+    columns: columns.map<ColumnDef<TData, TValue>>((column) => ({
+      id: column.name,
+      accessorKey: column.name,
+      header: column.name,
+      cell: ({ getValue }) => getValue() as string
+    })),
+    getCoreRowModel: getCoreRowModel()
+  });
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <When condition={!!currentModule}>
-        <div className="flex items-center w-full justify-between">
-          <h1 className="text-lg font-semibold md:text-2xl">{currentModule}</h1>
-        </div>
-      </When>
-      <div className="flex flex-col gap-6  rounded-lg shadow-sm w-full h-full relative">
-        <TableComponent>
-          <TableHeader>
-            <TableRow>
-              {columns.map((col, index) => (
-                <TableHead key={index} className="relative">
-                  {col.name}
-                  <Button
-                    className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 h-auto"
-                    onClick={() => removeColumn(col)}
-                  >
-                    <X size={12} />
-                  </Button>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </TableHead>
               ))}
             </TableRow>
-          </TableHeader>
-          <TableBody />
-        </TableComponent>
-      </div>
-    </main>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
-export default Table;
+export default DataTable;
