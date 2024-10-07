@@ -7,12 +7,16 @@ import React, {
   useState
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router';
 import { ColumnSelect } from '@trg_package/schemas-reporting/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/reports';
+
+interface ReportsProviderProps {
+  children: React.ReactNode;
+  tableId: string;
+}
 
 interface ReportsProviderState {
   columns: ColumnDef<ColumnSelect>[];
@@ -30,11 +34,10 @@ const initialState: ReportsProviderState = {
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
 
-export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children
+export const ReportsProvider: React.FC<ReportsProviderProps> = ({
+  children,
+  tableId
 }) => {
-  const { reportId } = useParams<{ reportId: string }>();
-
   const [columns, setColumns] = useState<ColumnDef<ColumnSelect>[]>([]);
   const [availableColumns, setAvailableColumns] = useState<
     ColumnDef<ColumnSelect>[]
@@ -50,18 +53,11 @@ export const ReportsProvider: React.FC<{ children: React.ReactNode }> = ({
     setAvailableColumns((prev) => [...prev, column]);
   }, []);
 
-  const { data: report } = useQuery({
-    queryKey: ['reports', 'getOne', reportId],
-    queryFn: () => services.read({ id: reportId }),
-    select: (data) => data.data.reports[0],
-    enabled: !!reportId
-  });
-
   const { data: fetchedColumns } = useQuery({
-    queryKey: ['columns', 'getAll', report?.baseEntity],
-    queryFn: () => services.getColumns({ tableId: report?.baseEntity || '' }),
+    queryFn: () => services.getColumns({ tableId }),
     select: (data) => data.data.columns,
-    enabled: !!report?.baseEntity
+    enabled: !!tableId,
+    queryKey: ['columns', 'getAll', tableId]
   });
 
   const createColumnDef = useCallback(

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Button,
   Card,
@@ -32,12 +32,6 @@ const Create: React.FC = () => {
     e.preventDefault();
     createReport();
   };
-
-  useEffect(() => {
-    console.log({
-      reportDetails
-    });
-  }, [reportDetails]);
 
   return (
     <form onSubmit={handleCreateReport} className="flex flex-col gap-6 h-full">
