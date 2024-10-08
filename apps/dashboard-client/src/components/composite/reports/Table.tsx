@@ -11,7 +11,8 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
+  When
 } from '@trg_package/vite/components';
 import { useReports } from '@/providers/ReportsProvider';
 import ReportSettings from './Settings';
@@ -24,7 +25,7 @@ const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
   const { columns } = useReports();
   const table = useReactTable({
     data,
-    columns: columns as ColumnDef<TData, TValue>[],
+    columns: columns.map((e) => e.column) as ColumnDef<TData, TValue>[],
     getCoreRowModel: getCoreRowModel()
   });
 
@@ -79,7 +80,9 @@ const DataTable = <TData, TValue>({ data }: DataTableProps<TData, TValue>) => {
           </TableBody>
         </Table>
       </div>
-      <ReportSettings />
+      <When condition={!!columns.length}>
+        <ReportSettings />
+      </When>
     </div>
   );
 };

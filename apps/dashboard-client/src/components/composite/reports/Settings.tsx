@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PlusCircle, X } from 'lucide-react';
 import {
   Select,
@@ -15,18 +15,12 @@ import {
   CardTitle,
   CardHeader
 } from '@trg_package/vite/components';
+import { useReports } from '@/providers/ReportsProvider';
+import Conditions from './Conditions';
 
 const ReportSettings = () => {
-  const [conditions, setConditions] = useState<Array<{ id: number }>>([]);
+  const { columns } = useReports();
   const [filters, setFilters] = useState<Array<{ id: number }>>([]);
-
-  const addCondition = () => {
-    setConditions([...conditions, { id: Date.now() }]);
-  };
-
-  const removeCondition = (id: number) => {
-    setConditions(conditions.filter((condition) => condition.id !== id));
-  };
 
   const addFilter = () => {
     setFilters([...filters, { id: Date.now() }]);
@@ -36,6 +30,14 @@ const ReportSettings = () => {
     setFilters(filters.filter((filter) => filter.id !== id));
   };
 
+  const ColumnSelectItem = useMemo(
+    () =>
+      columns.map(({ column }) => (
+        <SelectItem value={column.id || ''}>{column.id}</SelectItem>
+      )),
+    [columns]
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -44,67 +46,14 @@ const ReportSettings = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-2 flex-1 w-min">Group By</h3>
+          <h3 className="text-lg font-semibold mb-2 flex-1">Group By</h3>
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder="Select" />
+              <SelectValue placeholder="Column" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="option">Option</SelectItem>
-            </SelectContent>
+            <SelectContent>{ColumnSelectItem}</SelectContent>
           </Select>
-          <div>
-            <h3 className="text-lg font-semibold mb-2">Conditions</h3>
-            {conditions.map((condition) => (
-              <div key={condition.id} className="mb-2 space-y-2">
-                <div className="grid grid-cols-4 gap-2">
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Column" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="column">Column</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Operator" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="operator">Operator</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Value" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="value">Value</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Join" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="join">Join</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeCondition(condition.id)}
-                  className="text-red-500 hover:text-red-400"
-                >
-                  <X className="w-4 h-4 mr-1" /> Remove
-                </Button>
-              </div>
-            ))}
-            <Button size="sm" onClick={addCondition} className="mt-2">
-              <PlusCircle className="w-4 h-4 mr-1" /> Add Condition
-            </Button>
-          </div>
+          <Conditions />
           <div>
             <h3 className="text-lg font-semibold mb-2">Filters</h3>
             {filters.map((filter) => (
@@ -114,9 +63,7 @@ const ReportSettings = () => {
                     <SelectTrigger>
                       <SelectValue placeholder="Column" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="column">Column</SelectItem>
-                    </SelectContent>
+                    <SelectContent>{ColumnSelectItem}</SelectContent>
                   </Select>
                   <Select>
                     <SelectTrigger>

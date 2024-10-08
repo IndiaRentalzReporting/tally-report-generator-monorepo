@@ -13,14 +13,14 @@ const Sidebar: React.FC = () => {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 pt-6 text-sm font-medium lg:px-4 gap-2">
-            {availableColumns.map((col) => (
+            {availableColumns.map(({ data, column }) => (
               <Button
                 className="w-full"
                 variant="secondary"
-                key={col.id}
-                onClick={() => addColumn(col)}
+                key={data.name}
+                onClick={() => addColumn({ data, column })}
               >
-                {col.id?.toUpperCase()}
+                {data.name?.toUpperCase()}
               </Button>
             ))}
           </nav>
