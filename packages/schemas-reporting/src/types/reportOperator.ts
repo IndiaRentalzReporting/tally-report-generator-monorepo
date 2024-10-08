@@ -1,47 +1,50 @@
 import { ColumnTypeLiteral } from './ColumnTypes';
 
-export type OperatorType = { operator : string,params? : string[] };
-const commonOperators : OperatorType[] = [{
-  operator: '=',
-  params: ['value']
-},
-{
-  operator: 'IN',
-  params: ['value']
-},
-{
-  operator: '!=',
-  params: ['value']
-},
-{
-  operator: 'IS NULL',
-},
-{
-  operator: 'IS NOT NULL',
-},
+export type OperatorType = { operator: string; params?: string[] };
+const commonOperators: OperatorType[] = [
+  {
+    operator: '=',
+    params: ['value']
+  },
+  {
+    operator: 'IN',
+    params: ['value']
+  },
+  {
+    operator: '!=',
+    params: ['value']
+  },
+  {
+    operator: 'IS NULL'
+  },
+  {
+    operator: 'IS NOT NULL'
+  }
 ];
 
-const commonNumericOperators = [{
-  operator: '<',
-  params: ['value']
-},
-{
-  operator: '<=',
-  params: ['value']
-},
-{
-  operator: '>',
-  params: ['value']
-},
-{
-  operator: '>=',
-  params: ['value']
-},
-{
-  operator: 'BETWEEN',
-  params: ['from','to']
-}];
-export const Operators: { [k in ColumnTypeLiteral]:OperatorType[] } = {
+const commonNumericOperators = [
+  {
+    operator: '<',
+    params: ['value']
+  },
+  {
+    operator: '<=',
+    params: ['value']
+  },
+  {
+    operator: '>',
+    params: ['value']
+  },
+  {
+    operator: '>=',
+    params: ['value']
+  },
+  {
+    operator: 'BETWEEN',
+    params: ['from', 'to']
+  }
+];
+export const Operators: { [k in ColumnTypeLiteral]: OperatorType[] } = {
   id: [],
   string: [
     ...commonOperators,
@@ -52,15 +55,9 @@ export const Operators: { [k in ColumnTypeLiteral]:OperatorType[] } = {
     {
       operator: 'ILIKE',
       params: ['value']
-    },
+    }
   ],
-  number: [
-    ...commonOperators,
-    ...commonNumericOperators
-  ],
-  date: [
-    ...commonNumericOperators,
-    ...commonOperators
-  ],
+  number: [...commonOperators, ...commonNumericOperators],
+  date: [...commonNumericOperators, ...commonOperators],
   foreignKey: []
 };

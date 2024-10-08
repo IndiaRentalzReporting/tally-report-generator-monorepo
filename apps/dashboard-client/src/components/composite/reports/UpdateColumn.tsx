@@ -34,7 +34,7 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({
 }) => (
   <Drawer>
     <DrawerTrigger asChild>
-      <Edit size={100} className=" cursor-pointer opacity-20" />
+      <Edit size={100} className=" cursor-pointer opacity-5" />
     </DrawerTrigger>
     <DrawerContent className="px-6">
       <DrawerHeader className="px-0">

@@ -1,7 +1,7 @@
 import { Column } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { memo, useCallback } from 'react';
-import { Button } from '$/components';
+import { Button } from '@trg_package/vite/components';
 
 interface HeaderButtonProps<TData> {
   column: Column<TData, unknown>;

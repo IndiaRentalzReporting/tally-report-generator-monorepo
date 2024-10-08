@@ -1,4 +1,4 @@
-import { X, PlusCircle } from 'lucide-react';
+import { PlusCircle, TrashIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectGroup,
   SelectLabel
 } from '@trg_package/vite/components';
-import { Operators } from '@trg_package/schemas-reporting/types';
+import { OperatorType } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
 
 const Conditions: React.FC = () => {
@@ -25,64 +25,66 @@ const Conditions: React.FC = () => {
   };
 
   return (
-    <div>
-      <h3 className="text-lg font-semibold mb-2">Conditions</h3>
+    <div className="space-y-4">
+      <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
+        Conditions
+        <Button size="sm" onClick={addCondition} variant="ghost">
+          <PlusCircle className="w-4 h-4 mr-1" />
+        </Button>
+      </h3>
       {conditions.map((condition) => (
-        <Conditon column={condition} removeCondition={removeCondition} />
+        <Conditon
+          key={condition.id}
+          removeCondition={() => removeCondition(condition.id)}
+        />
       ))}
-      <Button size="sm" onClick={addCondition} className="mt-2">
-        <PlusCircle className="w-4 h-4 mr-1" /> Add Condition
-      </Button>
     </div>
   );
 };
 
 interface IConditionsProps {
-  column: { id: number };
-  removeCondition: (id: number) => void;
+  removeCondition: () => void;
 }
 
-const Conditon: React.FC<IConditionsProps> = ({ column, removeCondition }) => {
-  const { columns } = useReports();
+const Conditon: React.FC<IConditionsProps> = ({ removeCondition }) => {
+  const { columns, getOperators, getValue } = useReports();
 
   const [selectedColumn, setSelectedColumn] = useState<Column | undefined>(
     undefined
   );
 
   const [selectedOperation, setSelectedOperation] = useState<
-    string | undefined
+    OperatorType['operator'] | undefined
   >(undefined);
 
-  const ColumnSelectItem = useMemo(
-    () =>
-      columns.map((entity) => (
-        <SelectItem value={JSON.stringify(entity)}>
-          {entity.data.name}
-        </SelectItem>
-      )),
-    [columns]
+  const [selectedValue, setSelectedValue] = useState<
+    NonNullable<OperatorType['params']>[0] | undefined
+  >(undefined);
+
+  const [selectedJoin, setSelectedJoin] = useState<string | undefined>(
+    undefined
   );
 
-  const OperatorSelectItem = useMemo(
-    () =>
-      selectedColumn
-        ? Operators[selectedColumn.data.type].map((operator) => (
-            <SelectItem value={operator.operator}>
-              {operator.operator}
-            </SelectItem>
-          ))
-        : null,
-    [selectedColumn]
-  );
+  const operations = useMemo(() => {
+    if (!selectedColumn) return [];
+    return getOperators(selectedColumn.data);
+  }, [selectedColumn, getOperators]);
 
-  console.log(selectedColumn);
+  const values = useMemo(() => {
+    if (!selectedColumn || !selectedOperation) return [];
+    return getValue(selectedColumn?.data, selectedOperation).params;
+  }, [selectedColumn, selectedOperation, getValue]);
 
   return (
-    <div key={column.id} className="mb-2 space-y-2">
-      <div className="grid grid-cols-4 gap-2">
+    <div className="mb-2 space-y-2">
+      <div className="grid grid-cols-[2fr_2fr_2fr_2fr_auto] gap-2">
         <Select
           value={selectedColumn?.data.name}
-          onValueChange={(column) => setSelectedColumn(JSON.parse(column))}
+          onValueChange={(columnName) =>
+            setSelectedColumn(
+              columns.find((col) => col.data.name === columnName)
+            )
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Column" />
@@ -90,16 +92,17 @@ const Conditon: React.FC<IConditionsProps> = ({ column, removeCondition }) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Columns</SelectLabel>
-              {ColumnSelectItem}
+              {columns.map(({ data }) => (
+                <SelectItem value={data.name}>{data.name}</SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
+
         <Select
           value={selectedOperation}
-          onValueChange={(selectedOperation) =>
-            setSelectedOperation(selectedOperation)
-          }
-          disabled={!selectedColumn}
+          onValueChange={setSelectedOperation}
+          disabled={!operations?.length}
         >
           <SelectTrigger>
             <SelectValue placeholder="Operator" />
@@ -107,35 +110,58 @@ const Conditon: React.FC<IConditionsProps> = ({ column, removeCondition }) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Operators</SelectLabel>
-              {OperatorSelectItem}
+              {operations.map((operator) => (
+                <SelectItem value={operator.operator}>
+                  {operator.operator}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
-        <Select disabled={!selectedColumn}>
+
+        <Select
+          value={selectedValue}
+          onValueChange={setSelectedValue}
+          disabled={!values?.length}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Value" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="value">Value</SelectItem>
+            <SelectGroup>
+              <SelectLabel>Values</SelectLabel>
+              {values?.map((value) => (
+                <SelectItem value={value}>{value}</SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
-        <Select disabled={!selectedColumn}>
+
+        <Select
+          value={selectedJoin}
+          onValueChange={setSelectedJoin}
+          disabled={!selectedColumn}
+        >
           <SelectTrigger>
             <SelectValue placeholder="Join" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="join">Join</SelectItem>
+            <SelectGroup>
+              <SelectLabel>Join</SelectLabel>
+              {['AND', 'OR', 'NOT']?.map((join) => (
+                <SelectItem value={join}>{join}</SelectItem>
+              ))}
+            </SelectGroup>
           </SelectContent>
         </Select>
+
+        <Button
+          onClick={removeCondition}
+          className="bg-red-500 text-white hover:text-black"
+        >
+          <TrashIcon className="w-4 h-4 mr-1" />
+        </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => removeCondition(column.id)}
-        className="text-red-500 hover:text-red-400"
-      >
-        <X className="w-4 h-4 mr-1" /> Remove
-      </Button>
     </div>
   );
 };
