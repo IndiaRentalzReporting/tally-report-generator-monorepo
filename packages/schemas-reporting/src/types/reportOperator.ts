@@ -1,63 +1,126 @@
 import { ColumnTypeLiteral } from './ColumnTypes';
 
-export type OperatorType = { operator: string; params?: string[] };
-const commonOperators: OperatorType[] = [
-  {
-    operator: '=',
-    params: ['value']
-  },
-  {
-    operator: 'IN',
-    params: ['value']
-  },
-  {
-    operator: '!=',
-    params: ['value']
-  },
-  {
-    operator: 'IS NULL'
-  },
-  {
-    operator: 'IS NOT NULL'
-  }
-];
+export type OperatorType = { operator: string; params: string[] };
 
-const commonNumericOperators = [
-  {
-    operator: '<',
-    params: ['value']
-  },
-  {
-    operator: '<=',
-    params: ['value']
-  },
-  {
-    operator: '>',
-    params: ['value']
-  },
-  {
-    operator: '>=',
-    params: ['value']
-  },
-  {
-    operator: 'BETWEEN',
-    params: ['from', 'to']
-  }
-];
-export const Operators: { [k in ColumnTypeLiteral]: OperatorType[] } = {
+export type ColumnOperators = {
+  [key in ColumnTypeLiteral]: OperatorType[];
+};
+
+export const Operators: ColumnOperators = {
   id: [],
   string: [
-    ...commonOperators,
+    {
+      operator: '=',
+      params: ['Value']
+    },
+    {
+      operator: 'IN',
+      params: ['Value']
+    },
+    {
+      operator: '!=',
+      params: ['Value']
+    },
+    {
+      operator: 'IS NULL',
+      params: []
+    },
+    {
+      operator: 'IS NOT NULL',
+      params: []
+    },
     {
       operator: 'LIKE',
-      params: ['value']
+      params: ['Value']
     },
     {
       operator: 'ILIKE',
-      params: ['value']
+      params: ['Value']
     }
   ],
-  number: [...commonOperators, ...commonNumericOperators],
-  date: [...commonNumericOperators, ...commonOperators],
+  number: [
+    {
+      operator: '=',
+      params: ['Value']
+    },
+    {
+      operator: 'IN',
+      params: ['Value']
+    },
+    {
+      operator: '!=',
+      params: ['Value']
+    },
+    {
+      operator: 'IS NULL',
+      params: []
+    },
+    {
+      operator: 'IS NOT NULL',
+      params: []
+    },
+    {
+      operator: '<',
+      params: ['Value']
+    },
+    {
+      operator: '<=',
+      params: ['Value']
+    },
+    {
+      operator: '>',
+      params: ['Value']
+    },
+    {
+      operator: '>=',
+      params: ['Value']
+    },
+    {
+      operator: 'BETWEEN',
+      params: ['From', 'To']
+    }
+  ],
+  date: [
+    {
+      operator: '<',
+      params: ['Value']
+    },
+    {
+      operator: '<=',
+      params: ['Value']
+    },
+    {
+      operator: '>',
+      params: ['Value']
+    },
+    {
+      operator: '>=',
+      params: ['Value']
+    },
+    {
+      operator: 'BETWEEN',
+      params: ['From', 'To']
+    },
+    {
+      operator: '=',
+      params: ['Value']
+    },
+    {
+      operator: 'IN',
+      params: ['Value']
+    },
+    {
+      operator: '!=',
+      params: ['Value']
+    },
+    {
+      operator: 'IS NULL',
+      params: []
+    },
+    {
+      operator: 'IS NOT NULL',
+      params: []
+    }
+  ],
   foreignKey: []
 };

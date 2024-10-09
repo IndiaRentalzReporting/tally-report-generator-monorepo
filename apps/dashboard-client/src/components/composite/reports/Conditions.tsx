@@ -1,167 +1,126 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
+import { Button, When, Input } from '@trg_package/vite/components';
+import { Operators } from '@trg_package/schemas-reporting/types';
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  Button,
-  SelectGroup,
-  SelectLabel
-} from '@trg_package/vite/components';
-import { OperatorType } from '@trg_package/schemas-reporting/types';
-import { Column, useReports } from '@/providers/ReportsProvider';
+  Condition,
+  initialCondition,
+  useReports
+} from '@/providers/ReportsProvider';
+import ConditionSelect from './ConditionSelect';
 
 const Conditions: React.FC = () => {
-  const [conditions, setConditions] = useState<Array<{ id: number }>>([]);
-
-  const addCondition = () => {
-    setConditions([...conditions, { id: Date.now() }]);
-  };
-
-  const removeCondition = (id: number) => {
-    setConditions(conditions.filter((condition) => condition.id !== id));
-  };
+  const { conditions, updateCondition, removeCondition } = useReports();
 
   return (
     <div className="space-y-4">
       <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
         Conditions
-        <Button size="sm" onClick={addCondition} variant="ghost">
+        <Button size="sm" onClick={() => updateCondition()} variant="ghost">
           <PlusCircle className="w-4 h-4 mr-1" />
         </Button>
       </h3>
       {conditions.map((condition) => (
-        <Conditon
+        <ConditionItem
           key={condition.id}
-          removeCondition={() => removeCondition(condition.id)}
+          condition={condition}
+          onRemove={() => removeCondition(condition.id)}
         />
       ))}
     </div>
   );
 };
 
-interface IConditionsProps {
-  removeCondition: () => void;
-}
+const ConditionItem: React.FC<{
+  condition: Condition;
+  onRemove: () => void;
+}> = ({ condition, onRemove }) => {
+  const { columns, updateCondition } = useReports();
 
-const Conditon: React.FC<IConditionsProps> = ({ removeCondition }) => {
-  const { columns, getOperators, getValue } = useReports();
-
-  const [selectedColumn, setSelectedColumn] = useState<Column | undefined>(
-    undefined
+  const operations = useMemo(
+    () => (condition.column ? (Operators[condition.column.type] ?? []) : []),
+    [condition]
   );
 
-  const [selectedOperation, setSelectedOperation] = useState<
-    OperatorType['operator'] | undefined
-  >(undefined);
-
-  const [selectedValue, setSelectedValue] = useState<
-    NonNullable<OperatorType['params']>[0] | undefined
-  >(undefined);
-
-  const [selectedJoin, setSelectedJoin] = useState<string | undefined>(
-    undefined
+  const values = useMemo(
+    () =>
+      condition.column && condition.operator
+        ? (Operators[condition.column.type].find(
+            (op) => op.operator == condition.operator
+          )?.params ?? [])
+        : [],
+    [condition]
   );
-
-  const operations = useMemo(() => {
-    if (!selectedColumn) return [];
-    return getOperators(selectedColumn.data);
-  }, [selectedColumn, getOperators]);
-
-  const values = useMemo(() => {
-    if (!selectedColumn || !selectedOperation) return [];
-    return getValue(selectedColumn?.data, selectedOperation).params;
-  }, [selectedColumn, selectedOperation, getValue]);
 
   return (
-    <div className="mb-2 space-y-2">
-      <div className="grid grid-cols-[2fr_2fr_2fr_2fr_auto] gap-2">
-        <Select
-          value={selectedColumn?.data.name}
-          onValueChange={(columnName) =>
-            setSelectedColumn(
-              columns.find((col) => col.data.name === columnName)
-            )
+    <div className="flex items-center space-x-4 space-y-2">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
+        <ConditionSelect
+          label="Column"
+          value={condition.column?.name || ''}
+          options={columns.map(({ data }) => ({
+            label: data.name,
+            value: data.name
+          }))}
+          onChange={(columnName) =>
+            updateCondition(condition.id, {
+              ...initialCondition,
+              column: columns.find(({ data }) => data.name === columnName)?.data
+            })
           }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Column" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Columns</SelectLabel>
-              {columns.map(({ data }) => (
-                <SelectItem value={data.name}>{data.name}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        />
 
-        <Select
-          value={selectedOperation}
-          onValueChange={setSelectedOperation}
-          disabled={!operations?.length}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Operator" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Operators</SelectLabel>
-              {operations.map((operator) => (
-                <SelectItem value={operator.operator}>
-                  {operator.operator}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <ConditionSelect
+          label="Operator"
+          value={condition.operator || ''}
+          options={operations.map((op) => ({
+            label: op.operator,
+            value: op.operator
+          }))}
+          onChange={(operatorName) =>
+            updateCondition(condition.id, {
+              ...initialCondition,
+              column: condition.column,
+              operator: operatorName
+            })
+          }
+          disabled={!operations.length}
+        />
 
-        <Select
-          value={selectedValue}
-          onValueChange={setSelectedValue}
-          disabled={!values?.length}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Value" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Values</SelectLabel>
-              {values?.map((value) => (
-                <SelectItem value={value}>{value}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        <Select
-          value={selectedJoin}
-          onValueChange={setSelectedJoin}
-          disabled={!selectedColumn}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Join" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Join</SelectLabel>
-              {['AND', 'OR', 'NOT']?.map((join) => (
-                <SelectItem value={join}>{join}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        <Button
-          onClick={removeCondition}
-          className="bg-red-500 text-white hover:text-black"
-        >
-          <TrashIcon className="w-4 h-4 mr-1" />
-        </Button>
+        <When condition={!!values.length}>
+          {values.map((value) => (
+            <Input
+              key={value}
+              placeholder={value}
+              type={condition.column?.type}
+              onChange={({ target }) => {
+                updateCondition(condition.id, { value: target.value });
+              }}
+            />
+          ))}
+        </When>
+        <ConditionSelect
+          label="Join"
+          value={condition.join || ''}
+          options={['AND', 'OR', 'NOT'].map((join) => ({
+            label: join,
+            value: join
+          }))}
+          onChange={(joinName) =>
+            updateCondition(condition.id, {
+              join: joinName as 'AND' | 'OR' | 'NOT'
+            })
+          }
+          disabled={!condition.column}
+          className="justify-self-end"
+        />
       </div>
+      <Button
+        onClick={onRemove}
+        className="bg-red-500 text-white hover:text-black flex-shrink-0"
+      >
+        <TrashIcon className="w-4 h-4 mr-1" />
+      </Button>
     </div>
   );
 };

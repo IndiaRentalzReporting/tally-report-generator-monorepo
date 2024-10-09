@@ -1,53 +1,36 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import {
-  Button,
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-  SelectGroup,
-  SelectLabel
-} from '@trg_package/vite/components';
-import { Column, useReports } from '@/providers/ReportsProvider';
+import { Button } from '@trg_package/vite/components';
+import { Filter, initialFilter, useReports } from '@/providers/ReportsProvider';
+import ConditionSelect from './ConditionSelect';
 
 const Filters: React.FC = () => {
-  const [filters, setFilters] = useState<Array<{ id: number }>>([]);
-
-  const addFilter = () => {
-    setFilters([...filters, { id: Date.now() }]);
-  };
-
-  const removeFilter = (id: number) => {
-    setFilters(filters.filter((filter) => filter.id !== id));
-  };
+  const { filters, updateFilter, removeFilter } = useReports();
 
   return (
     <div className="space-y-4">
       <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
         <span>Filters</span>
-        <Button size="sm" onClick={addFilter} variant="ghost">
+        <Button size="sm" onClick={() => updateFilter()} variant="ghost">
           <PlusCircle className="w-4 h-4 mr-1" />
         </Button>
       </h3>
       {filters.map((filter) => (
-        <Filter key={filter.id} removeFilter={() => removeFilter(filter.id)} />
+        <FilterComponent
+          key={filter.id}
+          filter={filter}
+          removeFilter={() => removeFilter(filter.id)}
+        />
       ))}
     </div>
   );
 };
 
-interface IFiltersProps {
+const FilterComponent: React.FC<{
   removeFilter: () => void;
-}
-
-const Filter: React.FC<IFiltersProps> = ({ removeFilter }) => {
-  const { columns } = useReports();
-
-  const [selectedColumn, setSelectedColumn] = useState<Column | undefined>(
-    undefined
-  );
+  filter: Filter;
+}> = ({ removeFilter, filter }) => {
+  const { columns, updateFilter } = useReports();
 
   const [selectedType, setSelectedType] = useState<string | undefined>(
     undefined
@@ -56,40 +39,36 @@ const Filter: React.FC<IFiltersProps> = ({ removeFilter }) => {
   return (
     <div className="mb-2 space-y-2">
       <div className="grid grid-cols-[2fr_2fr_auto] gap-2">
-        <Select
-          value={selectedColumn?.data.name}
-          onValueChange={(columnName) =>
-            setSelectedColumn(
-              columns.find((col) => col.data.name === columnName)
-            )
+        <ConditionSelect
+          label="Column"
+          value={filter.column?.name || ''}
+          options={columns.map(({ data }) => ({
+            label: data.name,
+            value: data.name
+          }))}
+          onChange={(columnName) =>
+            updateFilter(filter.id, {
+              ...initialFilter,
+              column: columns.find(({ data }) => data.name === columnName)?.data
+            })
           }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Column" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Columns</SelectLabel>
-              {columns.map(({ data }) => (
-                <SelectItem value={data.name}>{data.name}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        />
 
-        <Select value={selectedType} onValueChange={setSelectedType}>
-          <SelectTrigger>
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Type</SelectLabel>
-              {['Select', 'Search'].map((type) => (
-                <SelectItem value={type}>{type}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <ConditionSelect
+          label="Type"
+          value={filter.type || ''}
+          options={['Select', 'Search'].map((type) => ({
+            label: type,
+            value: type
+          }))}
+          onChange={(typeName) =>
+            updateFilter(filter.id, {
+              type: typeName as 'Select' | 'Search'
+            })
+          }
+          disabled={!filter.column}
+          className="justify-self-end"
+        />
 
         <Button
           onClick={removeFilter}

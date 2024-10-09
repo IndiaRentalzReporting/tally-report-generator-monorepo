@@ -3,17 +3,16 @@ import React, {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState
+  useState,
+  useEffect
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnSelect,
-  Operators,
   OperatorType
 } from '@trg_package/schemas-reporting/types';
-import { Column as CLM, ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/reports';
@@ -23,25 +22,23 @@ interface ReportsProviderProps {
   children: React.ReactNode;
   tableId: string;
 }
-
-export type Column = { data: ColumnSelect; column: ColumnDef<ColumnSelect> };
-
+export interface Column {
+  data: ColumnSelect;
+  column: ColumnDef<ColumnSelect>;
+}
 export type GroupBy = ColumnSelect | undefined;
-
-export type Condition = {
+export interface Condition {
   id: number;
-  column: ColumnSelect;
-  operator: OperatorType['operator'];
-  value: NonNullable<OperatorType['params']>[0];
-  join: 'string';
-};
-
-export type Filter = {
+  column: ColumnSelect | undefined;
+  operator: OperatorType['operator'] | undefined;
+  value: NonNullable<OperatorType['params']>[0] | undefined;
+  join: 'AND' | 'OR' | 'NOT' | undefined;
+}
+export interface Filter {
   id: number;
-  column: ColumnSelect;
-  type: 'select' | 'search';
-};
-
+  column: ColumnSelect | undefined;
+  type: 'Select' | 'Search' | undefined;
+}
 interface ReportsProviderState {
   columns: Column[];
   availableColumns: Column[];
@@ -50,17 +47,30 @@ interface ReportsProviderState {
   groupBy: GroupBy;
   setGroupBy: React.Dispatch<React.SetStateAction<GroupBy>>;
   conditions: Array<Condition>;
-  addConditions: (condition: Condition) => void;
-  removeConditions: (condition: Condition) => void;
-  getOperators: (column: ColumnSelect) => Pick<OperatorType, 'operator'>[];
-  getValue: (
-    column: ColumnSelect,
-    operation: string
-  ) => Pick<OperatorType, 'params'>;
+  updateCondition: (
+    id?: number | null,
+    condition?: Partial<Omit<Condition, 'id'>>
+  ) => void;
+  removeCondition: (id: number) => void;
   filters: Array<Filter>;
-  addFilters: (filter: Filter) => void;
-  removeFilters: (filter: Filter) => void;
+  updateFilter: (
+    id?: number | null,
+    filter?: Partial<Omit<Filter, 'id'>>
+  ) => void;
+  removeFilter: (id: number) => void;
 }
+
+export const initialFilter: Omit<Filter, 'id'> = {
+  column: undefined,
+  type: undefined
+};
+
+export const initialCondition: Omit<Condition, 'id'> = {
+  column: undefined,
+  operator: undefined,
+  value: undefined,
+  join: undefined
+};
 
 const initialState: ReportsProviderState = {
   columns: [],
@@ -70,13 +80,11 @@ const initialState: ReportsProviderState = {
   groupBy: undefined,
   setGroupBy: () => null,
   conditions: [],
-  addConditions: () => null,
-  removeConditions: () => null,
-  getOperators: () => [],
-  getValue: () => ({ params: [] }),
+  updateCondition: () => null,
+  removeCondition: () => null,
   filters: [],
-  addFilters: () => null,
-  removeFilters: () => null
+  updateFilter: () => null,
+  removeFilter: () => null
 };
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
@@ -85,77 +93,73 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   children,
   tableId
 }) => {
-  const [columns, setColumns] = useState<ReportsProviderState['columns']>(
-    initialState.columns
+  const [columns, setColumns] = useState(initialState.columns);
+  const [availableColumns, setAvailableColumns] = useState(
+    initialState.availableColumns
   );
-  const [availableColumns, setAvailableColumns] = useState<
-    ReportsProviderState['availableColumns']
-  >(initialState.availableColumns);
-  const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>(
-    initialState.groupBy
-  );
-  const [conditions, setConditions] = useState<
-    ReportsProviderState['conditions']
-  >(initialState.conditions);
-  const [filters, setFilters] = useState<ReportsProviderState['filters']>(
-    initialState.filters
-  );
+  const [groupBy, setGroupBy] = useState(initialState.groupBy);
+  const [conditions, setConditions] = useState(initialState.conditions);
+  const [filters, setFilters] = useState(initialState.filters);
 
-  const addColumn: ReportsProviderState['addColumn'] = useCallback((entity) => {
+  const addColumn = useCallback((entity: Column) => {
     setColumns((prev) => [...prev, entity]);
     setAvailableColumns((prev) =>
-      prev.filter((prevEntity) => prevEntity.column.id !== entity.column.id)
+      prev.filter((col) => col.column.id !== entity.column.id)
     );
   }, []);
 
-  const removeColumn: ReportsProviderState['removeColumn'] = useCallback(
-    (entity) => {
-      setAvailableColumns((prev) => [...prev, entity]);
-      setColumns((prev) =>
-        prev.filter((prevEntity) => prevEntity.column.id !== entity.column.id)
-      );
+  const removeColumn = useCallback((entity: Column) => {
+    setAvailableColumns((prevAvailable) =>
+      prevAvailable.filter((col) => col.column.id !== entity.column.id)
+    );
+    setColumns((prevColumns) =>
+      prevColumns.filter((col) => col.column.id !== entity.column.id)
+    );
+    setConditions((prevConditions) =>
+      prevConditions.filter((cond) => cond.column?.name !== entity.data.name)
+    );
+    setFilters((prevFilters) =>
+      prevFilters.filter((filter) => filter.column?.name !== entity.data.name)
+    );
+  }, []);
+
+  const updateCondition: ReportsProviderState['updateCondition'] = useCallback(
+    (id = null, updates) => {
+      setConditions((prev) => {
+        if (id === null) {
+          return [...prev, { ...initialCondition, id: Date.now() }];
+        }
+
+        return prev.map((condition) =>
+          condition.id === id ? { ...condition, ...updates } : condition
+        );
+      });
     },
     []
   );
 
-  const addConditions: ReportsProviderState['addConditions'] = useCallback(
-    (condition) => {
-      setConditions((prev) => [...prev, condition]);
+  const removeCondition = useCallback((id: number) => {
+    setConditions((prev) => prev.filter((cond) => cond.id !== id));
+  }, []);
+
+  const updateFilter: ReportsProviderState['updateFilter'] = useCallback(
+    (id = null, updates) => {
+      setFilters((prev) => {
+        if (id === null) {
+          return [...prev, { ...initialFilter, id: Date.now() }];
+        }
+
+        return prev.map((filter) =>
+          filter.id === id ? { ...filter, ...updates } : filter
+        );
+      });
     },
     []
   );
 
-  const removeConditions: ReportsProviderState['removeConditions'] =
-    useCallback((condition) => {
-      setConditions((prev) =>
-        prev.filter((prevCondition) => prevCondition.id !== condition.id)
-      );
-    }, []);
-
-  const addFilters: ReportsProviderState['addFilters'] = useCallback(
-    (filter) => {
-      setFilters((prev) => [...prev, filter]);
-    },
-    []
-  );
-
-  const removeFilters: ReportsProviderState['removeFilters'] = useCallback(
-    (filter) => {
-      setFilters((prev) =>
-        prev.filter((prevFilter) => prevFilter.id !== filter.id)
-      );
-    },
-    []
-  );
-
-  const getOperators: ReportsProviderState['getOperators'] = (column) =>
-    Operators[column.type].map(({ operator }) => ({ operator }));
-
-  const getValue: ReportsProviderState['getValue'] = (column, operation) => {
-    const op = Operators[column.type].find((op) => op.operator === operation);
-    if (!op) return { params: [] };
-    return { params: op.params };
-  };
+  const removeFilter = useCallback((id: number) => {
+    setFilters((prev) => prev.filter((filter) => filter.id !== id));
+  }, []);
 
   const { data: fetchedColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),
@@ -168,40 +172,26 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     (data: ColumnSelect): Column['column'] => ({
       id: data.name,
       accessorKey: data.name,
-      header: ({ column }) =>
-        useMemo(
-          () => (
-            <MemoizedHeaderButton
-              column={column}
-              data={data}
-              removeColumn={removeColumn}
-            />
-          ),
-          [column]
-        ),
-      cell: ({ row }) => {
-        const column = row.original;
-        return useMemo(
-          () => <MemoizedUpdateButton column={column} />,
-          [column]
-        );
-      }
+      header: () => (
+        <MemoizedHeaderButton data={data} removeColumn={removeColumn} />
+      ),
+      cell: ({ row }) => <MemoizedUpdateButton column={row.original} />
     }),
-    []
+    [removeColumn]
   );
 
   useEffect(() => {
     if (fetchedColumns) {
-      const newColumnDefs = fetchedColumns.map((column) => ({
-        data: column,
-        column: createColumnDef(column)
+      const newColumnDefs = fetchedColumns.map((col) => ({
+        data: col,
+        column: createColumnDef(col)
       }));
       setAvailableColumns(newColumnDefs);
     }
   }, [fetchedColumns, createColumnDef]);
 
   const contextValue = useMemo(
-    (): ReportsProviderState => ({
+    () => ({
       columns,
       availableColumns,
       addColumn,
@@ -209,27 +199,24 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       groupBy,
       setGroupBy,
       conditions,
-      addConditions,
-      removeConditions,
-      getOperators,
-      getValue,
+      updateCondition,
+      removeCondition,
       filters,
-      addFilters,
-      removeFilters
+      updateFilter,
+      removeFilter
     }),
     [
       columns,
       availableColumns,
       addColumn,
       removeColumn,
+      updateCondition,
+      removeCondition,
       groupBy,
-      setGroupBy,
       conditions,
-      addConditions,
-      removeConditions,
       filters,
-      addFilters,
-      removeFilters
+      updateFilter,
+      removeFilter
     ]
   );
 
@@ -248,18 +235,18 @@ export const useReports = () => {
   return context;
 };
 
+// Memoized components for header and update buttons
 const HeaderButton: React.FC<{
   data: ColumnSelect;
-  column: CLM<ColumnSelect>;
   removeColumn: ReportsProviderState['removeColumn'];
-}> = ({ data, column, removeColumn }) => (
+}> = ({ data, removeColumn }) => (
   <div className="flex items-center gap-4">
     <span>{data.name}</span>
     <Button className="flex items-center justify-center" variant="ghost">
       <Trash
         color="red"
-        onClick={() => removeColumn({ column: column.columnDef, data })}
-        className=" h-4 w-4"
+        onClick={() => removeColumn({ column: { id: data.name }, data })}
+        className="h-4 w-4"
       />
     </Button>
   </div>
@@ -267,16 +254,10 @@ const HeaderButton: React.FC<{
 
 const MemoizedHeaderButton = memo(HeaderButton);
 
-const UpdateButton: React.FC<{
-  column: ColumnSelect;
-}> = ({ column }) => (
-  <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50  rounded-md">
+const UpdateButton: React.FC<{ column: ColumnSelect }> = ({ column }) => (
+  <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
     <UpdateColumn
-      module={{
-        id: column.name,
-        name: column.name,
-        type: 'Reports'
-      }}
+      module={{ id: column.name, name: column.name, type: 'Reports' }}
     />
   </div>
 );
