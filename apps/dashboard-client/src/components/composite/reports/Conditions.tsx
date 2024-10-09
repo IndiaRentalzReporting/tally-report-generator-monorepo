@@ -4,7 +4,7 @@ import { Button, When, Input } from '@trg_package/vite/components';
 import { Operators } from '@trg_package/schemas-reporting/types';
 import {
   Condition,
-  initialCondition,
+  defaultCondition,
   useReports
 } from '@/providers/ReportsProvider';
 import ConditionSelect from './ConditionSelect';
@@ -64,7 +64,7 @@ const ConditionItem: React.FC<{
           }))}
           onChange={(columnName) =>
             updateCondition(condition.id, {
-              ...initialCondition,
+              ...defaultCondition,
               column: columns.find(({ data }) => data.name === columnName)?.data
             })
           }
@@ -79,7 +79,7 @@ const ConditionItem: React.FC<{
           }))}
           onChange={(operatorName) =>
             updateCondition(condition.id, {
-              ...initialCondition,
+              ...defaultCondition,
               column: condition.column,
               operator: operatorName
             })

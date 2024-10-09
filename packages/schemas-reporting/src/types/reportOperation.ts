@@ -1,42 +1,68 @@
 import { ColumnTypeLiteral } from './ColumnTypes';
 
-type Operation = {
-  operationType : string,
-  operationParams? : string[]
+export type Operation = {
+  operationType: string;
+  operationParams: string[];
 };
 
-const CommmonOperations = [
-  {
-    operationType: 'COUNT'
-  },
-  {
-    operationType: 'MAX'
-  },
-  {
-    operationType: 'MIN'
-  }
-];
-export const ColumnOperation :
-{
-  [k in ColumnTypeLiteral]:Operation[]
+export const ColumnOperation: {
+  [k in ColumnTypeLiteral]: Operation[];
 } = {
   id: [
     {
-      operationType: 'COUNT'
+      operationType: 'COUNT',
+      operationParams: []
     }
   ],
-  string: CommmonOperations,
-  number: [
-    ...CommmonOperations,
+  string: [
     {
-      operationType: 'SUM'
+      operationType: 'COUNT',
+      operationParams: []
     },
     {
-      operationType: 'AVG'
+      operationType: 'MAX',
+      operationParams: []
+    },
+    {
+      operationType: 'MIN',
+      operationParams: []
+    }
+  ],
+  number: [
+    {
+      operationType: 'COUNT',
+      operationParams: []
+    },
+    {
+      operationType: 'MAX',
+      operationParams: []
+    },
+    {
+      operationType: 'MIN',
+      operationParams: []
+    },
+    {
+      operationType: 'SUM',
+      operationParams: []
+    },
+    {
+      operationType: 'AVG',
+      operationParams: []
     }
   ],
   date: [
-    ...CommmonOperations,
+    {
+      operationType: 'COUNT',
+      operationParams: []
+    },
+    {
+      operationType: 'MAX',
+      operationParams: []
+    },
+    {
+      operationType: 'MIN',
+      operationParams: []
+    },
     {
       operationType: 'AGE',
       operationParams: ['date1', 'date2']

@@ -1,7 +1,7 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '@trg_package/vite/components';
-import { Filter, initialFilter, useReports } from '@/providers/ReportsProvider';
+import { Filter, defaultFilter, useReports } from '@/providers/ReportsProvider';
 import ConditionSelect from './ConditionSelect';
 
 const Filters: React.FC = () => {
@@ -48,7 +48,7 @@ const FilterComponent: React.FC<{
           }))}
           onChange={(columnName) =>
             updateFilter(filter.id, {
-              ...initialFilter,
+              ...defaultFilter,
               column: columns.find(({ data }) => data.name === columnName)?.data
             })
           }

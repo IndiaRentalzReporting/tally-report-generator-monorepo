@@ -44,13 +44,16 @@ interface ReportsProviderState {
   availableColumns: Column[];
   addColumn: (entity: Column) => void;
   removeColumn: (entity: Column) => void;
+
   groupBy: GroupBy;
   setGroupBy: React.Dispatch<React.SetStateAction<GroupBy>>;
+
   conditions: Array<Condition>;
   updateCondition: (
     id?: number | null,
     condition?: Partial<Omit<Condition, 'id'>>
   ) => void;
+
   removeCondition: (id: number) => void;
   filters: Array<Filter>;
   updateFilter: (
@@ -60,12 +63,12 @@ interface ReportsProviderState {
   removeFilter: (id: number) => void;
 }
 
-export const initialFilter: Omit<Filter, 'id'> = {
+export const defaultFilter: Omit<Filter, 'id'> = {
   column: undefined,
   type: undefined
 };
 
-export const initialCondition: Omit<Condition, 'id'> = {
+export const defaultCondition: Omit<Condition, 'id'> = {
   column: undefined,
   operator: undefined,
   value: undefined,
@@ -77,11 +80,14 @@ const initialState: ReportsProviderState = {
   availableColumns: [],
   addColumn: () => null,
   removeColumn: () => null,
+
   groupBy: undefined,
   setGroupBy: () => null,
+
   conditions: [],
   updateCondition: () => null,
   removeCondition: () => null,
+
   filters: [],
   updateFilter: () => null,
   removeFilter: () => null
@@ -127,7 +133,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     (id = null, updates) => {
       setConditions((prev) => {
         if (id === null) {
-          return [...prev, { ...initialCondition, id: Date.now() }];
+          return [...prev, { ...defaultCondition, id: Date.now() }];
         }
 
         return prev.map((condition) =>
@@ -146,7 +152,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     (id = null, updates) => {
       setFilters((prev) => {
         if (id === null) {
-          return [...prev, { ...initialFilter, id: Date.now() }];
+          return [...prev, { ...defaultFilter, id: Date.now() }];
         }
 
         return prev.map((filter) =>
