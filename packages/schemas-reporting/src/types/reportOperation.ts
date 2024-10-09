@@ -17,7 +17,7 @@ export const ColumnOperation: {
   string: [
     {
       operationType: 'COUNT',
-      operationParams: []
+      operationParams: ['testing', 'test']
     },
     {
       operationType: 'MAX',

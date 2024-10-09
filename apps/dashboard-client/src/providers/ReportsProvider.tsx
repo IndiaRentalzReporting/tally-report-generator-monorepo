@@ -9,6 +9,7 @@ import React, {
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnSelect,
+  Operation,
   OperatorType
 } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
@@ -31,6 +32,14 @@ export interface Filter {
   column: ColumnSelect | undefined;
   type: 'Select' | 'Search' | undefined;
 }
+
+export interface Extras {
+  name: string | undefined;
+  heading: string | undefined;
+  operation: Operation['operationType'] | undefined;
+  params: Operation['operationParams'][0] | undefined;
+  showTotal: boolean;
+}
 interface ReportsProviderState {
   columns: ColumnSelect[];
   availableColumns: ColumnSelect[];
@@ -45,14 +54,17 @@ interface ReportsProviderState {
     id?: number | null,
     condition?: Partial<Omit<Condition, 'id'>>
   ) => void;
-
   removeCondition: (id: number) => void;
+
   filters: Array<Filter>;
   updateFilter: (
     id?: number | null,
     filter?: Partial<Omit<Filter, 'id'>>
   ) => void;
   removeFilter: (id: number) => void;
+
+  extras: Array<Extras>;
+  updateExtras: (name: string, condition?: Partial<Extras>) => void;
 }
 
 export const defaultFilter: Omit<Filter, 'id'> = {
@@ -65,6 +77,14 @@ export const defaultCondition: Omit<Condition, 'id'> = {
   operator: undefined,
   value: undefined,
   join: undefined
+};
+
+export const defaultExtras: Extras = {
+  name: undefined,
+  heading: undefined,
+  operation: undefined,
+  params: '',
+  showTotal: false
 };
 
 const initialState: ReportsProviderState = {
@@ -82,7 +102,10 @@ const initialState: ReportsProviderState = {
 
   filters: [],
   updateFilter: () => null,
-  removeFilter: () => null
+  removeFilter: () => null,
+
+  extras: [],
+  updateExtras: () => null
 };
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
@@ -98,6 +121,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   const [groupBy, setGroupBy] = useState(initialState.groupBy);
   const [conditions, setConditions] = useState(initialState.conditions);
   const [filters, setFilters] = useState(initialState.filters);
+  const [extras, setExtras] = useState(initialState.extras);
 
   const addColumn = useCallback((entity: ColumnSelect) => {
     setColumns((prev) => [...prev, entity]);
@@ -157,6 +181,17 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     setFilters((prev) => prev.filter((filter) => filter.id !== id));
   }, []);
 
+  const updateExtras: ReportsProviderState['updateExtras'] = useCallback(
+    (name, updates) => {
+      setExtras((prev) =>
+        prev.map((condition) =>
+          condition.name === name ? { ...condition, ...updates } : condition
+        )
+      );
+    },
+    []
+  );
+
   const { data: fetchedColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),
     select: (data) => data.data.columns,
@@ -167,6 +202,15 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   useEffect(() => {
     if (fetchedColumns) {
       setAvailableColumns(fetchedColumns);
+      setExtras(
+        fetchedColumns.map((col) => ({
+          name: col.name,
+          heading: col.name,
+          operation: undefined,
+          params: '',
+          showTotal: col.type === 'number'
+        }))
+      );
     }
   }, [fetchedColumns]);
 
@@ -183,7 +227,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       removeCondition,
       filters,
       updateFilter,
-      removeFilter
+      removeFilter,
+      extras,
+      updateExtras
     }),
     [
       columns,
@@ -196,7 +242,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       conditions,
       filters,
       updateFilter,
-      removeFilter
+      removeFilter,
+      extras,
+      updateExtras
     ]
   );
 

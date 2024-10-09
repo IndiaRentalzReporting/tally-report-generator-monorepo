@@ -38,7 +38,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
       header: () => (
         <MemoizedHeaderButton column={column} removeColumn={removeColumn} />
       ),
-      cell: ({ row }) => <MemoizedUpdateButton column={row.original} />
+      cell: () => <MemoizedUpdateButton column={column} />
     }),
     [removeColumn]
   );
@@ -121,12 +121,12 @@ const HeaderButton: React.FC<{
 }> = ({ column, removeColumn }) => (
   <div className="flex items-center gap-4">
     <span>{column.name}</span>
-    <Button className="flex items-center justify-center" variant="ghost">
-      <Trash
-        color="red"
-        onClick={() => removeColumn(column)}
-        className="h-4 w-4"
-      />
+    <Button
+      className="flex items-center justify-center"
+      variant="ghost"
+      onClick={() => removeColumn(column)}
+    >
+      <Trash color="red" className="h-4 w-4" />
     </Button>
   </div>
 );
@@ -135,9 +135,7 @@ const MemoizedHeaderButton = memo(HeaderButton);
 
 const UpdateButton: React.FC<{ column: ColumnSelect }> = ({ column }) => (
   <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
-    <UpdateColumn
-      module={{ id: column.name, name: column.name, type: 'Reports' }}
-    />
+    <UpdateColumn column={column} />
   </div>
 );
 
