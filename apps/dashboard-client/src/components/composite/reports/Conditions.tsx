@@ -58,15 +58,14 @@ const ConditionItem: React.FC<{
         <ConditionSelect
           label="Column"
           value={condition.column?.name || ''}
-          options={columns.map(({ column }) => ({
+          options={columns.map((column) => ({
             label: column.name,
             value: column.name
           }))}
           onChange={(columnName) =>
             updateCondition(condition.id, {
               ...defaultCondition,
-              column: columns.find(({ column }) => column.name === columnName)
-                ?.column
+              column: columns.find((column) => column.name === columnName)
             })
           }
         />

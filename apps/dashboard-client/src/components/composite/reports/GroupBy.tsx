@@ -23,8 +23,8 @@ const GroupBy: React.FC = () => {
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Columns</SelectLabel>
-            {columns.map(({ data }) => (
-              <SelectItem value={data.name}>{data.name}</SelectItem>
+            {columns.map((column) => (
+              <SelectItem value={column.name}>{column.name}</SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>

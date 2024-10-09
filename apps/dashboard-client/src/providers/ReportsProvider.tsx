@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  memo,
   useCallback,
   useContext,
   useMemo,
@@ -12,20 +11,13 @@ import {
   ColumnSelect,
   OperatorType
 } from '@trg_package/schemas-reporting/types';
-import { ColumnDef } from '@tanstack/react-table';
-import { Trash } from 'lucide-react';
-import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/reports';
-import { UpdateColumn } from '@/components/composite/reports/UpdateColumn';
 
 interface ReportsProviderProps {
   children: React.ReactNode;
   tableId: string;
 }
-export interface Column {
-  column: ColumnSelect;
-  columnDef: ColumnDef<ColumnSelect>;
-}
+
 export type GroupBy = ColumnSelect | undefined;
 export interface Condition {
   id: number;
@@ -40,10 +32,10 @@ export interface Filter {
   type: 'Select' | 'Search' | undefined;
 }
 interface ReportsProviderState {
-  columns: Column[];
-  availableColumns: Column[];
-  addColumn: (entity: Column) => void;
-  removeColumn: (entity: Column) => void;
+  columns: ColumnSelect[];
+  availableColumns: ColumnSelect[];
+  addColumn: (entity: ColumnSelect) => void;
+  removeColumn: (entity: ColumnSelect) => void;
 
   groupBy: GroupBy;
   setGroupBy: React.Dispatch<React.SetStateAction<GroupBy>>;
@@ -107,25 +99,23 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   const [conditions, setConditions] = useState(initialState.conditions);
   const [filters, setFilters] = useState(initialState.filters);
 
-  const addColumn = useCallback((entity: Column) => {
+  const addColumn = useCallback((entity: ColumnSelect) => {
     setColumns((prev) => [...prev, entity]);
     setAvailableColumns((prev) =>
-      prev.filter((col) => col.columnDef.id !== entity.columnDef.id)
+      prev.filter((col) => col.name !== entity.name)
     );
   }, []);
 
-  const removeColumn = useCallback((entity: Column) => {
-    setAvailableColumns((prevAvailable) =>
-      prevAvailable.filter((col) => col.columnDef.id !== entity.columnDef.id)
-    );
+  const removeColumn = useCallback((entity: ColumnSelect) => {
+    setAvailableColumns((prevAvailable) => [...prevAvailable, entity]);
     setColumns((prevColumns) =>
-      prevColumns.filter((col) => col.columnDef.id !== entity.columnDef.id)
+      prevColumns.filter((col) => col.name !== entity.name)
     );
     setConditions((prevConditions) =>
-      prevConditions.filter((cond) => cond.column?.name !== entity.column.name)
+      prevConditions.filter((cond) => cond.column?.name !== entity.name)
     );
     setFilters((prevFilters) =>
-      prevFilters.filter((filter) => filter.column?.name !== entity.column.name)
+      prevFilters.filter((filter) => filter.column?.name !== entity.name)
     );
   }, []);
 
@@ -174,27 +164,11 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     queryKey: ['columns', 'getAll', tableId]
   });
 
-  const createColumnDef = useCallback(
-    (data: ColumnSelect): Column['columnDef'] => ({
-      id: data.name,
-      accessorKey: data.name,
-      header: () => (
-        <MemoizedHeaderButton column={data} removeColumn={removeColumn} />
-      ),
-      cell: ({ row }) => <MemoizedUpdateButton column={row.original} />
-    }),
-    [removeColumn]
-  );
-
   useEffect(() => {
     if (fetchedColumns) {
-      const newColumnDefs = fetchedColumns.map((col) => ({
-        column: col,
-        columnDef: createColumnDef(col)
-      }));
-      setAvailableColumns(newColumnDefs);
+      setAvailableColumns(fetchedColumns);
     }
-  }, [fetchedColumns, createColumnDef]);
+  }, [fetchedColumns]);
 
   const contextValue = useMemo(
     () => ({
@@ -240,32 +214,3 @@ export const useReports = () => {
   }
   return context;
 };
-
-// Memoized components for header and update buttons
-const HeaderButton: React.FC<{
-  column: ColumnSelect;
-  removeColumn: ReportsProviderState['removeColumn'];
-}> = ({ column, removeColumn }) => (
-  <div className="flex items-center gap-4">
-    <span>{column.name}</span>
-    <Button className="flex items-center justify-center" variant="ghost">
-      <Trash
-        color="red"
-        onClick={() => removeColumn({ columnDef: { id: column.name }, column })}
-        className="h-4 w-4"
-      />
-    </Button>
-  </div>
-);
-
-const MemoizedHeaderButton = memo(HeaderButton);
-
-const UpdateButton: React.FC<{ column: ColumnSelect }> = ({ column }) => (
-  <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
-    <UpdateColumn
-      module={{ id: column.name, name: column.name, type: 'Reports' }}
-    />
-  </div>
-);
-
-const MemoizedUpdateButton = memo(UpdateButton);

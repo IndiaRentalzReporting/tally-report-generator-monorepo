@@ -42,15 +42,14 @@ const FilterComponent: React.FC<{
         <ConditionSelect
           label="Column"
           value={filter.column?.name || ''}
-          options={columns.map(({ column }) => ({
+          options={columns.map((column) => ({
             label: column.name,
             value: column.name
           }))}
           onChange={(columnName) =>
             updateFilter(filter.id, {
               ...defaultFilter,
-              column: columns.find(({ column }) => column.name === columnName)
-                ?.column
+              column: columns.find((column) => column.name === columnName)
             })
           }
         />
