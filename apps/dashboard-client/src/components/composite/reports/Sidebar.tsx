@@ -16,10 +16,10 @@ const Sidebar: React.FC = () => {
             <Button
               className="w-full"
               variant="secondary"
-              key={column.name}
+              key={column.column.name}
               onClick={() => addColumn(column)}
             >
-              {column.name?.toUpperCase()}
+              {column.column.name?.toUpperCase()}
             </Button>
           ))}
         </nav>

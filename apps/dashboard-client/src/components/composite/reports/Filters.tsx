@@ -1,24 +1,31 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button } from '@trg_package/vite/components';
-import { Filter, defaultFilter, useReports } from '@/providers/ReportsProvider';
+import { useReports } from '@/providers/ReportsProvider';
 import ConditionSelect from './ConditionSelect';
 
 const Filters: React.FC = () => {
-  const { filters, updateFilter, removeFilter } = useReports();
+  const [filters, setFilters] = useState<Array<{ id: number }>>([]);
+
+  const addFilter = () => {
+    setFilters((prev) => [...prev, { id: Date.now() }]);
+  };
+
+  const removeFilter = (id: number) => {
+    setFilters(filters.filter((filter) => filter.id !== id));
+  };
 
   return (
     <div className="space-y-4">
       <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
         <span>Filters</span>
-        <Button size="sm" onClick={() => updateFilter()} variant="ghost">
+        <Button size="sm" onClick={() => addFilter()} variant="ghost">
           <PlusCircle className="w-4 h-4 mr-1" />
         </Button>
       </h3>
       {filters.map((filter) => (
         <FilterComponent
           key={filter.id}
-          filter={filter}
           removeFilter={() => removeFilter(filter.id)}
         />
       ))}
@@ -28,12 +35,14 @@ const Filters: React.FC = () => {
 
 const FilterComponent: React.FC<{
   removeFilter: () => void;
-  filter: Filter;
-}> = ({ removeFilter, filter }) => {
-  const { columns, updateFilter } = useReports();
-
-  const [selectedType, setSelectedType] = useState<string | undefined>(
-    undefined
+}> = ({ removeFilter }) => {
+  const { columns, setFilter } = useReports();
+  const [selectedColumnName, setSelectedColumnName] = useState<
+    string | undefined
+  >(undefined);
+  const selectedColumn = useMemo(
+    () => columns.find((col) => col.column.name === selectedColumnName),
+    [selectedColumnName, columns]
   );
 
   return (
@@ -41,32 +50,27 @@ const FilterComponent: React.FC<{
       <div className="grid grid-cols-[2fr_2fr_auto] gap-2">
         <ConditionSelect
           label="Column"
-          value={filter.column?.name || ''}
-          options={columns.map((column) => ({
+          value={selectedColumn?.column.name}
+          options={columns.map(({ column }) => ({
             label: column.name,
             value: column.name
           }))}
-          onChange={(columnName) =>
-            updateFilter(filter.id, {
-              ...defaultFilter,
-              column: columns.find((column) => column.name === columnName)
-            })
-          }
+          onChange={setSelectedColumnName}
         />
 
         <ConditionSelect
-          label="Type"
-          value={filter.type || ''}
-          options={['Select', 'Search'].map((type) => ({
-            label: type,
-            value: type
+          label="Join"
+          value={selectedColumn?.filter.type || ''}
+          options={['AND', 'OR', 'NOT'].map((join) => ({
+            label: join,
+            value: join
           }))}
-          onChange={(typeName) =>
-            updateFilter(filter.id, {
-              type: typeName as 'Select' | 'Search'
-            })
-          }
-          disabled={!filter.column}
+          onChange={(type: string) => {
+            setFilter(selectedColumnName, {
+              type: type as 'Select' | 'Search'
+            });
+          }}
+          disabled={!selectedColumn}
           className="justify-self-end"
         />
 

@@ -1,5 +1,5 @@
 import { Edit } from 'lucide-react';
-import React, { Suspense, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Drawer,
   DrawerTrigger,
@@ -10,47 +10,58 @@ import {
   DrawerClose,
   Card,
   CardContent,
-  Skeleton,
   Checkbox,
   Input,
   Label,
-  When
+  When,
+  Button
 } from '@trg_package/vite/components';
-import {
-  ColumnOperation,
-  ColumnSelect
-} from '@trg_package/schemas-reporting/types';
-import { useReports } from '@/providers/ReportsProvider';
+import { ColumnOperation } from '@trg_package/schemas-reporting/types';
+import { Column, useReports } from '@/providers/ReportsProvider';
 import ConditionSelect from './ConditionSelect';
 
 interface IUpdateEntityProps {
-  column: ColumnSelect;
+  columnName: Column['column']['name'];
 }
 
-export const UpdateColumn: React.FC<IUpdateEntityProps> = ({
-  column: { name, type }
-}) => {
-  const { extras, updateExtras } = useReports();
-  const extra = useMemo(
-    () => extras.find((ex) => ex.name === name),
-    [extras, name]
+export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
+  const { columns, setExtra } = useReports();
+
+  const selectedColumn = useMemo(
+    () => columns.find((col) => col.column.name === columnName),
+    [columns, columnName]
   );
 
-  const operations = useMemo(() => ColumnOperation[type], [type]);
+  const [localExtra, setLocalExtra] = useState<Column['extra']>({
+    name: selectedColumn?.extra.name,
+    heading: selectedColumn?.extra.heading,
+    operation: selectedColumn?.extra.operation,
+    params: selectedColumn?.extra.params,
+    showTotal: Boolean(selectedColumn?.extra.showTotal)
+  });
+
+  const operations = useMemo(
+    () => (selectedColumn ? ColumnOperation[selectedColumn?.column.type] : []),
+    [selectedColumn]
+  );
 
   const values = useMemo(
     () =>
-      extra?.operation
-        ? (ColumnOperation[type].find(
-            (op) => op.operationType == extra?.operation
+      selectedColumn
+        ? (ColumnOperation[selectedColumn?.column.type].find(
+            (op) => op.operationType == selectedColumn?.extra.operation
           )?.operationParams ?? [])
         : [],
-    [extra]
+    [selectedColumn]
   );
+
+  const handleSave = () => {
+    setExtra(selectedColumn?.column.name, localExtra);
+  };
 
   return (
     <Drawer>
-      <DrawerTrigger asChild>
+      <DrawerTrigger>
         <Edit size={100} className=" cursor-pointer opacity-5" />
       </DrawerTrigger>
       <DrawerContent className="px-6">
@@ -59,66 +70,77 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({
         </DrawerHeader>
         <Card className="w-full relative">
           <CardContent className="pt-6 space-y-4">
-            <Suspense fallback={<Skeleton isLoading />}>
-              <div className="space-y-2">
-                <Label htmlFor="columnName">Column Name</Label>
-                <Input id="columnName" value={extra?.name} readOnly />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="columnName">Column Name</Label>
+              <Input id="columnName" value={localExtra.name} readOnly />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="heading">Heading</Label>
+            <div className="space-y-2">
+              <Label htmlFor="heading">Heading</Label>
+              <Input
+                id="heading"
+                value={localExtra.heading}
+                onChange={({ target }) =>
+                  setLocalExtra((prev) => ({
+                    ...prev,
+                    heading: target.value
+                  }))
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="operation">Operation</Label>
+              <ConditionSelect
+                label="Operation"
+                value={localExtra.operation || ''}
+                options={operations.map((op) => ({
+                  label: op.operationType,
+                  value: op.operationType
+                }))}
+                onChange={(operatorName) =>
+                  setLocalExtra((prev) => ({
+                    ...prev,
+                    operation: operatorName
+                  }))
+                }
+              />
+            </div>
+
+            <When condition={!!values.length}>
+              {values.map((value) => (
                 <Input
-                  id="heading"
-                  value={extra?.heading}
-                  onChange={({ target }) =>
-                    updateExtras(name, { heading: target.value })
+                  key={value}
+                  placeholder={value}
+                  type={localExtra.params}
+                  onChange={({ target }) => {
+                    setLocalExtra((prev) => ({
+                      ...prev,
+                      params: target.value
+                    }));
+                  }}
+                />
+              ))}
+            </When>
+
+            <When condition={!!selectedColumn?.extra.showTotal}>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localExtra.showTotal}
+                  id="showTotal"
+                  onCheckedChange={(showTotal) =>
+                    setLocalExtra((prev) => ({
+                      ...prev,
+                      showTotal: Boolean(showTotal)
+                    }))
                   }
                 />
+                <Label htmlFor="showTotal">Show Total</Label>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="operation">Operation</Label>
-                <ConditionSelect
-                  label="Operation"
-                  value={extra?.operation || ''}
-                  options={operations.map((op) => ({
-                    label: op.operationType,
-                    value: op.operationType
-                  }))}
-                  onChange={(operatorName) =>
-                    updateExtras(name, {
-                      operation: operatorName
-                    })
-                  }
-                />
-              </div>
-
-              <When condition={!!values.length}>
-                {values.map((value) => (
-                  <Input
-                    key={value}
-                    placeholder={value}
-                    type={extra?.params}
-                    onChange={({ target }) => {
-                      updateExtras(name, { params: target.value });
-                    }}
-                  />
-                ))}
-              </When>
-
-              <When condition={!!extra?.showTotal}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={extra?.showTotal}
-                    id="showTotal"
-                    onCheckedChange={(showTotal) =>
-                      updateExtras(name, { showTotal: Boolean(showTotal) })
-                    }
-                  />
-                  <Label htmlFor="showTotal">Show Total</Label>
-                </div>
-              </When>
-            </Suspense>
+            </When>
+            <Button onClick={handleSave} className="w-full">
+              Save
+            </Button>
           </CardContent>
         </Card>
 

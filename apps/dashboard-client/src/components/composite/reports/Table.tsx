@@ -19,9 +19,9 @@ import { ColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Trash } from 'lucide-react';
 
 import { useCallback, useEffect, memo, useState } from 'react';
-import ReportSettings from './Settings';
-import { useReports } from '@/providers/ReportsProvider';
+import { Column, useReports } from '@/providers/ReportsProvider';
 import { UpdateColumn } from './UpdateColumn';
+import ReportSettings from './Settings';
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -32,13 +32,13 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
   const [columnDef, setColumnDef] = useState<ColumnDef<TData>[]>([]);
 
   const createColumnDef = useCallback(
-    (column: ColumnSelect): ColumnDef<ColumnSelect> => ({
-      id: column.name,
-      accessorKey: column.name,
+    (column: Column): ColumnDef<ColumnSelect> => ({
+      id: column.column.name,
+      accessorKey: column.column.name,
       header: () => (
         <MemoizedHeaderButton column={column} removeColumn={removeColumn} />
       ),
-      cell: () => <MemoizedUpdateButton column={column} />
+      cell: () => <MemoizedUpdateButton columnName={column.column.name} />
     }),
     [removeColumn]
   );
@@ -116,11 +116,11 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
 
 // Memoized components for header and update buttons
 const HeaderButton: React.FC<{
-  column: ColumnSelect;
-  removeColumn: (entity: ColumnSelect) => void;
+  column: Column;
+  removeColumn: (entity: Column) => void;
 }> = ({ column, removeColumn }) => (
   <div className="flex items-center gap-4">
-    <span>{column.name}</span>
+    <span>{column.column.name}</span>
     <Button
       className="flex items-center justify-center"
       variant="ghost"
@@ -133,9 +133,9 @@ const HeaderButton: React.FC<{
 
 const MemoizedHeaderButton = memo(HeaderButton);
 
-const UpdateButton: React.FC<{ column: ColumnSelect }> = ({ column }) => (
+const UpdateButton: React.FC<{ columnName: string }> = ({ columnName }) => (
   <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
-    <UpdateColumn column={column} />
+    <UpdateColumn columnName={columnName} />
   </div>
 );
 

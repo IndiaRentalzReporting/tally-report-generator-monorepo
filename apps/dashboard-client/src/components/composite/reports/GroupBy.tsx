@@ -11,12 +11,20 @@ import {
 import { useReports } from '@/providers/ReportsProvider';
 
 const GroupBy: React.FC = () => {
-  const { columns } = useReports();
+  const { columns, groupBy, setGroupBy } = useReports();
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold mb-2 flex-1">Group By</h3>
-      <Select>
+      <Select
+        value={groupBy?.name}
+        onValueChange={(groupByName) => {
+          const column = columns.find((col) => col.column.name === groupByName);
+          if (column) {
+            setGroupBy(column.column);
+          }
+        }}
+      >
         <SelectTrigger>
           <SelectValue placeholder="Column" />
         </SelectTrigger>
@@ -24,7 +32,9 @@ const GroupBy: React.FC = () => {
           <SelectGroup>
             <SelectLabel>Columns</SelectLabel>
             {columns.map((column) => (
-              <SelectItem value={column.name}>{column.name}</SelectItem>
+              <SelectItem value={column.column.name}>
+                {column.column.name}
+              </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>

@@ -18,94 +18,52 @@ interface ReportsProviderProps {
   children: React.ReactNode;
   tableId: string;
 }
-
-export type GroupBy = ColumnSelect | undefined;
 export interface Condition {
-  id: number;
-  column: ColumnSelect | undefined;
   operator: OperatorType['operator'] | undefined;
   value: NonNullable<OperatorType['params']>[0] | undefined;
   join: 'AND' | 'OR' | 'NOT' | undefined;
 }
 export interface Filter {
-  id: number;
-  column: ColumnSelect | undefined;
   type: 'Select' | 'Search' | undefined;
 }
-
-export interface Extras {
+export interface Extra {
   name: string | undefined;
   heading: string | undefined;
   operation: Operation['operationType'] | undefined;
   params: Operation['operationParams'][0] | undefined;
   showTotal: boolean;
 }
-interface ReportsProviderState {
-  columns: ColumnSelect[];
-  availableColumns: ColumnSelect[];
-  addColumn: (entity: ColumnSelect) => void;
-  removeColumn: (entity: ColumnSelect) => void;
-
-  groupBy: GroupBy;
-  setGroupBy: React.Dispatch<React.SetStateAction<GroupBy>>;
-
-  conditions: Array<Condition>;
-  updateCondition: (
-    id?: number | null,
-    condition?: Partial<Omit<Condition, 'id'>>
-  ) => void;
-  removeCondition: (id: number) => void;
-
-  filters: Array<Filter>;
-  updateFilter: (
-    id?: number | null,
-    filter?: Partial<Omit<Filter, 'id'>>
-  ) => void;
-  removeFilter: (id: number) => void;
-
-  extras: Array<Extras>;
-  updateExtras: (name: string, condition?: Partial<Extras>) => void;
+export interface Column {
+  column: ColumnSelect;
+  condition: Condition;
+  filter: Filter;
+  extra: Extra;
 }
-
-export const defaultFilter: Omit<Filter, 'id'> = {
-  column: undefined,
-  type: undefined
-};
-
-export const defaultCondition: Omit<Condition, 'id'> = {
-  column: undefined,
-  operator: undefined,
-  value: undefined,
-  join: undefined
-};
-
-export const defaultExtras: Extras = {
-  name: undefined,
-  heading: undefined,
-  operation: undefined,
-  params: '',
-  showTotal: false
-};
+interface ReportsProviderState {
+  columns: Array<Column>;
+  availableColumns: Array<Column>;
+  addColumn: (entity: Column) => void;
+  removeColumn: (entity: Column) => void;
+  setCondition: (
+    columnName: string | undefined,
+    update: Partial<Condition>
+  ) => void;
+  setFilter: (columnName: string | undefined, update: Partial<Filter>) => void;
+  setExtra: (columnName: string | undefined, update: Partial<Extra>) => void;
+  groupBy: ColumnSelect | undefined;
+  setGroupBy: React.Dispatch<React.SetStateAction<ColumnSelect | undefined>>;
+}
 
 const initialState: ReportsProviderState = {
   columns: [],
   availableColumns: [],
   addColumn: () => null,
   removeColumn: () => null,
-
+  setCondition: () => null,
+  setFilter: () => null,
+  setExtra: () => null,
   groupBy: undefined,
-  setGroupBy: () => null,
-
-  conditions: [],
-  updateCondition: () => null,
-  removeCondition: () => null,
-
-  filters: [],
-  updateFilter: () => null,
-  removeFilter: () => null,
-
-  extras: [],
-  updateExtras: () => null
+  setGroupBy: () => null
 };
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
@@ -119,73 +77,54 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     initialState.availableColumns
   );
   const [groupBy, setGroupBy] = useState(initialState.groupBy);
-  const [conditions, setConditions] = useState(initialState.conditions);
-  const [filters, setFilters] = useState(initialState.filters);
-  const [extras, setExtras] = useState(initialState.extras);
 
-  const addColumn = useCallback((entity: ColumnSelect) => {
+  const addColumn = useCallback((entity: Column) => {
     setColumns((prev) => [...prev, entity]);
     setAvailableColumns((prev) =>
-      prev.filter((col) => col.name !== entity.name)
+      prev.filter((col) => col.column.name !== entity.column.name)
     );
   }, []);
 
-  const removeColumn = useCallback((entity: ColumnSelect) => {
+  const removeColumn = useCallback((entity: Column) => {
     setAvailableColumns((prevAvailable) => [...prevAvailable, entity]);
     setColumns((prevColumns) =>
-      prevColumns.filter((col) => col.name !== entity.name)
-    );
-    setConditions((prevConditions) =>
-      prevConditions.filter((cond) => cond.column?.name !== entity.name)
-    );
-    setFilters((prevFilters) =>
-      prevFilters.filter((filter) => filter.column?.name !== entity.name)
+      prevColumns.filter((col) => col.column.name !== entity.column.name)
     );
   }, []);
 
-  const updateCondition: ReportsProviderState['updateCondition'] = useCallback(
-    (id = null, updates) => {
-      setConditions((prev) => {
-        if (id === null) {
-          return [...prev, { ...defaultCondition, id: Date.now() }];
-        }
-
-        return prev.map((condition) =>
-          condition.id === id ? { ...condition, ...updates } : condition
-        );
-      });
+  const setCondition: ReportsProviderState['setCondition'] = useCallback(
+    (columnName, update) => {
+      setColumns((prevColumns) =>
+        prevColumns.map((col) =>
+          col.column.name === columnName
+            ? { ...col, condition: { ...col.condition, ...update } }
+            : col
+        )
+      );
     },
     []
   );
 
-  const removeCondition = useCallback((id: number) => {
-    setConditions((prev) => prev.filter((cond) => cond.id !== id));
-  }, []);
-
-  const updateFilter: ReportsProviderState['updateFilter'] = useCallback(
-    (id = null, updates) => {
-      setFilters((prev) => {
-        if (id === null) {
-          return [...prev, { ...defaultFilter, id: Date.now() }];
-        }
-
-        return prev.map((filter) =>
-          filter.id === id ? { ...filter, ...updates } : filter
-        );
-      });
+  const setExtra: ReportsProviderState['setExtra'] = useCallback(
+    (columnName, update) => {
+      setColumns((prevColumns) =>
+        prevColumns.map((col) =>
+          col.column.name === columnName
+            ? { ...col, extra: { ...col.extra, ...update } }
+            : col
+        )
+      );
     },
     []
   );
 
-  const removeFilter = useCallback((id: number) => {
-    setFilters((prev) => prev.filter((filter) => filter.id !== id));
-  }, []);
-
-  const updateExtras: ReportsProviderState['updateExtras'] = useCallback(
-    (name, updates) => {
-      setExtras((prev) =>
-        prev.map((condition) =>
-          condition.name === name ? { ...condition, ...updates } : condition
+  const setFilter: ReportsProviderState['setFilter'] = useCallback(
+    (columnName, update) => {
+      setColumns((prevColumns) =>
+        prevColumns.map((col) =>
+          col.column.name === columnName
+            ? { ...col, filter: { ...col.filter, ...update } }
+            : col
         )
       );
     },
@@ -201,14 +140,24 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
   useEffect(() => {
     if (fetchedColumns) {
-      setAvailableColumns(fetchedColumns);
-      setExtras(
-        fetchedColumns.map((col) => ({
-          name: col.name,
-          heading: col.name,
-          operation: undefined,
-          params: '',
-          showTotal: col.type === 'number'
+      setAvailableColumns(
+        fetchedColumns.map<Column>((column) => ({
+          column,
+          condition: {
+            operator: undefined,
+            value: undefined,
+            join: undefined
+          },
+          filter: {
+            type: undefined
+          },
+          extra: {
+            name: column.name,
+            heading: column.name,
+            operation: '',
+            params: '',
+            showTotal: column.type === 'number'
+          }
         }))
       );
     }
@@ -220,31 +169,22 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       availableColumns,
       addColumn,
       removeColumn,
+      setCondition,
+      setFilter,
+      setExtra,
       groupBy,
-      setGroupBy,
-      conditions,
-      updateCondition,
-      removeCondition,
-      filters,
-      updateFilter,
-      removeFilter,
-      extras,
-      updateExtras
+      setGroupBy
     }),
     [
       columns,
       availableColumns,
       addColumn,
       removeColumn,
-      updateCondition,
-      removeCondition,
+      setCondition,
+      setFilter,
+      setExtra,
       groupBy,
-      conditions,
-      filters,
-      updateFilter,
-      removeFilter,
-      extras,
-      updateExtras
+      setGroupBy
     ]
   );
 
