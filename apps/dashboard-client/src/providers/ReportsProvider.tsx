@@ -23,8 +23,8 @@ interface ReportsProviderProps {
   tableId: string;
 }
 export interface Column {
-  data: ColumnSelect;
-  column: ColumnDef<ColumnSelect>;
+  column: ColumnSelect;
+  columnDef: ColumnDef<ColumnSelect>;
 }
 export type GroupBy = ColumnSelect | undefined;
 export interface Condition {
@@ -110,22 +110,22 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   const addColumn = useCallback((entity: Column) => {
     setColumns((prev) => [...prev, entity]);
     setAvailableColumns((prev) =>
-      prev.filter((col) => col.column.id !== entity.column.id)
+      prev.filter((col) => col.columnDef.id !== entity.columnDef.id)
     );
   }, []);
 
   const removeColumn = useCallback((entity: Column) => {
     setAvailableColumns((prevAvailable) =>
-      prevAvailable.filter((col) => col.column.id !== entity.column.id)
+      prevAvailable.filter((col) => col.columnDef.id !== entity.columnDef.id)
     );
     setColumns((prevColumns) =>
-      prevColumns.filter((col) => col.column.id !== entity.column.id)
+      prevColumns.filter((col) => col.columnDef.id !== entity.columnDef.id)
     );
     setConditions((prevConditions) =>
-      prevConditions.filter((cond) => cond.column?.name !== entity.data.name)
+      prevConditions.filter((cond) => cond.column?.name !== entity.column.name)
     );
     setFilters((prevFilters) =>
-      prevFilters.filter((filter) => filter.column?.name !== entity.data.name)
+      prevFilters.filter((filter) => filter.column?.name !== entity.column.name)
     );
   }, []);
 
@@ -175,11 +175,11 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   });
 
   const createColumnDef = useCallback(
-    (data: ColumnSelect): Column['column'] => ({
+    (data: ColumnSelect): Column['columnDef'] => ({
       id: data.name,
       accessorKey: data.name,
       header: () => (
-        <MemoizedHeaderButton data={data} removeColumn={removeColumn} />
+        <MemoizedHeaderButton column={data} removeColumn={removeColumn} />
       ),
       cell: ({ row }) => <MemoizedUpdateButton column={row.original} />
     }),
@@ -189,8 +189,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   useEffect(() => {
     if (fetchedColumns) {
       const newColumnDefs = fetchedColumns.map((col) => ({
-        data: col,
-        column: createColumnDef(col)
+        column: col,
+        columnDef: createColumnDef(col)
       }));
       setAvailableColumns(newColumnDefs);
     }
@@ -243,15 +243,15 @@ export const useReports = () => {
 
 // Memoized components for header and update buttons
 const HeaderButton: React.FC<{
-  data: ColumnSelect;
+  column: ColumnSelect;
   removeColumn: ReportsProviderState['removeColumn'];
-}> = ({ data, removeColumn }) => (
+}> = ({ column, removeColumn }) => (
   <div className="flex items-center gap-4">
-    <span>{data.name}</span>
+    <span>{column.name}</span>
     <Button className="flex items-center justify-center" variant="ghost">
       <Trash
         color="red"
-        onClick={() => removeColumn({ column: { id: data.name }, data })}
+        onClick={() => removeColumn({ columnDef: { id: column.name }, column })}
         className="h-4 w-4"
       />
     </Button>
