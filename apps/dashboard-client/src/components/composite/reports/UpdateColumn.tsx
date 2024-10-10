@@ -25,7 +25,7 @@ interface IUpdateEntityProps {
 }
 
 export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
-  const { columns, setExtra } = useReports();
+  const { columns, updateColumn } = useReports();
 
   const selectedColumn = useMemo(
     () => columns.find((col) => col.column.name === columnName),
@@ -56,7 +56,7 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
   );
 
   const handleSave = () => {
-    setExtra(selectedColumn?.column.name, localExtra);
+    updateColumn(selectedColumn?.column.name, 'extra', localExtra);
   };
 
   return (

@@ -37,7 +37,7 @@ const Conditions: React.FC = () => {
 const ConditionItem: React.FC<{
   onRemove: () => void;
 }> = ({ onRemove }) => {
-  const { columns, setCondition } = useReports();
+  const { columns, updateColumn } = useReports();
   const [selectedColumnName, setSelectedColumnName] = useState<
     string | undefined
   >(undefined);
@@ -66,7 +66,7 @@ const ConditionItem: React.FC<{
     <div className="flex items-center space-x-4 space-y-2">
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
         <ConditionSelect
-          label="Column"
+          label="Condition Column"
           value={selectedColumn?.column.name || ''}
           options={columns.map(({ column }) => ({
             label: column.name,
@@ -85,7 +85,7 @@ const ConditionItem: React.FC<{
             value: op.operator
           }))}
           onChange={(operator) => {
-            setCondition(selectedColumnName, {
+            updateColumn(selectedColumnName, 'condition', {
               operator
             });
           }}
@@ -99,7 +99,7 @@ const ConditionItem: React.FC<{
               placeholder={value}
               type={selectedColumn?.column.type}
               onChange={({ target: { value } }) => {
-                setCondition(selectedColumnName, {
+                updateColumn(selectedColumnName, 'condition', {
                   value
                 });
               }}
@@ -115,7 +115,7 @@ const ConditionItem: React.FC<{
             value: join
           }))}
           onChange={(join: string) => {
-            setCondition(selectedColumnName, {
+            updateColumn(selectedColumnName, 'condition', {
               join: join as 'AND' | 'OR' | 'NOT'
             });
           }}

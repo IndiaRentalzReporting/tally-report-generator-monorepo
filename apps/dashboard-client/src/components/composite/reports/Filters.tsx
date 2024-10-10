@@ -36,10 +36,12 @@ const Filters: React.FC = () => {
 const FilterComponent: React.FC<{
   removeFilter: () => void;
 }> = ({ removeFilter }) => {
-  const { columns, setFilter } = useReports();
+  const { columns, updateColumn } = useReports();
+
   const [selectedColumnName, setSelectedColumnName] = useState<
     string | undefined
   >(undefined);
+
   const selectedColumn = useMemo(
     () => columns.find((col) => col.column.name === selectedColumnName),
     [selectedColumnName, columns]
@@ -49,7 +51,7 @@ const FilterComponent: React.FC<{
     <div className="mb-2 space-y-2">
       <div className="grid grid-cols-[2fr_2fr_auto] gap-2">
         <ConditionSelect
-          label="Column"
+          label="Filter Column"
           value={selectedColumn?.column.name}
           options={columns.map(({ column }) => ({
             label: column.name,
@@ -66,7 +68,7 @@ const FilterComponent: React.FC<{
             value: join
           }))}
           onChange={(type: string) => {
-            setFilter(selectedColumnName, {
+            updateColumn(selectedColumnName, 'filter', {
               type: type as 'Select' | 'Search'
             });
           }}

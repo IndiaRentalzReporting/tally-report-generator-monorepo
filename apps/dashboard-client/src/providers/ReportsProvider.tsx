@@ -44,12 +44,11 @@ interface ReportsProviderState {
   availableColumns: Array<Column>;
   addColumn: (entity: Column) => void;
   removeColumn: (entity: Column) => void;
-  setCondition: (
+  updateColumn: <T extends keyof Column>(
     columnName: string | undefined,
-    update: Partial<Condition>
+    feature: T,
+    update: Partial<Column[T]>
   ) => void;
-  setFilter: (columnName: string | undefined, update: Partial<Filter>) => void;
-  setExtra: (columnName: string | undefined, update: Partial<Extra>) => void;
   groupBy: ColumnSelect | undefined;
   setGroupBy: React.Dispatch<React.SetStateAction<ColumnSelect | undefined>>;
 }
@@ -59,9 +58,7 @@ const initialState: ReportsProviderState = {
   availableColumns: [],
   addColumn: () => null,
   removeColumn: () => null,
-  setCondition: () => null,
-  setFilter: () => null,
-  setExtra: () => null,
+  updateColumn: () => null,
   groupBy: undefined,
   setGroupBy: () => null
 };
@@ -92,38 +89,12 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     );
   }, []);
 
-  const setCondition: ReportsProviderState['setCondition'] = useCallback(
-    (columnName, update) => {
+  const updateColumn: ReportsProviderState['updateColumn'] = useCallback(
+    (columnName, feature, update) => {
       setColumns((prevColumns) =>
         prevColumns.map((col) =>
           col.column.name === columnName
-            ? { ...col, condition: { ...col.condition, ...update } }
-            : col
-        )
-      );
-    },
-    []
-  );
-
-  const setExtra: ReportsProviderState['setExtra'] = useCallback(
-    (columnName, update) => {
-      setColumns((prevColumns) =>
-        prevColumns.map((col) =>
-          col.column.name === columnName
-            ? { ...col, extra: { ...col.extra, ...update } }
-            : col
-        )
-      );
-    },
-    []
-  );
-
-  const setFilter: ReportsProviderState['setFilter'] = useCallback(
-    (columnName, update) => {
-      setColumns((prevColumns) =>
-        prevColumns.map((col) =>
-          col.column.name === columnName
-            ? { ...col, filter: { ...col.filter, ...update } }
+            ? { ...col, [feature]: { ...col[feature], ...update } }
             : col
         )
       );
@@ -169,9 +140,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       availableColumns,
       addColumn,
       removeColumn,
-      setCondition,
-      setFilter,
-      setExtra,
+      updateColumn,
       groupBy,
       setGroupBy
     }),
@@ -180,9 +149,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       availableColumns,
       addColumn,
       removeColumn,
-      setCondition,
-      setFilter,
-      setExtra,
+      updateColumn,
       groupBy,
       setGroupBy
     ]
