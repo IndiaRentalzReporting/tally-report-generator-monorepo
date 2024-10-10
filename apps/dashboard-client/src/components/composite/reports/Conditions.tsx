@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { Button, When, Input } from '@trg_package/vite/components';
 import { Operators } from '@trg_package/schemas-reporting/types';
 import { useReports } from '@/providers/ReportsProvider';
-import ConditionSelect from './ConditionSelect';
+import Select from './Select';
 
 const Conditions: React.FC = () => {
   const [conditions, setConditions] = useState<Array<{ id: number }>>([]);
@@ -65,9 +65,9 @@ const ConditionItem: React.FC<{
   return (
     <div className="flex items-center space-x-4 space-y-2">
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
-        <ConditionSelect
-          label="Condition Column"
-          value={selectedColumn?.column.name || ''}
+        <Select
+          label="Column"
+          value={selectedColumn?.column.name}
           options={columns.map(({ column }) => ({
             label: column.name,
             value: column.name
@@ -77,9 +77,9 @@ const ConditionItem: React.FC<{
           }}
         />
 
-        <ConditionSelect
+        <Select
           label="Operator"
-          value={selectedColumn?.condition.operator || ''}
+          value={selectedColumn?.condition.operator}
           options={operations.map((op) => ({
             label: op.operator,
             value: op.operator
@@ -107,9 +107,9 @@ const ConditionItem: React.FC<{
           ))}
         </When>
 
-        <ConditionSelect
+        <Select
           label="Join"
-          value={selectedColumn?.condition.join || ''}
+          value={selectedColumn?.condition.join}
           options={['AND', 'OR', 'NOT'].map((join) => ({
             label: join,
             value: join

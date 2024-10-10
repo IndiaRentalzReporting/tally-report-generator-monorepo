@@ -1,5 +1,5 @@
 import {
-  Select,
+  Select as SLCT,
   SelectContent,
   SelectGroup,
   SelectItem,
@@ -8,15 +8,15 @@ import {
   SelectValue
 } from '@trg_package/vite/components';
 
-const ConditionSelect: React.FC<{
+const Select: React.FC<{
   label: string;
   value: string | undefined;
   options: { label: string; value: string }[];
   onChange: (value: string) => void;
   disabled?: boolean;
   className?: string;
-}> = ({ label, value, options, onChange, disabled, className }) => (
-  <Select value={value} onValueChange={onChange} disabled={disabled}>
+}> = ({ label, value = '', options, onChange, disabled, className }) => (
+  <SLCT value={value} onValueChange={onChange} disabled={disabled}>
     <SelectTrigger className={className}>
       <SelectValue placeholder={label} />
     </SelectTrigger>
@@ -30,6 +30,7 @@ const ConditionSelect: React.FC<{
         ))}
       </SelectGroup>
     </SelectContent>
-  </Select>
+  </SLCT>
 );
-export default ConditionSelect;
+
+export default Select;

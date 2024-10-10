@@ -18,7 +18,7 @@ import {
 } from '@trg_package/vite/components';
 import { ColumnOperation } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
-import ConditionSelect from './ConditionSelect';
+import Select from './Select';
 
 interface IUpdateEntityProps {
   columnName: Column['column']['name'];
@@ -91,7 +91,7 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
 
             <div className="space-y-2">
               <Label htmlFor="operation">Operation</Label>
-              <ConditionSelect
+              <Select
                 label="Operation"
                 value={localExtra.operation || ''}
                 options={operations.map((op) => ({

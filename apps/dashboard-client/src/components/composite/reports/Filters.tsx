@@ -2,7 +2,7 @@ import { PlusCircle, TrashIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { Button } from '@trg_package/vite/components';
 import { useReports } from '@/providers/ReportsProvider';
-import ConditionSelect from './ConditionSelect';
+import Select from './Select';
 
 const Filters: React.FC = () => {
   const [filters, setFilters] = useState<Array<{ id: number }>>([]);
@@ -50,8 +50,8 @@ const FilterComponent: React.FC<{
   return (
     <div className="mb-2 space-y-2">
       <div className="grid grid-cols-[2fr_2fr_auto] gap-2">
-        <ConditionSelect
-          label="Filter Column"
+        <Select
+          label="Column"
           value={selectedColumn?.column.name}
           options={columns.map(({ column }) => ({
             label: column.name,
@@ -60,9 +60,9 @@ const FilterComponent: React.FC<{
           onChange={setSelectedColumnName}
         />
 
-        <ConditionSelect
+        <Select
           label="Join"
-          value={selectedColumn?.filter.type || ''}
+          value={selectedColumn?.filter.type}
           options={['AND', 'OR', 'NOT'].map((join) => ({
             label: join,
             value: join

@@ -87,6 +87,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     setColumns((prevColumns) =>
       prevColumns.filter((col) => col.column.name !== entity.column.name)
     );
+    setGroupBy(undefined);
   }, []);
 
   const updateColumn: ReportsProviderState['updateColumn'] = useCallback(

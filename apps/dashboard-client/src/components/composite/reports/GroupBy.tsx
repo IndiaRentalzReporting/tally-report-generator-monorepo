@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useReports } from '@/providers/ReportsProvider';
-import ConditionSelect from './ConditionSelect';
+import Select from './Select';
 
 const GroupBy: React.FC = () => {
   const { columns, groupBy, setGroupBy } = useReports();
@@ -9,9 +9,9 @@ const GroupBy: React.FC = () => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold mb-2 flex-1">Group By</h3>
-      <ConditionSelect
-        label="GroupBy Column"
-        value={groupBy?.name || ''}
+      <Select
+        label="Column"
+        value={groupBy?.name}
         options={columns.map(({ column }) => ({
           label: column.name,
           value: column.name
