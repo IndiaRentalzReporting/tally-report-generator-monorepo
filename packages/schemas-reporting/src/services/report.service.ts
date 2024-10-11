@@ -4,7 +4,7 @@ import { ReportSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ReportInsert, ReportSelect } from '@/schemas/report';
 import { CreateError, CustomError } from '@trg_package/errors';
-import { TableSelect } from '../types';
+import { ColumnSelect, ReportColumnSelect, ReportConfigSelect, TableSelect } from '../types';
 import { SQL, sql } from 'drizzle-orm';
 
 export class ReportService extends BaseServiceNew<
@@ -61,9 +61,10 @@ export class ReportService extends BaseServiceNew<
   }
 
   public getColumns(columns: (typeof ReportSchema)['$inferSelect']['columns']) {
-    let str: any = [];
-    columns?.map((column) => {
-      str.push(`${column.table}."${column.name}" as "${column.alias}"`);
+    let str: any = [];  
+    columns?.map((ele) => {
+      const {column} = ele;
+      str.push(`${column.tablealias}."${column.name}" as "${column.alias}"`);
     });
     return str.join(', ');
   }
@@ -73,7 +74,8 @@ export class ReportService extends BaseServiceNew<
   ) {
     let str = ' WHERE ';
     conditions?.map((condition) => {
-      str += ` ${condition.join} ${condition.column.alias} ${condition.operator} ${condition.value}`;
+      const {column} = condition;
+      str += ` ${condition.join} ${column.alias} ${condition.operator} ${condition.value}`;
     });
     return str;
   }
@@ -81,25 +83,51 @@ export class ReportService extends BaseServiceNew<
   public getGroupBy(groupBy: (typeof ReportSchema)['$inferSelect']['groupBy']) {
     let str: any[] = [];
     groupBy?.map((ele) => {
-      str.push(`${ele.alias}`);
+      str.push(`${ele.column.alias}`);
     });
     return str.join(', ');
   }
-  public async updateConfig(report: (typeof ReportSchema)['$inferSelect']) {
+  public async updateConfig(report: (typeof ReportSchema)['$inferSelect']) :  Promise<(typeof ReportSchema)['$inferSelect']> {
     //tables
     const tables = await this.getTableQuery(
       report.baseEntity as any,
       report.tables
     );
+
     //columns
     const columns = report.columns ? this.getColumns(report.columns) : '*';
+    
     //conditions
     const conditions = report.conditons
       ? this.getConditions(report.conditons)
       : '';
     //group by
     const groupBy = report.groupBy ? this.getGroupBy(report.groupBy) : '';
+  
+  
+    const query = `SELECT ${columns} FROM ${tables} ${conditions} ${groupBy}`;
+
+
+    let columnArr : ReportColumnSelect[] | undefined;
+
+    columnArr = report.columns?.map(e=>{
+      return {
+        heading : e.heading,
+        alias : e.column.alias
+      }
+    })
+
+    const reportConfig : ReportConfigSelect = {
+      dataSource : query,
+      columns : columnArr??null,
+      filters : null
+    }
+
+    return await this.updateOne({id : report.id},{queryConfig : reportConfig});
+
   }
+
+
 
   public async saveReport(
     data: (typeof ReportSchema)['$inferInsert'],
@@ -112,7 +140,7 @@ export class ReportService extends BaseServiceNew<
       } else {
         report = await this.createOne(data);
       }
-      // this.updateConfig(report);
+      report = await this.updateConfig(report);
       return report;
     } catch (e) {
       throw e;
