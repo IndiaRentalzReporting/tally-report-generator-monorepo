@@ -9,11 +9,14 @@ import {
 import {
   createOne,
   deleteOne,
+  getAllColumns,
+  getAllTables,
   getColumns,
   getTables,
   readAll,
   updateOne
 } from '../controller/report.controller';
+import z from 'zod';
 
 const reportRouter = Router();
 
