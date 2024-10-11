@@ -4,8 +4,9 @@ import {
   ReadError,
   UpdateError
 } from '@trg_package/errors';
-import { ExtractTablesWithRelations, TableRelationalConfig } from 'drizzle-orm';
-import { and, eq } from 'drizzle-orm';
+import {
+  ExtractTablesWithRelations, TableRelationalConfig , and, eq
+} from 'drizzle-orm';
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
 import { RelationalQueryBuilder } from 'drizzle-orm/pg-core/query-builders/query';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
@@ -20,15 +21,16 @@ export class BaseServiceNew<
   }>
 > {
   private entity: string;
+
   constructor(
     protected dbClient: PostgresJsDatabase<H>,
     protected schema: T,
     protected tableName: RelationalQueryBuilder<
-      ExtractTablesWithRelations<H>,
-      TableRelationalConfig
+    ExtractTablesWithRelations<H>,
+    TableRelationalConfig
     >
   ) {
-    //@ts-ignore
+    // @ts-ignore
     this.entity = this.tableName.tableConfig.dbName;
   }
 
@@ -51,20 +53,20 @@ export class BaseServiceNew<
   public async findMany(
     data: Partial<T['$inferSelect']> = {},
     extra?: Omit<
-      NonNullable<
-        Parameters<
-          RelationalQueryBuilder<
-            ExtractTablesWithRelations<H>,
-            TableRelationalConfig
-          >['findMany']
-        >[0]
-      >,
-      'where'
+    NonNullable<
+    Parameters<
+    RelationalQueryBuilder<
+    ExtractTablesWithRelations<H>,
+    TableRelationalConfig
+    >['findMany']
+    >[0]
+    >,
+    'where'
     >
   ): Promise<T['$inferSelect'][]> {
     try {
       const keys = Object.keys(data) as Array<
-        keyof Partial<typeof this.schema.$inferSelect>
+      keyof Partial<typeof this.schema.$inferSelect>
       >;
       const values = Object.values(data) as Array<any>;
       const entity = await this.tableName.findMany({
@@ -88,20 +90,20 @@ export class BaseServiceNew<
   public async findOne(
     data: Partial<T['$inferSelect']>,
     extra?: Omit<
-      NonNullable<
-        Parameters<
-          RelationalQueryBuilder<
-            ExtractTablesWithRelations<H>,
-            TableRelationalConfig
-          >['findFirst']
-        >[0]
-      >,
-      'where'
+    NonNullable<
+    Parameters<
+    RelationalQueryBuilder<
+    ExtractTablesWithRelations<H>,
+    TableRelationalConfig
+    >['findFirst']
+    >[0]
+    >,
+    'where'
     >
   ): Promise<T['$inferSelect']> {
     try {
       const keys = Object.keys(data) as Array<
-        keyof Partial<typeof this.schema.$inferSelect>
+      keyof Partial<typeof this.schema.$inferSelect>
       >;
       const values = Object.values(data) as Array<any>;
 
@@ -129,7 +131,7 @@ export class BaseServiceNew<
   ): Promise<T['$inferSelect']> {
     try {
       const keys = Object.keys(filterData) as Array<
-        keyof Partial<typeof this.schema.$inferSelect>
+      keyof Partial<typeof this.schema.$inferSelect>
       >;
       const values = Object.values(filterData) as Array<any>;
 
@@ -158,7 +160,7 @@ export class BaseServiceNew<
   ): Promise<T['$inferSelect']> {
     try {
       const keys = Object.keys(filterData) as Array<
-        keyof Partial<typeof this.schema.$inferSelect>
+      keyof Partial<typeof this.schema.$inferSelect>
       >;
       const values = Object.values(filterData) as Array<any>;
 

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { services } from '@/services/action';
 import Fields from './Fields';
 import { State, initialState } from './interface';

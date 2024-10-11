@@ -1,4 +1,3 @@
-
 import { Operators, OperatorType } from "./reportOperator"
 import { ReportColumnInsert } from "./reportColumn"
 import { ColumnSelect } from "./Column"

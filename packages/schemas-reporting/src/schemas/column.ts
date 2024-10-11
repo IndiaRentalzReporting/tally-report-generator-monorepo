@@ -1,9 +1,6 @@
-import { varchar } from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
-import { pgTable, pgEnum, AnyPgColumn } from 'drizzle-orm/pg-core';
-import { TableSchema } from './table';
+import { varchar, uuid, pgTable, pgEnum, text } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
-import { text } from 'drizzle-orm/pg-core';
+import { TableSchema } from './table';
 
 export const ColumnType = pgEnum('column_type', [
   'id',
@@ -13,7 +10,7 @@ export const ColumnType = pgEnum('column_type', [
   'foreignKey'
 ]);
 
-export const ColumnSchema = pgTable('rablee', {
+export const ColumnSchema = pgTable('column', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   type: ColumnType('type').default('string').notNull(),

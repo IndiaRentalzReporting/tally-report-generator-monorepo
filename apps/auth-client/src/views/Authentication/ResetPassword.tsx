@@ -1,4 +1,5 @@
-import { Label ,
+import {
+  Label,
   Card,
   CardHeader,
   CardTitle,
@@ -9,9 +10,9 @@ import { Label ,
   ToastAction,
   If,
   Then,
-  Else,
-  useToast
-} from '@trg_package/components';
+  Else
+} from '@trg_package/vite/components';
+import { useToast } from '@trg_package/vite/hooks';
 import { useState, FC, FormEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';

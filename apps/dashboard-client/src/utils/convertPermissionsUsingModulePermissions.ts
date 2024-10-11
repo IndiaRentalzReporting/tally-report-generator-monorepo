@@ -13,9 +13,7 @@ export const createPermissionsUsingModulePermissions = (
       module_id,
       action_ids: []
     };
-    if (module)
-      for (const action_id in module)
-        if (module[action_id]) p.action_ids.push(action_id);
+    if (module) for (const action_id in module) if (module[action_id]) p.action_ids.push(action_id);
     permissions.push(p);
   }
   return permissions;

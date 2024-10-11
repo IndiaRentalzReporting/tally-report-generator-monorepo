@@ -1,27 +1,23 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import * as reportingSchemas from "../schemas"
-import { ColumnSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { CustomError } from '@trg_package/errors';
-import { ColumnSelect, TableSelect } from '../types';
 import { sql } from 'drizzle-orm';
+import * as reportingSchemas from '../schemas';
+import { ColumnSchema } from '../schemas';
+import { ColumnSelect, TableSelect } from '../types';
 
 export class ColumnService extends BaseServiceNew
-<   
+  <
     typeof reportingSchemas,
     typeof ColumnSchema
->
-{
-    constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
-        super(db, ColumnSchema,db.query.ColumnSchema);
-    }
+  > {
+  constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
+    super(db, ColumnSchema,db.query.ColumnSchema);
+  }
 
-
-    
-    public async getAllColumns(tableId : TableSelect['id']) : Promise<ColumnSelect[]>
-    {
-        try{
-            const columns : ColumnSelect[] = await this.dbClient.execute(sql`
+  public async getAllColumns(tableId : TableSelect['id']) : Promise<ColumnSelect[]> {
+    try {
+      const columns : ColumnSelect[] = await this.dbClient.execute(sql`
               WITH RECURSIVE cte(name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
                     SELECT 
                     c.name,
@@ -52,18 +48,15 @@ export class ColumnService extends BaseServiceNew
                 )
                 SELECT cte."name",cte."type",cte."tablename" as table,cte."tablealias" FROM cte;
              `);
-            return columns;
-        }
-        catch(error)
-        {
-            throw new CustomError("Error while fetching all columns",400);
-        }
-
+      return columns;
+    } catch (error) {
+      throw new CustomError('Error while fetching all columns',400);
     }
+  }
 
-    public async updateForeignKeys(){
-        try{
-            await this.dbClient.execute(sql`
+  public async updateForeignKeys() {
+    try {
+      await this.dbClient.execute(sql`
                 UPDATE public."column" AS c1
                 SET 
                 "referenceTable" = t2."id",
@@ -75,10 +68,8 @@ export class ColumnService extends BaseServiceNew
                 WHERE c2.name = c1."referenceColumn"
                 and t2.name = c1."referenceTable"
             `);
-        }
-        catch(error)
-        {
-            throw new CustomError("There was an error while updating seeded column table",400);
-        }
+    } catch (error) {
+      throw new CustomError('There was an error while updating seeded column table',400);
     }
+  }
 }

@@ -12,14 +12,14 @@ import { type PermissionActionSelect } from './permission_action';
 
 type UserRole = {
   permission: Array<
-    PermissionSelect & {
-      permissionAction: Array<
-        PermissionActionSelect & {
-          action: ActionSelect;
-        }
-      >;
-      module: ModuleSelect;
+  PermissionSelect & {
+    permissionAction: Array<
+    PermissionActionSelect & {
+      action: ActionSelect;
     }
+    >;
+    module: ModuleSelect;
+  }
   >;
 };
 

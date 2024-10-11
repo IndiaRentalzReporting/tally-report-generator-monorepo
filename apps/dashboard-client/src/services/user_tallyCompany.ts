@@ -3,7 +3,7 @@ import {
   UserTallyCompanyInsert,
   UserTallyCompanySelect
 } from '@trg_package/schemas-dashboard/types';
-import createAxiosClient from '@trg_package/axios-client';
+import createAxiosClient from '@trg_package/vite/client';
 
 const userTallyCompanysAxios = createAxiosClient(
   { dashboard: true },

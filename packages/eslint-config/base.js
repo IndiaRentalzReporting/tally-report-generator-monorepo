@@ -9,7 +9,7 @@ module.exports = {
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended'
   ],
-  plugins: ['only-warn', 'turbo', '@typescript-eslint'],
+  plugins: ['only-warn', 'turbo', '@typescript-eslint', 'unused-imports'],
   parser: '@typescript-eslint/parser',
   ignorePatterns: [
     '.*.js',

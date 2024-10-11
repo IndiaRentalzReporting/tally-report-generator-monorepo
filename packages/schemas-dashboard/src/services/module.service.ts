@@ -1,6 +1,7 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { ModuleSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { ReadError } from '@trg_package/errors';
+import { ModuleSchema } from '../schemas';
 import * as dashboardSchemas from '../schemas';
 import { ModuleInsert, ModuleSelect } from '../types';
 import {
@@ -9,16 +10,19 @@ import {
   PermissionService,
   RoleService
 } from '.';
-import { ReadError } from '@trg_package/errors';
 
 export class ModuleService extends BaseServiceNew<
   typeof dashboardSchemas,
   typeof ModuleSchema
 > {
   private RoleService: RoleService;
+
   private PermissionService: PermissionService;
+
   private ActionService: ActionService;
+
   private PermissionActionService: PermissionActionService;
+
   constructor(db: PostgresJsDatabase<typeof dashboardSchemas>) {
     super(db, ModuleSchema, db.query.ModuleSchema);
     this.RoleService = new RoleService(db);
@@ -36,7 +40,7 @@ export class ModuleService extends BaseServiceNew<
   }
 
   private async extendSuperuserModules(module_id: string) {
-    let name = 'SUPERUSER';
+    const name = 'SUPERUSER';
 
     const role = await this.RoleService.findOne({
       name

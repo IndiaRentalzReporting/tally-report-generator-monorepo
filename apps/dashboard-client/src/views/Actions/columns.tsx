@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { DeleteEntity, UpdateEntity } from '@/components/composite';
 import { services } from '@/services/action';
 import { State } from './interface';
@@ -9,14 +9,14 @@ export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-        <Button
-          variant="ghost"
-          className="translate-x-[-10px]"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      <Button
+        variant="ghost"
+        className="translate-x-[-10px]"
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        Name
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     )
   },
   {

@@ -1,6 +1,6 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { RoleSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { RoleSchema } from '../schemas';
 import * as dashboardSchemas from '../schemas';
 
 export class RoleService extends BaseServiceNew<

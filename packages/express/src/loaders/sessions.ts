@@ -1,11 +1,13 @@
 import { Express } from 'express';
 import MongoStore from 'connect-mongo';
 import session, { SessionOptions } from 'express-session';
-import config from '../config';
 import { BadRequestError, DatabaseError } from '@trg_package/errors';
+import config from '../config';
 
 export const sessionsLoader = (app: Express) => {
-  const { SESSION_SECRET, MONGO_URL, NODE_ENV, DOMAIN, TLD } = config;
+  const {
+    SESSION_SECRET, MONGO_URL, NODE_ENV, DOMAIN, TLD
+  } = config;
   try {
     let sessionStore;
     try {

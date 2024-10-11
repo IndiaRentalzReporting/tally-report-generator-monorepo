@@ -1,4 +1,6 @@
-import { pgEnum, boolean, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+import {
+  pgEnum, boolean, uuid, varchar, timestamp
+} from 'drizzle-orm/pg-core';
 
 export const EntityStatus = pgEnum('status', [
   'deleted',

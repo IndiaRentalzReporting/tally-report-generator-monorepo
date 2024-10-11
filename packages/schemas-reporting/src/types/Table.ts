@@ -1,7 +1,6 @@
 export {
-    type TableInsert,
-    TableInsertSchema,
-    type TableSelect,
-    TableSelectSchema
-} from "../schemas/table"
- 
+  type TableInsert,
+  TableInsertSchema,
+  type TableSelect,
+  TableSelectSchema
+} from '../schemas/table';

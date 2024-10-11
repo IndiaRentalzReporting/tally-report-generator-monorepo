@@ -2,7 +2,7 @@ import {
   ActionSelect,
   ModuleSelect
 } from '@trg_package/schemas-dashboard/types';
-import { useAuth } from '@trg_package/providers';
+import { useAuth } from '@trg_package/vite/providers';
 
 export const useIsAllowed = ({
   module,

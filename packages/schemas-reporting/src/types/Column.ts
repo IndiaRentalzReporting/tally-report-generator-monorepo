@@ -1,9 +1,6 @@
-import { ColumnTypeLiteral } from "./ColumnTypes"
+import { ColumnTypeLiteral } from './ColumnTypes';
 
-export {
-    type ColumnInsert,
-    ColumnInsertSchema
-} from "../schemas/column"
+export { type ColumnInsert, ColumnInsertSchema } from '../schemas/column';
 
 export type ColumnSelect = {
     name : string,
@@ -14,4 +11,4 @@ export type ColumnSelect = {
     type : ColumnTypeLiteral,
 }
 
-//ColumnSelectSchema not required
+// ColumnSelectSchema not required

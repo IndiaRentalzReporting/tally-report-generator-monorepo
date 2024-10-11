@@ -11,7 +11,11 @@ import type {
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
 import { CompanyService } from '@trg_package/schemas-tally/services';
-import { ColumnService, ReportService, TableService } from '@trg_package/schemas-reporting/services';
+import {
+  ColumnService,
+  ReportService,
+  TableService
+} from '@trg_package/schemas-reporting/services';
 import * as dashboardSchemas from './models/schemas';
 import config from './config';
 import expressLoader from './loaders/express';
@@ -45,9 +49,9 @@ declare global {
       userTallyCompanyService: UserTallyCompanyService;
       apiKeyService: ApiKeyService;
       companyService: CompanyService;
-      tableService : TableService;
-      columnService :ColumnService;
-      reportService : ReportService;
+      tableService: TableService;
+      columnService: ColumnService;
+      reportService: ReportService;
 
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
       dashboardConnection: Sql<{}> | null;

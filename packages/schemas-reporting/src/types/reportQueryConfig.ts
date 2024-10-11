@@ -1,5 +1,5 @@
-import { ReportColumnSelect } from "./reportColumn"
-import { ReportFilterSelect } from "./reportFilter"
+import { ReportColumnSelect } from './reportColumn';
+import { ReportFilterSelect } from './reportFilter';
 
 export type ReportConfigSelect={
     dataSource : string, // query used to fetch data

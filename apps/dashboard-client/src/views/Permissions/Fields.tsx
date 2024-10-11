@@ -13,10 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
   Skeleton,
-  Switch
-} from '@trg_package/components';
+  Switch,
+  DataTable
+} from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
-import { DataTable } from '@/components/composite';
 import { services as moduleService } from '@/services/module';
 import { services as roleService } from '@/services/role';
 import { services as actionService } from '@/services/action';

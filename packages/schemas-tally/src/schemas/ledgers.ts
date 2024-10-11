@@ -1,13 +1,10 @@
 import {
-  uuid,
   varchar,
-  timestamp,
   pgTable,
-  doublePrecision,
-  integer
+  doublePrecision
 } from 'drizzle-orm/pg-core';
-import { TallyCommonSchema } from './base';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { TallyCommonSchema } from './base';
 
 const LedgerColumns = {
   ledgerName: varchar('ledgerName', { length: 200 }),

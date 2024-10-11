@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import React, { FormEventHandler } from 'react';
-import { Button } from '@trg_package/components';
+import { Button } from '@trg_package/vite/components';
 import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
 import { services } from '@/services/permission';
 import { services as actionService } from '@/services/action';

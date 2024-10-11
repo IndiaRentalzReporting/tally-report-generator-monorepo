@@ -1,8 +1,8 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { UserSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import * as dashboardSchemas from '../schemas';
 import bcrypt from 'bcrypt';
+import { UserSchema } from '../schemas';
+import * as dashboardSchemas from '../schemas';
 import { UserInsert, UserSelect } from '../schemas/users';
 import { DetailedUser } from '../types';
 

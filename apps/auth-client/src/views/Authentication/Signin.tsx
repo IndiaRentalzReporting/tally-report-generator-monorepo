@@ -9,9 +9,9 @@ import {
   CardTitle,
   Input,
   Label
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { LoginUser } from '@trg_package/schemas-auth/types';
-import { useAuth } from '@trg_package/providers';
+import { useAuth } from '@trg_package/vite/providers';
 
 export const SigninForm = () => {
   const {

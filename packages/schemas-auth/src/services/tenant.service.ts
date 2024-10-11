@@ -1,7 +1,8 @@
 import { BaseServiceNew } from '@trg_package/base-service';
-import { TenantSchema } from '../schemas';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { TenantSchema } from '../schemas';
 import * as authSchemas from '../schemas';
+
 export class TenantService extends BaseServiceNew<
   typeof authSchemas,
   typeof TenantSchema

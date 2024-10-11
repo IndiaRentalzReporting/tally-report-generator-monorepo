@@ -15,12 +15,13 @@ export class BaseService<
   K extends RelationalQueryBuilder<T, TableRelationalConfig>
 > {
   private entity: string;
+
   constructor(
     protected dbClient: PostgresJsDatabase<H>,
     protected schema: T,
     protected tableName: K
   ) {
-    //@ts-ignore
+    // @ts-ignore
     this.entity = this.tableName.tableConfig.dbName;
   }
 
@@ -30,8 +31,7 @@ export class BaseService<
       .values(data)
       .returning();
 
-    if (!entity)
-      throw new NotFoundError(`${this.entity} returned as undefined`);
+    if (!entity) throw new NotFoundError(`${this.entity} returned as undefined`);
 
     return entity;
   }
@@ -41,7 +41,7 @@ export class BaseService<
     extra?: Omit<NonNullable<Parameters<K['findMany']>[0]>, 'where'>
   ): Promise<NonNullable<Awaited<ReturnType<K['findMany']>>>> {
     const keys = Object.keys(data) as Array<
-      keyof Partial<typeof this.schema.$inferSelect>
+    keyof Partial<typeof this.schema.$inferSelect>
     >;
     const values = Object.values(data) as Array<any>;
     const entity = await this.tableName.findMany({
@@ -63,7 +63,7 @@ export class BaseService<
     extra?: Omit<NonNullable<Parameters<K['findFirst']>[0]>, 'where'>
   ): Promise<NonNullable<Awaited<ReturnType<K['findFirst']>>>> {
     const keys = Object.keys(data) as Array<
-      keyof Partial<typeof this.schema.$inferSelect>
+    keyof Partial<typeof this.schema.$inferSelect>
     >;
     const values = Object.values(data) as Array<any>;
 

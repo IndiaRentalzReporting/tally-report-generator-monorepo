@@ -36,11 +36,10 @@ class UserService extends BaseUserService {
         db_password,
         db_name
       });
-      const { client: dashboardDb, connection: dashboardConnection } =
-        createClient(DASHBOARD_PG_URL, dashboardSchemas, {
-          DB_MIGRATING: false,
-          DB_SEEDING: false
-        });
+      const { client: dashboardDb, connection: dashboardConnection } = createClient(DASHBOARD_PG_URL, dashboardSchemas, {
+        DB_MIGRATING: false,
+        DB_SEEDING: false
+      });
 
       const USI = new DashboardUserService(dashboardDb);
       const { role_id, role } = await USI.findOne({ email });

@@ -9,15 +9,14 @@ interface JsonObject {
 
 interface JsonArray extends Array<JsonValue> {}
 
-const isJsonObject = (value: JsonValue): value is JsonObject =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+const isJsonObject = (value: JsonValue): value is JsonObject => typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const removePrivateData = (data: JsonValue): JsonValue | undefined => {
   if (Array.isArray(data)) {
     return data
       .map(removePrivateData)
       .filter((item): item is JsonValue => item !== undefined);
-  } else if (isJsonObject(data)) {
+  } if (isJsonObject(data)) {
     if (data.isPrivate === true) {
       return undefined;
     }

@@ -1,30 +1,35 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { createOne, deleteOne, getAllColumns, getAllTables, readAll, updateOne } from '../controller/report.controller';
-import { ReportInsertSchema, ReportSelectSchema, TableSelectSchema } from '@trg_package/schemas-reporting/types';
-import z from 'zod';
-
+import {
+  ColumnInsertSchema,
+  ReportInsertSchema,
+  ReportSelectSchema,
+  TableSelectSchema
+} from '@trg_package/schemas-reporting/types';
+import {
+  createOne,
+  deleteOne,
+  getColumns,
+  getTables,
+  readAll,
+  updateOne
+} from '../controller/report.controller';
 
 const reportRouter = Router();
 
 reportRouter.post(
   '/create',
-  validateSchema(
-    {
-      body: ReportInsertSchema.pick({
-        name: true,
-        baseEntity: true,
-        description: true
-      })
-    }
-  ),
+  validateSchema({
+    body: ReportInsertSchema.pick({
+      name: true,
+      baseEntity: true,
+      description: true
+    })
+  }),
   createOne
 );
 
-reportRouter.get(
-  '/read',
-  readAll
-);
+reportRouter.get('/read', readAll);
 
 
 reportRouter.get(
@@ -63,6 +68,23 @@ reportRouter.delete(
     })
   }),
   deleteOne
+);
+
+reportRouter.get(
+  '/read/getColumns/:tableId',
+  validateSchema({
+    query: ColumnInsertSchema.partial(),
+    params: ColumnInsertSchema.pick({ tableId: true })
+  }),
+  getColumns
+);
+
+reportRouter.get(
+  '/read/getTables',
+  validateSchema({
+    query: TableSelectSchema.partial()
+  }),
+  getTables
 );
 
 export default reportRouter;

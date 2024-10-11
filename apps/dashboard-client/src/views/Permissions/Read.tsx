@@ -7,11 +7,11 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  Skeleton
-} from '@trg_package/components';
+  Skeleton,
+  DataTable
+} from '@trg_package/vite/components';
 import { services } from '@/services/permission';
 import { columns } from './columns';
-import { GroupingDataTable } from '@/components/composite/table/grouping-data-table';
 
 const Read: React.FC = () => {
   const [grouping, setGrouping] = React.useState<GroupingState>(['Role Name']);
@@ -32,7 +32,7 @@ const Read: React.FC = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Skeleton isLoading={fetchingPermissions}>
-          <GroupingDataTable
+          <DataTable
             columns={columns}
             data={allPermissions}
             grouping={{

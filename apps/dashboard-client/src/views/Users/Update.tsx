@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
-import { Button, Input, Label, Skeleton } from '@trg_package/components';
+import { Button, Input, Label, Skeleton } from '@trg_package/vite/components';
 import { services } from '@/services/user';
 import Fields from './Fields';
 import { State, initialState } from './interface';

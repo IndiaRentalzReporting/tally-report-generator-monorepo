@@ -79,9 +79,10 @@ export const handleSignOut = (
     req.session.destroy((err) => {
       if (err) return next(err);
 
-      res.clearCookie('connect.sid', { path: '/' });
-      res.clearCookie('permissions', { path: '/' });
-      return res.json({ message: 'Logged Out' });
+      return res
+        .clearCookie('connect.sid', { path: '/' })
+        .clearCookie('permissions', { path: '/' })
+        .json({ message: 'Logged Out' });
     });
   });
 };
@@ -97,17 +98,21 @@ export const handleStatusCheck = (
   try {
     if (req.isAuthenticated()) {
       const { user } = req;
+      console.log({
+        user
+      });
       return res.json({
         user,
         isAuthenticated: true
       });
     }
-    res.clearCookie('connect.sid', { path: '/' });
-    res.clearCookie('permissions', { path: '/' });
-    return res.json({
-      user: null,
-      isAuthenticated: false
-    });
+    return res
+      .clearCookie('connect.sid', { path: '/' })
+      .clearCookie('permissions', { path: '/' })
+      .json({
+        user: null,
+        isAuthenticated: false
+      });
   } catch (e) {
     return next(e);
   }

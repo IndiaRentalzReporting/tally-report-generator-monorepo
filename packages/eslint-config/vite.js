@@ -22,6 +22,7 @@ module.exports = {
   },
   rules: {
     'comma-dangle': 'off',
+    'unused-imports/no-unused-imports': 'error',
     '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/naming-convention': 'off',
     'import/extensions': 'off',

@@ -1,4 +1,5 @@
-import { Label ,
+import {
+  Label,
   Card,
   CardHeader,
   CardTitle,
@@ -6,9 +7,9 @@ import { Label ,
   CardContent,
   Button,
   Input,
-  ToastAction,
-  useToast
-} from '@trg_package/components';
+  ToastAction
+} from '@trg_package/vite/components';
+import { useToast } from '@trg_package/vite/hooks';
 import { useState, FC, FormEvent } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { services } from './services';

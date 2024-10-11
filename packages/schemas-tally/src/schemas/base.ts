@@ -1,7 +1,6 @@
-import { integer } from 'drizzle-orm/pg-core';
-import { date } from 'drizzle-orm/pg-core';
-import { varchar } from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
+import {
+  integer , date , varchar , uuid
+} from 'drizzle-orm/pg-core';
 
 export const TallyCommonSchema = () => ({
   id: uuid('id').primaryKey().defaultRandom(),

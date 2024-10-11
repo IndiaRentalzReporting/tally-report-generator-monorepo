@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from '@trg_package/components';
+} from '@trg_package/vite/components';
 import { services } from '@/services/module';
 import Fields from './Fields';
 import { State, initialState } from './interface';

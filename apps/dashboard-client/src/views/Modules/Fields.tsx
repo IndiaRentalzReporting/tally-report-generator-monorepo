@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import * as z from 'zod';
-import { Button, Input, Label, Switch } from '@trg_package/components';
+import { Button, Input, Label, Switch } from '@trg_package/vite/components';
 import { State, StateAsProps } from './interface';
 
 const iconSchema = z
