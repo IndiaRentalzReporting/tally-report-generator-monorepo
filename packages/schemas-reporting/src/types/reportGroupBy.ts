@@ -1,16 +1,14 @@
+import { Column } from "drizzle-orm"
+import { ColumnSelect } from "./Column"
 
 
 /**
  * GROUP BY {columnName}
  */
 export type ReportGroupByInsert={
-    column : string,
-    table: string,
-    alias: string
+    column : ColumnSelect,
 }
 
 export type ReportGroupBySelect={
-    column : string,
-    table: string,
-    alias: string
+    column : ColumnSelect,
 }

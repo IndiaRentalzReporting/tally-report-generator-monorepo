@@ -1,3 +1,4 @@
+import { ColumnSelect } from "./Column"
 import { ColumnTypeLiteral } from "./ColumnTypes"
 import { ColumnFormats } from "./reportFormat"
 import { ColumnOperation } from "./reportOperation"
@@ -7,13 +8,10 @@ import { ColumnOperation } from "./reportOperation"
 //Select Operation(table.name) as alias
 //Select FORMAT(table.name) as alias
 export type ReportColumnInsert = {
-    name : string,
-    type : ColumnTypeLiteral
-    table : string,
-    alias : string,
+    column : ColumnSelect
     heading : string,
-    operation : typeof ColumnOperation[ReportColumnInsert['type']] | null
-    format : typeof ColumnFormats[ReportColumnInsert['type']] | null
+    operation : typeof ColumnOperation[ReportColumnInsert['column']['type']] | null
+    format : typeof ColumnFormats[ReportColumnInsert['column']['type']] | null
 }
 
 

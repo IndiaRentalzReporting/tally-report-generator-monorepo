@@ -7,9 +7,11 @@ export {
 
 export type ColumnSelect = {
     name : string,
+    alias : string,
+    displayName : string,
     table : string,
     tablealias : string,
-    type : ColumnTypeLiteral
+    type : ColumnTypeLiteral,
 }
 
 //ColumnSelectSchema not required
