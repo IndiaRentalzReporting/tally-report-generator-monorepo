@@ -27,29 +27,16 @@ export const createOne = async (
   }
 };
 
-export const readOne = async (
-  req: Request<Pick<ReportSelect, 'id'>, ReportResponse, Partial<ReportSelect>>,
-  res: Response<ReportResponse>,
+export const readAll = async (
+  req: Request<object, Partial<ReportSelect>>,
+  res: Response<{ reports: ReportSelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const report = await req.reportService.findOne({
+    const reports = await req.reportService.findMany({
       ...req.query
     });
-    return res.json({ report });
-  } catch (e) {
-    return next(e);
-  }
-};
-
-export const readAll = async <T extends { reports: ReportSelect[] }>(
-  req: Request<object, T>,
-  res: Response<T>,
-  next: NextFunction
-) => {
-  try {
-    const reports = await req.reportService.findMany();
-    return res.json({ reports } as T);
+    return res.json({ reports });
   } catch (e) {
     return next(e);
   }

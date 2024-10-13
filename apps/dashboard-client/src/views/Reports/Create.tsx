@@ -1,5 +1,4 @@
 import React from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Card,
@@ -9,6 +8,7 @@ import {
   CardTitle
 } from '@trg_package/vite/components';
 import { useNavigate } from 'react-router';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { services } from '@/services/reports';
 import Fields from './Fields';
 import { State, initialState } from './interface';
@@ -18,7 +18,7 @@ const Create: React.FC = () => {
   const [reportDetails, setReportDetails] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createModule, isPending: loadingCreateModule } =
+  const { mutateAsync: createReport, isPending: loadingCreateReport } =
     useMutation({
       mutationFn: () => services.createOne(reportDetails),
       onSuccess: (data) => {
@@ -28,13 +28,13 @@ const Create: React.FC = () => {
       }
     });
 
-  const handleCreateModule: React.FormEventHandler = (e) => {
+  const handleCreateReport: React.FormEventHandler = (e) => {
     e.preventDefault();
-    createModule();
+    createReport();
   };
 
   return (
-    <form onSubmit={handleCreateModule} className="flex flex-col gap-6 h-full">
+    <form onSubmit={handleCreateReport} className="flex flex-col gap-6 h-full">
       <Card>
         <CardHeader>
           <CardTitle>Report Details</CardTitle>
@@ -49,10 +49,10 @@ const Create: React.FC = () => {
       <Button
         type="submit"
         className="w-min"
-        isLoading={loadingCreateModule}
+        isLoading={loadingCreateReport}
         disabled={!reportDetails}
       >
-        Create Module
+        Create Report
       </Button>
     </form>
   );

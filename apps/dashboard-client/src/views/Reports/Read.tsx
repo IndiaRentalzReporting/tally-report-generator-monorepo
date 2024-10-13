@@ -22,7 +22,7 @@ const Read: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>All Actions</CardTitle>
+        <CardTitle>All Reports</CardTitle>
         <CardDescription>
           Read, Update or Edit actions based on your permissions
         </CardDescription>

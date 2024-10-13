@@ -1,75 +1,159 @@
-import {
+import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState
+  useState,
+  useEffect
 } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   ColumnSelect,
-  TableSelect
+  Operation,
+  OperatorType
 } from '@trg_package/schemas-reporting/types';
-import { useQuery } from '@tanstack/react-query';
 import { services } from '@/services/reports';
 
+interface ReportsProviderProps {
+  children: React.ReactNode;
+  tableId: string;
+}
+export interface Condition {
+  operator: OperatorType['operator'] | undefined;
+  value: NonNullable<OperatorType['params']>[0] | undefined;
+  join: 'AND' | 'OR' | 'NOT' | undefined;
+}
+export interface Filter {
+  type: 'Select' | 'Search' | undefined;
+}
+export interface Extra {
+  name: string | undefined;
+  heading: string | undefined;
+  operation: Operation['operationType'] | undefined;
+  params: Operation['operationParams'][0] | undefined;
+  showTotal: boolean;
+}
+export interface Column {
+  column: ColumnSelect;
+  condition: Condition;
+  filter: Filter;
+  extra: Extra;
+}
 interface ReportsProviderState {
-  columns: ColumnSelect[];
-  availableColumns: ColumnSelect[];
-  addColumn: (column: ColumnSelect) => void;
-  removeColumn: (column: ColumnSelect) => void;
+  columns: Array<Column>;
+  availableColumns: Array<Column>;
+  addColumn: (entity: Column) => void;
+  removeColumn: (entity: Column) => void;
+  updateColumn: <T extends keyof Column>(
+    columnName: string | undefined,
+    feature: T,
+    update: Partial<Column[T]>
+  ) => void;
+  groupBy: ColumnSelect | undefined;
+  setGroupBy: React.Dispatch<React.SetStateAction<ColumnSelect | undefined>>;
 }
 
 const initialState: ReportsProviderState = {
   columns: [],
   availableColumns: [],
   addColumn: () => null,
-  removeColumn: () => null
+  removeColumn: () => null,
+  updateColumn: () => null,
+  groupBy: undefined,
+  setGroupBy: () => null
 };
 
 const ReportsContext = createContext<ReportsProviderState>(initialState);
 
-export const ReportsProvider = ({
+export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   children,
   tableId
-}: {
-  children: React.ReactNode;
-  tableId: TableSelect['id'];
 }) => {
-  const [state, setState] =
-    useState<Omit<ReportsProviderState, 'addColumn' | 'removeColumn'>>(
-      initialState
+  const [columns, setColumns] = useState(initialState.columns);
+  const [availableColumns, setAvailableColumns] = useState(
+    initialState.availableColumns
+  );
+  const [groupBy, setGroupBy] = useState(initialState.groupBy);
+
+  const addColumn = useCallback((entity: Column) => {
+    setColumns((prev) => [...prev, entity]);
+    setAvailableColumns((prev) =>
+      prev.filter((col) => col.column.name !== entity.column.name)
     );
-  const { data: allColumns } = useQuery({
+  }, []);
+
+  const removeColumn = useCallback((entity: Column) => {
+    setAvailableColumns((prevAvailable) => [...prevAvailable, entity]);
+    setColumns((prevColumns) =>
+      prevColumns.filter((col) => col.column.name !== entity.column.name)
+    );
+    if (entity.column.name === groupBy?.name) setGroupBy(undefined);
+  }, []);
+
+  const updateColumn: ReportsProviderState['updateColumn'] = useCallback(
+    (columnName, feature, update) => {
+      setColumns((prevColumns) =>
+        prevColumns.map((col) =>
+          col.column.name === columnName
+            ? { ...col, [feature]: { ...col[feature], ...update } }
+            : col
+        )
+      );
+    },
+    []
+  );
+
+  const { data: fetchedColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),
     select: (data) => data.data.columns,
-    queryKey: ['columns', 'getAll']
+    enabled: !!tableId,
+    queryKey: ['columns', 'getAll', tableId]
   });
 
-  const addColumn = useCallback((column: ColumnSelect) => {
-    setState((prev) => ({
-      columns: [...prev.columns, column],
-      availableColumns: prev.availableColumns.filter(
-        (col) => col.name !== column.name
-      )
-    }));
-  }, []);
-
-  const removeColumn = useCallback((column: ColumnSelect) => {
-    setState((prev) => ({
-      columns: prev.columns.filter((col) => col.name !== column.name),
-      availableColumns: [...prev.availableColumns, column]
-    }));
-  }, []);
-
   useEffect(() => {
-    if (!allColumns) return;
-    setState((prev) => ({ ...prev, availableColumns: allColumns }));
-  }, [allColumns]);
+    if (fetchedColumns) {
+      setAvailableColumns(
+        fetchedColumns.map<Column>((column) => ({
+          column,
+          condition: {
+            operator: undefined,
+            value: undefined,
+            join: undefined
+          },
+          filter: {
+            type: undefined
+          },
+          extra: {
+            name: column.name,
+            heading: column.name,
+            operation: '',
+            params: '',
+            showTotal: column.type === 'number'
+          }
+        }))
+      );
+    }
+  }, [fetchedColumns]);
 
   const contextValue = useMemo(
-    () => ({ ...state, addColumn, removeColumn }),
-    [state, addColumn, removeColumn]
+    () => ({
+      columns,
+      availableColumns,
+      addColumn,
+      removeColumn,
+      updateColumn,
+      groupBy,
+      setGroupBy
+    }),
+    [
+      columns,
+      availableColumns,
+      addColumn,
+      removeColumn,
+      updateColumn,
+      groupBy,
+      setGroupBy
+    ]
   );
 
   return (

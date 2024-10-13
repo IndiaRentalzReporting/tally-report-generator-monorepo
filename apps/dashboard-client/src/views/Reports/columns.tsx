@@ -1,45 +1,58 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Edit } from 'lucide-react';
-import { Button } from '@trg_package/vite/components';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { DeleteEntity } from '@/components/composite';
-import { services } from '@/services/reports';
+import { ExternalLink } from 'lucide-react';
 import { State } from './interface';
+import ActionCell from '@/components/composite/ActionCell';
+import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    )
+    header: ({ column }) =>
+      useMemo(
+        () => <SortingButton column={column} label="Module Name" />,
+        [column]
+      ),
+    cell: ({ row }) => {
+      const report = row.original;
+      return useMemo(
+        () => (
+          <span className="flex gap-4 items-center">
+            {report.name}
+            <Link to={`/reports/${report.id}`}>
+              <ExternalLink size={20} />
+            </Link>
+          </span>
+        ),
+        [report]
+      );
+    }
+  },
+  {
+    accessorKey: 'description',
+    header: ({ column }) =>
+      useMemo(
+        () => <SortingButton column={column} label="Module Name" />,
+        [column]
+      )
   },
   {
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const report = row.original;
-      return (
-        <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.deleteOne(report.id)
-              },
+      return useMemo(
+        () => (
+          <ActionCell
+            module={{
+              id: report.id,
               name: report.name,
-              module: 'Reports'
+              type: 'Reports'
             }}
           />
-          <Link to={`/reports/${report.id}`}>
-            <Edit size={20} className="text-green-500" />
-          </Link>
-        </span>
+        ),
+        [report]
       );
     }
   }
