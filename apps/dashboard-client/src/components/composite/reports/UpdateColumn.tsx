@@ -1,5 +1,5 @@
 import { Edit } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import {
   Drawer,
   DrawerTrigger,
@@ -26,43 +26,56 @@ interface IUpdateEntityProps {
 
 export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
   const { columns, updateColumn } = useReports();
+  const [isOpen, setIsOpen] = useState(false);
 
   const selectedColumn = useMemo(
     () => columns.find((col) => col.column.name === columnName),
     [columns, columnName]
   );
 
-  const [localExtra, setLocalExtra] = useState<Column['extra']>({
-    name: selectedColumn?.extra.name,
-    heading: selectedColumn?.extra.heading,
-    operation: selectedColumn?.extra.operation,
-    params: selectedColumn?.extra.params,
-    showTotal: Boolean(selectedColumn?.extra.showTotal)
-  });
+  const [localExtra, setLocalExtra] = useState<Column['extra']>(
+    selectedColumn?.extra ?? {
+      name: '',
+      heading: '',
+      operation: '',
+      params: '',
+      showTotal: false
+    }
+  );
+
+  // Reset localExtra when the drawer opens
+  useEffect(() => {
+    if (isOpen && selectedColumn) {
+      setLocalExtra(selectedColumn.extra);
+    }
+  }, [isOpen, selectedColumn]);
 
   const operations = useMemo(
-    () => (selectedColumn ? ColumnOperation[selectedColumn?.column.type] : []),
+    () => (selectedColumn ? ColumnOperation[selectedColumn.column.type] : []),
     [selectedColumn]
   );
 
   const values = useMemo(
     () =>
       selectedColumn
-        ? (ColumnOperation[selectedColumn?.column.type].find(
-            (op) => op.operationType == selectedColumn?.extra.operation
+        ? (ColumnOperation[selectedColumn.column.type].find(
+            (op) => op.operationType === selectedColumn.extra.operation
           )?.operationParams ?? [])
         : [],
     [selectedColumn]
   );
 
-  const handleSave = () => {
-    updateColumn(selectedColumn?.column.name, 'extra', localExtra);
-  };
+  const handleSave = useCallback(() => {
+    if (selectedColumn) {
+      updateColumn(selectedColumn.column.name, 'extra', localExtra);
+    }
+    setIsOpen(false);
+  }, [selectedColumn, updateColumn, localExtra]);
 
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger>
-        <Edit size={100} className=" cursor-pointer opacity-5" />
+        <Edit size={100} className="cursor-pointer opacity-5" />
       </DrawerTrigger>
       <DrawerContent className="px-6">
         <DrawerHeader className="px-0">
@@ -112,7 +125,7 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
                 <Input
                   key={value}
                   placeholder={value}
-                  type={localExtra.params}
+                  value={localExtra.params}
                   onChange={({ target }) => {
                     setLocalExtra((prev) => ({
                       ...prev,
@@ -123,7 +136,7 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
               ))}
             </When>
 
-            <When condition={!!selectedColumn?.extra.showTotal}>
+            <When condition={selectedColumn?.column.type === 'number'}>
               <div className="flex items-center space-x-2">
                 <Checkbox
                   checked={localExtra.showTotal}
