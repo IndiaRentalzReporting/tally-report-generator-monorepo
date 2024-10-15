@@ -47,7 +47,7 @@ export const services = {
     query = {}
   }: {
     tableId: TableSelect['id'];
-    query?: Partial<ReportSelect>;
+    query?: Partial<ColumnSelect>;
   }): AxiosPromise<{
     columns: ColumnSelect[];
   }> => {
@@ -57,9 +57,9 @@ export const services = {
     return reportsAxios.get(`/read/getColumns/${tableId}?${queryString}`);
   },
   getTables: async (
-    query: Partial<ReportSelect> = {}
+    query: Partial<TableSelect> = {}
   ): AxiosPromise<{
-    tables: ReportSelect[];
+    tables: TableSelect[];
   }> => {
     const queryString = new URLSearchParams(
       query as Record<string, string>

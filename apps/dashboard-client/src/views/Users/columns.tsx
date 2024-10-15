@@ -1,9 +1,9 @@
+import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
-import { Button, Checkbox } from '@trg_package/vite/components';
-import { services } from '@/services/user';
-import { DeleteEntity, UpdateEntity } from '@/components/composite';
+import { Checkbox } from '@trg_package/vite/components';
+import ActionCell from '@/components/composite/ActionCell';
+import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<DetailedUser>[] = [
   {
@@ -30,61 +30,44 @@ export const columns: ColumnDef<DetailedUser>[] = [
   },
   {
     accessorKey: 'first_name',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        First Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    )
+    header: ({ column }) =>
+      useMemo(
+        () => <SortingButton column={column} label="Module Name" />,
+        [column]
+      )
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Last Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    )
+    header: ({ column }) =>
+      useMemo(
+        () => <SortingButton column={column} label="Module Name" />,
+        [column]
+      )
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Email
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    )
+    header: ({ column }) =>
+      useMemo(
+        () => <SortingButton column={column} label="Module Name" />,
+        [column]
+      )
   },
   {
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const user = row.original;
-      return (
-        <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.deleteOne(user.id)
-              },
+      return useMemo(
+        () => (
+          <ActionCell
+            module={{
+              id: user.id,
               name: user.first_name,
-              module: 'Users'
+              type: 'Users'
             }}
           />
-          <UpdateEntity module="Users" id={user.id} />
-        </span>
+        ),
+        [user]
       );
     }
   }

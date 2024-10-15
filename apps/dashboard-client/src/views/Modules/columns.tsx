@@ -1,24 +1,17 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
 import { Button, Else, If, Then } from '@trg_package/vite/components';
-import { services } from '@/services/module';
-import { DeleteEntity, UpdateEntity } from '@/components/composite';
+import { useMemo } from 'react';
 import { State } from './interface';
+import ActionCell from '@/components/composite/ActionCell';
+import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<State>[] = [
   {
     id: 'Module Name',
     accessorKey: 'name',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    )
+    header: ({ column }) =>
+      useMemo(() => <SortingButton column={column} label="Name" />, [column])
   },
   {
     id: 'Module Privacy',
@@ -66,19 +59,17 @@ export const columns: ColumnDef<State>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const module = row.original;
-      return (
-        <span className="flex gap-4 items-center">
-          <DeleteEntity
-            options={{
-              mutation: {
-                mutationFn: () => services.deleteOne(module.id)
-              },
+      return useMemo(
+        () => (
+          <ActionCell
+            module={{
+              id: module.id,
               name: module.name,
-              module: 'Modules'
+              type: 'Modules'
             }}
           />
-          <UpdateEntity module="Modules" id={module.id} />
-        </span>
+        ),
+        [module]
       );
     }
   }
