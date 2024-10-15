@@ -1,7 +1,7 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { Button, When, Input } from '@trg_package/vite/components';
-import { Operators } from '@trg_package/schemas-reporting/types';
+import { ColumnOperators } from '@trg_package/schemas-reporting/types';
 import { useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
 
@@ -48,14 +48,15 @@ const ConditionItem: React.FC<{
   );
 
   const operations = useMemo(
-    () => (selectedColumn ? (Operators[selectedColumn.column.type] ?? []) : []),
+    () =>
+      selectedColumn ? (ColumnOperators[selectedColumn.column.type] ?? []) : [],
     [selectedColumn]
   );
 
   const values = useMemo(
     () =>
       selectedColumn && operations
-        ? (Operators[selectedColumn.column.type].find(
+        ? (ColumnOperators[selectedColumn.column.type].find(
             (op) => op.operator === selectedColumn.condition.operator
           )?.params ?? [])
         : [],
