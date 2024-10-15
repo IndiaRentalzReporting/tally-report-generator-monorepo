@@ -17,42 +17,53 @@ export class ReportService extends BaseServiceNew<
 
   public async getTableQuery(
     tableId: Pick<(typeof ReportSchema)['$inferSelect'], 'baseEntity'>,
-    tableNames: string[] | null = null
+    tableNames: String[] | null = null
   ): Promise<string> {
-    const whereCondition = tableNames == null ? '' : `WHERE tbe.tablealias IN ${tableNames}`;
+   
+    let query ="";
     try {
-      const tableQuery = await this.dbClient.execute(sql`
-                WITH RECURSIVE tbe(tablealias, tableid,tbe_query) AS (
-                    SELECT 
-                    c.name as tablealias,
-                    rftb.id AS tableid,
-                    concat('JOIN ',rftb.name,' ',c.name,' ON ', tb.name, '.',c.name,' = ',c.name,'.',rfc.name) as tbe_query
-                    FROM public."column" c 
-                    INNER JOIN public."table" tb ON c."tableId" = tb."id" 
-                    INNER JOIN public."table" rftb ON c."referenceTableId" = rftb.id
-                    INNER JOIN public."column" rfc ON rfc."id" = c."referenceColumnId"
-                    WHERE c."tableId" =  ${tableId}
-                    AND c."type" = 'foreignKey'
-                    
-                    UNION ALL
-                    
-                    SELECT 
-                    CONCAT(tbe.tablealias,'_',c2.name) as tablealias,
-                    rftb2.id AS tableid,
-                    concat(tbe.tbe_query,' JOIN ',rftb2.name,' ',CONCAT(tbe.tablealias,'_',c2.name),' ON ', tbe.tablealias, '.',c2.name,' = ',CONCAT(tbe.tablealias,'_',c2.name),'.',rfc2.name) as tbe_query
-                    FROM tbe  
-                    INNER JOIN public."column" c2 ON c2."tableId" = tbe.tableid
-                    INNER JOIN public."table" rftb2 ON c2."referenceTableId" = rftb2.id
-                    INNER JOIN public."column" rfc2 ON rfc2."id" = c2."referenceColumnId"
-                    WHERE c2."type" = 'foreignKey'
-                )
-                SELECT tbe.tablealias::TEXT, tbe.tbe_query::TEXT FROM tbe ${whereCondition};
-            `);
+      if(tableNames != null)
+      {
+        const formattedTableNames = tableNames.map((e) => `'${e}'`).join(',');
+        let whereCondition=`WHERE tbe.tablealias IN (${formattedTableNames})`;
 
-      let query = '';
-      tableQuery.forEach((ele) => {
-        query += ele.tbe_query;
-      });
+
+        const tableQuery = await this.dbClient.execute(sql`
+                     WITH RECURSIVE tbe(tablealias, tableid,tbe_query) AS (
+                      SELECT 
+                      c.name::text as tablealias,
+                      rftb.id AS tableid,
+                      concat('INNER JOIN ',rftb.name,' ',c.name,' ON ', tb.name, '.',c.name,' = ',c.name,'.',rfc.name) as tbe_query
+                      FROM public."column" c 
+                      INNER JOIN public."table" tb ON c."tableId" = tb."id" 
+                      INNER JOIN public."table" rftb ON c."referenceTable" = rftb.id::text
+                      INNER JOIN public."column" rfc ON rfc."id"::text = c."referenceColumn"
+                      WHERE c."tableId" = ${tableId}
+                      AND c."type" = 'foreignKey'
+	   					        AND c."referenceTable" != ${tableId}
+                      
+                      UNION ALL
+                      
+                      SELECT 
+                      CONCAT(tbe.tablealias,'_',c2.name) as tablealias,
+                      rftb2.id AS tableid,
+                      concat(tbe.tbe_query,' INNER JOIN ',rftb2.name,' ',lower(CONCAT(tbe.tablealias,'_',c2.name)),' ON ', tbe.tablealias, '.',c2.name,' = ',CONCAT(tbe.tablealias,'_',c2.name),'.',rfc2.name,' AND ',tbe.tablealias, '.','"companyId"',' = ',CONCAT(tbe.tablealias,'_',c2.name),'.','"companyId"') as tbe_query
+                      FROM tbe  
+                      INNER JOIN public."column" c2 ON c2."tableId" = tbe.tableid
+                      INNER JOIN public."table" rftb2 ON c2."referenceTable" = rftb2.id::text
+                      INNER JOIN public."column" rfc2 ON rfc2."id"::text = c2."referenceColumn"
+                      WHERE c2."type" = 'foreignKey'
+	   				          AND  tbe.tableid::text != c2."referenceTable" 
+                  )
+                  SELECT tb.name::TEXT as tablealias, tb.name::TEXT as tbe_query from public."table" tb WHERE tb."id" = ${tableId}
+                  UNION ALL
+                  SELECT tbe.tablealias::TEXT, tbe.tbe_query::TEXT FROM tbe ;
+              `);
+  
+        tableQuery.forEach((ele) => {
+          query += ele.tbe_query + " ";
+        });
+      }
       return query;
     } catch (error) {
       throw new CustomError('Unable to get the query for table', 400);
@@ -63,7 +74,7 @@ export class ReportService extends BaseServiceNew<
     let str: any = [];  
     columns?.map((ele) => {
       const {column} = ele;
-      str.push(`${column.tablealias}."${column.name}" as "${column.alias}"`);
+      str.push(`${column.tablealias}.${column.name} as \"${column.alias}\"`);
     });
     return str.join(', ');
   }
@@ -134,8 +145,8 @@ export class ReportService extends BaseServiceNew<
   ): Promise<(typeof ReportSchema)['$inferSelect']> {
     try {
       let report;
-      if (id) {
-        report = await this.updateOne({ id: data.id }, data);
+      if (id !== null) {
+        report = await this.updateOne({ id : id as any }, data);
       } else {
         report = await this.createOne(data);
       }
