@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
 import {
-  ColumnInsertSchema,
   ReportInsertSchema,
   ReportSelectSchema,
   TableSelectSchema
@@ -11,8 +10,6 @@ import {
   deleteOne,
   getAllColumns,
   getAllTables,
-  getColumns,
-  getTables,
   readAll,
   updateOne
 } from '../controller/report.controller';
@@ -63,7 +60,9 @@ reportRouter.patch(
   validateSchema({
     body: ReportInsertSchema.omit({
       baseEntity: true,
-      name:true
+      name:true,
+      queryConfig:true,
+      id:true
     }),
     params: ReportSelectSchema.pick({
       id: true
@@ -80,23 +79,6 @@ reportRouter.delete(
     })
   }),
   deleteOne
-);
-
-reportRouter.get(
-  '/read/getColumns/:tableId',
-  validateSchema({
-    query: ColumnInsertSchema.partial(),
-    params: ColumnInsertSchema.pick({ tableId: true })
-  }),
-  getColumns
-);
-
-reportRouter.get(
-  '/read/getTables',
-  validateSchema({
-    query: TableSelectSchema.partial()
-  }),
-  getTables
 );
 
 export default reportRouter;
