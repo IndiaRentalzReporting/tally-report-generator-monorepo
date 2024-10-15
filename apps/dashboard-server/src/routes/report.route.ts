@@ -55,7 +55,10 @@ reportRouter.get(
 reportRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ReportInsertSchema,
+    body: ReportInsertSchema.omit({
+      baseEntity: true,
+      name:true
+    }),
     params: ReportSelectSchema.pick({
       id: true
     })
