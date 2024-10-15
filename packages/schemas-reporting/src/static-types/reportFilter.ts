@@ -1,4 +1,4 @@
-import { ColumnSelect } from "./Column"
+import { ColumnSelect } from "../types/Column"
 
 /**
  * Used by user to filter reports when report is running or viewed

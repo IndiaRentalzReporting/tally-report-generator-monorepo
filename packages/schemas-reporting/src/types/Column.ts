@@ -1,4 +1,4 @@
-import { ColumnTypeLiteral } from './ColumnTypes';
+import { ColumnTypeLiteral } from '../static-types/ColumnTypes';
 
 export { type ColumnInsert, ColumnInsertSchema } from '../schemas/column';
 

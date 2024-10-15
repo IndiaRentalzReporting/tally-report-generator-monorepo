@@ -1,6 +1,6 @@
 import { Operators, OperatorType } from "./reportOperator"
 import { ReportColumnInsert } from "./reportColumn"
-import { ColumnSelect } from "./Column"
+import { ColumnSelect } from "../types/Column"
 
 
 //WHERE  {JOIN} {table}.{column}  {operator} {value}

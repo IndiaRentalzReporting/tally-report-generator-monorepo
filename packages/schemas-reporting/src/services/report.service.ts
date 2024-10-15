@@ -1,7 +1,6 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { ReportInsert, ReportSelect } from '@/schemas/report';
-import { ColumnSelect, ReportColumnSelect, ReportConfigSelect, TableSelect } from '../types';
+import { ReportColumnSelect, ReportConfigSelect } from '../static-types';
 import { CustomError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import { ReportSchema } from '../schemas';

@@ -1,5 +1,5 @@
 import { Column } from "drizzle-orm"
-import { ColumnSelect } from "./Column"
+import { ColumnSelect } from "../types/Column"
 
 
 /**

@@ -1,5 +1,4 @@
-import { ColumnSelect } from "./Column"
-import { ColumnTypeLiteral } from "./ColumnTypes"
+import { ColumnSelect } from "../types/Column"
 import { ColumnFormats } from "./reportFormat"
 import { ColumnOperation } from "./reportOperation"
 
