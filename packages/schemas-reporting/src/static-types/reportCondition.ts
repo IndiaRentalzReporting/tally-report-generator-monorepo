@@ -1,4 +1,4 @@
-import { ColumnSelect } from "../types/Column"
+import { ColumnSelect } from "../types"
 import { type ConditionOperators } from "./conditionOperators"
 
 // WHERE  {JOIN} {table}.{column}  {operator} {value}

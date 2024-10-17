@@ -1,4 +1,4 @@
-import { ColumnTypeLiteral } from './column';
+import { ColumnTypeLiteral } from '../types';
 import { Operation } from './reportOperation';
 
 export type ColumnFormats = {

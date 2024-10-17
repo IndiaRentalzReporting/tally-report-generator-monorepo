@@ -1,4 +1,4 @@
-import { ColumnTypeLiteral } from './column';
+import { ColumnTypeLiteral } from '../types';
 
 export type Operation = {
   operationType: string;

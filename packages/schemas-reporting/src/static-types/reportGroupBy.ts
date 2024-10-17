@@ -1,4 +1,4 @@
-import { ColumnSelect } from './column';
+import { ColumnSelect } from '../types';
 
 /**
  * GROUP BY {columnName}

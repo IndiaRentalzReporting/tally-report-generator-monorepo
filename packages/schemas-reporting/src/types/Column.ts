@@ -1,4 +1,6 @@
-import { ColumnTypeLiteral } from '@/static-types/column';
+import { ColumnType } from '@/schemas';
+
+export type ColumnTypeLiteral = (typeof ColumnType.enumValues)[number];
 
 export { type ColumnInsert, ColumnInsertSchema } from '../schemas/column';
 
@@ -11,5 +13,3 @@ export type ColumnSelect = {
   type: ColumnTypeLiteral;
 };
 
-// ColumnSelectSchema not required
-export { type ColumnTypeLiteral } from '../static-types/column';
