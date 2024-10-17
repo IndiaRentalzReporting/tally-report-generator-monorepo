@@ -1,5 +1,3 @@
-import { Operators, OperatorType } from "./reportOperator"
-import { ReportColumnInsert } from "./reportColumn"
 import { ColumnSelect } from "../types/Column"
 import { type ConditionOperators } from "./conditionOperators"
 
