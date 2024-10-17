@@ -1,4 +1,4 @@
-import { ColumnTypeLiteral } from './ColumnTypes';
+import { ColumnTypeLiteral } from '../types';
 
 export type ConditionOperators<T extends ColumnTypeLiteral> = 
     T extends 'string'?[
