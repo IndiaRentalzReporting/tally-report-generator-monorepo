@@ -18,36 +18,53 @@ export class ColumnService extends BaseServiceNew
   public async getAllColumns(tableId : TableSelect['id']) : Promise<ColumnSelect[]> {
     try {
       const columns : ColumnSelect[] = await this.dbClient.execute(sql`
-              WITH RECURSIVE cte(name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
-                    SELECT 
-                    c.name,
-                    c."referenceTable",
-                    c."tableId",
-                    tb.name::TEXT as tablealias,
-                    ''::TEXT as prefix,
-                    tb.name as tablename,
-                    c.type
-                    FROM  public."column" c
-                    INNER JOIN  public."table" tb on c."tableId" = tb."id" 
-                    WHERE c."tableId" = ${tableId}
+        WITH RECURSIVE cte(reference_column_id,name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
+          SELECT 
+					c."referenceColumn" as reference_column_id,
+          c.name,
+          c."referenceTable",
+          c."tableId",
+          tb.name::TEXT as tablealias,
+          ''::TEXT as prefix,
+          tb.name as tablename,
+          CASE 
+					    WHEN c.type = 'foreignKey' AND c."referenceTable" = c."tableId"::TEXT 
+					    THEN 'string' 
+					    ELSE c.type
+          END AS type
+          FROM  public."column" c
+          INNER JOIN  public."table" tb on c."tableId" = tb."id" 
+          WHERE c."tableId" = ${tableId}
+					AND c.type NOT IN  ('id')
 
-                    UNION ALL
+          UNION ALL
                     
-                    SELECT 
-                    pc.name, 
-                    pc."referenceTable",
-                    pc."tableId",
-                    concat(cte.prefix,cte.name) as tablealias,
-                    concat(cte.name,'_') as prefix,
-                    tb.name as tablename,
-                    pc.type
-                    FROM public."column" pc 
-                    INNER JOIN cte ON pc."tableId"::TEXT = cte.referencetable
-                    INNER JOIN  public."table" tb on pc."tableId" = tb."id"
+          SELECT 
+					pc."referenceColumn" as reference_column_id,
+          pc.name, 
+          pc."referenceTable",
+          pc."tableId",
+          concat(cte.prefix,cte.name) as tablealias,
+          concat(cte.name,'_') as prefix,
+          tb.name as tablename,
+          CASE 
+            WHEN pc.type = 'foreignKey' AND pc."referenceTable" = pc."tableId"::TEXT 
+            THEN 'string' 
+            ELSE pc.type
+          END AS type
+          FROM public."column" pc 
+          INNER JOIN cte ON pc."tableId"::TEXT = cte.referencetable
+          INNER JOIN  public."table" tb on pc."tableId" = tb."id"
 	 				WHERE cte.tableid != pc."tableId" 
-                )
-                SELECT cte."name",cte."type",cte."tablename" as table,cte."tablealias" FROM cte;
-             `);
+					AND pc.type != 'id'
+					AND pc.id::TEXT != cte.reference_column_id
+        )
+        SELECT cte."name",cte."type",cte."tablename" as table,
+				lower(cte."tablealias") as table_alias,
+				concat(replace(cte."tablename",'tally',''),'.',cte."name") as "displayName",
+				CONCAT(LOWER(cte."tablealias"),'_',LOWER(cte."name")) as alias
+				FROM cte ;
+      `);
       return columns;
     } catch (error) {
       throw new CustomError('Error while fetching all columns',400);
