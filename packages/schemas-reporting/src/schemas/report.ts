@@ -15,7 +15,7 @@ export const ReportSchema = pgTable("report",{
     columns : json('columns').$type<ReportColumnInsert[]>(),
     filters : json('filters').$type<ReportFilterInsert[]>(),
     groupBy : json('groupBy').$type<ReportGroupByInsert[]>(),
-    conditons : json('conditions').$type<ConditionInsert[]>(),
+    conditions : json('conditions').$type<ConditionInsert[]>(),
     queryConfig : json('queryConfig').$type<ReportConfigSelect>(),
 })
 
