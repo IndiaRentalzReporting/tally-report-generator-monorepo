@@ -5,6 +5,7 @@ import {
   ReportSelect,
   TableSelect
 } from '@trg_package/schemas-reporting/types';
+import { getQueryConfig } from '@/utils/queryBuilder';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true
   ? { reports: Partial<ReportSelect>[] }
@@ -20,7 +21,7 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const report = await req.reportService.saveReport({ ...req.body });
+    const report = await req.reportService.createOne({ ...req.body });
     return res.json({ report } as ReportResponse);
   } catch (e) {
     return next(e);
@@ -42,16 +43,31 @@ export const readAll = async (
   }
 };
 
+
 export const updateOne = async (
   req: Request<Pick<ReportSelect, 'id'>, object, ReportInsert>,
   res: Response<ReportResponse>,
   next: NextFunction
 ) => {
   try {
-    const report = await req.reportService.saveReport(
-      req.body,
-      req.params.id as any
+
+    //get the tables ready
+    
+    let report = await req.reportService.updateOne(
+      {id : req.params.id as any},
+      req.body
     );
+
+    const splitTables = req.body.tables?.flatMap(item => item.split('_'));
+    const tables = [...new Set(splitTables)];
+    const tableQuery = await req.reportService.getTableQuery(report.baseEntity as any,tables);
+
+    const reportQueryConfig = getQueryConfig(tableQuery,req.body);
+    report = await req.reportService.updateOne(
+      {id : req.params.id as any},
+      {queryConfig:reportQueryConfig}
+    );
+    
     return res.json({ report });
   } catch (e) {
     return next(e);
@@ -103,3 +119,4 @@ export const deleteOne = async (
     return next(e);
   }
 };
+
