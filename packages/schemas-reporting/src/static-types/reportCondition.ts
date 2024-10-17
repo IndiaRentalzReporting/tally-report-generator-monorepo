@@ -3,10 +3,9 @@ import { ReportColumnInsert } from "./reportColumn"
 import { ColumnSelect } from "../types/Column"
 import { type ConditionOperators } from "./conditionOperators"
 
-
-//WHERE  {JOIN} {table}.{column}  {operator} {value}
-//WHERE table.name like "%abc"
-//WHERE table.name between (from,to)
+// WHERE  {JOIN} {table}.{column}  {operator} {value}
+// WHERE table.name like "%abc"
+// WHERE table.name between (from,to)
 export type ConditionInsert = {
     column : ColumnSelect,
     operator : ConditionOperators<ConditionInsert['column']['type']>[number]['operator']

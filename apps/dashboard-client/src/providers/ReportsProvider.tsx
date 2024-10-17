@@ -9,12 +9,10 @@ import React, {
 import { useQuery } from '@tanstack/react-query';
 import {
   ColumnSelect,
-  ReportInsert
+  Operation,
+  OperatorType
 } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
-
-type Operation = NonNullable<NonNullable<ReportInsert['columns']>[number]['operation']>[number]
-type OperatorType = NonNullable<NonNullable<ReportInsert['conditons']>[number]['operator']>
 
 interface ReportsProviderProps {
   children: React.ReactNode;
