@@ -14,8 +14,8 @@ type ReportResponse<isArray extends boolean = false> = isArray extends true
 export const createOne = async (
   req: Request<
     object,
-    ReportResponse,
-    Pick<ReportInsert, 'name' | 'baseEntity' | 'description'>
+  ReportResponse,
+  Pick<ReportInsert, 'name' | 'baseEntity' | 'description'>
   >,
   res: Response<ReportResponse>,
   next: NextFunction
@@ -43,69 +43,61 @@ export const readAll = async (
   }
 };
 
-
 export const updateOne = async (
   req: Request<Pick<ReportSelect, 'id'>, object, ReportInsert>,
   res: Response<ReportResponse>,
   next: NextFunction
 ) => {
   try {
+    // get the tables ready
 
-    //get the tables ready
-    
     let report = await req.reportService.updateOne(
-      {id : req.params.id as any},
+      { id: req.params.id as any },
       req.body
     );
 
-    const splitTables = req.body.tables?.flatMap(item => item.split('_'));
+    const splitTables = req.body.tables?.flatMap((item) => item.split('_'));
     const tables = [...new Set(splitTables)];
     const tableQuery = await req.reportService.getTableQuery(report.baseEntity as any,tables);
 
     const reportQueryConfig = getQueryConfig(tableQuery,req.body);
     report = await req.reportService.updateOne(
-      {id : req.params.id as any},
-      {queryConfig:reportQueryConfig}
+      { id: req.params.id as any },
+      { queryConfig: reportQueryConfig }
     );
-    
+
     return res.json({ report });
   } catch (e) {
     return next(e);
   }
 };
 
-  
-export const getAllColumns = async <ResObject extends {columns : DetailedColumnSelect[]}>(
-  req : Request<{tableId:TableSelect['id']},object>,
+export const getAllColumns = async <ResObject extends { columns : DetailedColumnSelect[] }>(
+  req : Request<{ tableId:TableSelect['id'] },object>,
   res : Response<ResObject>,
   next : NextFunction
-)  => {
-  try{
-      const table = await req.tableService.findOne({id : req.params.tableId});
-      const columns = await req.columnService.getAllColumns(req.params.tableId);
-      return res.json({columns} as ResObject)
-  }   
-  catch(e)
-  {
-      next(e);
-  } 
-}
+) => {
+  try {
+    const table = await req.tableService.findOne({ id: req.params.tableId });
+    const columns = await req.columnService.getAllColumns(req.params.tableId);
+    return res.json({ columns } as ResObject);
+  } catch (e) {
+    next(e);
+  }
+};
 
-
-export const getAllTables = async <T extends {tables : TableSelect[]}>(
+export const getAllTables = async <T extends { tables : TableSelect[] }>(
   req : Request,
   res : Response<T>,
   next : NextFunction
-)  => {
-  try{
-      const tables = (await req.tableService.findMany());
-      return res.json({tables} as T);
+) => {
+  try {
+    const tables = (await req.tableService.findMany());
+    return res.json({ tables } as T);
+  } catch (e) {
+    return next(e);
   }
-  catch(e)
-  {   
-      return next(e);
-  }
-}
+};
 export const deleteOne = async (
   req: Request<Pick<ReportSelect, 'id'>>,
   res: Response<ReportResponse>,
@@ -119,4 +111,3 @@ export const deleteOne = async (
     return next(e);
   }
 };
-

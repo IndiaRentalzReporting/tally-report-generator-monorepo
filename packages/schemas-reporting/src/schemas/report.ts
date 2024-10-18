@@ -15,10 +15,10 @@ export const ReportSchema = pgTable('report',{
   description: text('description').default(''),
   baseEntity: uuid('baseEntity').references(() => TableSchema.id,{ onDelete: 'restrict',onUpdate: 'restrict' }).notNull(),
   tables: json('tables').$type<string[]>(),
-  columns: json('columns').$type<ReportColumnInsert[] | []>(),
-  filters: json('filters').$type<ReportFilterInsert[] | []>(),
-  groupBy: json('groupBy').$type<ReportGroupByInsert[] | []>(),
-  conditions: json('conditions').$type<ReportConditionInsert[] | []>(),
+  columns: json('columns').$type<ReportColumnInsert[]>().default([]).notNull(),
+  filters: json('filters').$type<ReportFilterInsert[]>().default([]).notNull(),
+  groupBy: json('groupBy').$type<ReportGroupByInsert[]>().default([]).notNull(),
+  conditions: json('conditions').$type<ReportConditionInsert[]>().default([]).notNull(),
   queryConfig: json('queryConfig').$type<ReportConfigSelect>(),
 });
 

@@ -9,8 +9,7 @@ import React, {
 import { useQuery } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
-  ColumnOperators,
-  OperatorType
+  ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
 
@@ -18,27 +17,12 @@ interface ReportsProviderProps {
   children: React.ReactNode;
   tableId: string;
 }
-export interface Condition {
-  operator: OperatorType['operator'] | undefined;
-  value: NonNullable<OperatorType['params']>[0] | undefined;
-  join: 'AND' | 'OR' | 'NOT' | undefined;
-}
-export interface Filter {
-  type: 'Select' | 'Search' | undefined;
-}
-export interface Extra {
-  name: string | undefined;
-  heading: string | undefined;
-  operation: ColumnOperators['operator'] | undefined;
-  params: ColumnOperators['params'][0] | undefined;
-  showTotal: boolean;
-}
-export interface Column {
-  column: DetailedColumnSelect;
-  condition: Condition;
-  filter: Filter;
-  extra: Extra;
-}
+
+export type Condition = ReportSelect['conditions'][number];
+export type Filter = ReportSelect['filters'][number];
+export type Column = ReportSelect['columns'][number];
+export type GroupBy = ReportSelect['groupBy'][number];
+
 interface ReportsProviderState {
   columns: Array<Column>;
   availableColumns: Array<Column>;

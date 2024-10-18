@@ -1,8 +1,37 @@
-import { ColumnTypeLiteral } from '../types/Column';
+export type ConditionOperations = {
+  LIKE: {
+    value: string
+  },
+  ILIKE: {
+    value: string
+  },
+  BETWEEN: {
+    from: string,
+    to: string
+  },
+  '<': {
+    value: string
+  },
+  '<=': {
+    value: string
+  },
+  '>': {
+    value: string
+  },
+  '>=': {
+    value: string
+  },
+  '=': {
+    value: string
+  },
+  IN: {
+    value: Array<string>
+  },
+  '!=': {
+    value: string
+  },
+  'IS NULL': null,
+  'IS NOT NULL': null,
+};
 
-export type ConditionOperator = string;
-
-export type ConditionParams<
-  T extends ColumnTypeLiteral
-> =
- null | { value : T | T[] } | { from: T , to : T };
+export type ConditionOperator = keyof ConditionOperations;
