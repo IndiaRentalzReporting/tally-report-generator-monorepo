@@ -40,7 +40,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
           <Button
             className="flex items-center justify-center"
             variant="ghost"
-            onClick={() => removeColumn(column.column?.displayName)}
+            onClick={() => removeColumn(column.id)}
           >
             <Trash color="red" className="h-4 w-4" />
           </Button>

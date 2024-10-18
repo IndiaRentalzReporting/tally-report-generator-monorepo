@@ -17,9 +17,9 @@ const Filters: React.FC = () => {
       </h3>
       {filters.map((filter) => (
         <FilterComponent
-          key={filter.column?.name}
+          key={filter.column?.displayName}
           filter={filter}
-          removeFilter={() => removeFilter(filter.column?.displayName)}
+          removeFilter={() => removeFilter(filter.id)}
         />
       ))}
     </div>
@@ -51,7 +51,7 @@ const FilterComponent: React.FC<{
             };
           })}
           onChange={(displayName) => {
-            updateFilter(filter.column?.displayName, {
+            updateFilter(filter.id, {
               column: columns
                 .concat(availableColumns)
                 .find((col) => col.column?.displayName === displayName)?.column
@@ -67,7 +67,7 @@ const FilterComponent: React.FC<{
             value: join
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.column?.displayName, { filterType: filterType as 'select' | 'search' | 'range' });
+            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'range' });
           }}
           disabled={!filter.column}
           className="justify-self-end"

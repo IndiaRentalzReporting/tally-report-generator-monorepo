@@ -15,7 +15,7 @@ import {
   Label,
   When
 } from '@trg_package/vite/components';
-import { StaticColumnOperators } from '@trg_package/schemas-reporting/types';
+import { ColumnOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
 
@@ -25,18 +25,22 @@ interface IUpdateEntityProps {
 
 const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   const { columns, updateColumn } = useReports();
+
   const [open, setOpen] = useState(false);
   const [localExtra, setLocalExtra] = useState(column);
+
   const selectedColumn = columns.find((col) => col.column?.name === column.column?.name);
 
-  const operations = selectedColumn?.column?.type
-    ? StaticColumnOperators[selectedColumn.column?.type]
-    : [];
+  const operations = Object.keys(ColumnOperations).filter((operatorName) => {
+    const operation = ColumnOperations[operatorName as keyof typeof ColumnOperations];
+    const operationFor = operation.for;
+    return selectedColumn?.column?.type ? operationFor.includes(selectedColumn.column.type) : [];
+  });
 
   const handleClose = (open: boolean) => {
     setOpen(open);
     if (selectedColumn && !open) {
-      setTimeout(() => updateColumn(selectedColumn.column?.name, { ...localExtra }), 500);
+      setTimeout(() => updateColumn(selectedColumn.id, { ...localExtra }), 500);
     }
   };
 
@@ -74,13 +78,13 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
                 <Label htmlFor="operation">Operation</Label>
                 <Select
                   label="Operation"
-                  value={localExtra.operation ? localExtra.operation[0] : ''}
+                  value={localExtra.operation}
                   options={operations.map((op) => ({
                     label: op,
                     value: op
                   }))}
                   onChange={(operation) => {
-                    setLocalExtra((prev) => ({ ...prev, operation: operation as 'COUNT' | 'MAX' | 'MIN' | 'SUM' | 'AVG' }));
+                    setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
                   }}
                 />
               </div>

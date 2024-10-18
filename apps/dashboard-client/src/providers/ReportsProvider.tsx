@@ -8,32 +8,33 @@ import {
 } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
 
-export type Column = Partial<ReportSelect['columns'][number]>;
-export type Condition = Partial<ReportSelect['conditions'][number]>;
-export type Filter = Partial<ReportSelect['filters'][number]>;
-export type GroupBy = Partial<ReportSelect['groupBy'][number]>;
+export type Column = Partial<ReportSelect['columns'][number]> & { id: number };
+export type Condition = Partial<ReportSelect['conditions'][number]> & { id: number };
+export type Filter = Partial<ReportSelect['filters'][number]> & { id: number };
+export type GroupBy = Partial<ReportSelect['groupBy'][number]> & { id: number };
 
 interface ReportsProviderState {
-  fetchingColumns: boolean,
-
   columns: Array<Column>;
   availableColumns: Array<Column>;
-  addColumn: (id: string | undefined) => void;
-  removeColumn: (id: string | undefined) => void;
-  updateColumn: (id: string | undefined, update: Partial<Column>) => void;
+  addColumn: (id: number | undefined) => void;
+  removeColumn: (id: number | undefined) => void;
+  updateColumn: (id: number | undefined, update: Partial<Column>) => void;
 
   conditions: Array<Condition>;
   addCondition: () => void;
-  removeCondition: (id: string | undefined) => void;
-  updateCondition: (id: string | undefined, update: Partial<Condition>) => void;
+  removeCondition: (id: number | undefined) => void;
+  updateCondition:
+  <T extends Condition>(id: number | undefined, condition: T, update: Partial<T>) => void;
 
   filters: Array<Filter>;
   addFilter: () => void;
-  removeFilter: (id: string | undefined) => void;
-  updateFilter: (id: string | undefined, update: Partial<Filter>) => void;
+  removeFilter: (id: number | undefined) => void;
+  updateFilter: (id: number | undefined, update: Partial<Filter>) => void;
 
   groupBy: Array<GroupBy>;
   setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
+
+  fetchingColumns: boolean,
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -45,7 +46,7 @@ interface ReportsProviderProps {
 }
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = (
-  { children, tableId, reportId }
+  { children, tableId }
 ) => {
   const [columns, setColumns] = useState<ReportsProviderState['columns']>([]);
   const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>([]);
@@ -55,6 +56,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),
     select: (data) => data.data.columns.map<Column>((column) => ({
+      id: Date.now(),
       column,
       heading: column.displayName,
       operation: undefined
@@ -64,29 +66,30 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   });
 
   const availableColumns = useMemo(() => {
-    const selectedIds = new Set(columns.map((col) => col.column?.name));
-    return fetchedColumns.filter((col) => !selectedIds.has(col.column?.name));
+    const selectedIds = new Set(columns.map((col) => col.column?.displayName));
+    return fetchedColumns.filter((col) => !selectedIds.has(col.column?.displayName));
   }, [fetchedColumns, columns]);
 
   const addColumn: ReportsProviderState['addColumn'] = useCallback((id) => {
-    const entity = availableColumns.find((col) => col.column?.name === id);
+    const entity = availableColumns.find((col) => col.column?.displayName === id);
     if (!entity) return;
     setColumns((prev) => [...prev, entity]);
   }, [availableColumns]);
 
   const removeColumn: ReportsProviderState['removeColumn'] = useCallback((id) => {
-    setColumns((prev) => prev.filter((col) => col.column?.name !== id));
-    setGroupBy((prev) => prev.filter((col) => col.column?.name !== id));
+    setColumns((prev) => prev.filter((col) => col.id !== id));
+    setGroupBy((prev) => prev.filter((col) => col.id !== id));
   }, []);
 
   const updateColumn: ReportsProviderState['updateColumn'] = useCallback((id, update) => {
     setColumns((prev) => prev.map(
-      (col) => (col.column?.name === id ? { ...col, ...update } : col)
+      (col) => (col.id === id ? { ...col, ...update } : col)
     ));
   }, []);
 
   const addCondition: ReportsProviderState['addCondition'] = useCallback(() => {
     const newCondition: Condition = {
+      id: Date.now(),
       column: undefined,
       operator: undefined,
       params: undefined,
@@ -96,18 +99,18 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const removeCondition: ReportsProviderState['removeCondition'] = useCallback((id) => {
-    setConditions((prev) => prev.filter((cond) => cond.column?.name !== id));
+    setConditions((prev) => prev.filter((cond) => cond.id !== id));
   }, []);
 
-  const updateCondition: ReportsProviderState['updateCondition'] = useCallback((id, update) => {
-    // @ts-ignore
+  const updateCondition: ReportsProviderState['updateCondition'] = useCallback((id, condition, update) => {
     setConditions((prev) => prev.map(
-      (cond) => (cond.column?.name === id ? { ...cond, ...update } : cond)
+      (cond) => (cond.id === id ? { ...cond, ...update } : cond)
     ));
   }, []);
 
   const addFilter: ReportsProviderState['addFilter'] = useCallback(() => {
     const newFilter: Filter = {
+      id: Date.now(),
       column: undefined,
       filterType: undefined
     };
@@ -115,12 +118,12 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const removeFilter: ReportsProviderState['removeFilter'] = useCallback((id) => {
-    setFilters((prev) => prev.filter((filter) => filter.column?.name !== id));
+    setFilters((prev) => prev.filter((filter) => filter.id !== id));
   }, []);
 
   const updateFilter: ReportsProviderState['updateFilter'] = useCallback((id, update) => {
     setFilters((prev) => prev.map(
-      (filter) => (filter.column?.name === id ? { ...filter, ...update } : filter)
+      (filter) => (filter.id === id ? { ...filter, ...update } : filter)
     ));
   }, []);
 
