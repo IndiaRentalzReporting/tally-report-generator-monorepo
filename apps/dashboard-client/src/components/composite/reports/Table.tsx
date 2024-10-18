@@ -12,16 +12,15 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-  When
+  TableRow
 } from '@trg_package/vite/components';
-import { DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Trash } from 'lucide-react';
 
-import { useCallback, useEffect, memo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
-import { UpdateColumn } from './UpdateColumn';
 import ReportSettings from './Settings';
+import UpdateColumn from './UpdateColumn';
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -33,12 +32,21 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
 
   const createColumnDef = useCallback(
     (column: Column): ColumnDef<DetailedColumnSelect> => ({
-      id: column.column.name,
-      accessorKey: column.column.name,
+      id: column.column?.displayName,
+      accessorKey: column.column?.displayName || 'No Name',
       header: () => (
-        <MemoizedHeaderButton column={column} removeColumn={removeColumn} />
+        <div className="flex items-center gap-4">
+          <span>{column.column?.displayName}</span>
+          <Button
+            className="flex items-center justify-center"
+            variant="ghost"
+            onClick={() => removeColumn(column.column?.displayName)}
+          >
+            <Trash color="red" className="h-4 w-4" />
+          </Button>
+        </div>
       ),
-      cell: () => <MemoizedUpdateButton columnName={column.column.name} />
+      cell: () => <UpdateColumn column={column} />
     }),
     [removeColumn]
   );
@@ -68,9 +76,9 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -107,38 +115,9 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
           </TableBody>
         </Table>
       </div>
-      <When condition={!!columns.length}>
-        <ReportSettings />
-      </When>
+      <ReportSettings />
     </div>
   );
 };
-
-// Memoized components for header and update buttons
-const HeaderButton: React.FC<{
-  column: Column;
-  removeColumn: (entity: Column) => void;
-}> = ({ column, removeColumn }) => (
-  <div className="flex items-center gap-4">
-    <span>{column.column.name}</span>
-    <Button
-      className="flex items-center justify-center"
-      variant="ghost"
-      onClick={() => removeColumn(column)}
-    >
-      <Trash color="red" className="h-4 w-4" />
-    </Button>
-  </div>
-);
-
-const MemoizedHeaderButton = memo(HeaderButton);
-
-const UpdateButton: React.FC<{ columnName: string }> = ({ columnName }) => (
-  <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
-    <UpdateColumn columnName={columnName} />
-  </div>
-);
-
-const MemoizedUpdateButton = memo(UpdateButton);
 
 export default DataTable;

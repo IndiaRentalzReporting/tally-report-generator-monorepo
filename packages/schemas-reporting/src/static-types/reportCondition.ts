@@ -1,24 +1,24 @@
 import { DetailedColumnSelect } from '../types';
-import { ConditionOperations, ConditionOperator } from './conditionOperators';
+import { ConditionOperations, ConditionOperators } from './conditionOperators';
 
-export type ConditionOperation<T extends ConditionOperator> = {
+export type ConditionOperation<T extends ConditionOperators> = {
   operator: T;
-  params: ConditionOperations[T];
+  params: typeof ConditionOperations[T];
 };
 
 // WHERE  {JOIN} {table}.{column}  {operator} {value}
 // WHERE table.name like "%abc"
 // WHERE table.name between (from,to)
 export type ReportConditionInsert = {
-  [K in ConditionOperator]: ConditionOperation<K>
-}[ConditionOperator] & {
+  [K in ConditionOperators]: ConditionOperation<K>
+}[ConditionOperators] & {
   column : DetailedColumnSelect,
   join : 'AND' | 'OR' | 'AND NOT' | 'OR NOT'
 };
 
 export type ReportConditionSelect = {
-  [K in ConditionOperator]: ConditionOperation<K>
-}[ConditionOperator] & {
+  [K in ConditionOperators]: ConditionOperation<K>
+}[ConditionOperators] & {
   column : DetailedColumnSelect,
   join : 'AND' | 'OR' | 'AND NOT' | 'OR NOT'
 };

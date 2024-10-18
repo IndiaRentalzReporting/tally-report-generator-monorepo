@@ -1,5 +1,5 @@
 import { DetailedColumnSelect } from '../types';
-import { ColumnOperations } from './columnOperation';
+import { ColumnOperators } from './columnOperation';
 
 // Select table.name as alias
 // Select Operation(table.name) as alias
@@ -7,7 +7,7 @@ import { ColumnOperations } from './columnOperation';
 export type ReportColumnInsert = {
   column: DetailedColumnSelect,
   heading: string,
-  operation: ColumnOperations;
+  operation: ColumnOperators;
 };
 
 export type ReportColumnSelect = {

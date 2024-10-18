@@ -3,6 +3,10 @@
     "source.fixAll": "explicit",
     "source.fixAll.eslint": "explicit"
   },
+<<<<<<< Updated upstream
   "eslint.validate": ["javascript"],
   "files.eol": "\n"
+=======
+  "eslint.validate": ["javascript"]
+>>>>>>> Stashed changes
 }

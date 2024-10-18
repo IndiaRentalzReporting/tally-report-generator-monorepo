@@ -6,7 +6,6 @@
     "dev": "dotenv -- turbo dev --concurrency=13",
     "lint": "dotenv -- turbo lint --concurrency=13",
     "lint:fix": "dotenv -- turbo lint --concurrency=13 -- --fix",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json"
   },
   "dependencies": {
