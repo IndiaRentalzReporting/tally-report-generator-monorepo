@@ -3,7 +3,7 @@ import { ConditionOperations, ConditionOperators } from './conditionOperators';
 
 export type ConditionOperation<T extends ConditionOperators> = {
   operator: T;
-  params: typeof ConditionOperations[T];
+  params: typeof ConditionOperations[T]['params'];
 };
 
 // WHERE  {JOIN} {table}.{column}  {operator} {value}

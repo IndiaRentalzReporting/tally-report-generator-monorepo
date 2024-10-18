@@ -2,7 +2,9 @@ import { ColumnType } from '@/schemas';
 
 export type ColumnTypeLiteral = (typeof ColumnType.enumValues)[number];
 
-export { type ColumnInsert, ColumnInsertSchema } from '../schemas/column';
+export {
+  type ColumnInsert, ColumnInsertSchema, type ColumnSelect, ColumnSelectSchema
+} from '../schemas/column';
 
 export type DetailedColumnSelect = {
   name: string;

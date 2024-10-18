@@ -28,6 +28,5 @@ export const ColumnSchema = pgTable('column', {
 
 export type ColumnInsert = typeof ColumnSchema.$inferInsert;
 export const ColumnInsertSchema = createInsertSchema(ColumnSchema);
-
-export type DetailedColumnSelect = typeof ColumnSchema.$inferSelect;
+export type ColumnSelect = typeof ColumnSchema.$inferSelect;
 export const ColumnSelectSchema = createSelectSchema(ColumnSchema);

@@ -1,7 +1,4 @@
 export {
   ConditionOperations,
-  StaticConditionOperators,
-  type ConditionOperators,
-  type ColumnOperations,
-  StaticColumnOperators
+  ColumnOperations,
 } from '@/static-types';

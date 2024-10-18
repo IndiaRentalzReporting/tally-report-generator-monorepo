@@ -1,36 +1,24 @@
-import { ColumnTypeLiteral } from '@/types';
-
 export const ColumnOperations = {
-  COUNT: null ,
-  MAX: null ,
-  MIN: null ,
-  SUM: null ,
-  AVG: null,
-
-} as const;
+  COUNT: {
+    params: { value: null },
+    for: ['string', 'number', 'date']
+  },
+  MAX: {
+    params: { value: null },
+    for: ['string', 'number', 'date']
+  },
+  MIN: {
+    params: { value: null },
+    for: ['string', 'number', 'date']
+  },
+  SUM: {
+    params: { value: null },
+    for: ['number']
+  },
+  AVG: {
+    params: { value: null },
+    for: ['number']
+  }
+};
 
 export type ColumnOperators = keyof typeof ColumnOperations;
-
-export const StaticColumnOperators: {
-  [X in ColumnTypeLiteral]: Array<ColumnOperators>
-} = {
-  id: [],
-  string: [
-    'COUNT',
-    'MAX',
-    'MIN'
-  ],
-  number: [
-    'COUNT',
-    'MAX',
-    'MIN',
-    'SUM',
-    'AVG'
-  ],
-  date: [
-    'COUNT',
-    'MAX',
-    'MIN'
-  ],
-  foreignKey: []
-};

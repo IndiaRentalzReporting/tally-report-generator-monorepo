@@ -1,81 +1,55 @@
-import { ColumnTypeLiteral } from '@/types';
-
 export const ConditionOperations = {
   LIKE: {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['string']
   },
   ILIKE: {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['string']
   },
   BETWEEN: {
-    from: 'string',
-    to: 'string',
+    params: {
+      from: 'string',
+      to: 'string',
+    },
+    for: ['number', 'date']
   },
   '<': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['number', 'date']
   },
   '<=': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['number', 'date']
   },
   '>': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['number', 'date']
   },
   '>=': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['number', 'date']
   },
   '=': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['id', 'string', 'number', 'date']
   },
   IN: {
-    value: ['string'],
+    params: { value: ['string'] },
+    for: ['id', 'string', 'number', 'date']
   },
   '!=': {
-    value: 'string',
+    params: { value: 'string' },
+    for: ['id', 'string', 'number', 'date']
   },
-  'IS NULL': null,
-  'IS NOT NULL': null,
+  'IS NULL': {
+    params: null,
+    for: ['id', 'string', 'number', 'date']
+  },
+  'IS NOT NULL': {
+    params: null,
+    for: ['id', 'string', 'number', 'date']
+  },
 };
 
 export type ConditionOperators = keyof typeof ConditionOperations;
-
-export const StaticConditionOperators: {
-  [X in ColumnTypeLiteral]: Array<ConditionOperators>
-} = {
-  id: [],
-  string: [
-    '=',
-    'IN',
-    '!=',
-    'IS NULL',
-    'IS NOT NULL',
-    'LIKE',
-    'ILIKE'
-
-  ],
-  number: [
-    '=',
-    'IN',
-    '!=',
-    'IS NULL',
-    'IS NOT NULL',
-    '<',
-    '<=',
-    '>',
-    '>=',
-    'BETWEEN'
-
-  ],
-  date: [
-    '<',
-    '<=',
-    '>',
-    '>=',
-    'BETWEEN',
-    '=',
-    'IN',
-    '!=',
-    'IS NULL',
-    'IS NOT NULL'
-  ],
-  foreignKey: []
-};
