@@ -8,8 +8,8 @@ import React, {
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
-  ColumnSelect,
-  Operation,
+  DetailedColumnSelect,
+  ColumnOperators,
   OperatorType
 } from '@trg_package/schemas-reporting/types';
 import { services } from '@/services/reports';
@@ -29,12 +29,12 @@ export interface Filter {
 export interface Extra {
   name: string | undefined;
   heading: string | undefined;
-  operation: Operation['operationType'] | undefined;
-  params: Operation['operationParams'][0] | undefined;
+  operation: ColumnOperators['operator'] | undefined;
+  params: ColumnOperators['params'][0] | undefined;
   showTotal: boolean;
 }
 export interface Column {
-  column: ColumnSelect;
+  column: DetailedColumnSelect;
   condition: Condition;
   filter: Filter;
   extra: Extra;
@@ -49,8 +49,8 @@ interface ReportsProviderState {
     feature: T,
     update: Partial<Column[T]>
   ) => void;
-  groupBy: ColumnSelect | undefined;
-  setGroupBy: React.Dispatch<React.SetStateAction<ColumnSelect | undefined>>;
+  groupBy: DetailedColumnSelect | undefined;
+  setGroupBy: React.Dispatch<React.SetStateAction<DetailedColumnSelect | undefined>>;
 }
 
 const initialState: ReportsProviderState = {
@@ -77,28 +77,20 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
   const addColumn = useCallback((entity: Column) => {
     setColumns((prev) => [...prev, entity]);
-    setAvailableColumns((prev) =>
-      prev.filter((col) => col.column.name !== entity.column.name)
-    );
+    setAvailableColumns((prev) => prev.filter((col) => col.column.name !== entity.column.name));
   }, []);
 
   const removeColumn = useCallback((entity: Column) => {
     setAvailableColumns((prevAvailable) => [...prevAvailable, entity]);
-    setColumns((prevColumns) =>
-      prevColumns.filter((col) => col.column.name !== entity.column.name)
-    );
+    setColumns((prevColumns) => prevColumns.filter((col) => col.column.name !== entity.column.name));
     if (entity.column.name === groupBy?.name) setGroupBy(undefined);
   }, []);
 
   const updateColumn: ReportsProviderState['updateColumn'] = useCallback(
     (columnName, feature, update) => {
-      setColumns((prevColumns) =>
-        prevColumns.map((col) =>
-          col.column.name === columnName
-            ? { ...col, [feature]: { ...col[feature], ...update } }
-            : col
-        )
-      );
+      setColumns((prevColumns) => prevColumns.map((col) => (col.column.name === columnName
+        ? { ...col, [feature]: { ...col[feature], ...update } }
+        : col)));
     },
     []
   );

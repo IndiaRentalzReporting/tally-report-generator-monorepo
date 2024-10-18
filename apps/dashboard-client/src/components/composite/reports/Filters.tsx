@@ -39,7 +39,7 @@ const FilterComponent: React.FC<{
   const { columns, updateColumn } = useReports();
 
   const [selectedColumnName, setSelectedColumnName] = useState<
-    string | undefined
+  string | undefined
   >(undefined);
 
   const selectedColumn = useMemo(

@@ -1,15 +1,12 @@
-import { ColumnSelect } from '../types';
-import { ColumnFormats } from './reportFormat';
-import { ColumnOperation } from './reportOperation';
+import { DetailedColumnSelect } from '../types';
 
 // Select table.name as alias
 // Select Operation(table.name) as alias
 // Select FORMAT(table.name) as alias
 export type ReportColumnInsert = {
-  column: ColumnSelect;
-  heading: string;
-  operation: ColumnOperation[ReportColumnInsert['column']['type']] | null;
-  format: ColumnFormats[ReportColumnInsert['column']['type']] | null;
+  column: DetailedColumnSelect,
+  heading: string,
+  operation: string;
 };
 
 export type ReportColumnSelect = {

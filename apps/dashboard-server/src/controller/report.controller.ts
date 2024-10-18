@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  ColumnSelect,
+  DetailedColumnSelect,
   ReportInsert,
   ReportSelect,
   TableSelect
@@ -75,7 +75,7 @@ export const updateOne = async (
 };
 
   
-export const getAllColumns = async <ResObject extends {columns : ColumnSelect[]}>(
+export const getAllColumns = async <ResObject extends {columns : DetailedColumnSelect[]}>(
   req : Request<{tableId:TableSelect['id']},object>,
   res : Response<ResObject>,
   next : NextFunction

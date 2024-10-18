@@ -1,15 +1,15 @@
-import { ColumnSelect } from '../types';
+import { DetailedColumnSelect } from '../types';
 
 /**
  * Used by user to filter reports when report is running or viewed
  * These data filters will be picked by user after report is generated
  */
 export type ReportFilterInsert = {
-  column: ColumnSelect;
+  column: DetailedColumnSelect;
   filterType: 'search' | 'select' | 'range';
 };
 
 export type ReportFilterSelect = {
-  column: ColumnSelect;
+  column: DetailedColumnSelect;
   filterType: 'search' | 'select' | 'range';
 };

@@ -15,7 +15,7 @@ import {
   TableRow,
   When
 } from '@trg_package/vite/components';
-import { ColumnSelect } from '@trg_package/schemas-reporting/types';
+import { DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Trash } from 'lucide-react';
 
 import { useCallback, useEffect, memo, useState } from 'react';
@@ -32,7 +32,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
   const [columnDef, setColumnDef] = useState<ColumnDef<TData>[]>([]);
 
   const createColumnDef = useCallback(
-    (column: Column): ColumnDef<ColumnSelect> => ({
+    (column: Column): ColumnDef<DetailedColumnSelect> => ({
       id: column.column.name,
       accessorKey: column.column.name,
       header: () => (

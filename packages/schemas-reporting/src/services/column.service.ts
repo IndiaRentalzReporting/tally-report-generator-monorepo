@@ -4,7 +4,7 @@ import { CustomError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import * as reportingSchemas from '../schemas';
 import { ColumnSchema } from '../schemas';
-import { ColumnSelect, TableSelect } from '../types';
+import { DetailedColumnSelect, TableSelect } from '../types';
 
 export class ColumnService extends BaseServiceNew
   <
@@ -15,9 +15,9 @@ export class ColumnService extends BaseServiceNew
     super(db, ColumnSchema,db.query.ColumnSchema);
   }
 
-  public async getAllColumns(tableId : TableSelect['id']) : Promise<ColumnSelect[]> {
+  public async getAllColumns(tableId : TableSelect['id']) : Promise<DetailedColumnSelect[]> {
     try {
-      const columns : ColumnSelect[] = await this.dbClient.execute(sql`
+      const columns : DetailedColumnSelect[] = await this.dbClient.execute(sql`
         WITH RECURSIVE cte(reference_column_id,name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
           SELECT 
 					c."referenceColumn" as reference_column_id,

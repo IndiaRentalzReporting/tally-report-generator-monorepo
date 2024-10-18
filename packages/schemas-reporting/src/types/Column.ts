@@ -4,7 +4,7 @@ export type ColumnTypeLiteral = (typeof ColumnType.enumValues)[number];
 
 export { type ColumnInsert, ColumnInsertSchema } from '../schemas/column';
 
-export type ColumnSelect = {
+export type DetailedColumnSelect = {
   name: string;
   alias: string;
   displayName: string;
@@ -12,4 +12,3 @@ export type ColumnSelect = {
   tablealias: string;
   type: ColumnTypeLiteral;
 };
-

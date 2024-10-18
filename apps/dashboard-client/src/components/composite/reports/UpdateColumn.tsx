@@ -1,5 +1,7 @@
 import { Edit } from 'lucide-react';
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, {
+  useMemo, useState, useCallback, useEffect
+} from 'react';
 import {
   Drawer,
   DrawerTrigger,
@@ -16,7 +18,7 @@ import {
   When,
   Button
 } from '@trg_package/vite/components';
-import { ColumnOperation } from '@trg_package/schemas-reporting/types';
+import { ColumnOperators } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
 
@@ -51,17 +53,16 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
   }, [isOpen, selectedColumn]);
 
   const operations = useMemo(
-    () => (selectedColumn ? ColumnOperation[selectedColumn.column.type] : []),
+    () => (selectedColumn ? ColumnOperators[selectedColumn.column.type] : []),
     [selectedColumn]
   );
 
   const values = useMemo(
-    () =>
-      selectedColumn
-        ? (ColumnOperation[selectedColumn.column.type].find(
-            (op) => op.operationType === selectedColumn.extra.operation
-          )?.operationParams ?? [])
-        : [],
+    () => (selectedColumn
+      ? (ColumnOperators[selectedColumn.column.type].find(
+        (op) => op.operator === selectedColumn.extra.operation
+      )?.params ?? [])
+      : []),
     [selectedColumn]
   );
 
@@ -93,11 +94,10 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
               <Input
                 id="heading"
                 value={localExtra.heading}
-                onChange={({ target }) =>
-                  setLocalExtra((prev) => ({
-                    ...prev,
-                    heading: target.value
-                  }))
+                onChange={({ target }) => setLocalExtra((prev) => ({
+                  ...prev,
+                  heading: target.value
+                }))
                 }
               />
             </div>
@@ -108,14 +108,13 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
                 label="Operation"
                 value={localExtra.operation || ''}
                 options={operations.map((op) => ({
-                  label: op.operationType,
-                  value: op.operationType
+                  label: op.operator,
+                  value: op.operator
                 }))}
-                onChange={(operatorName) =>
-                  setLocalExtra((prev) => ({
-                    ...prev,
-                    operation: operatorName
-                  }))
+                onChange={(operatorName) => setLocalExtra((prev) => ({
+                  ...prev,
+                  operation: operatorName
+                }))
                 }
               />
             </div>
@@ -141,11 +140,10 @@ export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
                 <Checkbox
                   checked={localExtra.showTotal}
                   id="showTotal"
-                  onCheckedChange={(showTotal) =>
-                    setLocalExtra((prev) => ({
-                      ...prev,
-                      showTotal: Boolean(showTotal)
-                    }))
+                  onCheckedChange={(showTotal) => setLocalExtra((prev) => ({
+                    ...prev,
+                    showTotal: Boolean(showTotal)
+                  }))
                   }
                 />
                 <Label htmlFor="showTotal">Show Total</Label>

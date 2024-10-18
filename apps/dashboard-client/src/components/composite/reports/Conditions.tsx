@@ -39,7 +39,7 @@ const ConditionItem: React.FC<{
 }> = ({ onRemove }) => {
   const { columns, updateColumn } = useReports();
   const [selectedColumnName, setSelectedColumnName] = useState<
-    string | undefined
+  string | undefined
   >(undefined);
 
   const selectedColumn = useMemo(
@@ -48,18 +48,16 @@ const ConditionItem: React.FC<{
   );
 
   const operations = useMemo(
-    () =>
-      selectedColumn ? (ColumnOperators[selectedColumn.column.type] ?? []) : [],
+    () => (selectedColumn ? (ColumnOperators[selectedColumn.column.type] ?? []) : []),
     [selectedColumn]
   );
 
   const values = useMemo(
-    () =>
-      selectedColumn && operations
-        ? (ColumnOperators[selectedColumn.column.type].find(
-            (op) => op.operator === selectedColumn.condition.operator
-          )?.params ?? [])
-        : [],
+    () => (selectedColumn && operations
+      ? (ColumnOperators[selectedColumn.column.type].find(
+        (op) => op.operator === selectedColumn.condition.operator
+      )?.params ?? [])
+      : []),
     [selectedColumn, operations]
   );
 

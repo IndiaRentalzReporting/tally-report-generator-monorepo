@@ -1,12 +1,12 @@
-import { ColumnSelect } from '../types';
+import { DetailedColumnSelect } from '../types';
 
 /**
  * GROUP BY {columnName}
  */
 export type ReportGroupByInsert = {
-  column: ColumnSelect;
+  column: DetailedColumnSelect;
 };
 
 export type ReportGroupBySelect = {
-  column: ColumnSelect;
+  column: DetailedColumnSelect;
 };
