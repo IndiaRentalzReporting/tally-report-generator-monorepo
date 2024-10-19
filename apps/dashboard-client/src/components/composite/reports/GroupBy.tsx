@@ -30,7 +30,7 @@ const GroupBy: React.FC = () => {
           const column = columns
             .concat(availableColumns)
             .find((col) => col.column?.displayName === displayName);
-          if (column) setGroupBy([{ column: column.column }]);
+          if (column) setGroupBy([{ id: Date.now(), column: column.column }]);
         }}
       />
     </div>
