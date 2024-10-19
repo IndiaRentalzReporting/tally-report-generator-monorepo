@@ -37,7 +37,7 @@ const FilterComponent: React.FC<{
       <div className="grid grid-cols-[2fr_2fr_auto] gap-4">
         <Select
           label="Column"
-          value={filter.column?.name}
+          value={filter.column?.displayName}
           options={columns.concat(availableColumns).map(({ column }) => {
             if (!column?.displayName) {
               return {

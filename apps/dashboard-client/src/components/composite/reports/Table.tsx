@@ -27,7 +27,7 @@ interface DataTableProps<TData> {
 }
 
 const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
-  const { columns, removeColumn } = useReports();
+  const { columns, removeColumn, updateReport } = useReports();
   const [columnDef, setColumnDef] = useState<ColumnDef<TData>[]>([]);
 
   const createColumnDef = useCallback(
@@ -116,6 +116,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
         </Table>
       </div>
       <ReportSettings />
+      <Button onClick={() => updateReport()}>Update Report</Button>
     </div>
   );
 };

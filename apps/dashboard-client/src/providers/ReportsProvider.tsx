@@ -2,10 +2,11 @@ import React, {
   useContext, useMemo, useCallback, useState,
   createContext
 } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { UseMutateAsyncFunction, useMutation, useQuery } from '@tanstack/react-query';
 import {
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
+import { AxiosResponse } from 'axios';
 import { services } from '@/services/reports';
 
 export type Column = Partial<ReportSelect['columns'][number]> & { id: number };
@@ -35,6 +36,10 @@ interface ReportsProviderState {
   setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
 
   fetchingColumns: boolean,
+
+  updateReport: UseMutateAsyncFunction<AxiosResponse<{
+    report: ReportSelect;
+  }, any>, Error>
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -46,7 +51,7 @@ interface ReportsProviderProps {
 }
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = (
-  { children, tableId }
+  { children, tableId, reportId }
 ) => {
   const [columns, setColumns] = useState<ReportsProviderState['columns']>([]);
   const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>([]);
@@ -65,13 +70,33 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     queryKey: ['columns', 'getAll', tableId]
   });
 
+  const { mutateAsync: updateReport } = useMutation({
+    mutationFn: () => {
+      const tables = Array.from(new Set(columns
+        .filter((column) => !!column.column)
+        .map((column) => column.column!.tablealias)));
+
+      return services.updateOne(reportId, {
+        conditions: conditions as ReportSelect['conditions'],
+        filters: filters as ReportSelect['filters'],
+        groupBy: groupBy as ReportSelect['groupBy'],
+        columns: columns as ReportSelect['columns'],
+        tables: tables as ReportSelect['tables'],
+      });
+    }
+  });
+
   const availableColumns = useMemo(() => {
     const selectedIds = new Set(columns.map((col) => col.column?.displayName));
     return fetchedColumns.filter((col) => !selectedIds.has(col.column?.displayName));
   }, [fetchedColumns, columns]);
 
   const addColumn: ReportsProviderState['addColumn'] = useCallback((id) => {
-    const entity = availableColumns.find((col) => col.column?.displayName === id);
+    console.log(id);
+    const entity = availableColumns.find((col) => col.id === id);
+    console.log({
+      entity
+    });
     if (!entity) return;
     setColumns((prev) => [...prev, entity]);
   }, [availableColumns]);
@@ -143,7 +168,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     removeFilter,
     updateFilter,
     groupBy,
-    setGroupBy
+    setGroupBy,
+    updateReport
   }), [
     fetchingColumns,
     columns,
@@ -160,7 +186,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     removeFilter,
     updateFilter,
     groupBy,
-    setGroupBy
+    setGroupBy,
+    updateReport
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;
