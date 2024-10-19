@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
                   className="w-full"
                   variant="secondary"
                   key={column.column?.displayName}
-                  onClick={() => addColumn(column.column?.displayName)}
+                  onClick={() => addColumn(column.id)}
                   >
                     {column.column?.displayName.toUpperCase()}
                   </Button>
