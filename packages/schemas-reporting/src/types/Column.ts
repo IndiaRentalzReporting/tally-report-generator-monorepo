@@ -1,6 +1,6 @@
 import { ColumnType } from '@/schemas';
 
-export type ColumnTypeLiteral = (typeof ColumnType.enumValues)[number];
+export type ColumnTypeLiteral = Exclude<(typeof ColumnType.enumValues)[number],'foreignKey' | 'id'>;
 
 export {
   type ColumnInsert, ColumnInsertSchema, type ColumnSelect, ColumnSelectSchema
