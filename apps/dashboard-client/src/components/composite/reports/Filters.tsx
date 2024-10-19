@@ -67,7 +67,7 @@ const FilterComponent: React.FC<{
             value: join
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'range' });
+            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'default' });
           }}
           disabled={!filter.column}
           className="justify-self-end"
