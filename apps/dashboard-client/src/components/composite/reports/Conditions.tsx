@@ -76,15 +76,15 @@ const ConditionItem: React.FC<{
           />
 
           <When condition={!!values && !!Object.keys(values).length}>
-            {values && Object.keys(values!)?.map((value) => (
+            {values && Object.keys(values!)?.map((param) => (
               <Input
-                key={value}
-                placeholder={value}
+                key={param}
+                placeholder={param}
                 type={condition.column?.type}
                 onChange={({ target: { value } }) => updateCondition(
                   condition.id,
                   condition,
-                  { [value]: value }
+                  { [param]: value }
                 )}
               />
             ))}

@@ -92,11 +92,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, [fetchedColumns, columns]);
 
   const addColumn: ReportsProviderState['addColumn'] = useCallback((id) => {
-    console.log(id);
     const entity = availableColumns.find((col) => col.id === id);
-    console.log({
-      entity
-    });
     if (!entity) return;
     setColumns((prev) => [...prev, entity]);
   }, [availableColumns]);
