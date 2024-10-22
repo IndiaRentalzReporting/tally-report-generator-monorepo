@@ -62,12 +62,12 @@ const FilterComponent: React.FC<{
         <Select
           label="Join"
           value={filter.filterType}
-          options={['Select', 'Search'].map((join) => ({
+          options={['select', 'search', 'range'].map((join) => ({
             label: join,
             value: join
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'default' });
+            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'range' });
           }}
           disabled={!filter.column}
           className="justify-self-end"
