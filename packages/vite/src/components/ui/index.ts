@@ -18,3 +18,4 @@ export * from './select';
 export * from './toaster';
 export * from './textarea';
 export * from './data-table';
+export * from './multi-select';

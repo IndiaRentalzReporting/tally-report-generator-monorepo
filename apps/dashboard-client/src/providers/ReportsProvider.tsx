@@ -1,7 +1,6 @@
 import React, {
   useContext, useMemo, useCallback, useState,
-  createContext,
-  useEffect
+  createContext
 } from 'react';
 import { UseMutateAsyncFunction, useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -13,7 +12,6 @@ import { services } from '@/services/reports';
 export type Column = Partial<ReportSelect['columns'][number]> & { id: number };
 export type Condition = Partial<ReportSelect['conditions'][number]> & { id: number };
 export type Filter = Partial<ReportSelect['filters'][number]> & { id: number };
-export type GroupBy = Partial<ReportSelect['groupBy'][number]> & { id: number };
 
 interface ReportsProviderState {
   columns: Array<Column>;
@@ -33,8 +31,8 @@ interface ReportsProviderState {
   removeFilter: (id: number | undefined) => void;
   updateFilter: (id: number | undefined, update: Partial<Filter>) => void;
 
-  groupBy: Array<GroupBy>;
-  setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
+  groupBy: Array<Column>;
+  setGroupBy: React.Dispatch<React.SetStateAction<Array<Column>>>;
 
   fetchingColumns: boolean,
 
@@ -58,10 +56,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>([]);
   const [filters, setFilters] = useState<ReportsProviderState['filters']>([]);
   const [conditions, setConditions] = useState<ReportsProviderState['conditions']>([]);
-
-  useEffect(() => console.log({
-    groupBy
-  }));
 
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),

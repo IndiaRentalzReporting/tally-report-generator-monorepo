@@ -1,7 +1,7 @@
 import React from 'react';
 
+import { MultiSelect } from '@trg_package/vite/components';
 import { useReports } from '@/providers/ReportsProvider';
-import Select from './Select';
 
 const GroupBy: React.FC = () => {
   const {
@@ -11,25 +11,16 @@ const GroupBy: React.FC = () => {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold mb-2 flex-1">Group By</h3>
-      <Select
-        label="Column"
-        value={groupBy[0]?.column?.displayName}
-        options={columns.filter((col) => !col.operation).map(({ column }) => {
-          if (!column?.displayName) {
-            return {
-              label: 'No Name',
-              value: 'No Name'
-            };
-          }
-          return {
-            label: column.displayName,
-            value: column.displayName
-          };
-        })}
-        onChange={(displayName) => {
-          const column = columns
-            .find((col) => col.column?.displayName === displayName);
-          if (column) setGroupBy([{ id: Date.now(), column: column.column }]);
+      <MultiSelect
+        label='columns'
+        options={columns.filter((col) => !col.operation).map((col) => ({
+          label: col.column?.displayName || 'No Label',
+          value: col.column?.displayName || 'No Value'
+        }))}
+        value={groupBy.map((group) => group.column?.displayName || '')}
+        onChange={(values) => {
+          const columnToAdd = Array.from(new Set(columns.filter((col) => values.includes(col.column?.displayName || ''))));
+          setGroupBy(columnToAdd);
         }}
       />
     </div>
