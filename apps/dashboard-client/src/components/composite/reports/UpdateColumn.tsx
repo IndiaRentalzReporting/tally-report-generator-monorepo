@@ -24,7 +24,9 @@ interface IUpdateEntityProps {
 }
 
 const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
-  const { columns, updateColumn } = useReports();
+  const {
+    columns, updateColumn, setGroupBy
+  } = useReports();
 
   const [open, setOpen] = useState(false);
   const [localExtra, setLocalExtra] = useState(column);
@@ -84,6 +86,9 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
                     value: op
                   }))}
                   onChange={(operation) => {
+                    setGroupBy((prev) => prev.filter(
+                      (group) => group.column?.displayName !== column.column?.displayName
+                    ));
                     setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
                   }}
                 />

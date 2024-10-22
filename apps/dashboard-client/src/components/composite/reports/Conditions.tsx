@@ -76,9 +76,9 @@ const ConditionItem: React.FC<{
           />
 
           <When condition={!!values && !!Object.keys(values).length}>
-            {values && Object.keys(values!)?.map((value) => (
+            {values && Object.keys(values!)?.map((value, index) => (
               <Input
-                key={value}
+                key={index}
                 placeholder={value}
                 type={condition.column?.type}
                 onChange={({ target: { value } }) => updateCondition(

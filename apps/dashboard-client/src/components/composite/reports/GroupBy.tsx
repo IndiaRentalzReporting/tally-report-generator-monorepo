@@ -5,7 +5,7 @@ import Select from './Select';
 
 const GroupBy: React.FC = () => {
   const {
-    columns, availableColumns, groupBy, setGroupBy
+    columns, groupBy, setGroupBy
   } = useReports();
 
   return (
@@ -14,7 +14,7 @@ const GroupBy: React.FC = () => {
       <Select
         label="Column"
         value={groupBy[0]?.column?.displayName}
-        options={columns.concat(availableColumns).map(({ column }) => {
+        options={columns.filter((col) => !col.operation).map(({ column }) => {
           if (!column?.displayName) {
             return {
               label: 'No Name',
@@ -28,7 +28,6 @@ const GroupBy: React.FC = () => {
         })}
         onChange={(displayName) => {
           const column = columns
-            .concat(availableColumns)
             .find((col) => col.column?.displayName === displayName);
           if (column) setGroupBy([{ id: Date.now(), column: column.column }]);
         }}

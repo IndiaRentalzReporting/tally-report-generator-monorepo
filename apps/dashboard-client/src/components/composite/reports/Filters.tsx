@@ -60,11 +60,11 @@ const FilterComponent: React.FC<{
         />
 
         <Select
-          label="Join"
+          label="Type"
           value={filter.filterType}
-          options={['select', 'search', 'default'].map((join) => ({
-            label: join,
-            value: join
+          options={['select', 'search', 'default'].map((type) => ({
+            label: type,
+            value: type
           }))}
           onChange={(filterType: string) => {
             updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'default' });

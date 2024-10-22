@@ -1,6 +1,7 @@
 import React, {
   useContext, useMemo, useCallback, useState,
-  createContext
+  createContext,
+  useEffect
 } from 'react';
 import { UseMutateAsyncFunction, useMutation, useQuery } from '@tanstack/react-query';
 import {
@@ -57,6 +58,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>([]);
   const [filters, setFilters] = useState<ReportsProviderState['filters']>([]);
   const [conditions, setConditions] = useState<ReportsProviderState['conditions']>([]);
+
+  useEffect(() => console.log({
+    groupBy
+  }));
 
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId }),
