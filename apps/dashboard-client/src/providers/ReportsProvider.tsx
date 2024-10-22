@@ -73,7 +73,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const { mutateAsync: updateReport } = useMutation({
     mutationFn: () => {
       const tables = Array.from(new Set(columns
-        .filter((column) => !!column.column)
+        .filter((column) => !!column.column && !!column.column.tablealias)
         .map((column) => column.column!.tablealias)));
 
       return services.updateOne(reportId, {
