@@ -1,11 +1,14 @@
 import React from 'react';
-import { Check, ChevronsUpDown, X } from 'lucide-react';
+import {
+  Check, ChevronsUpDown, X
+} from 'lucide-react';
 import {
   Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList
 } from '$/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover';
 import { Button } from '$/components/ui/button';
-import { Badge } from '$/components/ui/badge';
+import { Else, If, Then } from '../Conditionals';
+import { Badge } from './badge';
 
 interface Option {
   value: string;
@@ -45,15 +48,40 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     <div className={`w-full ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between"
-          >
-            {value.length === 0 ? `Select ${label}...` : `${value.length} selected`}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between"
+            >
+              <If condition={value.length > 0}>
+                <Then>
+                  <div className='flex gap-2 items-center'>
+                    {value.map((selectedValue) => {
+                      const option = options.find((opt) => opt.value === selectedValue);
+                      if (!option) return null;
+                      return (
+                        <Badge key={selectedValue} variant="secondary">
+                            {option.label}
+                            <button
+                            type='button'
+                            className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                            onClick={() => removeValue(selectedValue)}
+                            >
+                              <X className="h-3 w-3" />
+                              <span className="sr-only">Remove</span>
+                            </button>
+                          </Badge>
+                      );
+                    })}
+                  </div>
+                </Then>
+                <Else>
+                  {`Select ${label}...`}
+                </Else>
+              </If>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
         </PopoverTrigger>
         <PopoverContent className="w-full p-0">
           <Command>
@@ -80,28 +108,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           </Command>
         </PopoverContent>
       </Popover>
-
-      {value.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {value.map((selectedValue) => {
-            const option = options.find((opt) => opt.value === selectedValue);
-            if (!option) return null;
-            return (
-              <Badge key={selectedValue} variant="secondary">
-                {option.label}
-                <button
-                type='button'
-                  className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                  onClick={() => removeValue(selectedValue)}
-                >
-                  <X className="h-3 w-3" />
-                  <span className="sr-only">Remove</span>
-                </button>
-              </Badge>
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 };
