@@ -1,13 +1,13 @@
 import {
   varchar , text , uuid , pgTable,json
 } from 'drizzle-orm/pg-core';
+
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { ReportColumnInsert } from '@/types/reportColumn';
-import { ConditionInsert } from '@/types/reportCondition';
-import { ReportFilterInsert } from '@/types/reportFilter';
-import { ReportGroupByInsert } from '@/types/reportGroupBy';
-import { ReportConfigSelect } from '@/types/reportQueryConfig';
 import { TableSchema } from './table';
+import {
+  ReportColumnInsert, ReportConditionInsert,
+  ReportConfigSelect, ReportFilterInsert, ReportGroupByInsert
+} from '@/static-types';
 
 export const ReportSchema = pgTable('report',{
   id: uuid('id').primaryKey().defaultRandom(),
@@ -15,10 +15,10 @@ export const ReportSchema = pgTable('report',{
   description: text('description').default(''),
   baseEntity: uuid('baseEntity').references(() => TableSchema.id,{ onDelete: 'restrict',onUpdate: 'restrict' }).notNull(),
   tables: json('tables').$type<string[]>(),
-  columns: json('columns').$type<ReportColumnInsert[]>(),
-  filters: json('filters').$type<ReportFilterInsert[]>(),
-  groupBy: json('groupBy').$type<ReportGroupByInsert[]>(),
-  conditons: json('conditions').$type<ConditionInsert[]>(),
+  columns: json('columns').$type<ReportColumnInsert[]>().default([]).notNull(),
+  filters: json('filters').$type<ReportFilterInsert[]>().default([]).notNull(),
+  groupBy: json('groupBy').$type<ReportGroupByInsert[]>().default([]).notNull(),
+  conditions: json('conditions').$type<ReportConditionInsert[]>().default([]).notNull(),
   queryConfig: json('queryConfig').$type<ReportConfigSelect>(),
 });
 

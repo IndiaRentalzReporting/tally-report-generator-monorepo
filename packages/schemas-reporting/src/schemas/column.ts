@@ -1,4 +1,6 @@
-import { varchar, uuid, pgTable, pgEnum, text } from 'drizzle-orm/pg-core';
+import {
+  varchar, uuid, pgTable, pgEnum, text
+} from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { TableSchema } from './table';
 
@@ -26,6 +28,5 @@ export const ColumnSchema = pgTable('column', {
 
 export type ColumnInsert = typeof ColumnSchema.$inferInsert;
 export const ColumnInsertSchema = createInsertSchema(ColumnSchema);
-
 export type ColumnSelect = typeof ColumnSchema.$inferSelect;
 export const ColumnSelectSchema = createSelectSchema(ColumnSchema);

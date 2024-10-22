@@ -1,5 +1,5 @@
 import { Edit } from 'lucide-react';
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Drawer,
   DrawerTrigger,
@@ -13,154 +13,106 @@ import {
   Checkbox,
   Input,
   Label,
-  When,
-  Button
+  When
 } from '@trg_package/vite/components';
-import { ColumnOperation } from '@trg_package/schemas-reporting/types';
+import { ColumnOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
 
 interface IUpdateEntityProps {
-  columnName: Column['column']['name'];
+  column: Column;
 }
 
-export const UpdateColumn: React.FC<IUpdateEntityProps> = ({ columnName }) => {
+const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   const { columns, updateColumn } = useReports();
-  const [isOpen, setIsOpen] = useState(false);
 
-  const selectedColumn = useMemo(
-    () => columns.find((col) => col.column.name === columnName),
-    [columns, columnName]
-  );
+  const [open, setOpen] = useState(false);
+  const [localExtra, setLocalExtra] = useState(column);
 
-  const [localExtra, setLocalExtra] = useState<Column['extra']>(
-    selectedColumn?.extra ?? {
-      name: '',
-      heading: '',
-      operation: '',
-      params: '',
-      showTotal: false
+  const selectedColumn = columns.find((col) => col.column?.name === column.column?.name);
+
+  const operations = Object.keys(ColumnOperations).filter((operatorName) => {
+    const operation = ColumnOperations[operatorName as keyof typeof ColumnOperations];
+    const operationFor = operation.for;
+    return selectedColumn?.column?.type ? operationFor.includes(selectedColumn.column.type) : [];
+  });
+
+  const handleClose = (open: boolean) => {
+    setOpen(open);
+    if (selectedColumn && !open) {
+      setTimeout(() => updateColumn(selectedColumn.id, { ...localExtra }), 500);
     }
-  );
-
-  // Reset localExtra when the drawer opens
-  useEffect(() => {
-    if (isOpen && selectedColumn) {
-      setLocalExtra(selectedColumn.extra);
-    }
-  }, [isOpen, selectedColumn]);
-
-  const operations = useMemo(
-    () => (selectedColumn ? ColumnOperation[selectedColumn.column.type] : []),
-    [selectedColumn]
-  );
-
-  const values = useMemo(
-    () =>
-      selectedColumn
-        ? (ColumnOperation[selectedColumn.column.type].find(
-            (op) => op.operationType === selectedColumn.extra.operation
-          )?.operationParams ?? [])
-        : [],
-    [selectedColumn]
-  );
-
-  const handleSave = useCallback(() => {
-    if (selectedColumn) {
-      updateColumn(selectedColumn.column.name, 'extra', localExtra);
-    }
-    setIsOpen(false);
-  }, [selectedColumn, updateColumn, localExtra]);
+  };
 
   return (
-    <Drawer open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger>
-        <Edit size={100} className="cursor-pointer opacity-5" />
-      </DrawerTrigger>
-      <DrawerContent className="px-6">
-        <DrawerHeader className="px-0">
-          <DrawerTitle>Column Settings</DrawerTitle>
-        </DrawerHeader>
-        <Card className="w-full relative">
-          <CardContent className="pt-6 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="columnName">Column Name</Label>
-              <Input id="columnName" value={localExtra.name} readOnly />
-            </div>
+    <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
+      <Drawer open={open} onOpenChange={handleClose}>
+        <DrawerTrigger>
+          <Edit size={100} className="cursor-pointer opacity-5" />
+        </DrawerTrigger>
+        <DrawerContent className="px-6">
+          <DrawerHeader className="px-0">
+            <DrawerTitle>Column Settings</DrawerTitle>
+          </DrawerHeader>
+          <Card className="w-full relative">
+            <CardContent className="pt-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="columnName">Column Name</Label>
+                <Input id="columnName" value={column.column?.name} readOnly />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="heading">Heading</Label>
-              <Input
-                id="heading"
-                value={localExtra.heading}
-                onChange={({ target }) =>
-                  setLocalExtra((prev) => ({
-                    ...prev,
-                    heading: target.value
-                  }))
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="operation">Operation</Label>
-              <Select
-                label="Operation"
-                value={localExtra.operation || ''}
-                options={operations.map((op) => ({
-                  label: op.operationType,
-                  value: op.operationType
-                }))}
-                onChange={(operatorName) =>
-                  setLocalExtra((prev) => ({
-                    ...prev,
-                    operation: operatorName
-                  }))
-                }
-              />
-            </div>
-
-            <When condition={!!values.length}>
-              {values.map((value) => (
+              <div className="space-y-2">
+                <Label htmlFor="heading">Heading</Label>
                 <Input
-                  key={value}
-                  placeholder={value}
-                  value={localExtra.params}
-                  onChange={({ target }) => {
-                    setLocalExtra((prev) => ({
-                      ...prev,
-                      params: target.value
-                    }));
+                  id="heading"
+                  value={localExtra.heading || ''}
+                  onChange={({ target: { value: heading } }) => setLocalExtra((prev) => ({
+                    ...prev,
+                    heading
+                  }))
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="operation">Operation</Label>
+                <Select
+                  label="Operation"
+                  value={localExtra.operation}
+                  options={operations.map((op) => ({
+                    label: op,
+                    value: op
+                  }))}
+                  onChange={(operation) => {
+                    setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
                   }}
                 />
-              ))}
-            </When>
+              </div>
 
-            <When condition={selectedColumn?.column.type === 'number'}>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  checked={localExtra.showTotal}
-                  id="showTotal"
-                  onCheckedChange={(showTotal) =>
-                    setLocalExtra((prev) => ({
+              <When condition={selectedColumn?.column?.type === 'number'}>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={localExtra.column?.type === 'number'}
+                    id="showTotal"
+                    onCheckedChange={(showTotal) => setLocalExtra((prev) => ({
                       ...prev,
                       showTotal: Boolean(showTotal)
                     }))
-                  }
-                />
-                <Label htmlFor="showTotal">Show Total</Label>
-              </div>
-            </When>
-            <Button onClick={handleSave} className="w-full">
-              Save
-            </Button>
-          </CardContent>
-        </Card>
+                    }
+                  />
+                  <Label htmlFor="showTotal">Show Total</Label>
+                </div>
+              </When>
+            </CardContent>
+          </Card>
 
-        <DrawerFooter className="px-0">
-          <DrawerClose>Cancel</DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+          <DrawerFooter className="px-0">
+            <DrawerClose>Cancel</DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 };
+
+export default UpdateColumn;

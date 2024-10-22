@@ -1,20 +1,12 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { Button, When, Input } from '@trg_package/vite/components';
-import { Operators } from '@trg_package/schemas-reporting/types';
-import { useReports } from '@/providers/ReportsProvider';
+import { ConditionOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
+import { Condition, useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
 
 const Conditions: React.FC = () => {
-  const [conditions, setConditions] = useState<Array<{ id: number }>>([]);
-
-  const addCondition = () => {
-    setConditions((prev) => [...prev, { id: Date.now() }]);
-  };
-
-  const removeCondition = (id: number) => {
-    setConditions(conditions.filter((condition) => condition.id !== id));
-  };
+  const { conditions, addCondition, removeCondition } = useReports();
 
   return (
     <div className="space-y-4">
@@ -26,7 +18,8 @@ const Conditions: React.FC = () => {
       </h3>
       {conditions.map((condition) => (
         <ConditionItem
-          key={condition.id}
+          key={condition.column?.displayName}
+          condition={condition}
           onRemove={() => removeCondition(condition.id)}
         />
       ))}
@@ -35,93 +28,83 @@ const Conditions: React.FC = () => {
 };
 
 const ConditionItem: React.FC<{
+  condition: Condition;
   onRemove: () => void;
-}> = ({ onRemove }) => {
-  const { columns, updateColumn } = useReports();
-  const [selectedColumnName, setSelectedColumnName] = useState<
-    string | undefined
-  >(undefined);
+}> = ({ condition, onRemove }) => {
+  const { columns, availableColumns, updateCondition } = useReports();
 
-  const selectedColumn = useMemo(
-    () => columns.find((col) => col.column.name === selectedColumnName),
-    [selectedColumnName, columns]
-  );
+  const operations = Object.keys(ConditionOperations).filter((operatorName) => {
+    const operation = ConditionOperations[operatorName as keyof typeof ConditionOperations];
+    const operationFor = operation.for;
+    return condition.column ? operationFor.includes(condition.column.type) : [];
+  });
 
-  const operations = useMemo(
-    () => (selectedColumn ? (Operators[selectedColumn.column.type] ?? []) : []),
-    [selectedColumn]
-  );
-
-  const values = useMemo(
-    () =>
-      selectedColumn && operations
-        ? (Operators[selectedColumn.column.type].find(
-            (op) => op.operator === selectedColumn.condition.operator
-          )?.params ?? [])
-        : [],
-    [selectedColumn, operations]
-  );
+  const values = condition.operator ? ConditionOperations[condition.operator].params : null;
 
   return (
     <div className="flex items-center space-x-4 space-y-2">
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
         <Select
           label="Column"
-          value={selectedColumn?.column.name}
-          options={columns.map(({ column }) => ({
-            label: column.name,
-            value: column.name
+          value={condition.column?.displayName}
+          options={columns.concat(availableColumns).map(({ column }) => ({
+            label: column?.displayName || '',
+            value: column?.displayName || ''
           }))}
-          onChange={(columnName) => {
-            setSelectedColumnName(columnName);
-          }}
-        />
-
-        <Select
-          label="Operator"
-          value={selectedColumn?.condition.operator}
-          options={operations.map((op) => ({
-            label: op.operator,
-            value: op.operator
-          }))}
-          onChange={(operator) => {
-            updateColumn(selectedColumnName, 'condition', {
-              operator
+          onChange={(id) => {
+            updateCondition(condition.id, condition, {
+              column: columns
+                .concat(availableColumns)
+                .find((col) => col.column?.displayName === id)?.column
             });
           }}
-          disabled={!operations.length || !selectedColumn}
         />
 
-        <When condition={!!values.length}>
-          {values.map((value) => (
-            <Input
-              key={value}
-              placeholder={value}
-              type={selectedColumn?.column.type}
-              onChange={({ target: { value } }) => {
-                updateColumn(selectedColumnName, 'condition', {
-                  value
-                });
-              }}
-            />
-          ))}
+        <When condition={!!condition.column}>
+          <Select
+            label="Operator"
+            value={condition.operator}
+            options={operations.map((op) => ({
+              label: op,
+              value: op
+            }))}
+            onChange={(operator) => updateCondition(
+              condition.id,
+              condition,
+              { operator: operator as ReportSelect['conditions'][number]['operator'] }
+            )}
+          />
+
+          <When condition={!!values && !!Object.keys(values).length}>
+            {values && Object.keys(values!)?.map((value) => (
+              <Input
+                key={value}
+                placeholder={value}
+                type={condition.column?.type}
+                onChange={({ target: { value } }) => updateCondition(
+                  condition.id,
+                  condition,
+                  { [value]: value }
+                )}
+              />
+            ))}
+          </When>
+
+          <Select
+            label="Join"
+            value={condition.join || ''}
+            options={['AND', 'OR', 'AND NOT', 'OR NOT'].map((join) => ({
+              label: join,
+              value: join
+            }))}
+            onChange={(join: string) => updateCondition(condition.id, condition, {
+              join: join as ReportSelect['conditions'][number]['join']
+            })
+            }
+            className="justify-self-end"
+          />
         </When>
 
-        <Select
-          label="Join"
-          value={selectedColumn?.condition.join}
-          options={['AND', 'OR', 'NOT'].map((join) => ({
-            label: join,
-            value: join
-          }))}
-          onChange={(join: string) => {
-            updateColumn(selectedColumnName, 'condition', {
-              join: join as 'AND' | 'OR' | 'NOT'
-            });
-          }}
-          disabled={!selectedColumn}
-          className="justify-self-end"
-        />
       </div>
 
       <Button

@@ -1,7 +1,12 @@
 {
-  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
   },
-  "makefile.configureOnOpen": false
+<<<<<<< Updated upstream
+  "eslint.validate": ["javascript"],
+  "files.eol": "\n"
+=======
+  "eslint.validate": ["javascript"]
+>>>>>>> Stashed changes
 }

@@ -1,4 +1,4 @@
-import { type ReportInsert } from './Report';
+import { type ReportInsert } from '../schemas/report';
 
 export {
   type ReportInsert,
@@ -8,4 +8,7 @@ export {
 } from '../schemas/report';
 
 // Shape of report while fetching
-export type ReportFetchSchema = Pick<ReportInsert, 'id' | 'name' | 'queryConfig'>;
+export type ReportFetchSchema = Pick<
+ReportInsert,
+'id' | 'name' | 'queryConfig'
+>;

@@ -1,6 +1,6 @@
 import { AxiosPromise } from 'axios';
 import {
-  ColumnSelect,
+  DetailedColumnSelect,
   ReportInsert,
   ReportSelect,
   TableSelect
@@ -47,9 +47,9 @@ export const services = {
     query = {}
   }: {
     tableId: TableSelect['id'];
-    query?: Partial<ColumnSelect>;
+    query?: Partial<DetailedColumnSelect>;
   }): AxiosPromise<{
-    columns: ColumnSelect[];
+    columns: DetailedColumnSelect[];
   }> => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
