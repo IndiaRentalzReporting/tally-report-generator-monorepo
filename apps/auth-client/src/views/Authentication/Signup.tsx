@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useState, ChangeEvent, FormEvent } from 'react';
 import {
   Button,
   Card,
@@ -7,51 +6,53 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
-  Label
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input
 } from '@trg_package/vite/components';
-import { RegisterUser, TenantInsert } from '@trg_package/schemas-auth/types';
+import { TenantInsertSchema, UserSelectSchema } from '@trg_package/schemas-auth/types';
 import { useAuth } from '@trg_package/vite/providers';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-const initialTenantState: TenantInsert = {
-  name: ''
-};
-
-const initialUserState: RegisterUser = {
-  email: '',
-  password: '',
-  first_name: '',
-  last_name: ''
-};
+const formSchema = UserSelectSchema.pick({
+  email: true,
+  password: true,
+  first_name: true,
+  last_name: true
+}).extend({
+  tenant: TenantInsertSchema.shape.name
+});
 
 export const SignupForm = () => {
   const {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
 
-  const [tenantData, setTenantData] =
-    useState<TenantInsert>(initialTenantState);
-  const [userData, setUserData] = useState<RegisterUser>(initialUserState);
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      first_name: '',
+      last_name: '',
+      tenant: ''
+    }
+  });
 
-  const handleFormChange = <T extends object>(
-    e: ChangeEvent<HTMLInputElement>,
-    callback: React.Dispatch<React.SetStateAction<T>>
-  ) => {
-    const { value, name } = e.target;
-    callback((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async ({ tenant: name, ...user }: z.infer<typeof formSchema>) => {
     onboard({
-      tenant: tenantData,
-      user: userData
+      tenant: {
+        name
+      },
+      user
     });
-    setTenantData(initialTenantState);
-    setUserData(initialUserState);
   };
 
   return (
@@ -64,75 +65,118 @@ export const SignupForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="grid gap-4" onSubmit={handleSignUp}>
-            <div className="grid gap-2">
-              <Label htmlFor="company_name">Comapny Name</Label>
-              <Input
-                id="company_name"
-                name="name"
-                onChange={(e) => handleFormChange(e, setTenantData)}
-                placeholder="Max"
-                required
-                value={tenantData.name}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+          <Form {...form}>
+            <form className="grid gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input
-                  id="first-name"
-                  name="first_name"
-                  onChange={(e) => handleFormChange(e, setUserData)}
-                  placeholder="Max"
-                  required
-                  value={userData.first_name}
+                <FormField
+                  control={form.control}
+                  name="tenant"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel >Company Name</FormLabel>
+                      <FormControl>
+                      <Input
+                          placeholder="IXC Pvt Ltd."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="first_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel >First Name</FormLabel>
+                        <FormControl>
+                        <Input
+                            placeholder="Max"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <FormField
+                    control={form.control}
+                    name="last_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel >Last Name</FormLabel>
+                        <FormControl>
+                        <Input
+                            placeholder="Smith"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel >Email</FormLabel>
+                      <FormControl>
+                      <Input
+                          type='email'
+                          placeholder="m@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input
-                  id="last-name"
-                  name="last_name"
-                  onChange={(e) => handleFormChange(e, setUserData)}
-                  placeholder="Robinson"
-                  required
-                  value={userData.last_name}
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='flex items-center'>Password</FormLabel>
+                      <FormControl>
+                      <Input
+                          type='password'
+                          placeholder="********"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
+              <Button className="w-full" isLoading={isLoading} type="submit">
+                Create an Account
+              </Button>
+            </form>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{' '}
+              <Link className="underline" to="/sign-in">
+                Sign in
+              </Link>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                onChange={(e) => handleFormChange(e, setUserData)}
-                placeholder="m@example.com"
-                required
-                type="email"
-                value={userData.email}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                onChange={(e) => handleFormChange(e, setUserData)}
-                placeholder="********"
-                type="password"
-                value={userData.password}
-              />
-            </div>
-            <Button className="w-full" isLoading={isLoading} type="submit">
-              Create an Account
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <Link className="underline" to="/sign-in">
-              Sign in
-            </Link>
-          </div>
+          </Form>
         </CardContent>
       </Card>
     </div>

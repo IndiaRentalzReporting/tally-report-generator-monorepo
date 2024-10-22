@@ -1,5 +1,4 @@
 import {
-  Label,
   Card,
   CardHeader,
   CardTitle,
@@ -10,20 +9,33 @@ import {
   ToastAction,
   If,
   Then,
-  Else
+  Else,
+  Form,
+  FormField,
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from '@trg_package/vite/components';
 import { useToast } from '@trg_package/vite/hooks';
-import { useState, FC, FormEvent } from 'react';
+import { FC } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { UserSelectSchema } from '@trg_package/schemas-auth/types';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { services } from './services';
+
+const formSchema = UserSelectSchema.pick({ password: true }).extend({
+  confirmPassword: UserSelectSchema.shape.password
+});
 
 export const ResetPassword: FC = () => {
   const { token: unvalidatedToken } = useParams<{ token: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
 
   const { data: token, isError } = useQuery({
     queryFn: () => services.checkResetPassword(unvalidatedToken ?? ''),
@@ -31,38 +43,40 @@ export const ResetPassword: FC = () => {
     queryKey: ['reset token', 'validation']
   });
 
-  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } =
-    useMutation({
-      mutationFn: () =>
-        services.resetPassword({
-          token: token?.token ?? '',
-          password,
-          confirmPassword
-        }),
-      onSuccess: (data) => {
-        setPassword('');
-        setConfirmPassword('');
-        toast({
-          variant: 'default',
-          title: 'Password Reset!',
-          description: data.data.message,
-          action: (
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: ''
+    }
+  });
+
+  const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
+    mutationFn: (values: z.infer<typeof formSchema>) => services.resetPassword({
+      token: token?.token ?? '',
+      ...values
+    }),
+    onSuccess: (data) => {
+      toast({
+        variant: 'default',
+        title: 'Password Reset!',
+        description: data.data.message,
+        action: (
             <ToastAction altText="Okay!" onClick={() => navigate('/sign-in')}>
               Okay!
             </ToastAction>
-          )
-        });
-      }
-    });
+        )
+      });
+    }
+  });
 
-  const handleResetPassword = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    forgotPasswordMutation();
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    forgotPasswordMutation(values);
+    form.reset();
   };
-
   return (
     <div className="h-full flex flex-col justify-center items-center">
-      <If condition={isError}>
+      <If condition={false}>
         <Then>
           <Navigate to="/sign-in" />
         </Then>
@@ -75,37 +89,55 @@ export const ResetPassword: FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="grid gap-4" onSubmit={handleResetPassword}>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="*********"
-                    required
-                    type="password"
-                    value={password}
-                  />
-                  <Label htmlFor="email">ConfirmPassword</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="*********"
-                    required
-                    type="password"
-                    value={confirmPassword}
-                  />
-                </div>
-                <Button
-                  className="w-full"
-                  isLoading={loadingMutation}
-                  type="submit"
-                >
-                  Reset Password
-                </Button>
-              </form>
+              <Form {...form}>
+                <form className="grid gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+                  <div className="grid gap-2">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel >Password</FormLabel>
+                          <FormControl>
+                            <Input
+                                type='password'
+                                placeholder="********"
+                                {...field}
+                              />
+                          </FormControl>
+                          <FormDescription />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel >Confirm Password</FormLabel>
+                          <FormControl>
+                            <Input
+                                type='password'
+                                placeholder="********"
+                                {...field}
+                              />
+                          </FormControl>
+                          <FormDescription />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Button
+                    className="w-full"
+                    isLoading={loadingMutation}
+                    type="submit"
+                  >
+                    Reset Password
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </Else>

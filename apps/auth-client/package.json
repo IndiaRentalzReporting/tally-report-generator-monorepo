@@ -10,16 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@tanstack/react-query": "^5.40.1",
-    "@trg_package/vite": "*",
     "@trg_package/config-env": "*",
     "@trg_package/errors": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
+    "@trg_package/vite": "*",
     "axios": "^1.7.2",
     "lucide-react": "^0.439.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.53.1",
     "react-router": "^6.23.0",
     "react-router-dom": "^6.23.1",
     "zod": "^3.23.8"
