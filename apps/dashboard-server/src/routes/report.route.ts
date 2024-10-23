@@ -5,15 +5,18 @@ import {
   ReportSelectSchema,
   TableSelectSchema
 } from '@trg_package/schemas-reporting/types';
+import z from 'zod';
 import {
   createOne,
   deleteOne,
   getAllColumns,
   getAllTables,
+  getReportColumns,
+  getReportData,
+  getReportFilters,
   readAll,
   updateOne
 } from '../controller/report.controller';
-import z from 'zod';
 
 const reportRouter = Router();
 
@@ -37,32 +40,29 @@ reportRouter.get(
   readAll
 );
 
-
 reportRouter.get(
-    '/read/getColumns/:tableId',
-    validateSchema({
-        params: z.object({
-            tableId : TableSelectSchema.shape.id
-        })
-    }),
-    getAllColumns
+  '/read/getColumns/:tableId',
+  validateSchema({
+    params: z.object({
+      tableId: TableSelectSchema.shape.id
+    })
+  }),
+  getAllColumns
 );
 
 reportRouter.get(
-    '/read/getTables',
-    getAllTables,
+  '/read/getTables',
+  getAllTables,
 );
-
-
 
 reportRouter.patch(
   '/update/:id',
   validateSchema({
     body: ReportInsertSchema.omit({
       baseEntity: true,
-      name:true,
-      queryConfig:true,
-      id:true
+      name: true,
+      queryConfig: true,
+      id: true
     }),
     params: ReportSelectSchema.pick({
       id: true
@@ -79,6 +79,37 @@ reportRouter.delete(
     })
   }),
   deleteOne
+);
+
+// report level access pending
+reportRouter.get(
+  '/read/reportColumns/:id',
+  validateSchema({
+    params: ReportInsertSchema.pick({
+      id: true
+    })
+  }),
+  getReportColumns
+);
+
+reportRouter.get(
+  '/read/reportData/:id',
+  validateSchema({
+    params: ReportInsertSchema.pick({
+      id: true
+    })
+  }),
+  getReportData
+);
+
+reportRouter.get(
+  '/read/reportFilters/:id',
+  validateSchema({
+    params: ReportInsertSchema.pick({
+      id: true
+    })
+  }),
+  getReportFilters
 );
 
 export default reportRouter;

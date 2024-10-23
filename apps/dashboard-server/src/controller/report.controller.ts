@@ -3,8 +3,10 @@ import {
   DetailedColumnSelect,
   ReportInsert,
   ReportSelect,
-  TableSelect
+  TableSelect,
+  GeneratedReportFilters
 } from '@trg_package/schemas-reporting/types';
+import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getQueryConfig } from '@/utils/queryBuilder';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true
@@ -107,6 +109,87 @@ export const deleteOne = async (
     const { id } = req.params;
     const report = await req.reportService.deleteOne({ id });
     return res.json({ report });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const getReportData = async (
+  req : Request<Pick<ReportSelect,'id'>>,
+  res : Response,
+  next: NextFunction
+) => {
+  try {
+    const report = await req.reportService.findOne({ id: req.params.id });
+    const { queryConfig } = report;
+
+    if (!report.columns) {
+      throw new CustomError('Report Config is missing columns',400);
+    }
+
+    if (queryConfig?.dataSource === '') throw new CustomError('Report does not have a data source',400);
+    const data = await req.reportService.runConfigQuery(queryConfig?.dataSource ?? '');
+
+    return res.json({
+      data
+    });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const getReportColumns = async (
+  req : Request<Pick<ReportSelect,'id'>>,
+  res : Response,
+  next: NextFunction
+) => {
+  try {
+    const report = await req.reportService.findOne({ id: req.params.id });
+    const { queryConfig } = report;
+
+    if (!report.columns) {
+      throw new CustomError('Report Config is missing columns',400);
+    }
+
+    return res.json({
+      columns: queryConfig?.columns
+    });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const getReportFilters = async (
+  req : Request<Pick<ReportSelect,'id'>>,
+  res : Response,
+  next : NextFunction
+) => {
+  try {
+    const report = await req.reportService.findOne({ id: req.params.id });
+    if (!report.queryConfig) {
+      throw new BadRequestError('Query Config Does not exist');
+    }
+    const { filters } = report.queryConfig;
+    if (!filters) {
+      return res.json({ filters: [] });
+    }
+
+    const filterArr : GeneratedReportFilters[] = [];
+
+    Object.entries(filters).forEach(async ([alias, config]) => {
+      let filterData = null;
+      if (config.dataSource) {
+        filterData = await req.reportService.runConfigQuery<NonNullable<GeneratedReportFilters['data']>>(config.dataSource);
+      }
+      filterArr.push({
+        data: filterData,
+        fieldName: alias,
+        filterType: config.filterType,
+        label: ''
+      });
+    });
+
+    return res.json({ filters: filterArr });
   } catch (e) {
     return next(e);
   }
