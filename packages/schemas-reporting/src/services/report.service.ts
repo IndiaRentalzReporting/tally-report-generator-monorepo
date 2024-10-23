@@ -4,6 +4,7 @@ import { sql } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { ReportSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
+import { ReportSelect } from '@/types';
 
 export class ReportService extends BaseServiceNew<
   typeof reportingSchemas,
@@ -66,5 +67,13 @@ export class ReportService extends BaseServiceNew<
     } catch (error) {
       throw new CustomError('Unable to get the query for table', 400);
     }
+  }
+
+  public async runConfigQuery<T>(
+    dataSource : NonNullable<ReportSelect['queryConfig']>['dataSource']
+  ) : Promise<T> {
+    const escapedQuery = dataSource.replace(/\\\"/g, '"') ?? '';
+    const data = await this.dbClient.execute(sql.raw(escapedQuery)) as T;
+    return data;
   }
 }
