@@ -55,15 +55,40 @@ export function getGroupByQuery(columns : ReportSelect['groupBy']) {
   return `GROUP BY ${query.join(', ')}`;
 }
 
-type FilterConfig = NonNullable<ReportInsert['queryConfig']>['filters'];
+type FilterConfig = NonNullable<NonNullable<ReportInsert['queryConfig']>['filters']>;
 export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) : FilterConfig {
-  const filterConfig : FilterConfig = [];
+  const filterConfig : FilterConfig = {};
   filters.forEach((e) => {
-    let dataSource = null;
+    let dataSource : FilterConfig[string]['dataSource'] = null;
+    let queryCondition = '';
+
     if (e.filterType === 'select') {
-      dataSource = `SELECT ${getColumnName(e.column)} as label, as value FROM public."${e.column.table}"`;
+      dataSource = `SELECT ${getColumnName(e.column)} as label, as value FROM public."${e.column.table}"` as string;
+      queryCondition = `
+        "${e.column.alias}" IN (WITH RECURSIVE children_cte AS (
+          SELECT "${e.column.name}" as name, parent
+          FROM public."${e.column.table}"
+          WHERE parent IN {params}  
+          UNION ALL
+          SELECT t.name, t.parent
+          FROM  public."${e.column.table}" t
+          INNER JOIN children_cte c
+          ON t.parent = c.name
+          )
+          SELECT name
+          FROM children_cte)`;
+    } else if (e.filterType === 'search') {
+      queryCondition = `"${e.column.alias}" LIKE {params}`;
+    } else {
+      queryCondition = `"${e.column.alias}" BETWEEN {from} and {to}`;
     }
-    filterConfig.push({ ...e,dataSource });
+
+    filterConfig[e.column.alias] = {
+      dataSource,
+      queryCondition,
+      filterType: e.filterType,
+      heading: e.column.heading
+    };
   });
 
   return filterConfig;
@@ -81,8 +106,8 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
   const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} ${groupByQuery}`;
 
   const columnArr : NonNullable<ReportSelect['queryConfig']>['columns'] = [];
-  columns?.map((e) => {
-    columnArr.push({ heading: e.heading,alias: e.column.alias });
+  columns?.forEach((e) => {
+    columnArr.push({ heading: e.column.heading,alias: e.column.alias });
   });
 
   return {
