@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { ChangeEvent, useState, FormEvent } from 'react';
 import {
   Button,
   Card,
@@ -7,33 +6,42 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
-  Label
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input
 } from '@trg_package/vite/components';
-import { LoginUser } from '@trg_package/schemas-auth/types';
+import { UserSelectSchema } from '@trg_package/schemas-auth/types';
 import { useAuth } from '@trg_package/vite/providers';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
+const formSchema = UserSelectSchema.pick({
+  email: true,
+  password: true
+});
 
 export const SigninForm = () => {
   const {
     signIn: { mutation: signIn, isLoading }
   } = useAuth();
 
-  const [loginData, setLoginData] = useState<LoginUser>({
-    email: '',
-    password: ''
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
   });
 
-  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    setLoginData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    signIn(loginData);
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    signIn(values);
+    form.reset();
   };
 
   return (
@@ -46,49 +54,67 @@ export const SigninForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="grid gap-4" onSubmit={handleSignIn}>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                onChange={handleFormChange}
-                placeholder="m@example.com"
-                required
-                type="email"
-                value={loginData.email}
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  className="ml-auto inline-block text-sm underline"
-                  to="/forgot-password"
-                >
-                  Forgot your password?
-                </Link>
+          <Form {...form}>
+            <form className="grid gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel >Email</FormLabel>
+                      <FormControl>
+                      <Input
+                          type='email'
+                          placeholder="m@example.com"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <Input
-                id="password"
-                name="password"
-                onChange={handleFormChange}
-                placeholder="********"
-                required
-                type="password"
-                value={loginData.password}
-              />
+              <div className="grid gap-2">
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='flex items-center'>
+                        <span>Password</span>
+                        <Link
+                          className="ml-auto inline-block text-sm underline"
+                          to="/forgot-password"
+                        >
+                          Forgot your password?
+                        </Link>
+                      </FormLabel>
+                      <FormControl>
+                      <Input
+                          type='password'
+                          placeholder="********"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Button className="w-full" isLoading={isLoading} type="submit">
+                Login
+              </Button>
+            </form>
+            <div className="mt-4 text-center text-sm">
+              Don&apos;t have an account?{' '}
+              <Link className="underline" to="/sign-up">
+                Sign up
+              </Link>
             </div>
-            <Button className="w-full" isLoading={isLoading} type="submit">
-              Login
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link className="underline" to="/sign-up">
-              Sign up
-            </Link>
-          </div>
+          </Form>
         </CardContent>
       </Card>
     </div>

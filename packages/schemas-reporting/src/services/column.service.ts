@@ -59,11 +59,8 @@ export class ColumnService extends BaseServiceNew
 					AND pc.type != 'id'
 					AND pc.id::TEXT != cte.reference_column_id
         )
-        SELECT 
-        cte."name",
-        cte."type",
-        cte."tablename" as table,
-				lower(cte."tablealias") as table_alias,
+        SELECT cte."name",cte."type",cte."tablename" as table,
+				lower(cte."tablealias") as tablealias,
 				concat(replace(cte."tablename",'tally',''),'.',cte."name") as "displayName",
 				concat(replace(cte."tablename",'tally',''),'.',cte."name") as "heading",
 				CONCAT(LOWER(cte."tablealias"),'_',LOWER(cte."name")) as alias

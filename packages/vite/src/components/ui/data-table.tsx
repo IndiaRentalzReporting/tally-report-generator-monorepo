@@ -17,19 +17,21 @@ import {
 import React from 'react';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 import {
-  Button,
   Else,
   ElseIf,
   If,
+  Then,
+  When
+} from '../Conditionals';
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-  Then,
-  When
-} from '@trg_package/vite/components';
+} from './table';
+import { Button } from './button';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -122,8 +124,8 @@ export const DataTable = <TData, TValue>({
                         </Then>
                         <ElseIf condition={cell.getIsAggregated()}>
                           {flexRender(
-                            cell.column.columnDef.aggregatedCell ??
-                              cell.column.columnDef.cell,
+                            cell.column.columnDef.aggregatedCell
+                              ?? cell.column.columnDef.cell,
                             cell.getContext()
                           )}
                         </ElseIf>

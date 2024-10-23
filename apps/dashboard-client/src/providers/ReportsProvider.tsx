@@ -12,7 +12,6 @@ import { services } from '@/services/reports';
 export type Column = Partial<ReportSelect['columns'][number]> & { id: number };
 export type Condition = Partial<ReportSelect['conditions'][number]> & { id: number };
 export type Filter = Partial<ReportSelect['filters'][number]> & { id: number };
-export type GroupBy = Partial<ReportSelect['groupBy'][number]> & { id: number };
 
 interface ReportsProviderState {
   columns: Array<Column>;
@@ -32,8 +31,8 @@ interface ReportsProviderState {
   removeFilter: (id: number | undefined) => void;
   updateFilter: (id: number | undefined, update: Partial<Filter>) => void;
 
-  groupBy: Array<GroupBy>;
-  setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
+  groupBy: Array<Column>;
+  setGroupBy: React.Dispatch<React.SetStateAction<Array<Column>>>;
 
   fetchingColumns: boolean,
 
@@ -73,7 +72,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const { mutateAsync: updateReport } = useMutation({
     mutationFn: () => {
       const tables = Array.from(new Set(columns
-        .filter((column) => !!column.column)
+        .filter((column) => !!column.column && !!column.column.tablealias)
         .map((column) => column.column!.tablealias)));
 
       return services.updateOne(reportId, {
