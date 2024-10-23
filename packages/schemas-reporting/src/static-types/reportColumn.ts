@@ -11,6 +11,12 @@ export type ReportColumnInsert = {
 };
 
 export type ReportColumnSelect = {
-  alias: string; // Use this as response key
-  heading: string; // Use this as table column heading
+  column: DetailedColumnSelect,
+  heading: string,
+  operation: ColumnOperators;
+};
+
+export type ReportColumnConfig = {
+  alias : string,
+  heading : string
 };

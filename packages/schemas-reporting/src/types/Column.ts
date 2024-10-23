@@ -11,6 +11,7 @@ export type DetailedColumnSelect = {
   alias: string;
   displayName: string;
   table: string;
+  heading : string;
   tablealias: string;
   type: ColumnTypeLiteral;
 };

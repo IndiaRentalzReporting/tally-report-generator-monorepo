@@ -12,6 +12,14 @@ export type ReportFilterInsert = {
 
 export type ReportFilterSelect = {
   column : DetailedColumnSelect,
-  filterType : FilterTypes,
-  dataSource : string | null
+  filterType : FilterTypes
+};
+
+export type ReportFilterConfig = {
+  [K : DetailedColumnSelect['alias']] : {
+    filterType : FilterTypes,
+    dataSource : string | null,
+    heading : DetailedColumnSelect['heading']
+    queryCondition : string
+  }
 };

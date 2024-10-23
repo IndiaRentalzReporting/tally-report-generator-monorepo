@@ -6,3 +6,4 @@ export * from './reportFilter';
 export * from './reportGroupBy';
 export * from './filterTypes';
 export * from './reportQueryConfig';
+export * from './reportGenerator';

@@ -1,5 +1,8 @@
 export {
   ConditionOperations,
   ColumnOperations,
-  FilterOptions
+  FilterOptions,
+  type GeneratedReportColumns,
+  type GeneratedReportData,
+  type GeneratedReportFilters
 } from '@/static-types';
