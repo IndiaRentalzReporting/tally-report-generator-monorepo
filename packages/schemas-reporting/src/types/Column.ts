@@ -7,6 +7,7 @@ export {
 } from '../schemas/column';
 
 export type DetailedColumnSelect = {
+  id : string;
   name: string;
   alias: string;
   displayName: string;
