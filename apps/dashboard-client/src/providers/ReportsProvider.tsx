@@ -2,34 +2,36 @@ import React, {
   useContext, useMemo, useCallback, useState,
   createContext
 } from 'react';
-import { UseMutateAsyncFunction, useMutation, useQuery } from '@tanstack/react-query';
+import {
+  UseMutateAsyncFunction, useMutation, useQuery, useQueryClient
+} from '@tanstack/react-query';
 import {
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
 import { services } from '@/services/reports';
 
-export type Column = Partial<ReportSelect['columns'][number]> & { id: number };
-export type Condition = Partial<ReportSelect['conditions'][number]> & { id: number };
-export type Filter = Partial<ReportSelect['filters'][number]> & { id: number };
+export type Column = Partial<ReportSelect['columns'][number]>;
+export type Condition = Partial<ReportSelect['conditions'][number]>;
+export type Filter = Partial<ReportSelect['filters'][number]>;
 
 interface ReportsProviderState {
   columns: Array<Column>;
   availableColumns: Array<Column>;
-  addColumn: (id: number | undefined) => void;
-  removeColumn: (id: number | undefined) => void;
-  updateColumn: (id: number | undefined, update: Partial<Column>) => void;
+  addColumn: (id: string | undefined) => void;
+  removeColumn: (id: string | undefined) => void;
+  updateColumn: (id: string | undefined, update: Partial<Column>) => void;
 
   conditions: Array<Condition>;
   addCondition: () => void;
-  removeCondition: (id: number | undefined) => void;
+  removeCondition: (id: string | undefined) => void;
   updateCondition:
-  <T extends Condition>(id: number | undefined, condition: T, update: Partial<T>) => void;
+  <T extends Condition>(id: string | undefined, condition: T, update: Partial<T>) => void;
 
   filters: Array<Filter>;
   addFilter: () => void;
-  removeFilter: (id: number | undefined) => void;
-  updateFilter: (id: number | undefined, update: Partial<Filter>) => void;
+  removeFilter: (id: string | undefined) => void;
+  updateFilter: (id: string | undefined, update: Partial<Filter>) => void;
 
   groupBy: Array<Column>;
   setGroupBy: React.Dispatch<React.SetStateAction<Array<Column>>>;
@@ -39,6 +41,7 @@ interface ReportsProviderState {
   updateReport: UseMutateAsyncFunction<AxiosResponse<{
     report: ReportSelect;
   }, any>, Error>
+  isUpdatingReport: boolean
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -61,7 +64,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
     queryFn: () => services.getColumns({ tableId: report.baseEntity }),
     select: (data) => data.data.columns.map<Column>((column) => ({
-      id: Date.now(),
       column,
       heading: column.displayName,
       operation: undefined
@@ -70,7 +72,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     queryKey: ['columns', 'getAll', report.baseEntity]
   });
 
-  const { mutateAsync: updateReport } = useMutation({
+  const queryClient = useQueryClient();
+  const { mutateAsync: updateReport, isPending: isUpdatingReport } = useMutation({
     mutationFn: () => {
       const tables = Array.from(new Set(columns
         .filter((column) => !!column.column && !!column.column.tablealias)
@@ -83,7 +86,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
         columns: columns as ReportSelect['columns'],
         tables: tables as ReportSelect['tables'],
       });
-    }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
   });
 
   const availableColumns = useMemo(() => {
@@ -92,25 +96,24 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, [fetchedColumns, columns]);
 
   const addColumn: ReportsProviderState['addColumn'] = useCallback((id) => {
-    const entity = availableColumns.find((col) => col.id === id);
+    const entity = availableColumns.find((col) => col.column?.id === id);
     if (!entity) return;
     setColumns((prev) => [...prev, entity]);
   }, [availableColumns]);
 
   const removeColumn: ReportsProviderState['removeColumn'] = useCallback((id) => {
-    setColumns((prev) => prev.filter((col) => col.id !== id));
-    setGroupBy((prev) => prev.filter((col) => col.id !== id));
+    setColumns((prev) => prev.filter((col) => col.column?.id !== id));
+    setGroupBy((prev) => prev.filter((col) => col.column?.id !== id));
   }, []);
 
   const updateColumn: ReportsProviderState['updateColumn'] = useCallback((id, update) => {
     setColumns((prev) => prev.map(
-      (col) => (col.id === id ? { ...col, ...update } : col)
+      (col) => (col.column?.id === id ? { ...col, ...update } : col)
     ));
   }, []);
 
   const addCondition: ReportsProviderState['addCondition'] = useCallback(() => {
     const newCondition: Condition = {
-      id: Date.now(),
       column: undefined,
       operator: undefined,
       params: undefined,
@@ -120,18 +123,17 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const removeCondition: ReportsProviderState['removeCondition'] = useCallback((id) => {
-    setConditions((prev) => prev.filter((cond) => cond.id !== id));
+    setConditions((prev) => prev.filter((cond) => cond.column?.id !== id));
   }, []);
 
   const updateCondition: ReportsProviderState['updateCondition'] = useCallback((id, condition, update) => {
     setConditions((prev) => prev.map(
-      (cond) => (cond.id === id ? { ...cond, ...update } : cond)
+      (cond) => (cond.column?.id === id ? { ...cond, ...update } : cond)
     ));
   }, []);
 
   const addFilter: ReportsProviderState['addFilter'] = useCallback(() => {
     const newFilter: Filter = {
-      id: Date.now(),
       column: undefined,
       filterType: undefined
     };
@@ -139,12 +141,12 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const removeFilter: ReportsProviderState['removeFilter'] = useCallback((id) => {
-    setFilters((prev) => prev.filter((filter) => filter.id !== id));
+    setFilters((prev) => prev.filter((filter) => filter.column?.id !== id));
   }, []);
 
   const updateFilter: ReportsProviderState['updateFilter'] = useCallback((id, update) => {
     setFilters((prev) => prev.map(
-      (filter) => (filter.id === id ? { ...filter, ...update } : filter)
+      (filter) => (filter.column?.id === id ? { ...filter, ...update } : filter)
     ));
   }, []);
 
@@ -165,7 +167,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     updateFilter,
     groupBy,
     setGroupBy,
-    updateReport
+    updateReport,
+    isUpdatingReport
   }), [
     fetchingColumns,
     columns,
@@ -183,7 +186,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     updateFilter,
     groupBy,
     setGroupBy,
-    updateReport
+    updateReport,
+    isUpdatingReport
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;

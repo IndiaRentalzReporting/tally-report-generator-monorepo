@@ -19,7 +19,7 @@ export const RootLayout: React.FC<{ children: React.ReactNode }> = ({
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <div className="flex flex-col h-screen">{children}</div>
+        <div className="flex flex-col min-h-screen">{children}</div>
         <Toaster />
       </ThemeProvider>
     </AuthProvider>

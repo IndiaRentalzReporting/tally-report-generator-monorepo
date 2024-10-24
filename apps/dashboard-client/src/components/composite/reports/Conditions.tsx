@@ -20,7 +20,7 @@ const Conditions: React.FC = () => {
         <ConditionItem
           key={condition.column?.displayName}
           condition={condition}
-          onRemove={() => removeCondition(condition.id)}
+          onRemove={() => removeCondition(condition.column?.id)}
         />
       ))}
     </div>
@@ -52,7 +52,7 @@ const ConditionItem: React.FC<{
             value: column?.displayName || ''
           }))}
           onChange={(id) => {
-            updateCondition(condition.id, condition, {
+            updateCondition(condition.column?.id, condition, {
               column: columns
                 .concat(availableColumns)
                 .find((col) => col.column?.displayName === id)?.column
@@ -69,7 +69,7 @@ const ConditionItem: React.FC<{
               value: op
             }))}
             onChange={(operator) => updateCondition(
-              condition.id,
+              condition.column?.id,
               condition,
               { operator: operator as ReportSelect['conditions'][number]['operator'] }
             )}
@@ -82,7 +82,7 @@ const ConditionItem: React.FC<{
                 placeholder={param}
                 type={condition.column?.type}
                 onChange={({ target: { value } }) => updateCondition(
-                  condition.id,
+                  condition.column?.id,
                   condition,
                   { [param]: value }
                 )}
@@ -97,7 +97,7 @@ const ConditionItem: React.FC<{
               label: join,
               value: join
             }))}
-            onChange={(join: string) => updateCondition(condition.id, condition, {
+            onChange={(join: string) => updateCondition(condition.column?.id, condition, {
               join: join as ReportSelect['conditions'][number]['join']
             })
             }

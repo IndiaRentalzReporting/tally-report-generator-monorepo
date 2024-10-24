@@ -27,7 +27,9 @@ interface DataTableProps<TData> {
 }
 
 const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
-  const { columns, removeColumn, updateReport } = useReports();
+  const {
+    columns, removeColumn, updateReport, isUpdatingReport
+  } = useReports();
   const [columnDef, setColumnDef] = useState<ColumnDef<TData>[]>([]);
 
   const createColumnDef = useCallback(
@@ -40,7 +42,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
           <Button
             className="flex items-center justify-center"
             variant="ghost"
-            onClick={() => removeColumn(column.id)}
+            onClick={() => removeColumn(column.column?.id)}
           >
             <Trash color="red" className="h-4 w-4" />
           </Button>
@@ -116,7 +118,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
         </Table>
       </div>
       <ReportSettings />
-      <Button onClick={() => updateReport()}>Update Report</Button>
+      <Button onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
     </div>
   );
 };

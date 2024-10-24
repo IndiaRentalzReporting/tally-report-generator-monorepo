@@ -42,7 +42,7 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   const handleClose = (open: boolean) => {
     setOpen(open);
     if (selectedColumn && !open) {
-      setTimeout(() => updateColumn(selectedColumn.id, { ...localExtra }), 500);
+      setTimeout(() => updateColumn(selectedColumn.column?.id, { ...localExtra }), 500);
     }
   };
 

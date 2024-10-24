@@ -53,6 +53,7 @@ export const SignupForm = () => {
       },
       user
     });
+    form.reset();
   };
 
   return (

@@ -14,7 +14,7 @@ export const ReportSchema = pgTable('report',{
   name: varchar('name',{ length: 500 }).unique().notNull(),
   description: text('description').default(''),
   baseEntity: uuid('baseEntity').references(() => TableSchema.id,{ onDelete: 'restrict',onUpdate: 'restrict' }).notNull(),
-  tables: json('tables').$type<string[]>(),
+  tables: json('tables').$type<string[]>().default([]).notNull(),
   columns: json('columns').$type<ReportColumnInsert[]>().default([]).notNull(),
   filters: json('filters').$type<ReportFilterInsert[]>().default([]).notNull(),
   groupBy: json('groupBy').$type<ReportGroupByInsert[]>().default([]).notNull(),

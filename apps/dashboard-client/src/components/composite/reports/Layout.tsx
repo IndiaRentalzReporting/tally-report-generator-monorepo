@@ -30,7 +30,7 @@ const Layout = () => {
 
   return (
     <ReportsProvider report={report}>
-      <div className="grid relative min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+      <div className="flex relative w-full h-screen">
         <Sidebar />
         <div className="flex flex-col">
           <DashboardHeader />

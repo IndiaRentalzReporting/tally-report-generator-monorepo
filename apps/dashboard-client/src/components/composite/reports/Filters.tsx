@@ -19,7 +19,7 @@ const Filters: React.FC = () => {
         <FilterComponent
           key={filter.column?.displayName}
           filter={filter}
-          removeFilter={() => removeFilter(filter.id)}
+          removeFilter={() => removeFilter(filter.column?.id)}
         />
       ))}
     </div>
@@ -51,7 +51,7 @@ const FilterComponent: React.FC<{
             };
           })}
           onChange={(displayName) => {
-            updateFilter(filter.id, {
+            updateFilter(filter.column?.id, {
               column: columns
                 .concat(availableColumns)
                 .find((col) => col.column?.displayName === displayName)?.column
@@ -67,7 +67,7 @@ const FilterComponent: React.FC<{
             value: type
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.id, { filterType: filterType as 'select' | 'search' | 'default' });
+            updateFilter(filter.column?.id, { filterType: filterType as 'select' | 'search' | 'default' });
           }}
           disabled={!filter.column}
           className="justify-self-end"

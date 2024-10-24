@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
   const { availableColumns, addColumn, fetchingColumns } = useReports();
 
   return (
-    <div className="border-r bg-muted/40 flex  flex-col">
+    <div className="border-r bg-muted/40 flex flex-col w-[400px] overflow-y-auto">
       <div className="flex items-center justify-center h-14 border-b px-4 lg:h-[60px] lg:px-6">
         <h2 className="text-xl font-bold">Available Columns</h2>
       </div>
@@ -22,9 +22,9 @@ const Sidebar: React.FC = () => {
                   className="w-full"
                   variant="secondary"
                   key={column.column?.displayName}
-                  onClick={() => addColumn(column.id)}
+                  onClick={() => addColumn(column.column?.id)}
                   >
-                    {column.column?.displayName.toUpperCase()}
+                    {column.column?.displayName}
                   </Button>
                 ))}
               </Then>
