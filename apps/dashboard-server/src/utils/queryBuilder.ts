@@ -1,4 +1,5 @@
-import { ReportInsert, ReportSelect } from '@trg_package/schemas-reporting/types';
+import { BadRequestError } from '@trg_package/errors';
+import { FilterOptions, ReportInsert, ReportSelect } from '@trg_package/schemas-reporting/types';
 
 /**
  *
@@ -63,12 +64,12 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
     let queryCondition = '';
 
     if (e.filterType === 'select') {
-      dataSource = `SELECT ${getColumnName(e.column)} as label, as value FROM public."${e.column.table}"` as string;
+      dataSource = `SELECT ${getColumnName(e.column)} as label,${getColumnName(e.column)} as value FROM public."${e.column.table}" "${e.column.tablealias}"`;
       queryCondition = `
         "${e.column.alias}" IN (WITH RECURSIVE children_cte AS (
           SELECT "${e.column.name}" as name, parent
           FROM public."${e.column.table}"
-          WHERE parent IN {params}  
+          WHERE parent IN {value}  
           UNION ALL
           SELECT t.name, t.parent
           FROM  public."${e.column.table}" t
@@ -78,7 +79,7 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
           SELECT name
           FROM children_cte)`;
     } else if (e.filterType === 'search') {
-      queryCondition = `"${e.column.alias}" LIKE {params}`;
+      queryCondition = `"${e.column.alias}" LIKE {value}`;
     } else {
       queryCondition = `"${e.column.alias}" BETWEEN {from} and {to}`;
     }
@@ -115,4 +116,24 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
     columns: columnArr,
     filters: filterConfig
   };
+}
+
+export async function getFilterQuery(filters : { [K : string] : typeof FilterOptions[keyof typeof FilterOptions] ['params'] },filterConfig : NonNullable<NonNullable<ReportSelect['queryConfig']>['filters']>) {
+  const conditionArr : string[] = [];
+
+  Object.entries(filters).forEach(([filterName,params]) => {
+    console.log(filterName);
+    if (filterName in filterConfig) {
+      const config = filterConfig[filterName];
+      let query = config?.queryCondition ?? '';
+      
+      Object.entries(params).forEach(([e,value]) => {
+        query = query.replace(`{${e.toLowerCase()}}`,getEscapedValue(value).toString());
+      });
+
+      conditionArr.push(query);
+    } else { throw new BadRequestError('Filter does no exist in report'); }
+  });
+
+  return ` HAVING ${conditionArr.join(' AND ')}`;
 }

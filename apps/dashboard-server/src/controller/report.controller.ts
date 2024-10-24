@@ -4,10 +4,11 @@ import {
   ReportInsert,
   ReportSelect,
   TableSelect,
-  GeneratedReportFilters
+  GeneratedReportFilters,
+  RuntimeFilters
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
-import { getQueryConfig } from '@/utils/queryBuilder';
+import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true
   ? { reports: Partial<ReportSelect>[] }
@@ -115,7 +116,7 @@ export const deleteOne = async (
 };
 
 export const getReportData = async (
-  req : Request<Pick<ReportSelect,'id'>>,
+  req : Request<Pick<ReportSelect,'id'>,object,{ filters : RuntimeFilters }>,
   res : Response,
   next: NextFunction
 ) => {
@@ -127,8 +128,14 @@ export const getReportData = async (
       throw new CustomError('Report Config is missing columns',400);
     }
 
-    if (queryConfig?.dataSource === '') throw new CustomError('Report does not have a data source',400);
-    const data = await req.reportService.runConfigQuery(queryConfig?.dataSource ?? '');
+    if (queryConfig === null || queryConfig.dataSource === '') throw new CustomError('Report does not have a data source',400);
+
+    const {
+      filters
+    } = req.body;
+
+    const filterQuery = await getFilterQuery(filters,queryConfig.filters ?? {});
+    const data = await req.reportService.runConfigQuery(queryConfig.dataSource + filterQuery);
 
     return res.json({
       data
@@ -176,7 +183,7 @@ export const getReportFilters = async (
 
     const filterArr : GeneratedReportFilters[] = [];
 
-    Object.entries(filters).forEach(async ([alias, config]) => {
+    for (const [alias, config] of Object.entries(filters)) {
       let filterData = null;
       if (config.dataSource) {
         filterData = await req.reportService.runConfigQuery<NonNullable<GeneratedReportFilters['data']>>(config.dataSource);
@@ -185,9 +192,9 @@ export const getReportFilters = async (
         data: filterData,
         fieldName: alias,
         filterType: config.filterType,
-        label: ''
+        label: config.heading
       });
-    });
+    }
 
     return res.json({ filters: filterArr });
   } catch (e) {

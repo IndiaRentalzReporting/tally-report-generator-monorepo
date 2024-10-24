@@ -18,8 +18,9 @@ export class ColumnService extends BaseServiceNew
   public async getAllColumns(tableId : TableSelect['id']) : Promise<DetailedColumnSelect[]> {
     try {
       const columns : DetailedColumnSelect[] = await this.dbClient.execute(sql`
-        WITH RECURSIVE cte(reference_column_id,name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
+        WITH RECURSIVE cte(column_id,reference_column_id,name, referenceTable, tableId, tablealias, prefix, tablename, type) AS (
           SELECT 
+          c.id as column_id,
 					c."referenceColumn" as reference_column_id,
           c.name,
           c."referenceTable",
@@ -40,6 +41,7 @@ export class ColumnService extends BaseServiceNew
           UNION ALL
                     
           SELECT 
+          pc.id as column_id,
 					pc."referenceColumn" as reference_column_id,
           pc.name, 
           pc."referenceTable",
@@ -59,7 +61,7 @@ export class ColumnService extends BaseServiceNew
 					AND pc.type != 'id'
 					AND pc.id::TEXT != cte.reference_column_id
         )
-        SELECT cte."name",cte."type",cte."tablename" as table,
+        SELECT cte."column_id" as id,cte."name",cte."type",cte."tablename" as table,
 				lower(cte."tablealias") as tablealias,
 				concat(replace(cte."tablename",'tally',''),'.',cte."name") as "displayName",
 				concat(replace(cte."tablename",'tally',''),'.',cte."name") as "heading",
