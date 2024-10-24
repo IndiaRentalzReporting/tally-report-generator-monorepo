@@ -45,28 +45,29 @@ const ReportsContext = createContext<ReportsProviderState | undefined>(undefined
 
 interface ReportsProviderProps {
   children: React.ReactNode;
-  tableId: string;
-  reportId: string
+  report: ReportSelect
 }
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = (
-  { children, tableId, reportId }
+  {
+    children, report
+  }
 ) => {
-  const [columns, setColumns] = useState<ReportsProviderState['columns']>([]);
-  const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>([]);
-  const [filters, setFilters] = useState<ReportsProviderState['filters']>([]);
-  const [conditions, setConditions] = useState<ReportsProviderState['conditions']>([]);
+  const [columns, setColumns] = useState<ReportsProviderState['columns']>(report.columns);
+  const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>(report.groupBy);
+  const [filters, setFilters] = useState<ReportsProviderState['filters']>(report.filters);
+  const [conditions, setConditions] = useState<ReportsProviderState['conditions']>(report.conditions);
 
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
-    queryFn: () => services.getColumns({ tableId }),
+    queryFn: () => services.getColumns({ tableId: report.baseEntity }),
     select: (data) => data.data.columns.map<Column>((column) => ({
       id: Date.now(),
       column,
       heading: column.displayName,
       operation: undefined
     })),
-    enabled: !!tableId,
-    queryKey: ['columns', 'getAll', tableId]
+    enabled: !!report.baseEntity,
+    queryKey: ['columns', 'getAll', report.baseEntity]
   });
 
   const { mutateAsync: updateReport } = useMutation({
@@ -75,7 +76,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
         .filter((column) => !!column.column && !!column.column.tablealias)
         .map((column) => column.column!.tablealias)));
 
-      return services.updateOne(reportId, {
+      return services.updateOne(report.id, {
         conditions: conditions as ReportSelect['conditions'],
         filters: filters as ReportSelect['filters'],
         groupBy: groupBy as ReportSelect['groupBy'],

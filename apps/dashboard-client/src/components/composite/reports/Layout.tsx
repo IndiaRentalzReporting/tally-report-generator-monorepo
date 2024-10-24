@@ -26,10 +26,10 @@ const Layout = () => {
     enabled: !!reportId
   });
 
-  if (!reportId) return null;
+  if (!report) return null;
 
   return (
-    <ReportsProvider tableId={report?.baseEntity || ''} reportId={reportId}>
+    <ReportsProvider report={report}>
       <div className="grid relative min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <Sidebar />
         <div className="flex flex-col">
