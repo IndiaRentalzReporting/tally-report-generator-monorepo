@@ -1,42 +1,72 @@
 import React from 'react';
 import {
-  Button, Else, If, Skeleton, Then
+  Else, If, Then,
+  Sidebar,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenuSkeleton,
+  ElseIf
 } from '@trg_package/vite/components';
+import { Columns3, Plus } from 'lucide-react';
 import { useReports } from '@/providers/ReportsProvider';
 
-const Sidebar: React.FC = () => {
+const ReportsSidebar: React.FC = () => {
   const { availableColumns, addColumn, fetchingColumns } = useReports();
 
   return (
-    <div className="border-r bg-muted/40 flex flex-col">
-      <div className="flex items-center justify-center h-14 border-b px-4 lg:h-[60px] lg:px-6">
-        <h2 className="text-xl font-bold">Available Columns</h2>
-      </div>
-      <div className="flex-1 px-2 pt-6 lg:px-4">
-        <Skeleton isLoading={fetchingColumns}>
-          <nav className="grid items-start text-sm font-medium  gap-2">
-            <If condition={!!availableColumns.length}>
-              <Then>
-                {availableColumns.map((column) => (
-                  <Button
-                  className="w-full"
-                  variant="secondary"
-                  key={column.column?.displayName}
-                  onClick={() => addColumn(column.column?.id)}
-                  >
-                    {column.column?.displayName}
-                  </Button>
-                ))}
-              </Then>
-              <Else>
-                <div className="text-center">No columns available</div>
-              </Else>
-          </If>
-          </nav>
-        </Skeleton>
-      </div>
-    </div>
+    <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <div className="flex items-center gap-2 font-semibold">
+                <Columns3 className="h-6 w-6"/>
+                <span>Available Columns</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <If condition={fetchingColumns}>
+                <Then>
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <SidebarMenuItem key={index}>
+                      <SidebarMenuSkeleton showIcon/>
+                    </SidebarMenuItem>
+                  ))}
+                </Then>
+                <ElseIf condition={!!availableColumns.length}>
+                  {availableColumns.map((column) => (
+                    <SidebarMenuItem
+                      key={column.column?.displayName}
+                      onClick={() => addColumn(column.column?.id)}
+                    >
+                      <SidebarMenuButton>
+                        <Plus /> <span className="sr-only">Add Column</span>
+                        {column.column?.displayName}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </ElseIf>
+                <Else>
+                  <div className="text-center">No columns available</div>
+                </Else>
+            </If>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 };
 
-export default Sidebar;
+export default ReportsSidebar;

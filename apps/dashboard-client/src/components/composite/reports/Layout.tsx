@@ -2,13 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router';
 import { useToast } from '@trg_package/vite/hooks';
 import { object } from 'zod';
+import { SidebarProvider } from '@trg_package/vite/components';
 import Sidebar from './Sidebar';
 import DashboardHeader from '../dashboard/DashboardHeader';
 import DataTable from './Table';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/reports';
 
-const Layout = () => {
+const ReportingLayout = () => {
   const { toast } = useToast();
   const { reportId } = useParams<{ reportId: string }>();
   const { data: report } = useQuery({
@@ -29,16 +30,16 @@ const Layout = () => {
   if (!report) return null;
 
   return (
-    <ReportsProvider report={report}>
-      <div className="flex relative w-full h-screen">
+    <SidebarProvider>
+      <ReportsProvider report={report}>
         <Sidebar />
-        <div className="flex flex-col">
+        <main className="flex flex-col" style={{ width: 'calc(100% - var(--sidebar-width))' }}>
           <DashboardHeader />
           <DataTable data={[object]} />
-        </div>
-      </div>
-    </ReportsProvider>
+        </main>
+      </ReportsProvider>
+    </SidebarProvider>
   );
 };
 
-export default Layout;
+export default ReportingLayout;
