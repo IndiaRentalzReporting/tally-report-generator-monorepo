@@ -1,34 +1,31 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { State } from './interface';
-import ActionCell from '@/components/composite/ActionCell';
+import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<State>[] = [
   {
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
-    header: ({ column }) =>
-      useMemo(() => <SortingButton column={column} label="Name" />, [column]),
+    header: ({ column }) => useMemo(() => <SortingButton column={column} label="Name" />, [column]),
     getGroupingValue: (row) => `${row.role.name}}`
   },
   {
     id: 'Module Name',
     accessorFn: (row) => row.module.name,
-    header: ({ column }) =>
-      useMemo(
-        () => <SortingButton column={column} label="Module Name" />,
-        [column]
-      )
+    header: ({ column }) => useMemo(
+      () => <SortingButton column={column} label="Module Name" />,
+      [column]
+    )
   },
   {
     id: 'Actions on Modules',
     accessorKey: 'permissionActions',
-    header: ({ column }) =>
-      useMemo(
-        () => <SortingButton column={column} label="Actions" />,
-        [column]
-      ),
+    header: ({ column }) => useMemo(
+      () => <SortingButton column={column} label="Actions" />,
+      [column]
+    ),
     cell: ({ row }) => {
       const { permissionAction } = row.original;
       const actions = permissionAction.map((p) => p.action.name);
@@ -51,7 +48,7 @@ export const columns: ColumnDef<State>[] = [
       const permission = row.original;
       return useMemo(
         () => (
-          <ActionCell
+          <Action
             module={{
               id: permission.id,
               name: permission.id,

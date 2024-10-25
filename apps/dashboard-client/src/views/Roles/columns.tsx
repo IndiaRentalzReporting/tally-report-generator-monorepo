@@ -1,14 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { State } from './interface';
-import ActionCell from '@/components/composite/ActionCell';
+import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<State>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) =>
-      useMemo(() => <SortingButton column={column} label="Name" />, [column])
+    header: ({ column }) => useMemo(() => <SortingButton column={column} label="Name" />, [column])
   },
   {
     id: 'Actions',
@@ -17,7 +16,7 @@ export const columns: ColumnDef<State>[] = [
       const role = row.original;
       return useMemo(
         () => (
-          <ActionCell
+          <Action
             module={{
               id: role.id,
               name: role.name,

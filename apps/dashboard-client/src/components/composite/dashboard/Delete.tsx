@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Minus, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { ToastAction, If, Then, Else } from '@trg_package/vite/components';
+import {
+  If, Then, Else,
+  Button
+} from '@trg_package/vite/components';
 import { useToast } from '@trg_package/vite/hooks';
 import { useIsAllowed } from '@/hooks';
 
@@ -21,14 +24,14 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
 
   useEffect(() => {
     const loadServices = async () => {
-      const serviceModule = await import(`../../services/${type}`);
+      const serviceModule = await import(`../../../services/${type}`);
       setServices(serviceModule.services);
     };
 
     loadServices();
   }, [type]);
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: () => services.deleteOne(id),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -55,12 +58,13 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
               title: `Delete ${type}`,
               description: `Are you sure you want to delete ${name} from ${type}`,
               action: (
-                <ToastAction
-                  altText={`Delete from ${type}`}
+                <Button
+                  isLoading={isPending}
+                  type='button'
                   onClick={() => mutateAsync()}
                 >
                   Delete
-                </ToastAction>
+                </Button>
               )
             });
           }}

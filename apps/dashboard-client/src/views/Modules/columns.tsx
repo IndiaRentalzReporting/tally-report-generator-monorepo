@@ -1,17 +1,20 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Check, Minus, X } from 'lucide-react';
-import { Button, Else, If, Then } from '@trg_package/vite/components';
+import {
+  ArrowUpDown, Check, Minus, X
+} from 'lucide-react';
+import {
+  Button, Else, If, Then
+} from '@trg_package/vite/components';
 import { useMemo } from 'react';
 import { State } from './interface';
-import ActionCell from '@/components/composite/ActionCell';
+import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
 export const columns: ColumnDef<State>[] = [
   {
     id: 'Module Name',
     accessorKey: 'name',
-    header: ({ column }) =>
-      useMemo(() => <SortingButton column={column} label="Name" />, [column])
+    header: ({ column }) => useMemo(() => <SortingButton column={column} label="Name" />, [column])
   },
   {
     id: 'Module Privacy',
@@ -61,7 +64,7 @@ export const columns: ColumnDef<State>[] = [
       const module = row.original;
       return useMemo(
         () => (
-          <ActionCell
+          <Action
             module={{
               id: module.id,
               name: module.name,
