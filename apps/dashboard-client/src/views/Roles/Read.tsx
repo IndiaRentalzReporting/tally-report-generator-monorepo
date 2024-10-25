@@ -29,7 +29,18 @@ const Read: React.FC = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Skeleton isLoading={fetchingRoles}>
-          <DataTable columns={columns} data={allRoles} />
+          <DataTable
+            columns={columns}
+            data={allRoles}
+            grouping={{
+              rowGrouping: [],
+              setRowGrouping: () => null
+            }}
+            selection={{
+              rowSelection: {},
+              setRowSelection: () => null
+            }}
+          />
         </Skeleton>
       </CardContent>
     </Card>

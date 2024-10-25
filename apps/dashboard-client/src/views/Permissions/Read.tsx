@@ -14,13 +14,12 @@ import { services } from '@/services/permission';
 import { columns } from './columns';
 
 const Read: React.FC = () => {
-  const [grouping, setGrouping] = React.useState<GroupingState>(['Role Name']);
-  const { data: allPermissions = [], isFetching: fetchingPermissions } =
-    useQuery({
-      queryFn: () => services.read(),
-      select: (data) => data.data.permissions.filter(({ module }) => !!module),
-      queryKey: ['permissions', 'getAll']
-    });
+  const [rowGrouping, setRowGrouping] = React.useState<GroupingState>(['Role Name']);
+  const { data: allPermissions = [], isFetching: fetchingPermissions } = useQuery({
+    queryFn: () => services.read(),
+    select: (data) => data.data.permissions.filter(({ module }) => !!module),
+    queryKey: ['permissions', 'getAll']
+  });
 
   return (
     <Card>
@@ -36,8 +35,12 @@ const Read: React.FC = () => {
             columns={columns}
             data={allPermissions}
             grouping={{
-              grouping,
-              setGrouping
+              rowGrouping,
+              setRowGrouping
+            }}
+            selection={{
+              rowSelection: {},
+              setRowSelection: () => null
             }}
           />
         </Skeleton>

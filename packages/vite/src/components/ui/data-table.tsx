@@ -36,26 +36,26 @@ import { Button } from './button';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  selection?: {
-    rowSelection: RowSelectionState | null;
+  selection: {
+    rowSelection: RowSelectionState;
     setRowSelection: OnChangeFn<RowSelectionState>;
   };
-  grouping?: {
-    grouping: GroupingState | null;
-    setGrouping: OnChangeFn<GroupingState>;
+  grouping: {
+    rowGrouping: GroupingState;
+    setRowGrouping: OnChangeFn<GroupingState>;
   };
 }
 
 export const DataTable = <TData, TValue>({
   columns,
   data,
-  selection = {
-    rowSelection: null,
-    setRowSelection: () => null
+  selection: {
+    rowSelection,
+    setRowSelection
   },
-  grouping = {
-    grouping: null,
-    setGrouping: () => null
+  grouping: {
+    rowGrouping,
+    setRowGrouping
   }
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -63,16 +63,16 @@ export const DataTable = <TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: selection.setRowSelection,
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onGroupingChange: grouping.setGrouping,
+    onGroupingChange: setRowGrouping,
     getGroupedRowModel: getGroupedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     state: {
       sorting,
-      grouping: grouping.grouping ?? [],
-      rowSelection: selection.rowSelection ?? {}
+      grouping: rowGrouping ?? [],
+      rowSelection: rowSelection ?? {}
     }
   });
 
@@ -154,7 +154,7 @@ export const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <When condition={selection.rowSelection !== null}>
+      <When condition={rowSelection !== null}>
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.

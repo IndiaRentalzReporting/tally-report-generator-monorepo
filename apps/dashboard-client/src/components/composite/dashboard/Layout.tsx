@@ -1,22 +1,24 @@
 import { useLocation } from 'react-router-dom';
 import { SidebarProvider } from '@trg_package/vite/components';
-import DashboardHeader from './DashboardHeader';
-import DashboardSidebar from './DashboardSidebar';
+import Header from '../header/Header';
+import Sidebar from './Sidebar';
 import { NavigationProvider } from '@/providers/NavigationProvider';
-import DashboardContent from './DashboardContent';
+import Content from './Main';
 
-export const DashboardLayout = () => {
+const Layout = () => {
   const location = useLocation();
 
   return (
     <SidebarProvider>
       <NavigationProvider>
-        <DashboardSidebar key={location.pathname} />
+        <Sidebar key={location.pathname} />
         <main className="flex flex-col w-full">
-          <DashboardHeader />
-          <DashboardContent />
+          <Header />
+          <Content />
         </main>
       </NavigationProvider>
     </SidebarProvider>
   );
 };
+
+export default Layout;

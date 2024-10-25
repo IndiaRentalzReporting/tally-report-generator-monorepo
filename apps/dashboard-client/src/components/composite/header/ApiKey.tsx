@@ -15,7 +15,7 @@ import {
 
 import { CopyIcon, KeyIcon, Trash2Icon } from 'lucide-react';
 
-export const ApiKeyDropdown = () => (
+const ApiKey = () => (
   <DropdownMenu>
     <DropdownMenuTrigger className="rounded-full">
       <Button type="button" variant="outline" size="icon">
@@ -71,3 +71,5 @@ export const ApiKeyDropdown = () => (
     </DropdownMenuContent>
   </DropdownMenu>
 );
+
+export default ApiKey;

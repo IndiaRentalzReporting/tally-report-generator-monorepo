@@ -6,7 +6,6 @@ import Fields from './Fields';
 import { State, initialState } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  console.log({ id });
   const [reportData, setReportData] = React.useState<State>(initialState);
 
   const queryClient = useQueryClient();

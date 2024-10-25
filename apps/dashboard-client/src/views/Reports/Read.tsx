@@ -16,7 +16,7 @@ const Read: React.FC = () => {
   const { data: allActions = [], isFetching: fetchingActions } = useQuery({
     queryFn: () => services.read(),
     select: (data) => data.data.reports,
-    queryKey: ['actions', 'getAll']
+    queryKey: ['reports', 'getAll']
   });
 
   return (
@@ -29,7 +29,18 @@ const Read: React.FC = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Skeleton isLoading={fetchingActions}>
-          <DataTable columns={columns} data={allActions} />
+          <DataTable
+            columns={columns}
+            data={allActions}
+            grouping={{
+              rowGrouping: [],
+              setRowGrouping: () => null
+            }}
+            selection={{
+              rowSelection: {},
+              setRowSelection: () => null
+            }}
+          />
         </Skeleton>
       </CardContent>
     </Card>

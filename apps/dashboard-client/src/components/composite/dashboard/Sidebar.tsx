@@ -4,7 +4,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   When,
-  Sidebar,
+  Sidebar as SidebarComponent,
   SidebarHeader,
   SidebarContent,
   SidebarFooter,
@@ -18,12 +18,12 @@ import {
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
 
-const DashboardSidebar: React.FC = () => {
+const Sidebar: React.FC = () => {
   const { tenant } = useAuth();
   const { navigation } = useNav();
 
   return (
-    <Sidebar collapsible='icon' className="hidden border-r bg-muted/40 md:block">
+    <SidebarComponent collapsible='icon' className="hidden border-r bg-muted/40 md:block">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -94,8 +94,8 @@ const DashboardSidebar: React.FC = () => {
       <SidebarFooter >
         <SidebarTrigger/>
       </SidebarFooter>
-    </Sidebar>
+    </SidebarComponent>
   );
 };
 
-export default DashboardSidebar;
+export default Sidebar;

@@ -1,6 +1,6 @@
 import { SkeletonOverlay } from '@trg_package/vite/components';
 
-export const DashboardSkeletonOverlay = () => (
+const Skeleton = () => (
   <div className="grid relative min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
     <div className="hidden md:flex flex-col p-4 space-y-4 border-r">
       <SkeletonOverlay className="h-14 w-3/4 mb-4" />
@@ -39,3 +39,5 @@ export const DashboardSkeletonOverlay = () => (
     </div>
   </div>
 );
+
+export default Skeleton;

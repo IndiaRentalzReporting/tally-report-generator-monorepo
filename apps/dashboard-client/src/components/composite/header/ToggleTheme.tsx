@@ -9,7 +9,7 @@ import {
 } from '@trg_package/vite/components';
 import { useTheme } from '@trg_package/vite/providers';
 
-export const ToggleThemeDropdown = () => {
+const ToggleTheme: React.FC = () => {
   const { setTheme } = useTheme();
 
   return (
@@ -35,3 +35,5 @@ export const ToggleThemeDropdown = () => {
     </DropdownMenu>
   );
 };
+
+export default ToggleTheme;
