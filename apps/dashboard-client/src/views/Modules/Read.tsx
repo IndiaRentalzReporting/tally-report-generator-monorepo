@@ -29,7 +29,18 @@ const ReadModule: React.FC = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
         <Skeleton isLoading={fetchingModules}>
-          <DataTable columns={columns} data={allModules} />
+          <DataTable
+            columns={columns}
+            data={allModules}
+            grouping={{
+              rowGrouping: [],
+              setRowGrouping: () => null
+            }}
+            selection={{
+              rowSelection: {},
+              setRowSelection: () => null
+            }}
+          />
         </Skeleton>
       </CardContent>
     </Card>

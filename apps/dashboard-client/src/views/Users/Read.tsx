@@ -109,6 +109,10 @@ const Read: React.FC = () => {
                 rowSelection,
                 setRowSelection
               }}
+              grouping={{
+                rowGrouping: [],
+                setRowGrouping: () => null
+              }}
             />
           </Skeleton>
           <When condition={isUpdateAllowed}>
