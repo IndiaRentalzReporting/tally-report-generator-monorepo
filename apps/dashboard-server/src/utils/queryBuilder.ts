@@ -99,10 +99,10 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
     columns,conditions,groupBy,filters
   } = report;
 
-  const columnQuery = columns ? getColumnQuery(columns) : ' * ';
-  const condtionsQuery = conditions ? getConditionQuery(conditions) : ' ';
-  const groupByQuery = groupBy ? getGroupByQuery(groupBy) : ' ';
-  const filterConfig = filters ? getFilterConfig(filters) : null;
+  const columnQuery = (columns ?? []).length > 0 ? getColumnQuery(columns) : ' * ';
+  const condtionsQuery = (conditions ?? []).length > 0 ? getConditionQuery(conditions) : ' ';
+  const groupByQuery = (groupBy ?? []).length > 0 ? getGroupByQuery(groupBy ?? []) : ' ';
+  const filterConfig = (filters ?? []).length > 0 ? getFilterConfig(filters ?? []) : null;
 
   const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} ${groupByQuery}`;
 
@@ -122,11 +122,10 @@ export async function getFilterQuery(filters : { [K : string] : typeof FilterOpt
   const conditionArr : string[] = [];
 
   Object.entries(filters).forEach(([filterName,params]) => {
-    console.log(filterName);
     if (filterName in filterConfig) {
       const config = filterConfig[filterName];
       let query = config?.queryCondition ?? '';
-      
+
       Object.entries(params).forEach(([e,value]) => {
         query = query.replace(`{${e.toLowerCase()}}`,getEscapedValue(value).toString());
       });
