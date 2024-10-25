@@ -134,7 +134,8 @@ export const getReportData = async (
       filters
     } = req.body;
 
-    const filterQuery = await getFilterQuery(filters,queryConfig.filters ?? {});
+    const filterQuery = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : '';
+
     const data = await req.reportService.runConfigQuery(queryConfig.dataSource + filterQuery);
 
     return res.json({
