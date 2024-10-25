@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { Checkbox } from '@trg_package/vite/components';
-import { useMemo } from 'react';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
@@ -30,41 +29,29 @@ export const columns: ColumnDef<DetailedUser>[] = [
   },
   {
     accessorKey: 'first_name',
-    header: ({ column }) => useMemo(
-      () => <SortingButton column={column} label="Module Name" />,
-      [column]
-    )
+    header: ({ column }) => <SortingButton column={column} label="Module Name" />
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => useMemo(
-      () => <SortingButton column={column} label="Module Name" />,
-      [column]
-    )
+    header: ({ column }) => <SortingButton column={column} label="Module Name" />
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => useMemo(
-      () => <SortingButton column={column} label="Module Name" />,
-      [column]
-    )
+    header: ({ column }) => <SortingButton column={column} label="Module Name" />
   },
   {
     id: 'Actions',
     header: 'Actions',
     cell: ({ row }) => {
       const user = row.original;
-      return useMemo(
-        () => (
-          <Action
-            module={{
-              id: user.id,
-              name: user.first_name,
-              type: 'Users'
-            }}
-          />
-        ),
-        [user]
+      return (
+        <Action
+          module={{
+            id: user.id,
+            name: user.first_name,
+            type: 'Users'
+          }}
+        />
       );
     }
   }

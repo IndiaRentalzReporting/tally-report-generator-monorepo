@@ -1,4 +1,3 @@
-import { memo } from 'react';
 import { DeleteEntity } from './Delete';
 import { UpdateEntity } from './Update';
 
@@ -31,4 +30,4 @@ const ActionsCell: React.FC<ActionsCellProps> = ({
     </span>
 );
 
-export default memo(ActionsCell);
+export default ActionsCell;

@@ -5,7 +5,6 @@ import {
 import {
   Button, Else, If, Then
 } from '@trg_package/vite/components';
-import { useMemo } from 'react';
 import { State } from './interface';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
@@ -14,7 +13,7 @@ export const columns: ColumnDef<State>[] = [
   {
     id: 'Module Name',
     accessorKey: 'name',
-    header: ({ column }) => useMemo(() => <SortingButton column={column} label="Name" />, [column])
+    header: ({ column }) => <SortingButton column={column} label="Name" />
   },
   {
     id: 'Module Privacy',
@@ -62,8 +61,7 @@ export const columns: ColumnDef<State>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const module = row.original;
-      return useMemo(
-        () => (
+      return (
           <Action
             module={{
               id: module.id,
@@ -71,8 +69,6 @@ export const columns: ColumnDef<State>[] = [
               type: 'Modules'
             }}
           />
-        ),
-        [module]
       );
     }
   }
