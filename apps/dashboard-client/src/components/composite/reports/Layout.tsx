@@ -6,7 +6,7 @@ import {
   Else, ElseIf, If, Loading, SidebarProvider, Then
 } from '@trg_package/vite/components';
 import Sidebar from './Sidebar';
-import DashboardHeader from '../dashboard/DashboardHeader';
+import DashboardHeader from '../header/Header';
 import DataTable from './Table';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/reports';

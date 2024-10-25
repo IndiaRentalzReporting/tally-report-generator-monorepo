@@ -12,7 +12,7 @@ import { CircleUser } from 'lucide-react';
 
 import React, { useMemo } from 'react';
 
-const UserSettingsDropdown: React.FC = () => {
+const UserSettings: React.FC = () => {
   const {
     user,
     signOut: { mutation: signOut, isLoading }
@@ -50,4 +50,4 @@ const UserSettingsDropdown: React.FC = () => {
   );
 };
 
-export default UserSettingsDropdown;
+export default UserSettings;

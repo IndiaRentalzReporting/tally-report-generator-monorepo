@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { DeleteEntity } from './DeleteEntity';
-import { UpdateEntity } from './UpdateEntity';
+import { DeleteEntity } from './Delete';
+import { UpdateEntity } from './Update';
 
 interface ActionsCellProps {
   module: {
@@ -12,11 +12,7 @@ interface ActionsCellProps {
 
 const ActionsCell: React.FC<ActionsCellProps> = ({
   module: { id, name, type }
-}) => {
-  console.log({
-    type
-  });
-  return (
+}) => (
     <span className="flex gap-4 items-center">
       <DeleteEntity
         module={{
@@ -33,7 +29,6 @@ const ActionsCell: React.FC<ActionsCellProps> = ({
         }}
       />
     </span>
-  );
-};
+);
 
 export default memo(ActionsCell);
