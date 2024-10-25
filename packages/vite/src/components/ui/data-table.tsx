@@ -76,8 +76,6 @@ export const DataTable = <TData, TValue>({
     }
   });
 
-  console.log(table);
-
   return (
     <>
       <div className="rounded-md border w-full">

@@ -28,7 +28,7 @@ const Read: React.FC = () => {
     module: 'Users',
     action: 'Update'
   });
-  console.log(isUpdateAllowed);
+
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedRole, setSelectedRole] = React.useState<string>('');
 
