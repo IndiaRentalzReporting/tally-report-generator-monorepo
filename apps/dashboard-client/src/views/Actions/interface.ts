@@ -1,14 +1,8 @@
-import { Dispatch, SetStateAction } from 'react';
-import { ActionSelect } from '@trg_package/schemas-dashboard/types';
+import { ActionSelectSchema } from '@trg_package/schemas-dashboard/types';
+import { UseFormReturn } from 'react-hook-form';
+import * as z from 'zod';
 
-export interface State extends Pick<ActionSelect, 'id' | 'name'> {}
-
-export const initialState: State = {
-  id: '',
-  name: ''
-};
-
-export interface StateAsProps {
-  actionData: State;
-  setActionData: Dispatch<SetStateAction<State>>;
-}
+export const formSchema = ActionSelectSchema.pick({ name: true, id: true });
+export type State = z.infer<typeof formSchema>;
+export const defaultValues: State = { name: '', id: '' };
+export type StateAsProps = { form: UseFormReturn<State> };

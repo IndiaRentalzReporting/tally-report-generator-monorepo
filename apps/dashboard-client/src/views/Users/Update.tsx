@@ -1,34 +1,36 @@
-import React, {
-  Dispatch,
-  FormEventHandler,
-  SetStateAction,
-  useEffect,
-  useState
-} from 'react';
+import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
-import { Button, Input, Label, Skeleton } from '@trg_package/vite/components';
+import {
+  Button, Form, Input, Label, Skeleton
+} from '@trg_package/vite/components';
+import { schema } from '@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services } from '@/services/user';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const queryClient = useQueryClient();
-  const [updatedUser, setUpdatedUser] = useState<State>(initialState);
-  const [dataUpdated, setDataUpdated] = useState<boolean>(false);
-
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => data.data.users[0],
+    select: (data) => formSchema.parse(data.data.users[0]),
     queryKey: ['users', 'getOne', id]
   });
 
+  if (!userData) throw new Error('User data is undefined');
+
+  const form = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: userData
+  });
+
+  const queryClient = useQueryClient();
   const { mutateAsync: deleteRole } = useMutation({
-    mutationFn: () =>
-      services.updateOne(id, {
-        ...userData,
-        role_id: null
-      }),
+    mutationFn: () => services.updateOne(id, {
+      ...userData,
+      role_id: null
+    }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
@@ -36,56 +38,46 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   });
 
   const { mutateAsync: updateUser } = useMutation({
-    mutationFn: () => services.updateOne(id, updatedUser),
+    mutationFn: (updatedUser: Omit<State, 'id'>) => services.updateOne(id, updatedUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
     }
   });
 
-  useEffect(() => {
-    if (!userData) return;
-    setUpdatedUser({ ...userData, password: '' });
-  }, [userData]);
-
-  const handleUserUpdate: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    updateUser();
-  };
-
-  const handleUserDataChange: Dispatch<SetStateAction<State>> = (newState) => {
-    if (!dataUpdated) setDataUpdated(true);
-    setUpdatedUser(newState);
+  const handleSubmit = async (values: State) => {
+    updateUser(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleUserUpdate} className="grid gap-4">
-      <Skeleton isLoading={loadingUser}>
-        <Fields userData={updatedUser} setUserData={handleUserDataChange} />
-      </Skeleton>
-      <div className="flex items-center gap-2">
-        <Label htmlFor="role">Role</Label>
-        <Input
-          disabled
-          id="role"
-          name="role"
-          value={userData?.role?.name}
-          placeholder="--"
-          required
-        />
-        <TrashIcon
-          className="text-red-500 cursor-pointer"
-          onClick={() => deleteRole()}
-        />
-      </div>
-      <Button
-        type="submit"
-        disabled={!dataUpdated}
-        onClick={() => updateUser()}
-      >
-        Update
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+        <Skeleton isLoading={loadingUser}>
+          <Fields form={form} />
+        </Skeleton>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="role">Role</Label>
+          <Input
+            disabled
+            id="role"
+            name="role"
+            value={userData?.role?.name}
+            placeholder="--"
+            required
+          />
+          <TrashIcon
+            className="text-red-500 cursor-pointer"
+            onClick={() => deleteRole()}
+          />
+        </div>
+        <Button
+          type="submit"
+        >
+          Update
+        </Button>
+      </form>
+    </Form>
   );
 };
 

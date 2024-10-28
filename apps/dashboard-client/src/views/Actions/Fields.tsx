@@ -1,21 +1,29 @@
 import React from 'react';
-import { Input } from '@trg_package/vite/components';
+import {
+  FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Input
+} from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
 
-const Fields: React.FC<StateAsProps> = ({ actionData, setActionData }) => (
+const Fields: React.FC<StateAsProps> = ({ form }) => (
   <div className="flex flex-col gap-4">
-    <Input
-      id="name"
+    <FormField
+      control={form.control}
       name="name"
-      value={actionData.name}
-      onChange={(e) =>
-        setActionData((prev) => ({
-          ...prev,
-          name: e.target.value
-        }))
-      }
-      placeholder="Action Name"
-      required
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel >Name</FormLabel>
+          <FormControl>
+          <Input
+              type='text'
+              placeholder="Action Name"
+              required
+              {...field}
+            />
+          </FormControl>
+          <FormDescription />
+          <FormMessage />
+        </FormItem>
+      )}
     />
   </div>
 );

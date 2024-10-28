@@ -9,32 +9,35 @@ import {
 } from '@trg_package/vite/components';
 import { useNavigate } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services } from '@/services/reports';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema, defaultValues } from './interface';
 
 const Create: React.FC = () => {
   const navigate = useNavigate();
-  const [reportDetails, setReportDetails] = React.useState<State>(initialState);
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues
+  });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createReport, isPending: loadingCreateReport } =
-    useMutation({
-      mutationFn: () => services.createOne(reportDetails),
-      onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
-        setReportDetails(initialState);
-        navigate(`/reports/${data.data.report.id}`);
-      }
-    });
+  const { mutateAsync: createReport, isPending: loadingCreateReport } = useMutation({
+    mutationFn: (reportDetails: Omit<State, 'id'>) => services.createOne(reportDetails),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
+      navigate(`/reports/${data.data.report.id}`);
+    }
+  });
 
-  const handleCreateReport: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    createReport();
+  const handleSubmit = async (values: State) => {
+    createReport(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleCreateReport} className="flex flex-col gap-6 h-full">
+    <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-6 h-full">
       <Card>
         <CardHeader>
           <CardTitle>Report Details</CardTitle>
@@ -43,14 +46,13 @@ const Create: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Fields reportData={reportDetails} setReportData={setReportDetails} />
+          <Fields form={form} />
         </CardContent>
       </Card>
       <Button
         type="submit"
         className="w-min"
         isLoading={loadingCreateReport}
-        disabled={!reportDetails}
       >
         Create Report
       </Button>

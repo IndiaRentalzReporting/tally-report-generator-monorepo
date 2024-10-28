@@ -1,17 +1,23 @@
-import { Dispatch, SetStateAction } from 'react';
-import { ReportSelect } from '@trg_package/schemas-reporting/types';
+import { ReportSelectSchema } from '@trg_package/schemas-reporting/types';
+import * as z from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 
-export interface State
-  extends Pick<ReportSelect, 'id' | 'name' | 'baseEntity' | 'description'> {}
+export const formSchema = ReportSelectSchema.pick({
+  id: true,
+  name: true,
+  baseEntity: true,
+  description: true
+});
 
-export const initialState: State = {
+export type State = z.infer<typeof formSchema>;
+
+export type StateAsProps = {
+  form: UseFormReturn<State>;
+};
+
+export const defaultValues: State = {
   id: '',
   name: '',
   baseEntity: '',
   description: ''
 };
-
-export interface StateAsProps {
-  reportData: State;
-  setReportData: Dispatch<SetStateAction<State>>;
-}

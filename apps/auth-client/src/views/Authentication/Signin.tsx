@@ -25,6 +25,8 @@ const formSchema = UserSelectSchema.pick({
   email: true,
   password: true
 });
+type State = z.infer<typeof formSchema>;
+const defaultValues = { email: '', password: '' };
 
 export const SigninForm = () => {
   const {
@@ -33,13 +35,10 @@ export const SigninForm = () => {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: ''
-    }
+    defaultValues
   });
 
-  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (values: State) => {
     signIn(values);
     form.reset();
   };
