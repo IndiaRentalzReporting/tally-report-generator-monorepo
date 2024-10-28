@@ -15,15 +15,13 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['roles', 'getOne', id]
   });
 
-  if (!roleData) throw new Error('Role data is undefined');
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: roleData
   });
 
   const { mutateAsync: updateRole, isPending: updatingRole } = useMutation({
-    mutationFn: (roleData: Omit<State, 'id'>) => services.updateOne(id, roleData),
+    mutationFn: (roleData: Omit<State, 'id'>) => services.updateOne({ id }, roleData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
     }

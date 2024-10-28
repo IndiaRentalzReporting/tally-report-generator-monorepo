@@ -14,8 +14,6 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['getOne', 'modules', id]
   });
 
-  if (!moduleData) throw new Error('Module data is undefined');
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: moduleData
@@ -23,7 +21,7 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: updateModule, isPending: updatingModule } = useMutation({
-    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.updateOne(moduleData.id, moduleDetails),
+    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.updateOne({ id }, moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
     }

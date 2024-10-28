@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/reports';
+import { services } from '@/services/report';
 import Fields from './Fields';
 import { State, formSchema, defaultValues } from './interface';
 

@@ -23,7 +23,7 @@ const CreateModule: React.FC = () => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } = useMutation({
-    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.createOne({ moduleDetails }),
+    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.createOne(moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
     }

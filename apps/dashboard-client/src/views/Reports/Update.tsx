@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/reports';
+import { services } from '@/services/report';
 import Fields from './Fields';
 import { State, formSchema } from './interface';
 
@@ -15,15 +15,13 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['reports', 'getOne', id]
   });
 
-  if (!report) throw new Error('Report data is undefined');
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: report
   });
 
   const { mutateAsync: updateReport, isPending: updatingReport } = useMutation({
-    mutationFn: (reportData: Omit<State, 'id'>) => services.updateOne(id, reportData),
+    mutationFn: (reportData: Omit<State, 'id'>) => services.updateOne({ id }, reportData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
     }

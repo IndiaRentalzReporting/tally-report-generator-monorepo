@@ -1,9 +1,9 @@
-import { AxiosPromise } from 'axios';
 import {
   ModuleInsert,
   ModuleSelect
 } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/vite/client';
+import { CrudServices } from '.';
 
 const modulesAxios = createAxiosClient(
   { dashboard: true },
@@ -13,27 +13,18 @@ const modulesAxios = createAxiosClient(
   }
 );
 
-export const services = {
-  read: async (
-    query: Partial<ModuleSelect> = {}
-  ): AxiosPromise<{
-    modules: ModuleSelect[];
-  }> => {
+export const services: CrudServices<
+'module',
+ModuleSelect,
+ModuleInsert
+> = {
+  read: async (query) => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
     return modulesAxios.get(`/read?${queryString}`);
   },
-  createOne: async (data: {
-    moduleDetails: ModuleInsert;
-  }): AxiosPromise<{ module: ModuleSelect }> =>
-    modulesAxios.post('/create', data),
-  updateOne: async (
-    id: ModuleSelect['id'],
-    data: Partial<ModuleSelect>
-  ): AxiosPromise<ModuleSelect> => modulesAxios.patch(`/update/${id}`, data),
-  deleteOne: async (
-    id: ModuleSelect['id']
-  ): AxiosPromise<{ module: ModuleSelect }> =>
-    modulesAxios.delete(`/delete/${id}`)
+  createOne: async (data) => modulesAxios.post('/create', data),
+  updateOne: async ({ id }, data) => modulesAxios.patch(`/update/${id}`, data),
+  deleteOne: async ({ id }) => modulesAxios.delete(`/delete/${id}`)
 };

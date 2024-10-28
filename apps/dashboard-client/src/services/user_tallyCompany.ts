@@ -1,9 +1,9 @@
-import { AxiosPromise } from 'axios';
 import {
   UserTallyCompanyInsert,
   UserTallyCompanySelect
 } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/vite/client';
+import { CrudServices } from '.';
 
 const userTallyCompanysAxios = createAxiosClient(
   { dashboard: true },
@@ -13,38 +13,20 @@ const userTallyCompanysAxios = createAxiosClient(
   }
 );
 
-export const services = {
-  read: async (
-    query: Partial<UserTallyCompanySelect> = {}
-  ): AxiosPromise<{
-    userTallyCompanys: UserTallyCompanySelect[];
-  }> => {
+export const services: CrudServices<
+'userTallyCompany',
+UserTallyCompanySelect,
+UserTallyCompanyInsert,
+UserTallyCompanySelect,
+{ userId: string; tallyCompanyId: string }
+> = {
+  read: async (query) => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
     return userTallyCompanysAxios.get(`/read?${queryString}`);
   },
-  createOne: async (
-    userTallyCompanyDetails: UserTallyCompanyInsert
-  ): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> =>
-    userTallyCompanysAxios.post('/create', userTallyCompanyDetails),
-  updateOne: async (
-    {
-      user_id,
-      tallyCompany_id
-    }: {
-      user_id: UserTallyCompanySelect['user_id'];
-      tallyCompany_id: UserTallyCompanySelect['tallyCompany_id'];
-    },
-    data: Partial<UserTallyCompanySelect>
-  ): AxiosPromise<UserTallyCompanySelect> =>
-    userTallyCompanysAxios.patch(`/update/${user_id}/${tallyCompany_id}`, data),
-  deleteOne: async ({
-    user_id,
-    tallyCompany_id
-  }: {
-    user_id: UserTallyCompanySelect['user_id'];
-    tallyCompany_id: UserTallyCompanySelect['tallyCompany_id'];
-  }): AxiosPromise<{ userTallyCompany: UserTallyCompanySelect }> =>
-    userTallyCompanysAxios.delete(`/delete/${user_id}/${tallyCompany_id}`)
+  createOne: async (userTallyCompanyDetails) => userTallyCompanysAxios.post('/create', userTallyCompanyDetails),
+  updateOne: async ({ userId, tallyCompanyId }, data) => userTallyCompanysAxios.patch(`/update/${userId}/${tallyCompanyId}`, data),
+  deleteOne: async ({ userId, tallyCompanyId }) => userTallyCompanysAxios.delete(`/delete/${userId}/${tallyCompanyId}`)
 };

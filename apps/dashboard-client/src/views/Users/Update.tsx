@@ -18,7 +18,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['users', 'getOne', id]
   });
 
-  if (!userData) throw new Error('User data is undefined');
+  console.log(userData);
 
   const form = useForm({
     resolver: zodResolver(schema),
@@ -27,7 +27,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: deleteRole } = useMutation({
-    mutationFn: () => services.updateOne(id, {
+    mutationFn: () => services.updateOne({ id }, {
       ...userData,
       role_id: null
     }),
@@ -38,7 +38,7 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   });
 
   const { mutateAsync: updateUser } = useMutation({
-    mutationFn: (updatedUser: Omit<State, 'id'>) => services.updateOne(id, updatedUser),
+    mutationFn: (updatedUser: Omit<State, 'id'>) => services.updateOne({ id }, updatedUser),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });

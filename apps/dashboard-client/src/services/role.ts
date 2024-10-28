@@ -1,10 +1,10 @@
-import { AxiosPromise } from 'axios';
 import {
   RoleInsert,
   RoleSelect,
   RoleWithPermission
 } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/vite/client';
+import { CrudServices } from '.';
 
 const rolesAxios = createAxiosClient(
   { dashboard: true },
@@ -14,25 +14,19 @@ const rolesAxios = createAxiosClient(
   }
 );
 
-export const services = {
-  read: async (
-    query: Partial<RoleSelect> = {}
-  ): AxiosPromise<{
-    roles: RoleWithPermission[];
-  }> => {
+export const services: CrudServices<
+'role',
+RoleSelect,
+RoleInsert,
+RoleWithPermission
+> = {
+  read: async (query = {}) => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
     return rolesAxios.get(`/read?${queryString}`);
   },
-  createOne: async (
-    roleDetails: RoleInsert
-  ): AxiosPromise<{ role: RoleSelect }> =>
-    rolesAxios.post('/create', roleDetails),
-  updateOne: async (
-    id: RoleSelect['id'],
-    data: Partial<RoleSelect>
-  ): AxiosPromise<RoleSelect> => rolesAxios.patch(`/update/${id}`, data),
-  deleteOne: async (id: RoleSelect['id']): AxiosPromise<{ role: RoleSelect }> =>
-    rolesAxios.delete(`/delete/${id}`)
+  createOne: async (data) => rolesAxios.post('/create', data),
+  updateOne: async ({ id }, data) => rolesAxios.patch(`/update/${id}`, data),
+  deleteOne: async ({ id }) => rolesAxios.delete(`/delete/${id}`)
 };

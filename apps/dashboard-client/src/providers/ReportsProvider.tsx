@@ -9,7 +9,7 @@ import {
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import { services } from '@/services/reports';
+import { services } from '@/services/column';
 
 export type Column = Partial<ReportSelect['columns'][number]>;
 export type Condition = Partial<ReportSelect['conditions'][number]>;
@@ -62,7 +62,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const [conditions, setConditions] = useState<ReportsProviderState['conditions']>(report.conditions);
 
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
-    queryFn: () => services.getColumns({ tableId: report.baseEntity }),
+    queryFn: () => services.read({ tableId: report.baseEntity }),
     select: (data) => data.data.columns.map<Column>((column) => ({
       column,
       heading: column.displayName,

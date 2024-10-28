@@ -15,15 +15,13 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['actions', 'getOne', id]
   });
 
-  if (!actionData) throw new Error('Action data is undefined');
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: actionData
   });
 
   const { mutateAsync: updateAction, isPending: updatingAction } = useMutation({
-    mutationFn: (values: Omit<State, 'id'>) => services.updateOne(actionData.id, values),
+    mutationFn: (values: Omit<State, 'id'>) => services.updateOne({ id }, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });

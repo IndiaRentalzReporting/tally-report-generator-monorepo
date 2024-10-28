@@ -18,11 +18,11 @@ import {
 } from '@trg_package/vite/components';
 import { useQuery } from '@tanstack/react-query';
 import { StateAsProps } from './interface';
-import { services } from '@/services/reports';
+import { services as tableService } from '@/services/table';
 
 const Fields: React.FC<StateAsProps> = ({ form }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({
-    queryFn: async () => services.getTables(),
+    queryFn: async () => tableService.read(),
     select: (data) => data.data.tables,
     queryKey: ['roles', 'getAll']
   });

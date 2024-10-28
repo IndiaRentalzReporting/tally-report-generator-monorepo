@@ -1,9 +1,6 @@
-import { AxiosPromise } from 'axios';
-import {
-  PermissionActionInsert,
-  PermissionActionSelect
-} from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '@trg_package/vite/client';
+import { PermissionActionInsert, PermissionActionSelect } from '@trg_package/schemas-dashboard/types';
+import { CrudServices } from '.';
 
 const permissionActionsAxios = createAxiosClient(
   { dashboard: true },
@@ -13,38 +10,20 @@ const permissionActionsAxios = createAxiosClient(
   }
 );
 
-export const services = {
-  read: async (
-    query: Partial<PermissionActionSelect> = {}
-  ): AxiosPromise<{
-    permissionActions: PermissionActionSelect[];
-  }> => {
+export const services:CrudServices<
+'permissionAction',
+PermissionActionSelect,
+PermissionActionInsert,
+PermissionActionSelect,
+{ permissionId: string, actionId: string }
+> = {
+  read: async (query) => {
     const queryString = new URLSearchParams(
       query as Record<string, string>
     ).toString();
     return permissionActionsAxios.get(`/read?${queryString}`);
   },
-  createOne: async (
-    permissionActionDetails: PermissionActionInsert
-  ): AxiosPromise<{ permissionAction: PermissionActionSelect }> =>
-    permissionActionsAxios.post('/create', permissionActionDetails),
-  updateOne: async (
-    {
-      action_id,
-      permission_id
-    }: {
-      action_id: PermissionActionSelect['action_id'];
-      permission_id: PermissionActionSelect['permission_id'];
-    },
-    data: Partial<PermissionActionSelect>
-  ): AxiosPromise<PermissionActionSelect> =>
-    permissionActionsAxios.patch(`/update/${action_id}/${permission_id}`, data),
-  deleteOne: async ({
-    action_id,
-    permission_id
-  }: {
-    action_id: PermissionActionSelect['action_id'];
-    permission_id: PermissionActionSelect['permission_id'];
-  }): AxiosPromise<{ permissionAction: PermissionActionSelect }> =>
-    permissionActionsAxios.delete(`/delete/${action_id}/${permission_id}`)
+  createOne: async (permissionActionDetails) => permissionActionsAxios.post('/create', permissionActionDetails),
+  updateOne: async ({ permissionId, actionId }, data) => permissionActionsAxios.patch(`/update/${permissionId}/${actionId}`, data),
+  deleteOne: async ({ permissionId, actionId }) => permissionActionsAxios.delete(`/delete/${permissionId}/${actionId}`)
 };
