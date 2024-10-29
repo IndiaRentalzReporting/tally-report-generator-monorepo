@@ -6,7 +6,10 @@ import {
   LedgerInsertSchema,
   StockCategoryInsertSchema,
   StockGroupInsertSchema,
-  StockItemInsertSchema
+  StockItemInsertSchema,
+  UnitInsertSchema,
+  VoucherInsertSchema,
+  InventoryVoucherInsertSchema
 } from '@trg_package/schemas-tally/types';
 import z from 'zod';
 import { decryptApiKey } from '@/middlewares';
@@ -41,7 +44,11 @@ companyRouter.post(
         stockCategory: z.array(StockCategoryInsertSchema.strict()),
         stockGroup: z.array(StockGroupInsertSchema.strict()),
         stockItem: z.array(StockItemInsertSchema.strict()),
-        ledger: z.array(LedgerInsertSchema.strict())
+        ledger: z.array(LedgerInsertSchema.strict()),
+        unit: z.array(UnitInsertSchema.strict()),
+        voucher: z.array(VoucherInsertSchema.strict()),
+        inventoryVoucher: z.array(InventoryVoucherInsertSchema.strict()),
+
       })
       .partial(),
 

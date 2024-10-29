@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   GroupService,
+  InventoryVoucherService,
   LedgerService,
   StockCategoryService,
   StockGroupService,
-  StockItemService
+  StockItemService,
+  UnitService,
+  VoucherService
 } from '@trg_package/schemas-tally/services';
 import { CompanyInsert, CompanySelect } from '@trg_package/schemas-tally/types';
 
@@ -72,7 +75,10 @@ const TallyServices = {
   group: GroupService,
   stockCategory: StockCategoryService,
   stockGroup: StockGroupService,
-  stockItem: StockItemService
+  stockItem: StockItemService,
+  unit: UnitService,
+  voucher: VoucherService,
+  inventoryVoucher: InventoryVoucherService
 };
 
 type ServiceKey = keyof typeof TallyServices;
