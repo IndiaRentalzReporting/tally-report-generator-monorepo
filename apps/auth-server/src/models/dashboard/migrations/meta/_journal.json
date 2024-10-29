@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1727124997227,
-      "tag": "0000_spicy_barracuda",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1727814646185,
-      "tag": "0001_dazzling_baron_strucker",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1729782724907,
-      "tag": "0002_secret_randall_flagg",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1730112033179,
-      "tag": "0003_fair_silvermane",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1730120451233,
-      "tag": "0004_quick_electro",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1730121182207,
-      "tag": "0005_crazy_killmonger",
+      "when": 1730222837626,
+      "tag": "0000_volatile_diamondback",
       "breakpoints": true
     }
   ]

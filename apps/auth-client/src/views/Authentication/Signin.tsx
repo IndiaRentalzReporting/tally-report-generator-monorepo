@@ -34,6 +34,10 @@ export const SigninForm = () => {
 
   const form = useForm<State>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: ''
+    }
   });
 
   const handleSubmit = async (values: State) => {

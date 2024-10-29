@@ -34,11 +34,18 @@ type State = z.infer<typeof formSchema>;
 
 export const SignupForm = () => {
   const {
-    onboard: { isLoading, mutation: onboard }
+    onboard: { isLoading, mutation: onboard },
   } = useAuth();
 
   const form = useForm<State>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      first_name: '',
+      last_name: '',
+      password: '',
+      tenant: ''
+    }
   });
 
   const handleSubmit = async ({ tenant: name, ...user }: State) => {

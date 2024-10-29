@@ -1,1 +1,0 @@
-ALTER TABLE "modules" ALTER COLUMN "icon" SET NOT NULL;

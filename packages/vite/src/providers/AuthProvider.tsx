@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  createContext, useContext, useEffect, useMemo, useState
+} from 'react';
 import {
   UseMutateAsyncFunction,
   useMutation,
@@ -15,6 +17,7 @@ import { AxiosResponse } from 'axios';
 import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
 import services from '../services';
 import { DetailedUser } from '../models';
+import { useToast } from '$/lib/hooks';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -28,25 +31,25 @@ interface AuthProviderMutation {
   onboard: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: DetailedUser }>,
-      Error,
-      { user: RegisterUser; tenant: TenantInsert }
+    AxiosResponse<{ user: DetailedUser }>,
+    Error,
+    { user: RegisterUser; tenant: TenantInsert }
     >;
   };
   signIn: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: DetailedUser }>,
-      Error,
-      LoginUser
+    AxiosResponse<{ user: DetailedUser }>,
+    Error,
+    LoginUser
     >;
   };
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-      AxiosResponse<{ user: UserSelect }>,
-      Error,
-      RegisterUser
+    AxiosResponse<{ user: UserSelect }>,
+    Error,
+    RegisterUser
     >;
   };
   signOut: {
@@ -94,9 +97,8 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const { toast } = useToast();
   const queryClient = useQueryClient();
-  const onSuccess = () =>
-    queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
   const [state, setState] = useState<AuthProviderState>(initialState);
 
   const { data: authStatus, isFetching: isAuthStatusPending } = useQuery({
@@ -108,42 +110,68 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { mutateAsync: onboardMutation, isPending: isOnboarding } = useMutation(
     {
-      mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) =>
-        services.onboard(data),
+      mutationFn: (data: { user: RegisterUser; tenant: TenantInsert }) => services.onboard(data),
       mutationKey: ['auth', 'onboard'],
-      onSuccess
+      onSuccess: () => {
+        toast({
+          title: 'Onboarded!',
+          description: 'You have successfully onboarded!',
+          variant: 'default'
+        });
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
     }
   );
 
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
-    onSuccess
+    onSuccess: () => {
+      toast({
+        title: 'Signed In',
+        description: 'You have successfully signed in!',
+        variant: 'default'
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
   });
 
   const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
     mutationFn: (data: RegisterUser) => services.signUp(data),
     mutationKey: ['auth', 'signUp'],
-    onSuccess
+    onSuccess: () => {
+      toast({
+        title: 'Signed Up',
+        description: 'You have successfully signed up!',
+        variant: 'default'
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
   });
 
   const { mutateAsync: signOutMutation, isPending: isSigningOut } = useMutation(
     {
       mutationFn: services.signOut,
       mutationKey: ['auth', 'signOut'],
-      onSuccess
+      onSuccess: () => {
+        toast({
+          title: 'Signed Out',
+          description: 'You have successfully signed out!',
+          variant: 'default'
+        });
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
     }
   );
 
   const createPermissions = (
     permissions: UserRole['permission'] | undefined
-  ): Permissions[] =>
-    permissions
-      ?.filter(({ module }) => !!module)
-      .map(({ module, permissionAction }) => ({
-        module: { name: module.name, icon: module.icon },
-        actions: permissionAction.map(({ action }) => action.name)
-      })) ?? [];
+  ): Permissions[] => permissions
+    ?.filter(({ module }) => !!module)
+    .map(({ module, permissionAction }) => ({
+      module: { name: module.name, icon: module.icon },
+      actions: permissionAction.map(({ action }) => action.name)
+    })) ?? [];
 
   useEffect(() => {
     let user;
