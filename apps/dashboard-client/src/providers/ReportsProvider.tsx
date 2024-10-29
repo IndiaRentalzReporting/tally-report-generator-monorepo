@@ -6,16 +6,20 @@ import {
   UseMutateAsyncFunction, useMutation, useQuery, useQueryClient
 } from '@tanstack/react-query';
 import {
+  DetailedColumnSelect,
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import { services } from '@/services/column';
+import { services as columnService } from '@/services/Columns';
+import { services as reportService } from '@/services/Reports';
 
-export type Column = Partial<ReportSelect['columns'][number]>;
-export type Condition = Partial<ReportSelect['conditions'][number]>;
-export type Filter = Partial<ReportSelect['filters'][number]>;
+export type Column = ReportSelect['columns'][number];
+export type Condition = ReportSelect['conditions'][number];
+export type Filter = ReportSelect['filters'][number];
+export type GroupBy = ReportSelect['groupBy'][number];
 
 interface ReportsProviderState {
+  fetchedColumns: Array<Column>;
   columns: Array<Column>;
   availableColumns: Array<Column>;
   addColumn: (id: string | undefined) => void;
@@ -33,14 +37,13 @@ interface ReportsProviderState {
   removeFilter: (id: string | undefined) => void;
   updateFilter: (id: string | undefined, update: Partial<Filter>) => void;
 
-  groupBy: Array<Column>;
-  setGroupBy: React.Dispatch<React.SetStateAction<Array<Column>>>;
+  groupBy: Array<GroupBy>;
+  setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
 
   fetchingColumns: boolean,
-
   updateReport: UseMutateAsyncFunction<AxiosResponse<{
     report: ReportSelect;
-  }, any>, Error>
+  }>, Error>
   isUpdatingReport: boolean
 }
 
@@ -50,6 +53,20 @@ interface ReportsProviderProps {
   children: React.ReactNode;
   report: ReportSelect
 }
+
+const dummyColumn: DetailedColumnSelect = {
+  id: '',
+  displayName: '',
+  table: '',
+  type: 'string',
+  heading: '',
+  tablealias: '',
+  name: '',
+  alias: ''
+};
+
+// Helper function to check if a column is a dummy column
+const isDummyColumn = (column: DetailedColumnSelect) => JSON.stringify(column) === JSON.stringify(dummyColumn);
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = (
   {
@@ -62,10 +79,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   const [conditions, setConditions] = useState<ReportsProviderState['conditions']>(report.conditions);
 
   const { data: fetchedColumns = [], isFetching: fetchingColumns } = useQuery({
-    queryFn: () => services.read({ tableId: report.baseEntity }),
+    queryFn: () => columnService.read({ tableId: report.baseEntity }),
     select: (data) => data.data.columns.map<Column>((column) => ({
       column,
-      heading: column.displayName,
+      heading: column.heading,
       operation: undefined
     })),
     enabled: !!report.baseEntity,
@@ -79,79 +96,98 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
         .filter((column) => !!column.column && !!column.column.tablealias)
         .map((column) => column.column!.tablealias)));
 
-      return services.updateOne(report.id, {
-        conditions: conditions as ReportSelect['conditions'],
-        filters: filters as ReportSelect['filters'],
-        groupBy: groupBy as ReportSelect['groupBy'],
-        columns: columns as ReportSelect['columns'],
-        tables: tables as ReportSelect['tables'],
+      return reportService.updateOne({ id: report.id }, {
+        conditions: conditions.filter(
+          (condition) => !isDummyColumn(condition.column)
+        ),
+        filters: filters.filter(
+          (filter) => !isDummyColumn(filter.column)
+        ),
+        groupBy,
+        columns,
+        tables,
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
   });
 
   const availableColumns = useMemo(() => {
-    const selectedIds = new Set(columns.map((col) => col.column?.displayName));
-    return fetchedColumns.filter((col) => !selectedIds.has(col.column?.displayName));
+    const selectedIds = new Set(columns.map((col) => col.column.id));
+    return fetchedColumns.filter((col) => !selectedIds.has(col.column.id));
   }, [fetchedColumns, columns]);
 
   const addColumn: ReportsProviderState['addColumn'] = useCallback((id) => {
-    const entity = availableColumns.find((col) => col.column?.id === id);
+    const entity = availableColumns.find((col) => col.column.id === id);
     if (!entity) return;
     setColumns((prev) => [...prev, entity]);
   }, [availableColumns]);
 
   const removeColumn: ReportsProviderState['removeColumn'] = useCallback((id) => {
-    setColumns((prev) => prev.filter((col) => col.column?.id !== id));
-    setGroupBy((prev) => prev.filter((col) => col.column?.id !== id));
+    setColumns((prev) => prev.filter((col) => col.column.id !== id));
+    setGroupBy((prev) => prev.filter((col) => col.column.id !== id));
   }, []);
 
   const updateColumn: ReportsProviderState['updateColumn'] = useCallback((id, update) => {
     setColumns((prev) => prev.map(
-      (col) => (col.column?.id === id ? { ...col, ...update } : col)
+      (col) => (col.column.id === id ? { ...col, ...update } : col)
     ));
   }, []);
 
   const addCondition: ReportsProviderState['addCondition'] = useCallback(() => {
+    // Check if there's any condition with a dummy column
+    const hasDummyCondition = conditions.some((condition) => isDummyColumn(condition.column));
+
+    if (hasDummyCondition) {
+      return; // Don't add new condition if there's already one with a dummy column
+    }
+
     const newCondition: Condition = {
-      column: undefined,
+      column: dummyColumn,
       operator: undefined,
       params: undefined,
       join: undefined
     };
     setConditions((prev) => [...prev, newCondition]);
-  }, []);
+  }, [conditions]);
 
   const removeCondition: ReportsProviderState['removeCondition'] = useCallback((id) => {
-    setConditions((prev) => prev.filter((cond) => cond.column?.id !== id));
+    setConditions((prev) => prev.filter((cond) => cond.column.id !== id));
   }, []);
 
-  const updateCondition: ReportsProviderState['updateCondition'] = useCallback((id, condition, update) => {
+  const updateCondition: ReportsProviderState['updateCondition'] = useCallback((id, _, update) => {
     setConditions((prev) => prev.map(
-      (cond) => (cond.column?.id === id ? { ...cond, ...update } : cond)
+      (cond) => (cond.column.id === id ? { ...cond, ...update } : cond)
     ));
   }, []);
 
   const addFilter: ReportsProviderState['addFilter'] = useCallback(() => {
+    // Check if there's any filter with a dummy column
+    const hasDummyFilter = filters.some((filter) => isDummyColumn(filter.column));
+
+    if (hasDummyFilter) {
+      return; // Don't add new filter if there's already one with a dummy column
+    }
+
     const newFilter: Filter = {
-      column: undefined,
-      filterType: undefined
+      column: dummyColumn,
+      filterType: 'default'
     };
     setFilters((prev) => [...prev, newFilter]);
-  }, []);
+  }, [filters]);
 
   const removeFilter: ReportsProviderState['removeFilter'] = useCallback((id) => {
-    setFilters((prev) => prev.filter((filter) => filter.column?.id !== id));
+    setFilters((prev) => prev.filter((filter) => filter.column.id !== id));
   }, []);
 
   const updateFilter: ReportsProviderState['updateFilter'] = useCallback((id, update) => {
     setFilters((prev) => prev.map(
-      (filter) => (filter.column?.id === id ? { ...filter, ...update } : filter)
+      (filter) => (filter.column.id === id ? { ...filter, ...update } : filter)
     ));
   }, []);
 
   const contextValue = useMemo(() => ({
     fetchingColumns,
+    fetchedColumns,
     columns,
     availableColumns,
     addColumn,
@@ -170,6 +206,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
     updateReport,
     isUpdatingReport
   }), [
+    fetchedColumns,
     fetchingColumns,
     columns,
     availableColumns,

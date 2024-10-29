@@ -7,13 +7,13 @@ import { ColumnOperators } from './columnOperation';
 export type ReportColumnInsert = {
   column: DetailedColumnSelect,
   heading: string,
-  operation: ColumnOperators;
+  operation: ColumnOperators | undefined;
 };
 
 export type ReportColumnSelect = {
   column: DetailedColumnSelect,
   heading: string,
-  operation: ColumnOperators;
+  operation: ColumnOperators | undefined;
 };
 
 export type ReportColumnConfig = {

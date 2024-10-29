@@ -31,18 +31,18 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   const [open, setOpen] = useState(false);
   const [localExtra, setLocalExtra] = useState(column);
 
-  const selectedColumn = columns.find((col) => col.column?.name === column.column?.name);
+  const selectedColumn = columns.find((col) => col.column.name === column.column.name);
 
   const operations = Object.keys(ColumnOperations).filter((operatorName) => {
     const operation = ColumnOperations[operatorName as keyof typeof ColumnOperations];
     const operationFor = operation.for;
-    return selectedColumn?.column?.type ? operationFor.includes(selectedColumn.column.type) : [];
+    return selectedColumn?.column.type ? operationFor.includes(selectedColumn.column.type) : [];
   });
 
   const handleClose = (open: boolean) => {
     setOpen(open);
     if (selectedColumn && !open) {
-      setTimeout(() => updateColumn(selectedColumn.column?.id, { ...localExtra }), 500);
+      setTimeout(() => updateColumn(selectedColumn.column.id, { ...localExtra }), 500);
     }
   };
 
@@ -60,7 +60,7 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
             <CardContent className="pt-6 space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="columnName">Column Name</Label>
-                <Input id="columnName" value={column.column?.name} readOnly />
+                <Input id="columnName" value={column.column.name} readOnly />
               </div>
 
               <div className="space-y-2">
@@ -87,17 +87,17 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
                   }))}
                   onChange={(operation) => {
                     setGroupBy((prev) => prev.filter(
-                      (group) => group.column?.displayName !== column.column?.displayName
+                      (group) => group.column.displayName !== column.column.displayName
                     ));
                     setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
                   }}
                 />
               </div>
 
-              <When condition={selectedColumn?.column?.type === 'number'}>
+              <When condition={selectedColumn?.column.type === 'number'}>
                 <div className="flex items-center space-x-2">
                   <Checkbox
-                    checked={localExtra.column?.type === 'number'}
+                    checked={localExtra.column.type === 'number'}
                     id="showTotal"
                     onCheckedChange={(showTotal) => setLocalExtra((prev) => ({
                       ...prev,

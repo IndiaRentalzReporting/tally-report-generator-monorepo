@@ -14,12 +14,12 @@ const GroupBy: React.FC = () => {
       <MultiSelect
         label='columns'
         options={columns.filter((col) => !col.operation).map((col) => ({
-          label: col.column?.displayName || 'No Label',
-          value: col.column?.displayName || 'No Value'
+          label: col.column.displayName || 'No Label',
+          value: col.column.displayName || 'No Value'
         }))}
-        value={groupBy.map((group) => group.column?.displayName || '')}
+        value={groupBy.map((group) => group.column.displayName || '')}
         onChange={(values) => {
-          const columnToAdd = Array.from(new Set(columns.filter((col) => values.includes(col.column?.displayName || ''))));
+          const columnToAdd = Array.from(new Set(columns.filter((col) => values.includes(col.column.displayName || ''))));
           setGroupBy(columnToAdd);
         }}
       />

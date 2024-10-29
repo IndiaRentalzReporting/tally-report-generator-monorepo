@@ -18,9 +18,9 @@ const Conditions: React.FC = () => {
       </h3>
       {conditions.map((condition) => (
         <ConditionItem
-          key={condition.column?.displayName}
+          key={condition.column.id}
           condition={condition}
-          onRemove={() => removeCondition(condition.column?.id)}
+          onRemove={() => removeCondition(condition.column.id)}
         />
       ))}
     </div>
@@ -31,7 +31,15 @@ const ConditionItem: React.FC<{
   condition: Condition;
   onRemove: () => void;
 }> = ({ condition, onRemove }) => {
-  const { columns, availableColumns, updateCondition } = useReports();
+  const {
+    updateCondition, fetchedColumns, conditions
+  } = useReports();
+
+  const usedColumnIds = conditions.map((c) => c.column.id);
+
+  const availableColumns = fetchedColumns.filter(({
+    column
+  }) => !usedColumnIds.includes(column.id) || column.id === condition.column.id);
 
   const operations = Object.keys(ConditionOperations).filter((operatorName) => {
     const operation = ConditionOperations[operatorName as keyof typeof ConditionOperations];
@@ -46,21 +54,24 @@ const ConditionItem: React.FC<{
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
         <Select
           label="Column"
-          value={condition.column?.displayName}
-          options={columns.concat(availableColumns).map(({ column }) => ({
-            label: column?.displayName || '',
-            value: column?.displayName || ''
-          }))}
+          value={condition.column.displayName}
+          options={availableColumns
+            .map(({ column }) => ({
+              label: column.displayName,
+              value: column.displayName
+            }))}
           onChange={(id) => {
-            updateCondition(condition.column?.id, condition, {
-              column: columns
-                .concat(availableColumns)
-                .find((col) => col.column?.displayName === id)?.column
+            updateCondition(condition.column.id, condition, {
+              column: fetchedColumns
+                .find((col) => col.column.displayName === id)?.column,
+              join: undefined,
+              operator: undefined,
+              params: undefined
             });
           }}
         />
 
-        <When condition={!!condition.column}>
+        <When condition={!!condition.column.id}>
           <Select
             label="Operator"
             value={condition.operator}
@@ -69,9 +80,13 @@ const ConditionItem: React.FC<{
               value: op
             }))}
             onChange={(operator) => updateCondition(
-              condition.column?.id,
+              condition.column.id,
               condition,
-              { operator: operator as ReportSelect['conditions'][number]['operator'] }
+              {
+                operator: operator as ReportSelect['conditions'][number]['operator'],
+                params: undefined,
+                join: undefined
+              },
             )}
           />
 
@@ -80,9 +95,9 @@ const ConditionItem: React.FC<{
               <Input
                 key={param}
                 placeholder={param}
-                type={condition.column?.type}
+                type={condition.column.type}
                 onChange={({ target: { value } }) => updateCondition(
-                  condition.column?.id,
+                  condition.column.id,
                   condition,
                   { [param]: value }
                 )}
@@ -97,14 +112,13 @@ const ConditionItem: React.FC<{
               label: join,
               value: join
             }))}
-            onChange={(join: string) => updateCondition(condition.column?.id, condition, {
+            onChange={(join: string) => updateCondition(condition.column.id, condition, {
               join: join as ReportSelect['conditions'][number]['join']
             })
             }
             className="justify-self-end"
           />
         </When>
-
       </div>
 
       <Button

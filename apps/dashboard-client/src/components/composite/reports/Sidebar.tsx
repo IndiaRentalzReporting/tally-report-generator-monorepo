@@ -47,12 +47,12 @@ const ReportsSidebar: React.FC = () => {
                 <ElseIf condition={!!availableColumns.length}>
                   {availableColumns.map((column) => (
                     <SidebarMenuItem
-                      key={column.column?.displayName}
-                      onClick={() => addColumn(column.column?.id)}
+                      key={column.column.id}
+                      onClick={() => addColumn(column.column.id)}
                     >
                       <SidebarMenuButton>
                         <Plus /> <span className="sr-only">Add Column</span>
-                        {column.column?.displayName}
+                        {column.column.displayName}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
