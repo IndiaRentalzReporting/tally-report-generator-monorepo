@@ -1,89 +1,84 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import * as z from 'zod';
-import { Button, Input, Label, Switch } from '@trg_package/vite/components';
-import { State, StateAsProps } from './interface';
+import {
+  Button, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Input,
+  Switch
+} from '@trg_package/vite/components';
+import { StateAsProps } from './interface';
 
-const iconSchema = z
-  .string()
-  .startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
-  .endsWith('</svg>');
-
-const Fields: React.FC<StateAsProps> = ({ moduleData, setModuleData }) => {
-  const [moduleIcon, setModuleIcon] = React.useState<State['icon']>(
-    moduleData.icon
-  );
-  const iconRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => setModuleIcon(moduleData.icon), [moduleData]);
-
-  const renderIcon = async () => {
-    const icon = iconRef.current;
-    if (!icon) return;
-    try {
-      const parsedIcon = await iconSchema.parseAsync(moduleIcon);
-      setModuleData((prev) => ({ ...prev, icon: parsedIcon }));
-      icon.innerHTML = parsedIcon;
-    } catch (e) {
-      // SHOW TOAST
-    }
-  };
-  return (
+const Fields: React.FC<StateAsProps> = ({ form }) => (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 items-center">
-        <Input
-          required
-          minLength={3}
-          placeholder="Module Name"
-          value={moduleData.name}
-          onChange={(e) =>
-            setModuleData((prev) => ({ ...prev, name: e.target.value }))
-          }
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder="Module Name"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <span className="flex gap-4 items-center">
-          <Label htmlFor="isPrivate">Private</Label>
-          <Switch
-            checked={moduleData.isPrivate}
+          <FormField
+            control={form.control}
             name="isPrivate"
-            onCheckedChange={(checked) =>
-              setModuleData((prev) => ({ ...prev, isPrivate: checked }))
-            }
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel >Is Private</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={field.disabled}
+                    name={field.name}
+                    ref={field.ref}
+                    onBlur={field.onBlur}
+                  />
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </span>
       </div>
       <div className="flex gap-4 items-center">
-        <Input
-          minLength={3}
-          placeholder="Module Icon SVG"
-          value={moduleIcon ?? ''}
-          onChange={(e) => setModuleIcon(e.target.value)}
+        <FormField
+          control={form.control}
+          name="icon"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel >Icon</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder="Icon SVG"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <div
-          ref={iconRef}
-          dangerouslySetInnerHTML={{
-            __html: moduleData.icon ?? ''
-          }}
-          className="border border-border rounded-md p-2"
-        />
-        <Button
-          type="button"
-          disabled={!moduleIcon}
-          className="w-min"
-          onClick={renderIcon}
-        >
-          Render Icon
-        </Button>
         <Link
           to="https://lucide.dev/icons/"
           target="_blank"
           className="w-min"
-          onClick={renderIcon}
         >
           <Button type="button">Browse Icons</Button>
         </Link>
       </div>
     </div>
-  );
-};
+);
 
 export default Fields;

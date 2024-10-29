@@ -30,23 +30,18 @@ const formSchema = UserSelectSchema.pick({
   tenant: TenantInsertSchema.shape.name
 });
 
+type State = z.infer<typeof formSchema>;
+
 export const SignupForm = () => {
   const {
     onboard: { isLoading, mutation: onboard }
   } = useAuth();
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      first_name: '',
-      last_name: '',
-      tenant: ''
-    }
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema)
   });
 
-  const handleSubmit = async ({ tenant: name, ...user }: z.infer<typeof formSchema>) => {
+  const handleSubmit = async ({ tenant: name, ...user }: State) => {
     onboard({
       tenant: {
         name

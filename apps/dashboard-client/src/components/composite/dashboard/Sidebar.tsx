@@ -13,10 +13,12 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarGroup,
-  SidebarGroupContent
+  SidebarGroupContent,
+  SidebarSeparator
 } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
+import UserSettings from '../header/UserSettings';
 
 const Sidebar: React.FC = () => {
   const { tenant } = useAuth();
@@ -38,7 +40,6 @@ const Sidebar: React.FC = () => {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarGroup>
-          {/* <SidebarGroupLabel>Routes</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map(({
@@ -65,26 +66,6 @@ const Sidebar: React.FC = () => {
                       </span>
                     </NavLink>
                   </SidebarMenuButton>
-                  {/* <When condition={!!children?.length}>
-                    <AccordionContent className="flex flex-col float-right pb-0 py-2 px-3 ps-6 w-full">
-                      {children?.map((child) => (
-                        <NavLink
-                          to={child.to}
-                          key={child.name}
-                          className={({ isActive }) => clsx(
-                            'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
-                            isActive && 'text-primary'
-                          )
-                          }
-                        >
-                          <div className="mt-2 w-full h-[1px] bg-border self-stretch flex-grow" />
-                          <span className="flex gap-3 items-center flex-shrink">
-                            {child.name}
-                          </span>
-                        </NavLink>
-                      ))}
-                    </AccordionContent>
-                  </When> */}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -92,7 +73,15 @@ const Sidebar: React.FC = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter >
-        <SidebarTrigger/>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton className="w-min float-right">
+              <SidebarTrigger/>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SidebarSeparator/>
+        <UserSettings/>
       </SidebarFooter>
     </SidebarComponent>
   );

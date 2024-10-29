@@ -42,7 +42,7 @@ reportRouter.get(
 );
 
 reportRouter.get(
-  '/read/getColumns/:tableId',
+  '/read/columns/:tableId',
   validateSchema({
     params: z.object({
       tableId: TableSelectSchema.shape.id
@@ -52,7 +52,7 @@ reportRouter.get(
 );
 
 reportRouter.get(
-  '/read/getTables',
+  '/read/tables',
   getAllTables,
 );
 

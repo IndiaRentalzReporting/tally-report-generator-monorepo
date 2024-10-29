@@ -10,7 +10,7 @@ import {
   Skeleton,
   DataTable
 } from '@trg_package/vite/components';
-import { services } from '@/services/permission';
+import { services } from '@/services/Permissions';
 import { columns } from './columns';
 
 const Read: React.FC = () => {

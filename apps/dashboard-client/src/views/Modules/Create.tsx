@@ -6,51 +6,55 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  Form
 } from '@trg_package/vite/components';
-import { services } from '@/services/module';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { services } from '@/services/Modules';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const CreateModule: React.FC = () => {
-  const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema.omit({ id: true })),
+  });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createModule, isPending: loadingCreateModule } =
-    useMutation({
-      mutationFn: () => services.createOne({ moduleDetails }),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-        setModuleDetails(initialState);
-      }
-    });
+  const { mutateAsync: createModule, isPending: loadingCreateModule } = useMutation({
+    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.createOne(moduleDetails),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
+    }
+  });
 
-  const handleCreateModule: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    createModule();
+  const handleSubmit = async (values: State) => {
+    createModule(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleCreateModule} className="flex flex-col gap-6 h-full">
-      <Card>
-        <CardHeader>
-          <CardTitle>Modules Details</CardTitle>
-          <CardDescription>
-            Give your module an appropriate name and icon!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Fields moduleData={moduleDetails} setModuleData={setModuleDetails} />
-        </CardContent>
-      </Card>
-      <Button
-        type="submit"
-        isLoading={loadingCreateModule}
-        disabled={!!moduleDetails}
-      >
-        Create Module
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Modules Details</CardTitle>
+            <CardDescription>
+              Give your module an appropriate name and icon!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Fields form={form} />
+          </CardContent>
+        </Card>
+        <Button
+          type="submit"
+          isLoading={loadingCreateModule}
+        >
+          Create Module
+        </Button>
+      </form>
+    </Form>
   );
 };
 

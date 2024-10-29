@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import {
-  Menu, Package2, Search, ChevronDown
+  Menu, Package2, ChevronDown
 } from 'lucide-react';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -10,7 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
   Button,
-  Input,
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -18,9 +17,6 @@ import {
 } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
-import ToggleTheme from './ToggleTheme';
-import ApiKey from './ApiKey';
-import UserSettingsDropdown from './UserSettings';
 
 const Header: React.FC = () => {
   const { tenant } = useAuth();
@@ -99,21 +95,6 @@ const Header: React.FC = () => {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
-        <form>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-            />
-          </div>
-        </form>
-      </div>
-      <ToggleTheme />
-      <ApiKey />
-      <UserSettingsDropdown />
     </header>
   );
 };

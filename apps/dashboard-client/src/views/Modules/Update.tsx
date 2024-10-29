@@ -1,63 +1,48 @@
-import React, {
-  Dispatch,
-  FormEventHandler,
-  SetStateAction,
-  useEffect
-} from 'react';
+import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button, Skeleton } from '@trg_package/vite/components';
+import { Button, Form, Skeleton } from '@trg_package/vite/components';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Fields from './Fields';
-import { services } from '@/services/module';
-import { State, initialState } from './interface';
+import { services } from '@/services/Modules';
+import { State, formSchema } from './interface';
 
 const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const [moduleDetails, setModuleDetails] = React.useState<State>(initialState);
-  const [dataChanged, setDataChanged] = React.useState<boolean>(false);
-
   const { data: moduleData, isFetching: loadingModule } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => data.data.modules[0],
+    select: (data) => formSchema.parse(data.data.modules[0]),
     queryKey: ['getOne', 'modules', id]
   });
 
-  useEffect(() => {
-    if (!moduleData) return;
-    setModuleDetails(moduleData);
-  }, [moduleData]);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema),
+    values: moduleData
+  });
 
   const queryClient = useQueryClient();
   const { mutateAsync: updateModule, isPending: updatingModule } = useMutation({
-    mutationFn: () => services.updateOne(id, moduleDetails),
+    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.updateOne({ id }, moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
-      setModuleDetails(initialState);
     }
   });
 
-  const handleModuleDataChange: Dispatch<SetStateAction<State>> = (
-    newState
-  ) => {
-    if (!dataChanged) setDataChanged(true);
-    setModuleDetails(newState);
-  };
-
-  const handleUpdateModule: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    updateModule();
+  const handleSubmit = async (values: State) => {
+    updateModule(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleUpdateModule} className="flex flex-col gap-6">
-      <Skeleton isLoading={loadingModule}>
-        <Fields
-          moduleData={moduleDetails}
-          setModuleData={handleModuleDataChange}
-        />
-      </Skeleton>
-      <Button disabled={!dataChanged} type="submit" isLoading={updatingModule}>
-        Update Module
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-6">
+        <Skeleton isLoading={loadingModule}>
+          <Fields form={form} />
+        </Skeleton>
+        <Button type="submit" isLoading={updatingModule}>
+          Update Module
+        </Button>
+      </form>
+    </Form>
   );
 };
 

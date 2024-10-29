@@ -1,8 +1,4 @@
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
   Button,
@@ -13,19 +9,10 @@ import {
   DropdownMenuPortal
 } from '@trg_package/vite/components';
 
-import { CopyIcon, KeyIcon, Trash2Icon } from 'lucide-react';
+import { CopyIcon, Trash2Icon } from 'lucide-react';
 
 const ApiKey = () => (
-  <DropdownMenu>
-    <DropdownMenuTrigger className="rounded-full">
-      <Button type="button" variant="outline" size="icon">
-        <KeyIcon className="h-5 w-5" />
-        <span className="sr-only">API Keys</span>
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-[300px]">
-      <DropdownMenuLabel className="font-medium">API Keys</DropdownMenuLabel>
-      <DropdownMenuSeparator />
+    <div className="w-[300px]">
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>Create New API Key</DropdownMenuSubTrigger>
         <DropdownMenuPortal>
@@ -68,8 +55,7 @@ const ApiKey = () => (
           </div>
         </div>
       </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+    </div>
 );
 
 export default ApiKey;

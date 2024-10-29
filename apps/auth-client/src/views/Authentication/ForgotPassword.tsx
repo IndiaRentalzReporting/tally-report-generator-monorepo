@@ -25,12 +25,13 @@ import * as z from 'zod';
 import { services } from './services';
 
 const formSchema = UserSelectSchema.pick({ email: true });
+type State = z.infer<typeof formSchema>;
 
 export const ForgotPassword: FC = () => {
   const { toast } = useToast();
 
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({
-    mutationFn: (values: z.infer<typeof formSchema>) => services.forgotPassword(values),
+    mutationFn: (values: State) => services.forgotPassword(values),
     onSuccess: (data) => {
       toast({
         variant: 'default',
@@ -41,14 +42,11 @@ export const ForgotPassword: FC = () => {
     }
   });
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: ''
-    }
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema)
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: State) => {
     forgotPasswordMutation(values);
     form.reset();
   };

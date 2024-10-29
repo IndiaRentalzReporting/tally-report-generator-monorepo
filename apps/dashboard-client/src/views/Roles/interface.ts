@@ -1,14 +1,10 @@
-import { Dispatch, SetStateAction } from 'react';
-import { RoleSelect } from '@trg_package/schemas-dashboard/types';
+import { RoleSelectSchema } from '@trg_package/schemas-dashboard/types';
+import * as z from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 
-export interface State extends Pick<RoleSelect, 'id' | 'name'> {}
+export const formSchema = RoleSelectSchema.pick({ id: true, name: true });
 
-export const initialState: State = {
-  id: '',
-  name: ''
+export type State = z.infer<typeof formSchema>;
+export type StateAsProps = {
+  form: UseFormReturn<State>
 };
-
-export interface StateAsProps {
-  roleData: State;
-  setRoleData: Dispatch<SetStateAction<State>>;
-}

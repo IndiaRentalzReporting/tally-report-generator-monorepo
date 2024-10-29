@@ -1,53 +1,52 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
-import { Button, Skeleton } from '@trg_package/vite/components';
-import { services } from '@/services/reports';
+import React from 'react';
+import { Button, Form, Skeleton } from '@trg_package/vite/components';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { services } from '@/services/Reports';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const [reportData, setReportData] = React.useState<State>(initialState);
-
   const queryClient = useQueryClient();
   const { data: report, isFetching: loadingReport } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => data.data.reports[0],
+    select: (data) => formSchema.parse(data.data.reports[0]),
     queryKey: ['reports', 'getOne', id]
   });
 
-  useEffect(() => {
-    if (!report) return;
-    setReportData(report);
-  }, [report]);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema),
+    values: report
+  });
 
   const { mutateAsync: updateReport, isPending: updatingReport } = useMutation({
-    mutationFn: () => services.updateOne(id, reportData),
+    mutationFn: (reportData: Omit<State, 'id'>) => services.updateOne({ id }, reportData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
-    },
-    onSettled: () => {
-      setReportData(initialState);
     }
   });
 
-  const handleUpdateReport: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    updateReport();
+  const handleSubmit = (values: State) => {
+    updateReport(values);
+    form.reset();
   };
 
   return (
-    <form className="h-full flex flex-col gap-4" onSubmit={handleUpdateReport}>
-      <Skeleton isLoading={loadingReport}>
-        <Fields reportData={reportData} setReportData={setReportData} />
-      </Skeleton>
-      <Button
-        isLoading={updatingReport}
-        type="submit"
-        className="w-full mt-auto"
-      >
-        Update
-      </Button>
-    </form>
+    <Form {...form}>
+      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+        <Skeleton isLoading={loadingReport}>
+          <Fields form={form} />
+        </Skeleton>
+        <Button
+          isLoading={updatingReport}
+          type="submit"
+          className="w-full mt-auto"
+        >
+          Update
+        </Button>
+      </form>
+    </Form>
   );
 };
 

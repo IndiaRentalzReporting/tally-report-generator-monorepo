@@ -17,9 +17,9 @@ const Filters: React.FC = () => {
       </h3>
       {filters.map((filter) => (
         <FilterComponent
-          key={filter.column?.displayName}
+          key={filter.column.id}
           filter={filter}
-          removeFilter={() => removeFilter(filter.column?.id)}
+          removeFilter={() => removeFilter(filter.column.id)}
         />
       ))}
     </div>
@@ -30,16 +30,24 @@ const FilterComponent: React.FC<{
   filter: Filter;
   removeFilter: () => void;
 }> = ({ filter, removeFilter }) => {
-  const { columns, availableColumns, updateFilter } = useReports();
+  const {
+    fetchedColumns, updateFilter, filters
+  } = useReports();
+
+  const usedColumnIds = filters.map((c) => c.column.id);
+
+  const availableColumns = fetchedColumns.filter(({
+    column
+  }) => !usedColumnIds.includes(column.id) || column.id === filter.column.id);
 
   return (
     <div className="mb-2 space-y-2">
       <div className="grid grid-cols-[2fr_2fr_auto] gap-4">
         <Select
           label="Column"
-          value={filter.column?.displayName}
-          options={columns.concat(availableColumns).map(({ column }) => {
-            if (!column?.displayName) {
+          value={filter.column.displayName}
+          options={availableColumns.map(({ column }) => {
+            if (!column.displayName) {
               return {
                 label: 'No Name',
                 value: 'No Name'
@@ -51,10 +59,9 @@ const FilterComponent: React.FC<{
             };
           })}
           onChange={(displayName) => {
-            updateFilter(filter.column?.id, {
-              column: columns
-                .concat(availableColumns)
-                .find((col) => col.column?.displayName === displayName)?.column
+            updateFilter(filter.column.id, {
+              column: fetchedColumns
+                .find((col) => col.column.displayName === displayName)?.column
             });
           }}
         />
@@ -67,7 +74,7 @@ const FilterComponent: React.FC<{
             value: type
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.column?.id, { filterType: filterType as 'select' | 'search' | 'default' });
+            updateFilter(filter.column.id, { filterType: filterType as 'select' | 'search' | 'default' });
           }}
           disabled={!filter.column}
           className="justify-self-end"

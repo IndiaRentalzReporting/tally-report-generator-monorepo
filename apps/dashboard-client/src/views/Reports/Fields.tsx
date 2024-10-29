@@ -1,5 +1,11 @@
 import React from 'react';
 import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
   Select,
   SelectContent,
@@ -12,61 +18,88 @@ import {
 } from '@trg_package/vite/components';
 import { useQuery } from '@tanstack/react-query';
 import { StateAsProps } from './interface';
-import { services } from '@/services/reports';
+import { services as tableService } from '@/services/Tables';
 
-const Fields: React.FC<StateAsProps> = ({ reportData, setReportData }) => {
+const Fields: React.FC<StateAsProps> = ({ form }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({
-    queryFn: async () => services.getTables(),
+    queryFn: async () => tableService.read(),
     select: (data) => data.data.tables,
-    queryKey: ['roles', 'getAll']
+    queryKey: ['tables', 'getAll']
   });
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-4 items-center">
-        <Input
-          required
-          minLength={3}
-          placeholder="Name"
-          value={reportData.name}
-          onChange={(e) =>
-            setReportData((prev) => ({ ...prev, name: e.target.value }))
-          }
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem className='flex-grow'>
+              <FormLabel >Name</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder="Report Name"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Select
-          onValueChange={(baseEntity) =>
-            setReportData((prev) => ({ ...prev, baseEntity }))
-          }
-          value={reportData.baseEntity}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a Base Entity" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Tables</SelectLabel>
-              <Skeleton isLoading={fetchingTables}>
-                {baseEntities?.map((table) => (
-                  <SelectItem key={table.id} value={table.id}>
-                    {table.displayName}
-                  </SelectItem>
-                ))}
-              </Skeleton>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex gap-4 items-center">
-        <Input
-          required
-          minLength={3}
-          placeholder="Description"
-          value={reportData.description || ''}
-          onChange={(e) =>
-            setReportData((prev) => ({ ...prev, description: e.target.value }))
-          }
+        <FormField
+          control={form.control}
+          name="baseEntity"
+          render={({ field }) => (
+            <FormItem className='flex-grow'>
+              <FormLabel>Base Entity</FormLabel>
+              <FormControl>
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Base Entity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Tables</SelectLabel>
+                      <Skeleton isLoading={fetchingTables}>
+                        {baseEntities?.map((table) => (
+                          <SelectItem key={table.id} value={table.id}>
+                            {table.displayName}
+                          </SelectItem>
+                        ))}
+                      </Skeleton>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel >Description</FormLabel>
+            <FormControl>
+              <Input
+                type='text'
+                placeholder="Description"
+                {...field}
+                value={field.value ?? undefined}
+              />
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

@@ -5,56 +5,60 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  Form
 } from '@trg_package/vite/components';
 import { useNavigate } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { services } from '@/services/reports';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { services } from '@/services/Reports';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const Create: React.FC = () => {
   const navigate = useNavigate();
-  const [reportDetails, setReportDetails] = React.useState<State>(initialState);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema.omit({ id: true }))
+  });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createReport, isPending: loadingCreateReport } =
-    useMutation({
-      mutationFn: () => services.createOne(reportDetails),
-      onSuccess: (data) => {
-        queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
-        setReportDetails(initialState);
-        navigate(`/reports/${data.data.report.id}`);
-      }
-    });
+  const { mutateAsync: createReport, isPending: loadingCreateReport } = useMutation({
+    mutationFn: (reportDetails: State) => services.createOne(reportDetails),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
+      form.reset();
+      navigate(`/reports/${data.data.report.id}`);
+    }
+  });
 
-  const handleCreateReport: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    createReport();
+  const handleSubmit = async (values: State) => {
+    await createReport(values);
   };
 
   return (
-    <form onSubmit={handleCreateReport} className="flex flex-col gap-6 h-full">
-      <Card>
-        <CardHeader>
-          <CardTitle>Report Details</CardTitle>
-          <CardDescription>
-            Give your report an appropriate details!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Fields reportData={reportDetails} setReportData={setReportDetails} />
-        </CardContent>
-      </Card>
-      <Button
-        type="submit"
-        className="w-min"
-        isLoading={loadingCreateReport}
-        disabled={!reportDetails}
-      >
-        Create Report
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-6 h-full">
+        <Card>
+          <CardHeader>
+            <CardTitle>Report Details</CardTitle>
+            <CardDescription>
+              Give your report an appropriate details!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Fields form={form} />
+          </CardContent>
+        </Card>
+        <Button
+          type="submit"
+          isLoading={loadingCreateReport}
+          className="w-min"
+        >
+          Create Report
+        </Button>
+      </form>
+    </Form>
   );
 };
 

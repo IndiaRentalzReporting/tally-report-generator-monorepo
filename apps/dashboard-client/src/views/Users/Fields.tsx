@@ -1,56 +1,88 @@
 import React from 'react';
-import { Input } from '@trg_package/vite/components';
+import {
+  FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, Input
+} from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
 
-const Fields: React.FC<StateAsProps> = ({ userData, setUserData }) => (
+const Fields: React.FC<StateAsProps> = ({ form }) => (
   <div className="flex flex-col gap-4">
     <div className="flex w-full gap-4">
       <div className="flex-grow">
-        <Input
-          id="first-name"
+        <FormField
+          control={form.control}
           name="first_name"
-          value={userData.first_name}
-          onChange={(e) =>
-            setUserData((prev) => ({ ...prev, first_name: e.target.value }))
-          }
-          placeholder="Max"
-          required
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel >First Name</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder="Max"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
       <div className="flex-grow">
-        <Input
-          id="last-name"
+        <FormField
+          control={form.control}
           name="last_name"
-          value={userData.last_name}
-          onChange={(e) =>
-            setUserData((prev) => ({ ...prev, last_name: e.target.value }))
-          }
-          placeholder="Robinson"
-          required
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel >Last Name</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder="Robinson"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
     </div>
-    <Input
-      id="email"
-      type="email"
+    <FormField
+      control={form.control}
       name="email"
-      value={userData.email}
-      onChange={(e) =>
-        setUserData((prev) => ({ ...prev, email: e.target.value }))
-      }
-      placeholder="m@example.com"
-      required
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel >Email</FormLabel>
+          <FormControl>
+            <Input
+              type='email'
+              placeholder="m@example.com"
+              {...field}
+            />
+          </FormControl>
+          <FormDescription />
+          <FormMessage />
+        </FormItem>
+      )}
     />
-    <Input
-      type="password"
-      id="password"
+    <FormField
+      control={form.control}
       name="password"
-      value={userData.password}
-      onChange={(e) =>
-        setUserData((prev) => ({ ...prev, password: e.target.value }))
-      }
-      placeholder="********"
-      required
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel >Password</FormLabel>
+          <FormControl>
+            <Input
+              type='password'
+              placeholder="********"
+              {...field}
+            />
+          </FormControl>
+          <FormDescription />
+          <FormMessage />
+        </FormItem>
+      )}
     />
   </div>
 );

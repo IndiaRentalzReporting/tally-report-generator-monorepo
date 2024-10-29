@@ -34,15 +34,15 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
 
   const createColumnDef = useCallback(
     (column: Column): ColumnDef<DetailedColumnSelect> => ({
-      id: column.column?.displayName,
-      accessorKey: column.column?.displayName || 'No Name',
+      id: column.column.displayName,
+      accessorKey: column.column.displayName || 'No Name',
       header: () => (
         <div className="flex items-center gap-4">
-          <span>{column.column?.displayName}</span>
+          <span>{column.column.displayName}</span>
           <Button
             className="flex items-center justify-center"
             variant="ghost"
-            onClick={() => removeColumn(column.column?.id)}
+            onClick={() => removeColumn(column.column.id)}
           >
             <Trash color="red" className="h-4 w-4" />
           </Button>

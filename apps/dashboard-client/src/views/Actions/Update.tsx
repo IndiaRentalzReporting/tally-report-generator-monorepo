@@ -1,54 +1,53 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button, Skeleton } from '@trg_package/vite/components';
-import { services } from '@/services/action';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, useForm } from 'react-hook-form';
+import { services } from '@/services/Actions';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const [actionData, setActionData] = React.useState<State>(initialState);
-
   const queryClient = useQueryClient();
-  const { data: actionDataX, isFetching: loadingAction } = useQuery({
+  const { data: actionData, isFetching: loadingAction } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => data.data.actions[0],
+    select: (data) => formSchema.parse(data.data.actions[0]),
     queryKey: ['actions', 'getOne', id]
   });
 
-  useEffect(() => {
-    if (!actionDataX) return;
-    setActionData(actionDataX);
-  }, [actionDataX]);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema),
+    values: actionData
+  });
 
   const { mutateAsync: updateAction, isPending: updatingAction } = useMutation({
-    mutationFn: () => services.updateOne(id, actionData),
+    mutationFn: (values: Omit<State, 'id'>) => services.updateOne({ id }, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
-    },
-    onSettled: () => {
-      setActionData(initialState);
     }
   });
 
-  const handleUpdateAction: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    updateAction();
+  const handleSubmit = async (values: State) => {
+    updateAction(values);
+    form.reset();
   };
 
   return (
-    <form className="h-full flex flex-col gap-4" onSubmit={handleUpdateAction}>
-      <Skeleton isLoading={loadingAction}>
-        <Fields actionData={actionData} setActionData={setActionData} />
-      </Skeleton>
-      <Button
-        isLoading={updatingAction}
-        type="submit"
-        className="w-full mt-auto"
-      >
-        Update
-      </Button>
-    </form>
+    <Form {...form}>
+      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+        <Skeleton isLoading={loadingAction}>
+          <Fields form={form} />
+        </Skeleton>
+        <Button
+          isLoading={updatingAction}
+          type="submit"
+          className="w-full mt-auto"
+        >
+          Update
+        </Button>
+      </form>
+    </Form>
   );
 };
 

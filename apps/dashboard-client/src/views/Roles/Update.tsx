@@ -1,49 +1,48 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
-import { Button, Skeleton } from '@trg_package/vite/components';
-import { services } from '@/services/role';
+import React from 'react';
+import { Button, Form, Skeleton } from '@trg_package/vite/components';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { services } from '@/services/Roles';
 import Fields from './Fields';
-import { State, initialState } from './interface';
+import { State, formSchema } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
-  const [roleData, setRoleData] = React.useState<State>(initialState);
-
   const queryClient = useQueryClient();
-  const { data: roleDataX, isFetching: loadingRole } = useQuery({
+  const { data: roleData, isFetching: loadingRole } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => data.data.roles[0],
+    select: (data) => formSchema.parse(data.data.roles[0]),
     queryKey: ['roles', 'getOne', id]
   });
 
-  useEffect(() => {
-    if (!roleDataX) return;
-    setRoleData(roleDataX);
-  }, [roleDataX]);
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema),
+    values: roleData
+  });
 
   const { mutateAsync: updateRole, isPending: updatingRole } = useMutation({
-    mutationFn: () => services.updateOne(id, roleData),
+    mutationFn: (roleData: Omit<State, 'id'>) => services.updateOne({ id }, roleData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
-    },
-    onSettled: () => {
-      setRoleData(initialState);
     }
   });
 
-  const handleUpdateRole: React.FormEventHandler = (e) => {
-    e.preventDefault();
-    updateRole();
+  const handleSubmit = (values: State) => {
+    updateRole(values);
+    form.reset();
   };
 
   return (
-    <form className="h-full flex flex-col gap-4" onSubmit={handleUpdateRole}>
-      <Skeleton isLoading={loadingRole}>
-        <Fields roleData={roleData} setRoleData={setRoleData} />
-      </Skeleton>
-      <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
-        Update
-      </Button>
-    </form>
+    <Form {...form}>
+      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+        <Skeleton isLoading={loadingRole}>
+          <Fields form={form} />
+        </Skeleton>
+        <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
+          Update
+        </Button>
+      </form>
+    </Form>
   );
 };
 
