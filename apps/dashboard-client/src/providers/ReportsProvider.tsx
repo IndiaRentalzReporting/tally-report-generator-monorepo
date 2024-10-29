@@ -65,14 +65,12 @@ const dummyColumn: DetailedColumnSelect = {
   alias: ''
 };
 
-// Helper function to check if a column is a dummy column
-const isDummyColumn = (column: DetailedColumnSelect) => JSON.stringify(column) === JSON.stringify(dummyColumn);
+const isDummyColumn = (column: DetailedColumnSelect) => JSON.stringify(column)
+=== JSON.stringify(dummyColumn);
 
-export const ReportsProvider: React.FC<ReportsProviderProps> = (
-  {
-    children, report
-  }
-) => {
+export const ReportsProvider: React.FC<ReportsProviderProps> = ({
+  children, report
+}) => {
   const [columns, setColumns] = useState<ReportsProviderState['columns']>(report.columns);
   const [groupBy, setGroupBy] = useState<ReportsProviderState['groupBy']>(report.groupBy);
   const [filters, setFilters] = useState<ReportsProviderState['filters']>(report.filters);
@@ -134,12 +132,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const addCondition: ReportsProviderState['addCondition'] = useCallback(() => {
-    // Check if there's any condition with a dummy column
     const hasDummyCondition = conditions.some((condition) => isDummyColumn(condition.column));
 
-    if (hasDummyCondition) {
-      return; // Don't add new condition if there's already one with a dummy column
-    }
+    if (hasDummyCondition || conditions.length === fetchedColumns.length) return;
 
     const newCondition: Condition = {
       column: dummyColumn,
@@ -148,7 +143,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
       join: undefined
     };
     setConditions((prev) => [...prev, newCondition]);
-  }, [conditions]);
+  }, [conditions, fetchedColumns]);
 
   const removeCondition: ReportsProviderState['removeCondition'] = useCallback((id) => {
     setConditions((prev) => prev.filter((cond) => cond.column.id !== id));
@@ -161,19 +156,16 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = (
   }, []);
 
   const addFilter: ReportsProviderState['addFilter'] = useCallback(() => {
-    // Check if there's any filter with a dummy column
     const hasDummyFilter = filters.some((filter) => isDummyColumn(filter.column));
 
-    if (hasDummyFilter) {
-      return; // Don't add new filter if there's already one with a dummy column
-    }
+    if (hasDummyFilter || filters.length === fetchedColumns.length) return;
 
     const newFilter: Filter = {
       column: dummyColumn,
       filterType: 'default'
     };
     setFilters((prev) => [...prev, newFilter]);
-  }, [filters]);
+  }, [filters, fetchedColumns]);
 
   const removeFilter: ReportsProviderState['removeFilter'] = useCallback((id) => {
     setFilters((prev) => prev.filter((filter) => filter.column.id !== id));

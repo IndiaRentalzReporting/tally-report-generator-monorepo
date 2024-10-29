@@ -17,9 +17,6 @@ import {
 } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
-import ToggleTheme from './ToggleTheme';
-import ApiKey from './ApiKey';
-import UserSettingsDropdown from './UserSettings';
 
 const Header: React.FC = () => {
   const { tenant } = useAuth();
@@ -98,9 +95,6 @@ const Header: React.FC = () => {
           </nav>
         </SheetContent>
       </Sheet>
-      <ToggleTheme />
-      <ApiKey />
-      <UserSettingsDropdown />
     </header>
   );
 };

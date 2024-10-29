@@ -6,7 +6,6 @@ import {
   Else, ElseIf, If, Loading, SidebarProvider, Then
 } from '@trg_package/vite/components';
 import Sidebar from './Sidebar';
-import DashboardHeader from '../header/Header';
 import DataTable from './Table';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/Reports';
@@ -44,7 +43,6 @@ const ReportingLayout = () => {
           {report && <ReportsProvider report={report}>
             <Sidebar />
             <main className="flex flex-col" style={{ width: 'calc(100% - var(--sidebar-width))' }}>
-              <DashboardHeader />
               <DataTable data={[object]} />
             </main>
           </ReportsProvider>}
