@@ -25,7 +25,7 @@ export class TableService extends BaseServiceNew
     for (const table of tables) {
       const tableObject = {
         name: table.name,
-        displayName: table.displayName.replace(/([a-z])([A-Z])/g, '$1 $2')
+        displayName: table.displayName.replace(/([a-z])([A-Z])/g, '$1 $2').replace('tally ','')
       };
       await this.createOne(tableObject);
     }

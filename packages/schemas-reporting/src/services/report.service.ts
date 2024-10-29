@@ -43,9 +43,9 @@ export class ReportService extends BaseServiceNew<
             UNION ALL
             
             SELECT 
-            LOWER(CONCAT(tbe.prefix,'_',c2.name))::TEXT as tablealias,
+            LOWER(c2.name)::TEXT as tablealias,
             rftb2.id AS tableid,
-            concat(' INNER JOIN public."',rftb2.name,'" ',LOWER(CONCAT(tbe.tablealias,'_',c2.name)),' ON ', tbe.tablealias, '.',c2.name,' = ',CONCAT(tbe.tablealias,'_',c2.name),'.',rfc2.name,' AND ',tbe.tablealias, '.','"companyId"',' = ',CONCAT(tbe.tablealias,'_',c2.name),'.','"companyId"')::text as tbe_query,
+            concat(' INNER JOIN public."',rftb2.name,'" ',LOWER(CONCAT(tbe.tablealias,'_',c2.name)),' ON ', tbe.tablealias, '."',c2.name,'" = ',CONCAT(tbe.tablealias,'_',c2.name),'."',rfc2.name,'" AND ',tbe.tablealias, '.','"companyId"',' = ',CONCAT(tbe.tablealias,'_',c2.name),'.','"companyId"')::text as tbe_query,
             rftb2.name::text as prefix
             FROM tbe    
             INNER JOIN public."column" c2 ON c2."tableId" = tbe.tableid
