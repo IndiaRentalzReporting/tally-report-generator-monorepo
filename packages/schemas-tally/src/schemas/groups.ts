@@ -1,17 +1,17 @@
 import {
-  integer,
   varchar,
-  pgTable
+  pgTable,
+  text
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { TallyCommonSchema } from './base';
 
 const GroupColumns = {
-  groupName: varchar('groupName', { length: 200 }),
+  name: varchar('name', { length: 200 }),
   aliasName: varchar('aliasName', { length: 200 }),
-  parentId: integer('parentId'),
+  parent: text('parent'),
   primaryGroup: varchar('primaryGroup', { length: 200 }),
-  natureofGroup: varchar('natureofGroup', { length: 200 }) //
+  natureofGroup: varchar('natureofGroup', { length: 200 })
 };
 export const GroupSchema = pgTable('tallyGroups', {
   ...TallyCommonSchema(),

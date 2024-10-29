@@ -128,7 +128,7 @@ export const getReportData = async (
       throw new CustomError('Report Config is missing columns',400);
     }
 
-    if (queryConfig === null || queryConfig.dataSource === '') throw new CustomError('Report does not have a data source',400);
+    if (queryConfig === null || queryConfig.dataSource === '') throw new CustomError('This report is not configured yet, please configure the report to view it',400);
 
     const {
       filters

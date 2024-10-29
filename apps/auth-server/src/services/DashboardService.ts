@@ -118,7 +118,7 @@ class DashboardService {
 
     type k = keyof typeof columns;
     for (const { id, name } of tables) {
-      const columData = columns[name as k];
+      const columData = columns[name as k] ?? [];
       for (const column of columData) {
         await CSI.createOne({ ...(column as ColumnInsert), tableId: id });
       }

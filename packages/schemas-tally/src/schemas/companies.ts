@@ -1,14 +1,12 @@
-import { pgTable, varchar, integer } from 'drizzle-orm/pg-core';
+import { pgTable, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { TallyCommonSchema } from './base';
 
 const CompanyColumns = {
-  companyName: varchar('companyName', { length: 200 }).notNull(),
-  companyMailName: varchar('companyMailName', { length: 200 }).notNull(),
-  companyNumber: varchar('companyNumber', { length: 200 }).notNull(),
-  ledgerAlterID: integer('ledgerAlterID').notNull(),
-  stockItemAlterID: integer('stockItemAlterID').notNull(),
-  voucherMasterID: integer('voucherMasterID').notNull()
+  name: varchar('name', { length: 200 }).notNull(),
+  companyMailName: varchar('companyMailName', { length: 200 }),
+  companyNumber: varchar('companyNumber', { length: 200 }),
+  GSTNumber: varchar('GSTNumber',{ length: 512 })
 };
 
 export const CompanySchema = pgTable('tallyCompanies', {

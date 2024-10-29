@@ -7,12 +7,14 @@ import { FilterTypes } from './filterTypes';
  */
 export type ReportFilterInsert = {
   column: DetailedColumnSelect,
-  filterType : FilterTypes
+  filterType : FilterTypes,
+  conditionType : 'having' | undefined
 };
 
 export type ReportFilterSelect = {
   column : DetailedColumnSelect,
-  filterType : FilterTypes
+  filterType : FilterTypes,
+  conditionType : 'having' | undefined
 };
 
 export type ReportFilterConfig = {

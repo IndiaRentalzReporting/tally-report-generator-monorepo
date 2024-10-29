@@ -1,251 +1,305 @@
 {
-    "tallyCompanies" : [
-        {
-            "name" : "companyNumber", 
-            "type" : "string"
-        },
-        {
-            "name" : "companyMailName", 
-            "type" : "string"
-        },
-        {
-            "name" : "companyName", 
-            "type" : "string"
-        },
-        {
-            "name" : "id", 
-            "type" : "id"
-        }
+    "tallyCompanies": [
+      {
+        "name": "company",
+        "type": "string"
+      },
+      {
+        "name": "masterId",
+        "type": "id"
+      }
     ],
-    "tallyGroups" : [
-        {
-            "name" : "primaryGroup", 
-            "type" : "foreignKey",
-            "referenceTable" : "tallyGroups",
-            "referenceColumn":"groupName"
-        }, 
-        {
-            "name" : "id", 
-            "type" : "id"
-        }, 
-        {
-            "name" : "groupName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "aliasName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "parentId", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "companyId", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyCompanies",
-            "referenceColumn":"id"
-        },  
-        {
-            "name" : "natureofGroup", 
-            "type" : "string"
-        }
+    "tallyGroups": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "aliasName",
+        "type": "string"
+      },
+      {
+        "name": "primaryGroup",
+        "type": "string"
+      },
+      {
+        "name": "natureOfGroup",
+        "type": "string"
+      }
     ],
-    "tallyLedgers" : [
-        {
-            "name" : "PINCode", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "ledgerName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "aliasName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "parent", 
-            "type" : "foreignKey"
-        }, 
-        {
-            "name" : "primaryGroup", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyGroups",
-            "referenceColumn":"groupName"
-        }, 
-        {
-            "name" : "mailingName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "addressLine1", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "addressLine2", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "addressLine3", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "addressLine4", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "countryName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "stateName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "GSTIN", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "PANNo", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "contactPerson", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "mobile", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "phone", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "fax", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "email", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "emailCC", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "website", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "openingBalance", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "id", 
-            "type" : "id"
-        }, 
-        {
-            "name" : "companyId", 
-            "type" : "foreignKey",
-             "referenceTable":"tallyCompanies",
-            "referenceColumn":"id"
-        }
+    "tallyLedgers": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "aliasName",
+        "type": "string"
+      },
+      {
+        "name": "primaryGroup",
+        "type": "string"
+      },
+      {
+        "name": "parent",
+        "type": "string"
+      },
+      {
+        "name": "addressLine1",
+        "type": "string"
+      },
+      {
+        "name": "addressLine2",
+        "type": "string"
+      },
+      {
+        "name": "addressLine3",
+        "type": "string"
+      },
+      {
+        "name": "addressLine4",
+        "type": "string"
+      },
+      {
+        "name": "pincode",
+        "type": "string"
+      },
+      {
+        "name": "state",
+        "type": "string"
+      },
+      {
+        "name": "country",
+        "type": "string"
+      },
+      {
+        "name": "GSTNumber",
+        "type": "string"
+      },
+      {
+        "name": "PANNo",
+        "type": "string"
+      },
+      {
+        "name": "mailingName",
+        "type": "string"
+      },
+      {
+        "name": "contactPerson",
+        "type": "string"
+      },
+      {
+        "name": "mobile",
+        "type": "string"
+      },
+      {
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "name": "fax",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "name": "emailCC",
+        "type": "string"
+      },
+      {
+        "name": "website",
+        "type": "string"
+      },
+      {
+        "name": "openingBalance",
+        "type": "number"
+      },
+      {
+        "name": "region",
+        "type": "string"
+      },
+      {
+        "name": "salesPerson",
+        "type": "string"
+      },
+      {
+        "name": "channel",
+        "type": "string"
+      },
+      {
+        "name": "segment",
+        "type": "string"
+      },
+      {
+        "name": "creationDate",
+        "type": "date"
+      }
     ],
-    "tallyStockCategories" : [
-        {
-            "name" : "id", 
-            "type" : "id"
-        }, 
-        {
-            "name" : "parent", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyStockCategories",
-            "referenceColumn":"stockCategoryName"
-        }, 
-        {
-            "name" : "lastSyncDate", 
-            "type" : "date"
-        }, 
-        {
-            "name" : "stockCategoryName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "companyId", 
-            "type" : "foreignKey",
-             "referenceTable":"tallyCompanies",
-            "referenceColumn":"id"
-        }
+    "tallyStockCategories": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "aliasName",
+        "type": "string"
+      },
+      {
+        "name": "parent",
+        "type": "string"
+      }
     ],
-    "tallyStockGroups" : [
-        {
-            "name" : "parent", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyStockGroups",
-            "referenceColumn":"stockGroupName"
-        }, 
-        {
-            "name" : "companyId", 
-            "type" : "foreignKey",
-             "referenceTable":"tallyCompanies",
-            "referenceColumn":"id"
-        }, 
-        {
-            "name" : "id", 
-            "type" : "id"
-        }, 
-        {
-            "name" : "stockGroupName", 
-            "type" : "string"
-        }
+    "tallyStockGroups": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "aliasName",
+        "type": "string"
+      },
+      {
+        "name": "parent",
+        "type": "string"
+      }
     ],
-    "tallyStockItems" : [
-        {
-            "name" : "parent", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyStockGroups",
-            "referenceColumn":"stockGroupName"
-        }, 
-        {
-            "name" : "openingBalance", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "openingRate", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "companyId", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyCompanies",
-            "referenceColumn":"id"
-        }, 
-        {
-            "name" : "baseUnits", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "openingValue", 
-            "type" : "number"
-        }, 
-        {
-            "name" : "category", 
-            "type" : "foreignKey",
-            "referenceTable":"tallyStockCategories",
-            "referenceColumn":"stockCategoryName"
-        }, 
-        {
-            "name" : "id", 
-            "type" : "id"
-        }, 
-        {
-            "name" : "aliasName", 
-            "type" : "string"
-        }, 
-        {
-            "name" : "stockItemName", 
-            "type" : "string"
-        }]
-}
+    "tallyUnits": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "tallyStockItems": [
+      {
+        "name": "masterId",
+        "type": "id"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "aliasName",
+        "type": "string"
+      },
+      {
+        "name": "openingRate",
+        "type": "number"
+      },
+      {
+        "name": "openingValue",
+        "type": "number"
+      },
+      {
+        "name": "openingBalance",
+        "type": "number"
+      },
+      {
+        "name": "baseUnitMasterId",
+        "type": "foreignKey",
+        "referenceTable": "tallyUnits",
+        "referenceColumn": "masterId"
+      },
+      {
+        "name": "groupMasterId",
+        "type": "foreignKey",
+        "referenceTable": "tallyStockGroups",
+        "referenceColumn": "masterId"
+      },
+      {
+        "name": "categoryMasterId",
+        "type": "foreignKey",
+        "referenceTable": "tallyStockCategories",
+        "referenceColumn": "masterId"
+      }
+    ],
+    "tallyVouchers": [
+      {
+        "name": "voucherTypeName",
+        "type": "string"
+      },
+      {
+        "name": "voucherNumber",
+        "type": "string"
+      },
+      {
+        "name": "narration",
+        "type": "string"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      }
+    ],
+    "tallyInventoryVouchers": [
+      {
+        "name": "voucherTypeName",
+        "type": "string"
+      },
+      {
+        "name": "voucherNumber",
+        "type": "string"
+      },
+      {
+        "name": "date",
+        "type": "date"
+      },
+      {
+        "name": "billedQty",
+        "type": "number"
+      },
+      {
+        "name": "actualQty",
+        "type": "number"
+      },
+      {
+        "name": "inwardQty",
+        "type": "number"
+      },
+      {
+        "name": "outwardQty" ,
+        "type": "number"
+      },
+      {
+        "name": "discount",
+        "type": "number"
+      },
+      {
+        "name": "amount",
+        "type": "number"
+      },
+      {
+        "name": "rate",
+        "type": "number"
+      },
+      {
+        "name": "stockItemMasterId",
+        "type": "foreignKey",
+        "referenceTable": "tallyStockItems",
+        "referenceColumn": "masterId"
+      }
+  
+    ]
+  } 

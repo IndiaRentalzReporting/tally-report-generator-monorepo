@@ -17,6 +17,7 @@ import {
   readAll,
   updateOne
 } from '../controller/report.controller';
+import { validateReport } from '@/middlewares/validateReport';
 
 const reportRouter = Router();
 
@@ -68,6 +69,7 @@ reportRouter.patch(
       id: true
     })
   }),
+  validateReport,
   updateOne
 );
 
