@@ -31,7 +31,7 @@ const FilterComponent: React.FC<{
   removeFilter: () => void;
 }> = ({ filter, removeFilter }) => {
   const {
-    fetchedColumns, updateFilter, filters
+    fetchedColumns, updateFilter: UF, filters
   } = useReports();
 
   const usedColumnIds = filters.map((c) => c.column.id);
@@ -39,6 +39,10 @@ const FilterComponent: React.FC<{
   const availableColumns = fetchedColumns.filter(({
     column
   }) => !usedColumnIds.includes(column.id) || column.id === filter.column.id);
+
+  const updateFilter = (data: Partial<Filter>) => {
+    UF(filter.column.id, data);
+  };
 
   return (
     <div className="mb-2 space-y-2">
@@ -59,7 +63,7 @@ const FilterComponent: React.FC<{
             };
           })}
           onChange={(displayName) => {
-            updateFilter(filter.column.id, {
+            updateFilter({
               column: fetchedColumns
                 .find((col) => col.column.displayName === displayName)?.column
             });
@@ -74,7 +78,7 @@ const FilterComponent: React.FC<{
             value: type
           }))}
           onChange={(filterType: string) => {
-            updateFilter(filter.column.id, { filterType: filterType as 'select' | 'search' | 'default' });
+            updateFilter({ filterType: filterType as 'select' | 'search' | 'default' });
           }}
           disabled={!filter.column}
           className="justify-self-end"

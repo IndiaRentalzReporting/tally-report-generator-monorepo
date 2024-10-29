@@ -162,7 +162,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
     const newFilter: Filter = {
       column: dummyColumn,
-      filterType: 'default'
+      filterType: 'default',
+      conditionType: undefined
     };
     setFilters((prev) => [...prev, newFilter]);
   }, [filters, fetchedColumns]);

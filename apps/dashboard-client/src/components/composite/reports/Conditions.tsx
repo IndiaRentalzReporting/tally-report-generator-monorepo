@@ -32,7 +32,7 @@ const ConditionItem: React.FC<{
   onRemove: () => void;
 }> = ({ condition, onRemove }) => {
   const {
-    updateCondition, fetchedColumns, conditions
+    updateCondition: UC, fetchedColumns, conditions
   } = useReports();
 
   const usedColumnIds = conditions.map((c) => c.column.id);
@@ -47,7 +47,13 @@ const ConditionItem: React.FC<{
     return condition.column ? operationFor.includes(condition.column.type) : [];
   });
 
-  const values = condition.operator ? ConditionOperations[condition.operator].params : null;
+  const values = condition.operator
+    ? ConditionOperations[condition.operator].params
+    : null;
+
+  const updateCondition = (data: Partial<Condition>) => {
+    UC(condition.column.id, condition, data);
+  };
 
   return (
     <div className="flex items-center space-x-4 space-y-2">
@@ -61,7 +67,7 @@ const ConditionItem: React.FC<{
               value: column.displayName
             }))}
           onChange={(id) => {
-            updateCondition(condition.column.id, condition, {
+            updateCondition({
               column: fetchedColumns
                 .find((col) => col.column.displayName === id)?.column,
               join: undefined,
@@ -79,28 +85,22 @@ const ConditionItem: React.FC<{
               label: op,
               value: op
             }))}
-            onChange={(operator) => updateCondition(
-              condition.column.id,
-              condition,
-              {
-                operator: operator as ReportSelect['conditions'][number]['operator'],
-                params: undefined,
-                join: undefined
-              },
-            )}
+            onChange={(operator) => updateCondition({
+              operator: operator as ReportSelect['conditions'][number]['operator'],
+              params: undefined,
+              join: undefined
+            },)}
           />
 
           <When condition={!!values && !!Object.keys(values).length}>
-            {values && Object.keys(values!)?.map((param) => (
+            {values && Object.keys(values).map((param) => (
               <Input
                 key={param}
                 placeholder={param}
                 type={condition.column.type}
-                onChange={({ target: { value } }) => updateCondition(
-                  condition.column.id,
-                  condition,
-                  { [param]: value }
-                )}
+                onChange={({ target: { value } }) => updateCondition({
+                  params: { ...condition.params, [param]: value } as ReportSelect['conditions'][number]['params']
+                })}
               />
             ))}
           </When>
@@ -112,7 +112,7 @@ const ConditionItem: React.FC<{
               label: join,
               value: join
             }))}
-            onChange={(join: string) => updateCondition(condition.column.id, condition, {
+            onChange={(join: string) => updateCondition({
               join: join as ReportSelect['conditions'][number]['join']
             })
             }
