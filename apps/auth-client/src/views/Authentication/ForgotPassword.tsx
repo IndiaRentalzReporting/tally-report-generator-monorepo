@@ -26,7 +26,6 @@ import { services } from './services';
 
 const formSchema = UserSelectSchema.pick({ email: true });
 type State = z.infer<typeof formSchema>;
-const defaultValues = { email: '' };
 
 export const ForgotPassword: FC = () => {
   const { toast } = useToast();
@@ -43,9 +42,8 @@ export const ForgotPassword: FC = () => {
     }
   });
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema)
   });
 
   const onSubmit = async (values: State) => {

@@ -9,9 +9,6 @@ export const formSchema = ModuleSelectSchema.pick({
   icon: true
 });
 export type State = z.infer<typeof formSchema>;
-export const defaultValues: State = {
-  name: '', id: '', isPrivate: false, icon: ''
-};
 export type StateAsProps = {
   form: UseFormReturn<State>;
 };

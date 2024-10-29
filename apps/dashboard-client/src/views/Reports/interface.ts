@@ -14,10 +14,3 @@ export type State = z.infer<typeof formSchema>;
 export type StateAsProps = {
   form: UseFormReturn<State>;
 };
-
-export const defaultValues: State = {
-  id: '',
-  name: '',
-  baseEntity: '',
-  description: ''
-};

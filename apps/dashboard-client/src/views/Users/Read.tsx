@@ -18,8 +18,8 @@ import {
   When,
   DataTable
 } from '@trg_package/vite/components';
-import { services as userServices } from '@/services/user';
-import { services as roleServices } from '@/services/role';
+import { services as userServices } from '@/services/Users';
+import { services as roleServices } from '@/services/Roles';
 import { columns } from './columns';
 import { useIsAllowed } from '@/hooks';
 

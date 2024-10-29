@@ -33,7 +33,6 @@ const formSchema = UserSelectSchema.pick({ password: true }).extend({
 });
 
 type State = z.infer<typeof formSchema>;
-const defaultValues = { password: '', confirmPassword: '' };
 
 export const ResetPassword: FC = () => {
   const { token: unvalidatedToken } = useParams<{ token: string }>();
@@ -46,9 +45,8 @@ export const ResetPassword: FC = () => {
     queryKey: ['reset token', 'validation']
   });
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema)
   });
 
   const { mutateAsync: forgotPasswordMutation, isPending: loadingMutation } = useMutation({

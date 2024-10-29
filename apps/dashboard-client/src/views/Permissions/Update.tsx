@@ -6,9 +6,9 @@ import {
   ModuleAction,
   ModulePermissions
 } from '@trg_package/schemas-dashboard/types';
-import { services as permissionService } from '@/services/permission';
-import { services as actionService } from '@/services/action';
-import { services as permission_actionService } from '@/services/permission_action';
+import { services as permissionService } from '@/services/Permissions';
+import { services as actionService } from '@/services/Actions';
+import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
 

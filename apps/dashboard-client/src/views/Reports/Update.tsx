@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/report';
+import { services } from '@/services/Reports';
 import Fields from './Fields';
 import { State, formSchema } from './interface';
 
@@ -15,9 +15,9 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['reports', 'getOne', id]
   });
 
-  const form = useForm({
+  const form = useForm<State>({
     resolver: zodResolver(formSchema),
-    defaultValues: report
+    values: report
   });
 
   const { mutateAsync: updateReport, isPending: updatingReport } = useMutation({

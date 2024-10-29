@@ -18,13 +18,13 @@ import {
 } from '@trg_package/vite/components';
 import { useQuery } from '@tanstack/react-query';
 import { StateAsProps } from './interface';
-import { services as tableService } from '@/services/table';
+import { services as tableService } from '@/services/Tables';
 
 const Fields: React.FC<StateAsProps> = ({ form }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({
     queryFn: async () => tableService.read(),
     select: (data) => data.data.tables,
-    queryKey: ['roles', 'getAll']
+    queryKey: ['tables', 'getAll']
   });
   return (
     <div className="flex flex-col gap-4">
@@ -33,7 +33,7 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='flex-grow'>
               <FormLabel >Name</FormLabel>
               <FormControl>
                 <Input
@@ -51,11 +51,12 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
           control={form.control}
           name="baseEntity"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='flex-grow'>
               <FormLabel>Base Entity</FormLabel>
               <FormControl>
                 <Select
                   {...field}
+                  onValueChange={field.onChange}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select a Base Entity" />
@@ -80,27 +81,25 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
           )}
         />
       </div>
-      <div className="flex gap-4 items-center">
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel >Description</FormLabel>
-              <FormControl>
-                <Input
-                  type='text'
-                  placeholder="Description"
-                  {...field}
-                  value={field.value ?? undefined}
-                />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel >Description</FormLabel>
+            <FormControl>
+              <Input
+                type='text'
+                placeholder="Description"
+                {...field}
+                value={field.value ?? undefined}
+              />
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

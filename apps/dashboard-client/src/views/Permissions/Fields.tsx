@@ -17,9 +17,9 @@ import {
   DataTable
 } from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
-import { services as moduleService } from '@/services/module';
-import { services as roleService } from '@/services/role';
-import { services as actionService } from '@/services/action';
+import { services as moduleService } from '@/services/Modules';
+import { services as roleService } from '@/services/Roles';
+import { services as actionService } from '@/services/Actions';
 
 interface ColumnData {
   module_name: ModuleSelect['name'];

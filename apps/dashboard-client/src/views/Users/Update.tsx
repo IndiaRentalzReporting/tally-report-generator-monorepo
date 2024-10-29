@@ -2,27 +2,38 @@ import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TrashIcon } from 'lucide-react';
 import {
-  Button, Form, Input, Label, Skeleton
+  Button,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Skeleton
 } from '@trg_package/vite/components';
-import { schema } from '@hookform/resolvers/ajv/src/__tests__/__fixtures__/data.js';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/user';
+import { services } from '@/services/Users';
 import Fields from './Fields';
 import { State, formSchema } from './interface';
 
 const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => formSchema.parse(data.data.users[0]),
+    select: (data) => formSchema
+      .omit({ password: true })
+      .parse(data.data.users[0]),
     queryKey: ['users', 'getOne', id]
   });
 
-  console.log(userData);
-
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: userData
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema.omit({ password: true })),
+    values: userData ? {
+      ...userData,
+      password: '********'
+    } : undefined
   });
 
   const queryClient = useQueryClient();
@@ -56,21 +67,31 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
         <Skeleton isLoading={loadingUser}>
           <Fields form={form} />
         </Skeleton>
-        <div className="flex items-center gap-2">
-          <Label htmlFor="role">Role</Label>
-          <Input
-            disabled
-            id="role"
-            name="role"
-            value={userData?.role?.name}
-            placeholder="--"
-            required
-          />
-          <TrashIcon
-            className="text-red-500 cursor-pointer"
-            onClick={() => deleteRole()}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="role.name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel >Role</FormLabel>
+              <FormControl>
+                <div className='flex gap-2 items-center'>
+                  <Input
+                    disabled
+                    type='text'
+                    placeholder="--"
+                    {...field}
+                  />
+                  <TrashIcon
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => deleteRole()}
+                  />
+                </div>
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button
           type="submit"
         >

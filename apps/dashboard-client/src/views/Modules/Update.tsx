@@ -4,7 +4,7 @@ import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Fields from './Fields';
-import { services } from '@/services/module';
+import { services } from '@/services/Modules';
 import { State, formSchema } from './interface';
 
 const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
@@ -14,9 +14,9 @@ const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
     queryKey: ['getOne', 'modules', id]
   });
 
-  const form = useForm({
+  const form = useForm<State>({
     resolver: zodResolver(formSchema),
-    defaultValues: moduleData
+    values: moduleData
   });
 
   const queryClient = useQueryClient();

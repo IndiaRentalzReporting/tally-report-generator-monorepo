@@ -9,7 +9,7 @@ import Sidebar from './Sidebar';
 import DashboardHeader from '../header/Header';
 import DataTable from './Table';
 import { ReportsProvider } from '@/providers/ReportsProvider';
-import { services } from '@/services/report';
+import { services } from '@/services/Reports';
 
 const ReportingLayout = () => {
   const { toast } = useToast();

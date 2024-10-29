@@ -5,12 +5,6 @@ import { UseFormReturn } from 'react-hook-form';
 export const formSchema = RoleSelectSchema.pick({ id: true, name: true });
 
 export type State = z.infer<typeof formSchema>;
-
-export const defaultValues: State = {
-  id: '',
-  name: ''
-};
-
 export type StateAsProps = {
   form: UseFormReturn<State>
 };

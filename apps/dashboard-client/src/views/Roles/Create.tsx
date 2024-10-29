@@ -3,15 +3,14 @@ import React from 'react';
 import { Button, Form } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/role';
+import { services } from '@/services/Roles';
 import Fields from './Fields';
-import { State, defaultValues } from './interface';
+import { State } from './interface';
 import { formSchema } from '../Actions/interface';
 
 const Create: React.FC = () => {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema.omit({ id: true })),
   });
 
   const queryClient = useQueryClient();
@@ -31,7 +30,10 @@ const Create: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+      <form className="h-full flex flex-col gap-4" onSubmit={() => {
+        console.log(form);
+        return form.handleSubmit(handleSubmit);
+      }}>
         <Fields form={form} />
         <Button
           type="submit"

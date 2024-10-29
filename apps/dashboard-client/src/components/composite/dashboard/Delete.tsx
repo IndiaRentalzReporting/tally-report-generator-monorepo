@@ -7,6 +7,7 @@ import {
 } from '@trg_package/vite/components';
 import { useToast } from '@trg_package/vite/hooks';
 import { useIsAllowed } from '@/hooks';
+import { CrudServices } from '@/services';
 
 interface IDeleteEntityProps {
   module: {
@@ -20,25 +21,34 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
   module: { id, name, type }
 }) => {
   const queryClient = useQueryClient();
-  const [services, setServices] = useState<any>(null); // To hold dynamically imported services
+  const [deleteOneService, setDeleteOneService] = useState<
+  CrudServices<'', object, object>['deleteOne'] | null
+  >(null);
 
   useEffect(() => {
     const loadServices = async () => {
-      const serviceModule = await import(`../../../services/${type}`);
-      setServices(serviceModule.services);
+      const module = type.toLowerCase();
+      const { services: { deleteOne: DO } } = await import(`../../../services/${module}`);
+      setDeleteOneService(() => DO);
     };
 
     loadServices();
   }, [type]);
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () => services.deleteOne(id),
+    mutationFn: async () => {
+      if (!deleteOneService) {
+        throw new Error('Delete service not initialized');
+      }
+      return deleteOneService({ id });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [type.toLowerCase(), 'getAll']
       });
     }
   });
+
   const { toast } = useToast();
 
   const isDeleteAllowed = useIsAllowed({

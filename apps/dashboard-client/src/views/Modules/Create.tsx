@@ -11,14 +11,13 @@ import {
 } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { services } from '@/services/module';
+import { services } from '@/services/Modules';
 import Fields from './Fields';
-import { State, formSchema, defaultValues } from './interface';
+import { State, formSchema } from './interface';
 
 const CreateModule: React.FC = () => {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues
+  const form = useForm<State>({
+    resolver: zodResolver(formSchema.omit({ id: true })),
   });
 
   const queryClient = useQueryClient();

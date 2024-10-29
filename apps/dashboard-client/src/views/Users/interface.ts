@@ -9,19 +9,10 @@ export const formSchema = UserSelectSchema.pick({
   email: true,
   password: true
 }).extend({
-  role: RoleSelectSchema.optional()
+  role: RoleSelectSchema.pick({ name: true })
 });
 
 export type State = z.infer<typeof formSchema>;
-
-export const defaultValues: State = {
-  id: '',
-  email: '',
-  password: '',
-  first_name: '',
-  last_name: '',
-  role: undefined
-};
 
 export type StateAsProps = {
   form: UseFormReturn<State>;
