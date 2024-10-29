@@ -95,6 +95,7 @@ const ConditionItem: React.FC<{
           <When condition={!!values && !!Object.keys(values).length}>
             {values && Object.keys(values).map((param) => (
               <Input
+                value={condition.params ? condition.params[param as keyof typeof values] as string : ''}
                 key={param}
                 placeholder={param}
                 type={condition.column.type}
