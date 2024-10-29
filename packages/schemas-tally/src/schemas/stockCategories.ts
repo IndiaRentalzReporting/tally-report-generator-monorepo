@@ -3,7 +3,8 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { TallyCommonSchema } from './base';
 
 const StockCatgoryColumns = {
-  stockCategoryName: varchar('stockCategoryName', { length: 200 }).notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
+  aliasName: varchar('aliasName', { length: 200 }),
   parent: varchar('parent', { length: 500 })
 };
 

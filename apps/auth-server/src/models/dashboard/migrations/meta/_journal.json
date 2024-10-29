@@ -22,6 +22,27 @@
       "when": 1729782724907,
       "tag": "0002_secret_randall_flagg",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1730112033179,
+      "tag": "0003_fair_silvermane",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1730120451233,
+      "tag": "0004_quick_electro",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1730121182207,
+      "tag": "0005_crazy_killmonger",
+      "breakpoints": true
     }
   ]
 }

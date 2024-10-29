@@ -14,6 +14,7 @@ export const ColumnType = pgEnum('column_type', [
 
 export const ColumnSchema = pgTable('column', {
   id: uuid('id').primaryKey().defaultRandom(),
+  alias: varchar('alias',{ length: 255 }),
   name: varchar('name', { length: 255 }).notNull(),
   type: ColumnType('type').default('string').notNull(),
   tableId: uuid('tableId')
