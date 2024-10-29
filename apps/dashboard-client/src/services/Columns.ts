@@ -23,7 +23,7 @@ DetailedColumnSelect
   read: async (query) => {
     if (!query) throw new Error('Query is required');
     const { tableId } = query;
-    return columnsAxios.get(`/read/column/${tableId}`);
+    return columnsAxios.get(`/read/columns/${tableId}`);
   },
   createOne: async (data) => columnsAxios.post('/create', data),
   updateOne: async ({ id }, data) => columnsAxios.patch(`/update/${id}`, data),

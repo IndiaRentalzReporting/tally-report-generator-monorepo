@@ -25,6 +25,6 @@ ReportInsert
     return reportsAxios.get(`/read?${queryString}`);
   },
   createOne: async (data) => reportsAxios.post('/create', data),
-  updateOne: async (id, data) => reportsAxios.patch(`/update/${id}`, data),
-  deleteOne: async (id) => reportsAxios.delete(`/delete/${id}`),
+  updateOne: async ({ id }, data) => reportsAxios.patch(`/update/${id}`, data),
+  deleteOne: async ({ id }) => reportsAxios.delete(`/delete/${id}`),
 };
