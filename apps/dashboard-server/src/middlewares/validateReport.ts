@@ -8,7 +8,7 @@ export const validateReport = (
   next : NextFunction
 ) => {
   const {
-    columns,groupBy,filters
+    columns,groupBy,filters,tables,conditions
   } = req.body;
 
   const groupBySet = new Set(groupBy?.map((gb) => gb.column.id));
@@ -40,5 +40,16 @@ export const validateReport = (
     }
   });
 
+  filters?.forEach((filter) => {
+    if (!tables?.find((e) => e === filter.column.tablealias)) {
+      tables?.push(filter.column.tablealias);
+    }
+  });
+
+  conditions?.forEach((condition) => {
+    if (!tables?.find((e) => e === condition.column.tablealias)) {
+      tables?.push(condition.column.tablealias);
+    }
+  });
   next();
 };
