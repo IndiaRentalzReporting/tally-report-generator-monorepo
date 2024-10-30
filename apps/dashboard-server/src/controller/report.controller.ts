@@ -5,7 +5,8 @@ import {
   ReportSelect,
   TableSelect,
   GeneratedReportFilters,
-  RuntimeFilters
+  RuntimeFilters,
+  ColumnSelect
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
@@ -87,6 +88,21 @@ export const getAllColumns = async <ResObject extends { columns : DetailedColumn
   } catch (e) {
     next(e);
   }
+};
+
+type DataSelectType = Array<{ label:string,value:string }>;
+export const getSelectData = async <T extends { data: DataSelectType }>(
+  req: Request<Pick<ColumnSelect,'id'>,object,object>,
+  res : Response<T>,
+  next : NextFunction
+) => {
+  const { id: columnId } = req.params;
+  const column = await req.columnService.findOne({ id: columnId });
+  const table = await req.tableService.findOne({ id: column.tableId });
+
+  const selectData = await req.reportService.runConfigQuery<DataSelectType>(`SELECT tb."${column.name}" as label,tb."${column.name}" as value from public."${table.name}" tb`);
+  if (!selectData || selectData.length === 0) { throw new BadRequestError('No Data found in the table'); }
+  return res.json({ data: selectData } as T);
 };
 
 export const getAllTables = async <T extends { tables : TableSelect[] }>(
