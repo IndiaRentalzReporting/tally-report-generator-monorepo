@@ -32,23 +32,23 @@ export const ConditionOperations = {
   },
   '=': {
     params: { value: 'string' },
-    for: ['id', 'string', 'number', 'date']
+    for: ['string', 'number', 'date']
   },
   IN: {
     params: { value: ['string'] },
-    for: ['id', 'string', 'number', 'date']
+    for: ['string', 'date']
   },
   '!=': {
     params: { value: 'string' },
-    for: ['id', 'string', 'number', 'date']
+    for: ['string', 'number', 'date']
   },
   'IS NULL': {
     params: null,
-    for: ['id', 'string', 'number', 'date']
+    for: ['string', 'number', 'date']
   },
   'IS NOT NULL': {
     params: null,
-    for: ['id', 'string', 'number', 'date']
+    for: ['string', 'number', 'date']
   },
 };
 
