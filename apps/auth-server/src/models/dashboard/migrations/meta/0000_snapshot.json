@@ -1,5 +1,5 @@
 {
-  "id": "8e5c0807-2cbd-4b4f-8379-3d48b5b7808d",
+  "id": "05ee0f14-c181-4d6b-97d6-7e10181b1749",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1864,8 +1864,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "stockGroupName": {
-          "name": "stockGroupName",
+        "name": {
+          "name": "name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
@@ -1931,8 +1931,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "stockGroupName": {
-          "name": "stockGroupName",
+        "name": {
+          "name": "name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
