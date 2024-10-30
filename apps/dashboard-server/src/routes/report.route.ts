@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
 import {
+  ColumnInsertSchema,
   ReportSelectSchema,
   TableSelectSchema
 } from '@trg_package/schemas-reporting/types';
@@ -13,6 +14,7 @@ import {
   getReportColumns,
   getReportData,
   getReportFilters,
+  getSelectData,
   readAll,
   updateOne
 } from '../controller/report.controller';
@@ -84,6 +86,15 @@ reportRouter.delete(
 );
 
 // report level access pending
+reportRouter.get(
+  '/read/selectData/:id',
+  validateSchema({
+    params: ColumnInsertSchema.pick({
+      id: true
+    })
+  }),
+  getSelectData
+);
 reportRouter.get(
   '/read/reportColumns/:id',
   validateSchema({

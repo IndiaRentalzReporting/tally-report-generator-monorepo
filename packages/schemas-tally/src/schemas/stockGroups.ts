@@ -6,7 +6,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { TallyCommonSchema } from './base';
 
 const StockGroupColumns = {
-  name: varchar('stockGroupName', { length: 200 }).notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
   aliasName: varchar('aliasName', { length: 200 }),
   parent: varchar('parent', { length: 500 })
 };

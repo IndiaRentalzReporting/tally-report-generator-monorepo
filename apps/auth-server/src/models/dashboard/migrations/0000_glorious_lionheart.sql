@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS "tallyStockGroups" (
 	"companyId" varchar,
 	"masterId" integer NOT NULL,
 	"alterId" integer NOT NULL,
-	"stockGroupName" varchar(200) NOT NULL,
+	"name" varchar(200) NOT NULL,
 	"aliasName" varchar(200),
 	"parent" varchar(500),
 	CONSTRAINT "tallyStockGroups_masterId_unique" UNIQUE("masterId")
@@ -325,7 +325,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyStockGroups" (
 	"companyId" varchar,
 	"masterId" integer NOT NULL,
 	"alterId" integer NOT NULL,
-	"stockGroupName" varchar(200) NOT NULL,
+	"name" varchar(200) NOT NULL,
 	"aliasName" varchar(200),
 	"parent" varchar(500),
 	CONSTRAINT "tempTallyStockGroups_masterId_unique" UNIQUE("masterId")
