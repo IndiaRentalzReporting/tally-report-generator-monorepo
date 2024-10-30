@@ -40,7 +40,7 @@ export function getColumnQuery(columns : ReportInsert['columns']) {
 export function getConditionQuery(conditions : ReportInsert['conditions']) {
   const query : string[] = [];
   conditions?.forEach((condition) => {
-    const join = condition.join ?? '';
+    const join = conditions[0] === condition ? ' ' : (condition.join ?? 'AND');
     if (!condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator}`);
     else if (condition.params && 'value' in condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.value)}`);
     else if (condition.params && 'from' in condition.params && 'to' in condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.from)} AND ${getEscapedValue(condition.params.to)}`);
