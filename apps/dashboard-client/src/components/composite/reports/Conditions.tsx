@@ -10,12 +10,15 @@ import {
   PopoverTrigger,
   Calendar,
   MultiSelect,
+  Skeleton,
 
 } from '@trg_package/vite/components';
 import { ConditionOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import moment from 'moment';
+import { useQuery } from '@tanstack/react-query';
 import { Condition, useReports } from '@/providers/ReportsProvider';
 import Select from './Select';
+import { getColumnData } from '@/services/Columns';
 
 const Conditions: React.FC = () => {
   const { conditions, addCondition, removeCondition } = useReports();
@@ -38,17 +41,6 @@ const Conditions: React.FC = () => {
     </div>
   );
 };
-
-const paramOptions = [{
-  label: 'Inki',
-  value: 'inki'
-}, {
-  label: 'Pinki',
-  value: 'pinki'
-}, {
-  label: 'Ponki',
-  value: 'ponki'
-}];
 
 const ConditionItem: React.FC<{
   condition: Condition;
@@ -118,50 +110,12 @@ const ConditionItem: React.FC<{
           <When condition={!!values && !!Object.keys(values).length}>
             {values && Object.keys(values).map((param) => (
               condition.operator === 'IN'
-                ? condition.column.type === 'date'
-                  ? <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={`justify-start text-left font-normal ${!condition.params && 'text-muted-foreground'} overflow-x-auto`}
-                          style={{
-                            scrollbarWidth: 'none',
-                          }}
-                        >
-                          <CalendarIcon className="mr-2 h-4 min-w-4" />
-                          {
-                            condition.params
-                              ? (condition.params[param as keyof typeof values] as Array<Date>)
-                                .map((d) => `${moment(d, 'do').format('Do')} `)
-                              : <span>Pick a date</span>
-                          }
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="multiple"
-                          selected={condition.params
-                            ? condition.params[param as keyof typeof values]
-                            : []
-                          }
-                          onSelect={(newValues) => updateCondition({
-                            params: { ...condition.params, [param]: newValues } as ReportSelect['conditions'][number]['params']
-                          })}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  : <MultiSelect
-                      label='columns'
-                      options={paramOptions}
-                      value={condition.params
-                        ? condition.params[param as keyof typeof values]
-                        : []
-                      }
-                      onChange={(newValues) => updateCondition({
-                        params: { ...condition.params, [param]: newValues } as ReportSelect['conditions'][number]['params']
-                      })}
-                    />
+                ? <ConditionParamsSelect
+                    values={values}
+                    param={param as keyof typeof values}
+                    condition={condition}
+                    updateCondition={updateCondition}
+                  />
                 : condition.column.type === 'date'
                   ? <Popover>
                       <PopoverTrigger asChild>
@@ -229,6 +183,72 @@ const ConditionItem: React.FC<{
         <TrashIcon className="w-4 h-4 mr-1" />
       </Button>
     </div>
+  );
+};
+
+interface ConditionParamsSelectProps {
+  condition: Condition;
+  param: keyof Condition['params'];
+  values: Condition['params'];
+  updateCondition: (data: Partial<Condition>) => void
+}
+
+const ConditionParamsSelect = ({
+  condition, values, param, updateCondition
+}: ConditionParamsSelectProps) => {
+  const { data: paramOptions = [], isLoading: loadingParamOptions } = useQuery({
+    queryKey: ['columns', 'selectData', condition.column.id],
+    queryFn: () => getColumnData(condition.column.id),
+    select: (data) => data.data,
+    enabled: !!condition.column.id
+  });
+  return (
+    condition.column.type === 'date'
+      ? <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={`justify-start text-left font-normal ${!condition.params && 'text-muted-foreground'} overflow-x-auto`}
+              style={{
+                scrollbarWidth: 'none',
+              }}
+            >
+              <CalendarIcon className="mr-2 h-4 min-w-4" />
+              {
+                condition.params
+                  ? (condition.params[param as keyof typeof values] as Array<Date>)
+                    .map((d) => `${moment(d, 'do').format('Do')} `)
+                  : <span>Pick a date</span>
+              }
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="multiple"
+              selected={condition.params
+                ? condition.params[param as keyof typeof values]
+                : []
+              }
+              onSelect={(newValues) => updateCondition({
+                params: { ...condition.params, [param]: newValues } as ReportSelect['conditions'][number]['params']
+              })}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      : <Skeleton isLoading={loadingParamOptions}>
+          <MultiSelect
+            label='data'
+            options={paramOptions}
+            value={condition.params
+              ? condition.params[param]
+              : []
+            }
+            onChange={(newValues) => updateCondition({
+              params: { ...condition.params, [param]: newValues } as ReportSelect['conditions'][number]['params']
+            })}
+          />
+        </Skeleton>
   );
 };
 
