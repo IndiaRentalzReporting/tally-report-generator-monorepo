@@ -40,9 +40,10 @@ export function getColumnQuery(columns : ReportInsert['columns']) {
 export function getConditionQuery(conditions : ReportInsert['conditions']) {
   const query : string[] = [];
   conditions?.forEach((condition) => {
-    if (condition.params === null) query.push(`${condition.join} ${condition.operator}(${getColumnName(condition.column)})`);
-    else if (condition.params && 'value' in condition.params) query.push(`${condition.join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.value)}`);
-    else if (condition.params && 'from' in condition.params && 'to' in condition.params) query.push(`${condition.join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.from)} AND ${getEscapedValue(condition.params.to)}`);
+    const join = condition.join ?? '';
+    if (!condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator}`);
+    else if (condition.params && 'value' in condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.value)}`);
+    else if (condition.params && 'from' in condition.params && 'to' in condition.params) query.push(`${join} ${getColumnName(condition.column)} ${condition.operator} ${getEscapedValue(condition.params.from)} AND ${getEscapedValue(condition.params.to)}`);
   });
 
   return `WHERE ${query.join(' ')}`;
