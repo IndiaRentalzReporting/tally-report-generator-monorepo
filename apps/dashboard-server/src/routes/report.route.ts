@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
 import {
-  ReportInsertSchema,
   ReportSelectSchema,
   TableSelectSchema
 } from '@trg_package/schemas-reporting/types';
@@ -18,6 +17,7 @@ import {
   updateOne
 } from '../controller/report.controller';
 import { validateReport } from '@/middlewares/validateReport';
+import { ReportInsertSchema } from '@/models/zodSchemas/report';
 
 const reportRouter = Router();
 
@@ -60,11 +60,11 @@ reportRouter.patch(
   '/update/:id',
   validateSchema({
     body: ReportInsertSchema.omit({
-      baseEntity: true,
+      id: true,
       name: true,
-      queryConfig: true,
-      id: true
-    }),
+      description: true,
+      baseEntity: true
+    }).strict(),
     params: ReportSelectSchema.pick({
       id: true
     })
