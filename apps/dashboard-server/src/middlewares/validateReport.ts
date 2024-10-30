@@ -51,5 +51,10 @@ export const validateReport = (
       tables?.push(condition.column.tablealias);
     }
   });
+  groupBy?.forEach((gb) => {
+    if (!tables?.find((e) => e === gb.column.tablealias)) {
+      tables?.push(gb.column.tablealias);
+    }
+  });
   next();
 };
