@@ -1,0 +1,1 @@
+ALTER TABLE "apiKeys" ALTER COLUMN "key" SET DATA TYPE text;

@@ -4,27 +4,42 @@ import config from '../config';
 const { ENCRYPTION_KEY } = config;
 
 export function encrypt(text: string): string {
-  const iv = crypto.randomBytes(16);
+  const iv = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv(
-    'aes-256-cbc',
+    'aes-128-gcm',
     Buffer.from(ENCRYPTION_KEY, 'hex'),
     iv
   );
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
+
+  let encrypted = cipher.update(text, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+  const authTag = cipher.getAuthTag().toString('base64');
+  return `${iv.toString('base64')}:${authTag}:${encrypted}`;
 }
 
 export function decrypt(text: string): string {
   const textParts = text.split(':');
-  const iv = Buffer.from(textParts.shift()!, 'hex');
-  const encryptedText = Buffer.from(textParts.join(':'), 'hex');
+  const textPart1 = textParts[0];
+  const textPart2 = textParts[1];
+  const encryptedText = textParts[2];
+
+  if (!encryptedText || !textPart1 || !textPart2) {
+    throw new Error('Encrypted text is required');
+  }
+
+  const iv = Buffer.from(textPart1, 'base64');
+  const authTag = Buffer.from(textPart2, 'base64');
+
   const decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
+    'aes-128-gcm',
     Buffer.from(ENCRYPTION_KEY, 'hex'),
     iv
   );
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
+
+  decipher.setAuthTag(authTag);
+
+  let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
 }
