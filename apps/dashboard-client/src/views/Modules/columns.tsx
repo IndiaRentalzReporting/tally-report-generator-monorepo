@@ -5,11 +5,11 @@ import {
 import {
   Button, Else, If, Then
 } from '@trg_package/vite/components';
-import { State } from './interface';
+import { FormState } from './interface';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
-export const columns: ColumnDef<State>[] = [
+export const columns: ColumnDef<FormState>[] = [
   {
     id: 'Module Name',
     accessorKey: 'name',

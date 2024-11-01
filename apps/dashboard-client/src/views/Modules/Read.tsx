@@ -11,11 +11,12 @@ import {
 } from '@trg_package/vite/components';
 import { services } from '@/services/Modules';
 import { columns } from './columns';
+import { SelectFormSchema } from './interface';
 
 const ReadModule: React.FC = () => {
   const { data: allModules = [], isFetching: fetchingModules } = useQuery({
     queryFn: async () => services.read(),
-    select: (data) => data.data.modules,
+    select: (data) => data.data.modules.map((module) => SelectFormSchema.parse(module)),
     queryKey: ['modules', 'getAll']
   });
 

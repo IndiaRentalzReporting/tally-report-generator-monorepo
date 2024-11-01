@@ -1,10 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { Checkbox } from '@trg_package/vite/components';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
+import { FormState } from './interface';
 
-export const columns: ColumnDef<DetailedUser>[] = [
+export const columns: ColumnDef<FormState>[] = [
   {
     id: 'select',
     header: ({ table }) => (

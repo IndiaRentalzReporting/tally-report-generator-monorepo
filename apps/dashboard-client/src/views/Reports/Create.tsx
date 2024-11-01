@@ -14,17 +14,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { services } from '@/services/Reports';
 import Fields from './Fields';
-import { State, formSchema } from './interface';
+import { FormState, InsertFormSchema, InsertState } from './interface';
 
 const Create: React.FC = () => {
   const navigate = useNavigate();
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema.omit({ id: true }))
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema.omit({ id: true }))
   });
 
   const queryClient = useQueryClient();
   const { mutateAsync: createReport, isPending: loadingCreateReport } = useMutation({
-    mutationFn: (reportDetails: State) => services.createOne(reportDetails),
+    mutationFn: (reportDetails: InsertState) => services.createOne(reportDetails),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
       form.reset();
@@ -32,8 +32,9 @@ const Create: React.FC = () => {
     }
   });
 
-  const handleSubmit = async (values: State) => {
+  const handleSubmit = async (values: FormState) => {
     await createReport(values);
+    form.reset();
   };
 
   return (

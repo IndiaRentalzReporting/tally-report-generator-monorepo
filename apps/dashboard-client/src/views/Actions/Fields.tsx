@@ -11,12 +11,11 @@ const Fields: React.FC<StateAsProps> = ({ form }) => (
       name="name"
       render={({ field }) => (
         <FormItem>
-          <FormLabel >Name</FormLabel>
+          <FormLabel>Name</FormLabel>
           <FormControl>
-          <Input
-              type='text'
+            <Input
+              type="text"
               placeholder="Action Name"
-              required
               {...field}
             />
           </FormControl>

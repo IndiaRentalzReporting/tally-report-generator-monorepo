@@ -11,11 +11,12 @@ import {
 } from '@trg_package/vite/components';
 import { services } from '@/services/Roles';
 import { columns } from './columns';
+import { SelectFormSchema } from './interface';
 
 const Read: React.FC = () => {
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: () => services.read(),
-    select: (data) => data.data.roles,
+    select: (data) => data.data.roles.map((role) => SelectFormSchema.parse(role)),
     queryKey: ['roles', 'getAll']
   });
 

@@ -22,6 +22,8 @@ import { services as userServices } from '@/services/Users';
 import { services as roleServices } from '@/services/Roles';
 import { columns } from './columns';
 import { useIsAllowed } from '@/hooks';
+import { SelectFormSchema as UserSelectFormSchema } from './interface';
+import { SelectFormSchema as RoleSelectFormSchema } from '../Roles/interface';
 
 const Read: React.FC = () => {
   const isUpdateAllowed = useIsAllowed({
@@ -34,13 +36,13 @@ const Read: React.FC = () => {
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
     queryFn: () => userServices.read(),
-    select: (data) => data.data.users,
+    select: (data) => data.data.users.map((user) => UserSelectFormSchema.parse(user)),
     queryKey: ['users', 'getAll']
   });
 
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleServices.read(),
-    select: (data) => data.data.roles,
+    select: (data) => data.data.roles.map((role) => RoleSelectFormSchema.parse(role)),
     queryKey: ['roles', 'getAll']
   });
 

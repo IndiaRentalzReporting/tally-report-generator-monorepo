@@ -3,19 +3,19 @@ import { Button, Form } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { State, formSchema } from './interface';
+import { InsertState, InsertFormSchema, FormState } from './interface';
 import Fields from './Fields';
 
 const Create: React.FC = () => {
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema.omit({ id: true, role: true })),
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema.omit({ id: true, role: true })),
   });
 
   const {
     signUp: { mutation: signUp, isLoading }
   } = useAuth();
 
-  const handleSubmit = async (values: State) => {
+  const handleSubmit = async (values: InsertState) => {
     signUp(values);
     form.reset();
   };
