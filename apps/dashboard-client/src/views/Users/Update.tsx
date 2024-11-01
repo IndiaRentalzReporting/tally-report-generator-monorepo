@@ -22,13 +22,13 @@ import { SelectState, SelectFormSchema, FormState } from './interface';
 const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => SelectFormSchema.omit({ password: true }).parse(data.data.users[0]),
+    select: (data) => SelectFormSchema.parse({ ...data.data.users[0], password: '********' }),
     queryKey: ['users', 'getOne', id]
   });
 
   const form = useForm<FormState>({
     resolver: zodResolver(SelectFormSchema),
-    values: userData ? { ...userData, password: '********' } : undefined
+    values: userData
   });
 
   const queryClient = useQueryClient();
