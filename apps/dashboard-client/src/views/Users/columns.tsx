@@ -29,15 +29,19 @@ export const columns: ColumnDef<FormState>[] = [
   },
   {
     accessorKey: 'first_name',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="First Name" />
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="Last Name" />
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="Email" />
+  },
+  {
+    accessorKey: 'role.name',
+    header: ({ column }) => <SortingButton column={column} label="Role" />
   },
   {
     id: 'Actions',
