@@ -1,9 +1,9 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { State } from './interface';
+import { FormState } from './interface';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
 
-export const columns: ColumnDef<State>[] = [
+export const columns: ColumnDef<FormState>[] = [
   {
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
@@ -43,7 +43,7 @@ export const columns: ColumnDef<State>[] = [
           <Action
             module={{
               id: permission.id,
-              name: permission.id,
+              name: permission.role.name,
               type: 'Permissions'
             }}
           />

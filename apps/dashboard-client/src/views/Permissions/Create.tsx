@@ -1,14 +1,20 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { FormEventHandler } from 'react';
-import { Button } from '@trg_package/vite/components';
+import React from 'react';
+import { Button, Form } from '@trg_package/vite/components';
 import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services } from '@/services/Permissions';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
+import { FormState, InsertFormSchema } from './interface';
 
 const Create: React.FC = () => {
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema)
+  });
   const [selectedRole, setSelectedRole] = React.useState<string>('');
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
@@ -43,27 +49,32 @@ const Create: React.FC = () => {
     }
   });
 
-  const handleCreatePermission: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values: FormState) => {
     createPermission();
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleCreatePermission} className="flex flex-col gap-4">
-      <Fields
-        modulePermissions={modulePermissions}
-        setModulePermissions={setModulePermission}
-        role={selectedRole}
-        setRole={setSelectedRole}
-      />
-      <Button
-        type="submit"
-        className="w-min mt-2"
-        isLoading={createPermissionLoading}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex flex-col gap-4"
       >
-        Create Permission
-      </Button>
-    </form>
+        <Fields
+          modulePermissions={modulePermissions}
+          setModulePermissions={setModulePermission}
+          role={selectedRole}
+          form={form}
+        />
+        <Button
+          type="submit"
+          className="w-min mt-2"
+          isLoading={createPermissionLoading}
+        >
+          Create Permission
+        </Button>
+      </form>
+    </Form>
   );
 };
 

@@ -1,18 +1,24 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { FormEventHandler, useEffect } from 'react';
-import { Button, Skeleton } from '@trg_package/vite/components';
+import React, { useEffect } from 'react';
+import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import {
   PermissionSelect,
   ModuleAction,
   ModulePermissions
 } from '@trg_package/schemas-dashboard/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services as permissionService } from '@/services/Permissions';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
+import { FormState, SelectFormSchema } from './interface';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
+  const form = useForm<FormState>({
+    resolver: zodResolver(SelectFormSchema)
+  });
   const [selectedRole, setSelectedRole] = React.useState<string>(id);
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
@@ -94,29 +100,31 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
     }
   });
 
-  const handleUpdatePermission: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const handleSubmit = (values: FormState) => {
     createPermission();
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleUpdatePermission} className="flex flex-col gap-4">
-      <Skeleton isLoading={loadingPermissions}>
-        <Fields
-          modulePermissions={modulePermissions}
-          setModulePermissions={setModulePermission}
-          role={id}
-          setRole={setSelectedRole}
-        />
-      </Skeleton>
-      <Button
-        type="submit"
-        className="w-min mt-2"
-        isLoading={createPermissionLoading}
-      >
-        Create PermissionSelect
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-4">
+        <Skeleton isLoading={loadingPermissions}>
+          <Fields
+            modulePermissions={modulePermissions}
+            setModulePermissions={setModulePermission}
+            role={id}
+            form={form}
+          />
+        </Skeleton>
+        <Button
+          type="submit"
+          className="w-min mt-2"
+          isLoading={createPermissionLoading}
+        >
+          Create PermissionSelect
+        </Button>
+      </form>
+    </Form>
   );
 };
 
