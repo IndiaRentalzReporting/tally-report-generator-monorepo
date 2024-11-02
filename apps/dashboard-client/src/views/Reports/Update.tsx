@@ -3,6 +3,8 @@ import React from 'react';
 import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { services } from '@/services/Reports';
 import Fields from './Fields';
 import { FormState, SelectFormSchema, SelectState } from './interface';
@@ -38,15 +40,26 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
     <Form {...form}>
       <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
         <Skeleton isLoading={loadingReport}>
-          <Fields form={form} />
+          <Fields
+            form={form}
+            disabledFields={{
+              baseEntity: true
+            }}
+          />
+          <Link to={`/reports/${reportData?.id}`} className='flex items-center gap-2 self-end'>
+            <span className='text-sm'>Edit</span>
+            <ExternalLink size={20} />
+          </Link>
         </Skeleton>
-        <Button
-          isLoading={updatingReport}
-          type="submit"
-          className="w-full mt-auto"
-        >
-          Update
-        </Button>
+        <div className='flex items-center gap-2 justify-between'>
+          <Button
+            isLoading={updatingReport}
+            type="submit"
+            className="mt-auto"
+          >
+            Update
+          </Button>
+        </div>
       </form>
     </Form>
   );

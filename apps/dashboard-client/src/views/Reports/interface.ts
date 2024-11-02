@@ -14,4 +14,9 @@ export type SelectState = z.infer<typeof SelectFormSchema>;
 
 export type FormState = SelectState | InsertState;
 
-export type StateAsProps = { form: UseFormReturn<FormState> };
+export type StateAsProps = {
+  form: UseFormReturn<FormState>,
+  disabledFields?: {
+    [key in keyof FormState]? : boolean;
+  }
+};

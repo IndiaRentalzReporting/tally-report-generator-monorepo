@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { StateAsProps } from './interface';
 import { services as tableService } from '@/services/Tables';
 
-const Fields: React.FC<StateAsProps> = ({ form }) => {
+const Fields: React.FC<StateAsProps> = ({ form, disabledFields }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({
     queryFn: async () => tableService.read(),
     select: (data) => data.data.tables,
@@ -57,9 +57,10 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
                 <Select
                   {...field}
                   onValueChange={field.onChange}
+                  disabled={disabledFields?.baseEntity}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a Base Entity" />
+                    <SelectValue placeholder="Select a Base Entity"/>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
