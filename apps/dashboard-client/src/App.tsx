@@ -10,6 +10,7 @@ import { Loading, PrivateRoutes } from '@trg_package/vite/components';
 import { ModuleMapper } from './components/utility';
 import DashboardLayout from './components/composite/dashboard/Layout';
 import ReportLayout from './components/composite/reports/Layout';
+import Update from './components/composite/reports/Update';
 
 const App = () => {
   const { permissions, loading } = useAuth();
@@ -32,7 +33,9 @@ const App = () => {
             </Route>
           ))}
         </Route>
-        <Route path="/reports/:reportId" element={<ReportLayout />} />
+        <Route path="/reports" element={<ReportLayout />}>
+          <Route path=":reportId/update" element={<Update />} />
+        </Route>
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>
     ])
