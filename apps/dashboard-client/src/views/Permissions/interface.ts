@@ -9,51 +9,47 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 import * as z from 'zod';
 import { UseFormReturn } from 'react-hook-form';
-import { SelectState as RoleState } from '../Roles/interface';
+
+export const ModuleSchema = ModuleSelectSchema.pick({
+  id: true,
+  name: true
+});
+
+export const RoleSchema = RoleSelectSchema.pick({
+  id: true,
+  name: true
+});
+
+export const ActionSchema = ActionSelectSchema.pick({
+  name: true,
+  id: true
+});
+
+export const PermissionActionSchema = z.array(z.object({
+  action: ActionSchema
+}));
 
 export const InsertFormSchema = PermissionInsertSchema.pick({
   id: true,
 }).extend({
-  module: ModuleSelectSchema.pick({
-    id: true,
-    name: true
-  }),
-  role: RoleSelectSchema.pick({
-    id: true,
-    name: true
-  }),
-  permissionAction: z.array(z.object({
-    action: ActionSelectSchema.pick({
-      name: true,
-      id: true
-    })
-  }))
+  module: ModuleSchema,
+  role: RoleSchema,
+  permissionAction: PermissionActionSchema
 });
-export type InsertForm = z.infer<typeof InsertFormSchema>;
+export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
   id: true,
-}).extend({
-  module: ModuleSelectSchema.pick({
-    id: true,
-    name: true
-  }),
-  role: RoleSelectSchema.pick({
-    id: true,
-    name: true
-  }),
-  permissionAction: z.array(z.object({
-    action: ActionSelectSchema.pick({
-      name: true,
-      id: true
-    })
-  }))
-});
-export type SelectForm = z.infer<typeof SelectFormSchema>;
+}).merge(z.object({
+  module: ModuleSchema,
+  role: RoleSchema,
+  permissionAction: PermissionActionSchema
+}));
+export type SelectState = z.infer<typeof SelectFormSchema>;
 
-export type FormState = InsertForm | SelectForm;
+export type FormState = InsertState | SelectState;
 
-export const initialState: InsertForm = {
+export const initialState: InsertState = {
   id: '',
   module: {
     name: '',
@@ -67,7 +63,6 @@ export const initialState: InsertForm = {
 };
 
 export interface StateAsProps {
-  role?: RoleState['name'];
   modulePermissions: ModulePermissions;
   setModulePermissions: Dispatch<SetStateAction<ModulePermissions>>;
   form: UseFormReturn<FormState>

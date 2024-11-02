@@ -33,7 +33,6 @@ interface ColumnData {
 }
 
 const Fields: React.FC<StateAsProps> = ({
-  role,
   modulePermissions,
   setModulePermissions,
   form
@@ -61,7 +60,7 @@ const Fields: React.FC<StateAsProps> = ({
 
   const { data: allRolesWithNoPermission, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleService.read(),
-    select: (data) => data.data.roles.filter((r) => (!role ? r.permission.length === 0 : true)),
+    select: (data) => data.data.roles.filter((r) => (!form.getValues('role.id') ? r.permission.length === 0 : true)),
     queryKey: ['roles', 'getAll']
   });
 

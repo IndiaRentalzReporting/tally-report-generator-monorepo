@@ -9,18 +9,17 @@ import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
-import { FormState, InsertFormSchema } from './interface';
+import { FormState, InsertFormSchema, InsertState } from './interface';
 
 const Create: React.FC = () => {
   const form = useForm<FormState>({
     resolver: zodResolver(InsertFormSchema)
   });
-  const [selectedRole, setSelectedRole] = React.useState<string>('');
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: InsertState) => {
       const permissions = createPermissionsUsingModulePermissions(modulePermissions);
       for (const { module_id, action_ids } of permissions) {
         const {
@@ -29,7 +28,7 @@ const Create: React.FC = () => {
           }
         } = await services.createOne({
           module_id,
-          role_id: selectedRole
+          role_id: values.role.id
         });
         for (const action_id of action_ids) {
           await actionService.read({ id: action_id });
@@ -45,12 +44,11 @@ const Create: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
       setModulePermission({});
-      setSelectedRole('');
     }
   });
 
   const handleSubmit = (values: FormState) => {
-    createPermission();
+    createPermission(values);
     form.reset();
   };
 
@@ -63,7 +61,6 @@ const Create: React.FC = () => {
         <Fields
           modulePermissions={modulePermissions}
           setModulePermissions={setModulePermission}
-          role={selectedRole}
           form={form}
         />
         <Button

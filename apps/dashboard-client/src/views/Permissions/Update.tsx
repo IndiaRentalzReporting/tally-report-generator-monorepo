@@ -19,7 +19,6 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const form = useForm<FormState>({
     resolver: zodResolver(SelectFormSchema)
   });
-  const [selectedRole, setSelectedRole] = React.useState<string>(id);
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
@@ -65,7 +64,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: FormState) => {
       const prettyPermissions: Array<
       ModuleAction & { permission_id: string }
       > = addPermissionId(
@@ -82,7 +81,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
           data: { permission }
         } = await permissionService.createOne({
           module_id,
-          role_id: selectedRole
+          role_id: values.role.id
         });
         for (const action_id of action_ids) {
           await actionService.read({ id: action_id });
@@ -101,7 +100,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   });
 
   const handleSubmit = (values: FormState) => {
-    createPermission();
+    createPermission(values);
     form.reset();
   };
 
@@ -112,7 +111,6 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
           <Fields
             modulePermissions={modulePermissions}
             setModulePermissions={setModulePermission}
-            role={id}
             form={form}
           />
         </Skeleton>

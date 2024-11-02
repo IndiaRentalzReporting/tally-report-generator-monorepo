@@ -12,12 +12,22 @@ import {
 } from '@trg_package/vite/components';
 import { services } from '@/services/Permissions';
 import { columns } from './columns';
+import { SelectFormSchema } from './interface';
 
 const Read: React.FC = () => {
   const [rowGrouping, setRowGrouping] = React.useState<GroupingState>(['Role Name']);
   const { data: allPermissions = [], isFetching: fetchingPermissions } = useQuery({
     queryFn: () => services.read(),
-    select: (data) => data.data.permissions.filter(({ module }) => !!module),
+    select: (data) => data.data.permissions
+      .filter(({ module }) => !!module)
+      .map((permission) => {
+        try {
+          SelectFormSchema.parse(permission);
+        } catch (error) {
+          console.error(error);
+        }
+        return SelectFormSchema.parse(permission);
+      }),
     queryKey: ['permissions', 'getAll']
   });
 
