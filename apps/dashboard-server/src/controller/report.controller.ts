@@ -53,8 +53,6 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    // get the tables ready
-
     let report = await req.reportService.updateOne(
       { id: req.params.id as any },
       req.body
@@ -76,6 +74,20 @@ export const updateOne = async (
   }
 };
 
+export const deleteOne = async (
+  req: Request<Pick<ReportSelect, 'id'>>,
+  res: Response<ReportResponse>,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const report = await req.reportService.deleteOne({ id });
+    return res.json({ report });
+  } catch (e) {
+    return next(e);
+  }
+};
+
 export const getAllColumns = async <ResObject extends { columns : DetailedColumnSelect[] }>(
   req : Request<{ tableId:TableSelect['id'] },object>,
   res : Response<ResObject>,
@@ -91,9 +103,9 @@ export const getAllColumns = async <ResObject extends { columns : DetailedColumn
 };
 
 type DataSelectType = Array<{ label:string,value:string }>;
-export const getSelectData = async <T extends { data: DataSelectType }>(
+export const getSelectData = async (
   req: Request<Pick<ColumnSelect,'id'>,object,object>,
-  res : Response<T>,
+  res : Response<{ data: DataSelectType }>,
   next : NextFunction
 ) => {
   const { id: columnId } = req.params;
@@ -102,30 +114,19 @@ export const getSelectData = async <T extends { data: DataSelectType }>(
 
   const selectData = await req.reportService.runConfigQuery<DataSelectType>(`SELECT tb."${column.name}" as label,tb."${column.name}" as value from public."${table.name}" tb`);
   if (!selectData || selectData.length === 0) { throw new BadRequestError('No Data found in the table'); }
-  return res.json({ data: selectData } as T);
+  return res.json({ data: selectData });
 };
 
-export const getAllTables = async <T extends { tables : TableSelect[] }>(
+export const getAllTables = async (
   req : Request,
-  res : Response<T>,
+  res : Response<{
+    tables: TableSelect[]
+  }>,
   next : NextFunction
 ) => {
   try {
-    const tables = (await req.tableService.findMany());
-    return res.json({ tables } as T);
-  } catch (e) {
-    return next(e);
-  }
-};
-export const deleteOne = async (
-  req: Request<Pick<ReportSelect, 'id'>>,
-  res: Response<ReportResponse>,
-  next: NextFunction
-) => {
-  try {
-    const { id } = req.params;
-    const report = await req.reportService.deleteOne({ id });
-    return res.json({ report });
+    const tables = await req.tableService.findMany();
+    return res.json({ tables });
   } catch (e) {
     return next(e);
   }
@@ -164,14 +165,14 @@ export const getReportData = async (
 
 export const getReportColumns = async (
   req : Request<Pick<ReportSelect,'id'>>,
-  res : Response,
+  res : Response<Pick<NonNullable<ReportSelect['queryConfig']>,'columns'>>,
   next: NextFunction
 ) => {
   try {
     const report = await req.reportService.findOne({ id: req.params.id });
     const { queryConfig } = report;
 
-    if (!report.columns) {
+    if (!report.columns || !queryConfig) {
       throw new CustomError('Report Config is missing columns',400);
     }
 
@@ -185,7 +186,7 @@ export const getReportColumns = async (
 
 export const getReportFilters = async (
   req : Request<Pick<ReportSelect,'id'>>,
-  res : Response,
+  res : Response<{ filters : GeneratedReportFilters[] }>,
   next : NextFunction
 ) => {
   try {

@@ -3,21 +3,25 @@ import { ReportInsert, ReportSelect } from '@trg_package/schemas-reporting/types
 import { NextFunction, Request, Response } from 'express';
 
 export const validateReport = (
-  req : Request<Pick<ReportSelect,'id'>,object,ReportInsert>,
+  req : Request<Pick<ReportSelect,'id'>, object, ReportInsert>,
   res : Response,
   next : NextFunction
 ) => {
   const {
-    columns,groupBy,filters,tables,conditions
+    columns,
+    groupBy,
+    filters,
+    tables,
+    conditions
   } = req.body;
 
   const groupBySet = new Set(groupBy?.map((gb) => gb.column.id));
-  // Flag to check if any column has an operation
   const hasOperation = columns?.some((col) => col.operation);
 
   if (hasOperation && groupBySet.size == 0) {
     throw new BadRequestError('Report requires a group by in order to aggreate the columns');
   }
+
   columns?.forEach((col) => {
     const isInGroupBy = groupBySet.has(col.column.id);
     const matchingFilter = filters?.find((f) => f.column.id === col.column.id);
@@ -45,7 +49,6 @@ export const validateReport = (
       tables?.push(filter.column.tablealias);
     }
   });
-
   conditions?.forEach((condition) => {
     if (!tables?.find((e) => e === condition.column.tablealias)) {
       tables?.push(condition.column.tablealias);
