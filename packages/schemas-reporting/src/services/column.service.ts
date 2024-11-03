@@ -1,6 +1,6 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { CustomError } from '@trg_package/errors';
+import { BadRequestError, CustomError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import * as reportingSchemas from '../schemas';
 import { ColumnSchema } from '../schemas';
@@ -29,8 +29,8 @@ export class ColumnService extends BaseServiceNew
           tb.name as tablename,
           c.type as type,
           ''::text as tabledisplayname
-          FROM  public."column" c
-          INNER JOIN  public."table" tb on c."tableId" = tb."id" 
+          FROM  public."columns" c
+          INNER JOIN  public."tables" tb on c."tableId" = tb."id" 
           WHERE c."tableId" = ${tableId}
           AND c.type NOT IN ('id')  
 
@@ -46,9 +46,9 @@ export class ColumnService extends BaseServiceNew
           tb.name as tablename,
           pc.type as type,
           tb."displayName"::text as tabledisplayname
-          FROM public."column" pc 
+          FROM public."columns" pc 
           INNER JOIN cte ON pc."tableId"::TEXT = cte.referencetable
-          INNER JOIN  public."table" tb on pc."tableId" = tb."id"
+          INNER JOIN  public."tables" tb on pc."tableId" = tb."id"
           WHERE cte.tableid != pc."tableId" 
           AND pc.type != 'id'
         )
@@ -77,19 +77,20 @@ export class ColumnService extends BaseServiceNew
   public async updateForeignKeys() {
     try {
       await this.dbClient.execute(sql`
-                UPDATE public."column" AS c1
+                UPDATE public."columns" AS c1
                 SET 
                 "referenceTable" = t2."id",
                 "referenceColumn" = c2."id"
                 FROM 
-                public."column" AS c2  
-                INNER JOIN public."table" as t2
+                public."columns" AS c2  
+                INNER JOIN public."tables" as t2
                 on c2."tableId" = t2.id
                 WHERE c2.name = c1."referenceColumn"
                 and t2.name = c1."referenceTable"
             `);
     } catch (error) {
-      throw new CustomError('There was an error while updating seeded column table',400);
+      console.error(error);
+      throw new BadRequestError('There was an error while updating seeded column table');
     }
   }
 }
