@@ -38,14 +38,14 @@ export const getColumnData = async (columnId: string): AxiosPromise<Array<{
   value: string;
 }>> => columnsAxios.get(`/read/selectData/${columnId}`);
 
-export const getReportColumn = async (reportId: string): AxiosPromise<
-Array<Pick<NonNullable<ReportSelect['queryConfig']
->, 'columns'>>> => columnsAxios.get(`/read/reportColumns/${reportId}`);
+export const getReportColumns = async (reportId: string): AxiosPromise<
+Array<Pick<NonNullable<ReportSelect['queryConfig']>, 'columns'>>
+> => columnsAxios.get(`/read/reportColumns/${reportId}`);
 
 export const getReportData = async (reportId: string): AxiosPromise<{
   data: unknown[]
 }> => columnsAxios.get(`/read/reportData/${reportId}`);
 
-export const getReportFilter = async (reportId: string): AxiosPromise<{
+export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : GeneratedReportFilters[]
 }> => columnsAxios.get(`/read/reportFilters/${reportId}`);
