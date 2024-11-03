@@ -1,3 +1,3 @@
-export { TableSchema } from './table';
-export { ColumnSchema,ColumnType } from './column';
-export { ReportSchema } from './report';
+export { TableSchema } from './tables';
+export { ColumnSchema } from './columns';
+export { ReportSchema } from './reports';

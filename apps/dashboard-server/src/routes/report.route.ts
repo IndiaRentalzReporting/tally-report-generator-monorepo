@@ -3,7 +3,8 @@ import { validateSchema } from '@trg_package/middlewares';
 import {
   ColumnInsertSchema,
   ReportSelectSchema,
-  TableSelectSchema
+  TableSelectSchema,
+  ReportInsertSchema
 } from '@trg_package/schemas-reporting/types';
 import z from 'zod';
 import {
@@ -19,7 +20,6 @@ import {
   updateOne
 } from '../controller/report.controller';
 import { validateReport } from '@/middlewares/validateReport';
-import { ReportInsertSchema } from '@/models/zodSchemas/report';
 
 const reportRouter = Router();
 

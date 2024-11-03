@@ -6,4 +6,4 @@ export * from './stockGroup.service';
 export * from './stockItem.service';
 export * from './unit.service';
 export * from './voucher.service';
-export * from './inventoryVoucer.service';
+export * from './inventoryVoucher.service';

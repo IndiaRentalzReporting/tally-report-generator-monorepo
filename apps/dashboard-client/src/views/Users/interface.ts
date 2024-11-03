@@ -11,7 +11,7 @@ export const InsertFormSchema = UserInsertSchema.pick({
   email: true,
   password: true
 }).extend({
-  role: RoleSelectSchema.pick({ name: true, id: true }).nullable()
+  role: RoleSelectSchema.pick({ id: true, name: true }).nullable()
 });
 export type InsertState = z.infer<typeof InsertFormSchema>;
 
@@ -22,7 +22,7 @@ export const SelectFormSchema = UserSelectSchema.pick({
   email: true,
   password: true
 }).extend({
-  role: RoleSelectSchema.pick({ name: true }).nullable()
+  role: RoleSelectSchema.pick({ id: true, name: true }).nullable()
 });
 export type SelectState = z.infer<typeof SelectFormSchema>;
 
