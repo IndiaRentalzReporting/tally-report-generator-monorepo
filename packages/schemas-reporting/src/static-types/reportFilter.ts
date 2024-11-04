@@ -8,13 +8,15 @@ import { FilterTypes } from './filterTypes';
 export type ReportFilterInsert = {
   column: DetailedColumnSelect,
   filterType : FilterTypes,
-  conditionType : 'having' | undefined
+  conditionType : 'having' | undefined,
+  columnName : string | undefined
 };
 
 export type ReportFilterSelect = {
   column : DetailedColumnSelect,
   filterType : FilterTypes,
-  conditionType : 'having' | undefined
+  conditionType : 'having' | undefined,
+  columnName : string | undefined
 };
 
 export type ReportFilterConfig = {
@@ -23,5 +25,6 @@ export type ReportFilterConfig = {
     dataSource : string | null,
     heading : DetailedColumnSelect['heading']
     queryCondition : string
+    conditionType : 'having' | 'where'
   }
 };

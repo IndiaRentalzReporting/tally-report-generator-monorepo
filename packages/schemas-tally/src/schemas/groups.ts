@@ -11,7 +11,7 @@ const GroupColumns = {
   aliasName: varchar('aliasName', { length: 200 }),
   parent: text('parent'),
   primaryGroup: varchar('primaryGroup', { length: 200 }),
-  natureofGroup: varchar('natureofGroup', { length: 200 })
+  natureOfGroup: varchar('natureOfGroup', { length: 200 })
 };
 export const GroupSchema = pgTable('tallyGroups', {
   ...TallyCommonSchema(),

@@ -8,7 +8,8 @@ import { FilterOptions, ReportInsert, ReportSelect } from '@trg_package/schemas-
  */
 function getEscapedValue(param : any) {
   if (Array.isArray(param)) {
-    param.map((e) => getEscapedValue(e));
+    param = param.map((e) => getEscapedValue(e));
+    console.log(param);
     return `(${param.join(',')})`;
   }
   if (typeof param === 'number') {
@@ -64,32 +65,23 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
     let dataSource : FilterConfig[string]['dataSource'] = null;
     let queryCondition = '';
 
+    const columnName = e.columnName ?? getColumnName(e.column);
     if (e.filterType === 'select') {
       dataSource = `SELECT ${getColumnName(e.column)} as label,${getColumnName(e.column)} as value FROM public."${e.column.table}" "${e.column.tablealias}"`;
       queryCondition = `
-        "${e.column.alias}" IN (WITH RECURSIVE children_cte AS (
-          SELECT "${e.column.name}" as name, parent
-          FROM public."${e.column.table}"
-          WHERE parent IN {value}  
-          UNION ALL
-          SELECT t.name, t.parent
-          FROM  public."${e.column.table}" t
-          INNER JOIN children_cte c
-          ON t.parent = c.name
-          )
-          SELECT name
-          FROM children_cte)`;
-    } else if (e.filterType === 'search') {
-      queryCondition = `"${e.column.alias}" LIKE {value}`;
+        ${columnName} IN (SELECT tb."${e.column.name}" as name from public."${e.column.table}" tb WHERE tb."${e.column.name}" IN {value})`;
+    } else if (e.filterType === 'search' || e.column.type === 'string') {
+      queryCondition = `${columnName} LIKE {value}`;
     } else {
-      queryCondition = `"${e.column.alias}" BETWEEN {from} and {to}`;
+      queryCondition = `${columnName} BETWEEN {from} and {to}`;
     }
 
     filterConfig[e.column.alias] = {
       dataSource,
       queryCondition,
       filterType: e.filterType,
-      heading: e.column.heading
+      heading: e.column.heading,
+      conditionType: e.conditionType ?? 'where'
     };
   });
 
@@ -105,7 +97,7 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
   const groupByQuery = (groupBy ?? []).length > 0 ? getGroupByQuery(groupBy ?? []) : ' ';
   const filterConfig = (filters ?? []).length > 0 ? getFilterConfig(filters ?? []) : null;
 
-  const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} ${groupByQuery}`;
+  const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} {WHERE} ${groupByQuery} {HAVING}`;
 
   const columnArr : NonNullable<ReportSelect['queryConfig']>['columns'] = [];
   columns?.forEach((e) => {
@@ -120,7 +112,7 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
 }
 
 export async function getFilterQuery(filters : { [K : string] : typeof FilterOptions[keyof typeof FilterOptions] ['params'] },filterConfig : NonNullable<NonNullable<ReportSelect['queryConfig']>['filters']>) {
-  const conditionArr : string[] = [];
+  const conditionArr : { having: string[],where: string[] } = { having: [],where: [] };
 
   Object.entries(filters).forEach(([filterName,params]) => {
     if (filterName in filterConfig) {
@@ -130,10 +122,12 @@ export async function getFilterQuery(filters : { [K : string] : typeof FilterOpt
       Object.entries(params).forEach(([e,value]) => {
         query = query.replace(`{${e.toLowerCase()}}`,getEscapedValue(value).toString());
       });
-
-      conditionArr.push(query);
+      conditionArr[config?.conditionType ?? 'where'].push(query);
     } else { throw new BadRequestError('Filter does no exist in report'); }
   });
 
-  return ` HAVING ${conditionArr.join(' AND ')}`;
+  return {
+    havingQuery: conditionArr.having.length > 0 ? `HAVING ${conditionArr.having.join(' AND ')}` : '',
+    whereQuery: conditionArr.where.length > 0 ? `AND ${conditionArr.where.join(' AND ')}` : ''
+  };
 }

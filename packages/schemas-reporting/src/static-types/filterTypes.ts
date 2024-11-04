@@ -11,7 +11,7 @@ export const FilterOptions = {
     },
     for: ['string']
   },
-  default: {
+  between: {
     params: {
       from: 'string',
       to: 'string'

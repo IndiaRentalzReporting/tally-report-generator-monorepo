@@ -150,9 +150,9 @@ export const getReportData = async (
       filters
     } = req.body;
 
-    const filterQuery = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : '';
+    const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    const data = await req.reportService.runConfigQuery(queryConfig.dataSource + filterQuery);
+    const data = await req.reportService.runConfigQuery<GeneratedReportFilters>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery));
 
     return res.json({
       data
