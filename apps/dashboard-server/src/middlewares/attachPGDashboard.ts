@@ -1,7 +1,7 @@
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import { NextFunction, Response, Request } from 'express';
-import * as dashboardSchemas from '@/models/schemas';
 import { createUrl, createClient } from '@trg_package/pg-client';
+import * as dashboardSchemas from '@/models/schemas';
 
 export const attachPGDashboard = async (
   req: Request,
@@ -10,8 +10,8 @@ export const attachPGDashboard = async (
 ) => {
   if (req.dashboardConnection && req.dashboardDb) return next();
   try {
-    if (req.user) {
-      const { db_name, db_username, db_password } = req.user.tenant;
+    if (req.user || req.decryptedApiKey) {
+      const { db_name, db_username, db_password } = req.user ? req.user.tenant : req.decryptedApiKey;
 
       if (!db_name || !db_username || !db_password) {
         throw new BadRequestError('Tenant database error, missing credentials');

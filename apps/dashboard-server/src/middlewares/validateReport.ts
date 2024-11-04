@@ -40,6 +40,7 @@ export const validateReport = (
     }
 
     if (hasOperationDefined && matchingFilter) {
+      matchingFilter.columnName = `${col.operation}(${col.column.tablealias}."${col.column.name}")`;
       matchingFilter.conditionType = 'having';
     }
   });

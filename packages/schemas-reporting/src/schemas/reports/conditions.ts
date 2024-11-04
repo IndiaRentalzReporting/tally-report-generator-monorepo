@@ -107,7 +107,8 @@ export type ReportConditionInsert = {
   [K in ConditionOperators]: ConditionOperation<K>
 }[ConditionOperators] & {
   column : DetailedColumnSelect,
-  join : 'AND' | 'OR' | 'AND NOT' | 'OR NOT' | undefined
+  join : 'AND' | 'OR' | 'AND NOT' | 'OR NOT' | undefined,
+  conditionType : 'where' | undefined
 };
 
 export type ReportConditionSelect = {
@@ -115,4 +116,5 @@ export type ReportConditionSelect = {
 }[ConditionOperators] & {
   column : DetailedColumnSelect,
   join : 'AND' | 'OR' | 'AND NOT' | 'OR NOT' | undefined
+  conditionType : 'where' | undefined
 };

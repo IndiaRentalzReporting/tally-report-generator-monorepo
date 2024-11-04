@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { BadRequestError } from '@trg_package/errors';
+import { TenantSelect } from '@trg_package/schemas-auth/types';
 import { decrypt } from '../utils/crypto';
 
 export const decryptApiKey = (
-  req: Request & { decryptedApiKey?: { tenant: string } },
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -15,9 +16,9 @@ export const decryptApiKey = (
 
   try {
     const decryptedData = decrypt(apiKey);
-    const { tenant } = JSON.parse(decryptedData);
+    const { tenant } = JSON.parse(decryptedData) as { tenant : TenantSelect };
 
-    req.decryptedApiKey = { tenant };
+    req.decryptedApiKey = tenant;
     next();
   } catch (error) {
     throw new BadRequestError('Invalid API key');
