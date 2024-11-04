@@ -7,10 +7,13 @@ import {
 } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
+  GeneratedReportFilters,
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import { services as columnService } from '@/services/Columns';
+import {
+  services as columnService, getReportData, getReportColumns, getReportFilters
+} from '@/services/Columns';
 import { services as reportService } from '@/services/Reports';
 
 export type Column = ReportSelect['columns'][number];
@@ -45,6 +48,14 @@ interface ReportsProviderState {
     report: ReportSelect;
   }>, Error>
   isUpdatingReport: boolean
+
+  fetchData: UseMutateAsyncFunction<AxiosResponse<{
+    data: unknown[];
+  }, any>, Error, void, unknown>,
+  fetchColumns: UseMutateAsyncFunction<AxiosResponse<Array<Pick<NonNullable<ReportSelect['queryConfig']>, 'columns'>>>>,
+  fetchFilters: UseMutateAsyncFunction<AxiosResponse<{
+    filters: GeneratedReportFilters[];
+  }, any>, Error, void, unknown>,
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -107,6 +118,18 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
+  });
+
+  const { mutateAsync: fetchData } = useMutation({
+    mutationFn: () => getReportData(report.id)
+  });
+
+  const { mutateAsync: fetchColumns } = useMutation({
+    mutationFn: () => getReportColumns(report.id)
+  });
+
+  const { mutateAsync: fetchFilters } = useMutation({
+    mutationFn: () => getReportFilters(report.id)
   });
 
   const availableColumns = useMemo(() => {
@@ -197,7 +220,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     groupBy,
     setGroupBy,
     updateReport,
-    isUpdatingReport
+    isUpdatingReport,
+    fetchColumns,
+    fetchData,
+    fetchFilters
   }), [
     fetchedColumns,
     fetchingColumns,
@@ -217,7 +243,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     groupBy,
     setGroupBy,
     updateReport,
-    isUpdatingReport
+    isUpdatingReport,
+    fetchColumns,
+    fetchData,
+    fetchFilters
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;

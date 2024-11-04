@@ -1,7 +1,7 @@
 import { varchar , uuid , pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
-export const TableSchema = pgTable('table', {
+export const TableSchema = pgTable('tables', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).unique().notNull(),
   displayName: varchar('displayName').notNull()

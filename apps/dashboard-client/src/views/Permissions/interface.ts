@@ -1,17 +1,55 @@
 import { Dispatch, SetStateAction } from 'react';
 import {
-  DetailedPermission,
-  ModulePermissions
+  ActionSelectSchema,
+  ModulePermissions,
+  ModuleSelectSchema,
+  PermissionInsertSchema,
+  PermissionSelectSchema,
+  RoleSelectSchema
 } from '@trg_package/schemas-dashboard/types';
-import { State as RoleState } from '../Roles/interface';
+import * as z from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 
-export interface State
-  extends Pick<
-  DetailedPermission,
-  'id' | 'module' | 'role' | 'permissionAction'
-  > {}
+export const ModuleSchema = ModuleSelectSchema.pick({
+  id: true,
+  name: true
+});
 
-export const initialState: State = {
+export const RoleSchema = RoleSelectSchema.pick({
+  id: true,
+  name: true
+});
+
+export const ActionSchema = ActionSelectSchema.pick({
+  name: true,
+  id: true
+});
+
+export const PermissionActionSchema = z.array(z.object({
+  action: ActionSchema
+}));
+
+export const InsertFormSchema = PermissionInsertSchema.pick({
+  id: true,
+}).extend({
+  module: ModuleSchema,
+  role: RoleSchema,
+  permissionAction: PermissionActionSchema
+});
+export type InsertState = z.infer<typeof InsertFormSchema>;
+
+export const SelectFormSchema = PermissionSelectSchema.pick({
+  id: true,
+}).merge(z.object({
+  module: ModuleSchema,
+  role: RoleSchema,
+  permissionAction: PermissionActionSchema
+}));
+export type SelectState = z.infer<typeof SelectFormSchema>;
+
+export type FormState = InsertState | SelectState;
+
+export const initialState: InsertState = {
   id: '',
   module: {
     name: '',
@@ -25,8 +63,7 @@ export const initialState: State = {
 };
 
 export interface StateAsProps {
-  role?: RoleState['name'];
-  setRole?: Dispatch<SetStateAction<RoleState['name']>>;
   modulePermissions: ModulePermissions;
   setModulePermissions: Dispatch<SetStateAction<ModulePermissions>>;
+  form: UseFormReturn<FormState>
 }

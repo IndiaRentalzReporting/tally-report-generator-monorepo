@@ -1,20 +1,25 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { FormEventHandler } from 'react';
-import { Button } from '@trg_package/vite/components';
+import React from 'react';
+import { Button, Form } from '@trg_package/vite/components';
 import { ModulePermissions } from '@trg_package/schemas-dashboard/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services } from '@/services/Permissions';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
+import { FormState, InsertFormSchema, InsertState } from './interface';
 
 const Create: React.FC = () => {
-  const [selectedRole, setSelectedRole] = React.useState<string>('');
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema)
+  });
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: InsertState) => {
       const permissions = createPermissionsUsingModulePermissions(modulePermissions);
       for (const { module_id, action_ids } of permissions) {
         const {
@@ -23,7 +28,7 @@ const Create: React.FC = () => {
           }
         } = await services.createOne({
           module_id,
-          role_id: selectedRole
+          role_id: values.role.id
         });
         for (const action_id of action_ids) {
           await actionService.read({ id: action_id });
@@ -39,31 +44,34 @@ const Create: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
       setModulePermission({});
-      setSelectedRole('');
     }
   });
 
-  const handleCreatePermission: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    createPermission();
+  const handleSubmit = (values: FormState) => {
+    createPermission(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleCreatePermission} className="flex flex-col gap-4">
-      <Fields
-        modulePermissions={modulePermissions}
-        setModulePermissions={setModulePermission}
-        role={selectedRole}
-        setRole={setSelectedRole}
-      />
-      <Button
-        type="submit"
-        className="w-min mt-2"
-        isLoading={createPermissionLoading}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="flex flex-col gap-4"
       >
-        Create Permission
-      </Button>
-    </form>
+        <Fields
+          modulePermissions={modulePermissions}
+          setModulePermissions={setModulePermission}
+          form={form}
+        />
+        <Button
+          type="submit"
+          className="w-min mt-2"
+          isLoading={createPermissionLoading}
+        >
+          Create Permission
+        </Button>
+      </form>
+    </Form>
   );
 };
 

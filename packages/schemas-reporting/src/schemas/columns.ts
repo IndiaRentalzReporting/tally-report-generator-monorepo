@@ -2,7 +2,7 @@ import {
   varchar, uuid, pgTable, pgEnum, text
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
-import { TableSchema } from './table';
+import { TableSchema } from './tables';
 
 export const ColumnType = pgEnum('column_type', [
   'id',
@@ -12,7 +12,7 @@ export const ColumnType = pgEnum('column_type', [
   'foreignKey'
 ]);
 
-export const ColumnSchema = pgTable('column', {
+export const ColumnSchema = pgTable('columns', {
   id: uuid('id').primaryKey().defaultRandom(),
   alias: varchar('alias',{ length: 255 }),
   name: varchar('name', { length: 255 }).notNull(),

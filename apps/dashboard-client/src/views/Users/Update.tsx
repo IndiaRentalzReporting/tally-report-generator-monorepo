@@ -17,23 +17,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { services } from '@/services/Users';
 import Fields from './Fields';
-import { State, formSchema } from './interface';
+import { SelectState, SelectFormSchema, FormState } from './interface';
 
-const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
+const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => formSchema
-      .omit({ password: true })
-      .parse(data.data.users[0]),
+    select: (data) => SelectFormSchema.parse({ ...data.data.users[0], password: '********' }),
     queryKey: ['users', 'getOne', id]
   });
 
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema.omit({ password: true })),
-    values: userData ? {
-      ...userData,
-      password: '********'
-    } : undefined
+  const form = useForm<FormState>({
+    resolver: zodResolver(SelectFormSchema),
+    values: userData
   });
 
   const queryClient = useQueryClient();
@@ -49,16 +44,18 @@ const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
   });
 
   const { mutateAsync: updateUser } = useMutation({
-    mutationFn: (updatedUser: Omit<State, 'id'>) => services.updateOne({ id }, updatedUser),
+    mutationFn: (userUpdate: Omit<SelectState, 'id'>) => services.updateOne({ id }, userUpdate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
     }
   });
 
-  const handleSubmit = async (values: State) => {
-    updateUser(values);
-    form.reset();
+  const handleSubmit = async (values: FormState) => {
+    const { data: { user } } = await updateUser(values);
+    form.resetField('first_name', { defaultValue: user.first_name });
+    form.resetField('last_name', { defaultValue: user.last_name });
+    form.resetField('email', { defaultValue: user.email });
   };
 
   return (
