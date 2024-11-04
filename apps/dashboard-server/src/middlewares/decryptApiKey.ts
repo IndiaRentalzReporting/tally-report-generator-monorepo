@@ -14,8 +14,7 @@ export const decryptApiKey = (
   }
 
   try {
-    const decodedKey = Buffer.from(apiKey, 'base64').toString();
-    const decryptedData = decrypt(decodedKey);
+    const decryptedData = decrypt(apiKey);
     const { tenant } = JSON.parse(decryptedData);
 
     req.decryptedApiKey = { tenant };

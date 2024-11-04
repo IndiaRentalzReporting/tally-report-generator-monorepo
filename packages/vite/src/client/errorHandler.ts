@@ -3,13 +3,10 @@ import z from 'zod';
 import { toast } from '../lib/hooks';
 
 export const responseErrorHandler = (error: AxiosError<any>) => {
-  console.error(error);
-
   let title: string;
   let description: string;
 
   if (error.response?.status === 422) {
-    console.log(error.response?.data.error);
     const [firstZodError] = JSON.parse(
       error.response?.data.error
     ) as Array<z.ZodIssue>;
@@ -30,7 +27,6 @@ export const responseErrorHandler = (error: AxiosError<any>) => {
 };
 
 export const requestErrorHandler = (error: AxiosError<any>) => {
-  console.error(error);
   toast({
     variant: 'destructive',
     title: error.message,

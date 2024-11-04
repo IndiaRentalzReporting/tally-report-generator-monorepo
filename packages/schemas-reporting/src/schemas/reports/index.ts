@@ -3,13 +3,14 @@ import {
 } from 'drizzle-orm/pg-core';
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { TableSchema } from './table';
-import {
-  ReportColumnInsert, ReportConditionInsert,
-  ReportConfigSelect, ReportFilterInsert, ReportGroupByInsert
-} from '@/static-types';
+import { TableSchema } from '../tables';
+import { ReportColumnInsert } from './columns';
+import { ReportFilterInsert } from './filters';
+import { ReportGroupByInsert } from './groupBy';
+import { ReportConditionInsert } from './conditions';
+import { ReportQueryConfigSelect } from './queryConfig';
 
-export const ReportSchema = pgTable('report',{
+export const ReportSchema = pgTable('reports',{
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name',{ length: 500 }).unique().notNull(),
   description: text('description').default(''),
@@ -19,7 +20,7 @@ export const ReportSchema = pgTable('report',{
   filters: json('filters').$type<ReportFilterInsert[]>().default([]).notNull(),
   groupBy: json('groupBy').$type<ReportGroupByInsert[]>().default([]).notNull(),
   conditions: json('conditions').$type<ReportConditionInsert[]>().default([]).notNull(),
-  queryConfig: json('queryConfig').$type<ReportConfigSelect>(),
+  queryConfig: json('queryConfig').$type<ReportQueryConfigSelect>(),
 });
 
 export type ReportInsert = typeof ReportSchema.$inferInsert;

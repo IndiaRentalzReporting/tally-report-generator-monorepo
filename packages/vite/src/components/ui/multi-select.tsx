@@ -77,7 +77,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                   </div>
                 </Then>
                 <Else>
-                  {`Select ${label}...`}
+                  {`Select ${label}`}
                 </Else>
               </If>
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

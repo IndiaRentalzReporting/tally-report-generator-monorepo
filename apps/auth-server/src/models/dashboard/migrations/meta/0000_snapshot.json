@@ -1,5 +1,5 @@
 {
-  "id": "05ee0f14-c181-4d6b-97d6-7e10181b1749",
+  "id": "bde8e1a8-63b0-4b8d-8bce-30e2fdffb76c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -142,7 +142,7 @@
         },
         "key": {
           "name": "key",
-          "type": "varchar(64)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         }
@@ -2689,8 +2689,8 @@
         }
       }
     },
-    "public.column": {
-      "name": "column",
+    "public.columns": {
+      "name": "columns",
       "schema": "",
       "columns": {
         "id": {
@@ -2741,10 +2741,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "column_tableId_table_id_fk": {
-          "name": "column_tableId_table_id_fk",
-          "tableFrom": "column",
-          "tableTo": "table",
+        "columns_tableId_tables_id_fk": {
+          "name": "columns_tableId_tables_id_fk",
+          "tableFrom": "columns",
+          "tableTo": "tables",
           "columnsFrom": [
             "tableId"
           ],
@@ -2758,8 +2758,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.report": {
-      "name": "report",
+    "public.reports": {
+      "name": "reports",
       "schema": "",
       "columns": {
         "id": {
@@ -2832,10 +2832,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "report_baseEntity_table_id_fk": {
-          "name": "report_baseEntity_table_id_fk",
-          "tableFrom": "report",
-          "tableTo": "table",
+        "reports_baseEntity_tables_id_fk": {
+          "name": "reports_baseEntity_tables_id_fk",
+          "tableFrom": "reports",
+          "tableTo": "tables",
           "columnsFrom": [
             "baseEntity"
           ],
@@ -2848,8 +2848,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "report_name_unique": {
-          "name": "report_name_unique",
+        "reports_name_unique": {
+          "name": "reports_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"
@@ -2857,8 +2857,8 @@
         }
       }
     },
-    "public.table": {
-      "name": "table",
+    "public.tables": {
+      "name": "tables",
       "schema": "",
       "columns": {
         "id": {
@@ -2885,8 +2885,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "table_name_unique": {
-          "name": "table_name_unique",
+        "tables_name_unique": {
+          "name": "tables_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"

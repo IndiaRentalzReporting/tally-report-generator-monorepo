@@ -1,12 +1,8 @@
+/* eslint-disable no-nested-ternary */
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 import { useToast } from '@trg_package/vite/hooks';
-import { object } from 'zod';
-import {
-  Else, ElseIf, If, Loading, SidebarProvider, Then
-} from '@trg_package/vite/components';
-import Sidebar from './Sidebar';
-import DataTable from './Table';
+import { Loading, SidebarProvider } from '@trg_package/vite/components';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/Reports';
 
@@ -30,24 +26,15 @@ const ReportingLayout = () => {
 
   return (
     <SidebarProvider>
-      <If condition={isFetching}>
-        <Then>
-          <div className='w-full h-full'>
-            <Loading />
-          </div>
-        </Then>
-        <ElseIf condition={!report && !isFetching}>
-          Could not find report
-        </ElseIf>
-        <Else>
-          {report && <ReportsProvider report={report}>
-            <Sidebar />
-            <main className="flex flex-col" style={{ width: 'calc(100% - var(--sidebar-width))' }}>
-              <DataTable data={[object]} />
-            </main>
-          </ReportsProvider>}
-        </Else>
-      </If>
+      {
+        isFetching
+          ? <Loading />
+          : report
+            ? <ReportsProvider report={report}>
+                  <Outlet/>
+                </ReportsProvider>
+            : <div className='w-full h-full'>Report not found!</div>
+      }
     </SidebarProvider>
   );
 };

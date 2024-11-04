@@ -136,7 +136,7 @@ export class BaseServiceNew<
       const values = Object.values(filterData) as Array<any>;
 
       if (Object.prototype.hasOwnProperty.call(this.schema,'isReadonly')) {
-        keys.push('isReadOnly');
+        keys.push('isReadonly');
         values.push(false);
       }
 
@@ -169,9 +169,13 @@ export class BaseServiceNew<
       const values = Object.values(filterData) as Array<any>;
 
       if (Object.prototype.hasOwnProperty.call(this.schema,'isReadonly')) {
-        keys.push('isReadOnly');
+        keys.push('isReadonly');
         values.push(false);
       }
+
+      console.log({
+        keys, values
+      });
 
       const [entity] = await this.dbClient
         .delete(this.schema)

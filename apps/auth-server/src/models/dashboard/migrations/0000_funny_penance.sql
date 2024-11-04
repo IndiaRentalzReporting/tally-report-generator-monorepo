@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "apiKeys" (
 	"updatedAt" timestamp DEFAULT now(),
 	"deletedAt" timestamp,
 	"approvedAt" timestamp,
-	"key" varchar(64) NOT NULL,
+	"key" text NOT NULL,
 	CONSTRAINT "apiKeys_key_unique" UNIQUE("key")
 );
 --> statement-breakpoint
@@ -457,7 +457,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyVouchers" (
 	CONSTRAINT "tempTallyVouchers_masterId_unique" UNIQUE("masterId")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "column" (
+CREATE TABLE IF NOT EXISTS "columns" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"alias" varchar(255),
 	"name" varchar(255) NOT NULL,
@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS "column" (
 	"referenceColumn" text
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "report" (
+CREATE TABLE IF NOT EXISTS "reports" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(500) NOT NULL,
 	"description" text DEFAULT '',
@@ -478,14 +478,14 @@ CREATE TABLE IF NOT EXISTS "report" (
 	"groupBy" json DEFAULT '[]'::json NOT NULL,
 	"conditions" json DEFAULT '[]'::json NOT NULL,
 	"queryConfig" json,
-	CONSTRAINT "report_name_unique" UNIQUE("name")
+	CONSTRAINT "reports_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "table" (
+CREATE TABLE IF NOT EXISTS "tables" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"displayName" varchar NOT NULL,
-	CONSTRAINT "table_name_unique" UNIQUE("name")
+	CONSTRAINT "tables_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -531,13 +531,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "column" ADD CONSTRAINT "column_tableId_table_id_fk" FOREIGN KEY ("tableId") REFERENCES "public"."table"("id") ON DELETE restrict ON UPDATE restrict;
+ ALTER TABLE "columns" ADD CONSTRAINT "columns_tableId_tables_id_fk" FOREIGN KEY ("tableId") REFERENCES "public"."tables"("id") ON DELETE restrict ON UPDATE restrict;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "report" ADD CONSTRAINT "report_baseEntity_table_id_fk" FOREIGN KEY ("baseEntity") REFERENCES "public"."table"("id") ON DELETE restrict ON UPDATE restrict;
+ ALTER TABLE "reports" ADD CONSTRAINT "reports_baseEntity_tables_id_fk" FOREIGN KEY ("baseEntity") REFERENCES "public"."tables"("id") ON DELETE restrict ON UPDATE restrict;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

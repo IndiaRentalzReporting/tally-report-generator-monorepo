@@ -47,7 +47,7 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-[30vh] hover:bg-muted/50 rounded-md">
+    <div className="flex items-center justify-center h-[25vh] hover:bg-muted/50 rounded-md">
       <Drawer open={open} onOpenChange={handleClose}>
         <DrawerTrigger>
           <Edit size={100} className="cursor-pointer opacity-5" />

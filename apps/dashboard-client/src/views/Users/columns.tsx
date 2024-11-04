@@ -1,10 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { DetailedUser } from '@trg_package/schemas-dashboard/types';
 import { Checkbox } from '@trg_package/vite/components';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
+import { FormState } from './interface';
 
-export const columns: ColumnDef<DetailedUser>[] = [
+export const columns: ColumnDef<FormState>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -29,15 +29,19 @@ export const columns: ColumnDef<DetailedUser>[] = [
   },
   {
     accessorKey: 'first_name',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="First Name" />
   },
   {
     accessorKey: 'last_name',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="Last Name" />
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="Email" />
+  },
+  {
+    accessorKey: 'role.name',
+    header: ({ column }) => <SortingButton column={column} label="Role" />
   },
   {
     id: 'Actions',

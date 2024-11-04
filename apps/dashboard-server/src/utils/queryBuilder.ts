@@ -1,5 +1,5 @@
 import { BadRequestError } from '@trg_package/errors';
-import { FilterOptions, ReportInsert, ReportSelect } from '@trg_package/schemas-reporting/types';
+import { FilterOperations, ReportInsert, ReportSelect } from '@trg_package/schemas-reporting/types';
 
 /**
  *
@@ -111,8 +111,8 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
   };
 }
 
-export async function getFilterQuery(filters : { [K : string] : typeof FilterOptions[keyof typeof FilterOptions] ['params'] },filterConfig : NonNullable<NonNullable<ReportSelect['queryConfig']>['filters']>) {
-  const conditionArr : { having: string[],where: string[] } = { having: [],where: [] };
+export async function getFilterQuery(filters : { [K : string] : typeof FilterOperations[keyof typeof FilterOperations] ['params'] },filterConfig : NonNullable<NonNullable<ReportSelect['queryConfig']>['filters']>) {
+  const conditionArr : string[] = [];
 
   Object.entries(filters).forEach(([filterName,params]) => {
     if (filterName in filterConfig) {

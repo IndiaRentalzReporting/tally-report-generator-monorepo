@@ -1,36 +1,38 @@
+// Update.tsx
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { Button, Skeleton } from '@trg_package/vite/components';
+import { Button, Skeleton, Form } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { services } from '@/services/Actions';
 import Fields from './Fields';
-import { State, formSchema } from './interface';
+import { SelectState, SelectFormSchema, FormState } from './interface';
 
-const Update: React.FC<Pick<State, 'id'>> = ({ id }) => {
+const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const queryClient = useQueryClient();
   const { data: actionData, isFetching: loadingAction } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => formSchema.parse(data.data.actions[0]),
+    select: (data) => SelectFormSchema.parse(data.data.actions[0]),
     queryKey: ['actions', 'getOne', id]
   });
 
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormState>({
+    resolver: zodResolver(SelectFormSchema),
     values: actionData
   });
 
   const { mutateAsync: updateAction, isPending: updatingAction } = useMutation({
-    mutationFn: (values: Omit<State, 'id'>) => services.updateOne({ id }, values),
+    mutationFn: (actionUpdate: Omit<FormState, 'id'>) => services.updateOne({ id }, actionUpdate),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['actions', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
     }
   });
 
-  const handleSubmit = async (values: State) => {
-    updateAction(values);
-    form.reset();
+  const handleSubmit = async (values: FormState) => {
+    const { data: { action } } = await updateAction(values);
+    form.resetField('name', { defaultValue: action.name });
   };
 
   return (

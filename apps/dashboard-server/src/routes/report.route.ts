@@ -3,7 +3,8 @@ import { validateSchema } from '@trg_package/middlewares';
 import {
   ColumnInsertSchema,
   ReportSelectSchema,
-  TableSelectSchema
+  TableSelectSchema,
+  ReportInsertSchema
 } from '@trg_package/schemas-reporting/types';
 import z from 'zod';
 import {
@@ -19,7 +20,6 @@ import {
   updateOne
 } from '../controller/report.controller';
 import { validateReport } from '@/middlewares/validateReport';
-import { ReportInsertSchema } from '@/models/zodSchemas/report';
 
 const reportRouter = Router();
 
@@ -43,21 +43,6 @@ reportRouter.get(
   readAll
 );
 
-reportRouter.get(
-  '/read/columns/:tableId',
-  validateSchema({
-    params: z.object({
-      tableId: TableSelectSchema.shape.id
-    })
-  }),
-  getAllColumns
-);
-
-reportRouter.get(
-  '/read/tables',
-  getAllTables,
-);
-
 reportRouter.patch(
   '/update/:id',
   validateSchema({
@@ -66,7 +51,7 @@ reportRouter.patch(
       name: true,
       description: true,
       baseEntity: true
-    }).strict(),
+    }),
     params: ReportSelectSchema.pick({
       id: true
     })
@@ -85,6 +70,21 @@ reportRouter.delete(
   deleteOne
 );
 
+reportRouter.get(
+  '/read/columns/:tableId',
+  validateSchema({
+    params: z.object({
+      tableId: TableSelectSchema.shape.id
+    })
+  }),
+  getAllColumns
+);
+
+reportRouter.get(
+  '/read/tables',
+  getAllTables,
+);
+
 // report level access pending
 reportRouter.get(
   '/read/selectData/:id',
@@ -95,6 +95,7 @@ reportRouter.get(
   }),
   getSelectData
 );
+
 reportRouter.get(
   '/read/reportColumns/:id',
   validateSchema({

@@ -7,7 +7,7 @@ import {
 
 import {
   Button,
-  Table,
+  Table as TB,
   TableBody,
   TableCell,
   TableHead,
@@ -19,14 +19,13 @@ import { Trash } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Column, useReports } from '@/providers/ReportsProvider';
-import ReportSettings from './Settings';
 import UpdateColumn from './UpdateColumn';
 
-interface DataTableProps<TData> {
+interface TableProps<TData> {
   data: TData[];
 }
 
-const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
+const Table = <TData,>({ data }: TableProps<TData>) => {
   const {
     columns, removeColumn, updateReport, isUpdatingReport
   } = useReports();
@@ -69,7 +68,7 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
   return (
     <div className="p-6 space-y-6">
       <div className="rounded-md border w-full overflow-x-auto">
-        <Table>
+        <TB>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -115,12 +114,10 @@ const DataTable = <TData,>({ data }: DataTableProps<TData>) => {
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </TB>
       </div>
-      <ReportSettings />
-      <Button onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
     </div>
   );
 };
 
-export default DataTable;
+export default Table;

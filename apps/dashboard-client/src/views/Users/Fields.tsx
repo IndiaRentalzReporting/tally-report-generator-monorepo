@@ -6,7 +6,7 @@ import { StateAsProps } from './interface';
 
 const Fields: React.FC<StateAsProps> = ({ form }) => (
   <div className="flex flex-col gap-4">
-    <div className="flex w-full gap-4">
+    <div className="flex w-full gap-4 items-center">
       <div className="flex-grow">
         <FormField
           control={form.control}

@@ -1,5 +1,5 @@
-import { FilterOptions, FilterTypes } from './filterTypes';
-import { ReportColumnConfig } from './reportColumn';
+import { FilterOperations, FilterTypes } from './filters';
+import { ReportColumnConfig } from './columns';
 
 export type GeneratedReportColumns = ReportColumnConfig[];
 
@@ -14,5 +14,5 @@ export type GeneratedReportFilters =
 };
 
 export type RuntimeFilters = {
-  [K : string] : typeof FilterOptions[FilterTypes]['params']
+  [K : string] : typeof FilterOperations[FilterTypes]['params']
 };

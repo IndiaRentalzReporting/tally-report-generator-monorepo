@@ -5,31 +5,31 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Fields from './Fields';
 import { services } from '@/services/Modules';
-import { State, formSchema } from './interface';
+import { SelectState, SelectFormSchema, FormState } from './interface';
 
-const Edit: React.FC<Pick<State, 'id'>> = ({ id }) => {
+const Edit: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: moduleData, isFetching: loadingModule } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => formSchema.parse(data.data.modules[0]),
+    select: (data) => SelectFormSchema.parse(data.data.modules[0]),
     queryKey: ['getOne', 'modules', id]
   });
 
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormState>({
+    resolver: zodResolver(SelectFormSchema),
     values: moduleData
   });
 
   const queryClient = useQueryClient();
   const { mutateAsync: updateModule, isPending: updatingModule } = useMutation({
-    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.updateOne({ id }, moduleDetails),
+    mutationFn: (moduleUpdate: Omit<FormState, 'id'>) => services.updateOne({ id }, moduleUpdate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
     }
   });
 
-  const handleSubmit = async (values: State) => {
-    updateModule(values);
-    form.reset();
+  const handleSubmit = async (values: FormState) => {
+    const { data: { module } } = await updateModule(values);
+    form.resetField('name', { defaultValue: module.name });
   };
 
   return (

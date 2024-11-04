@@ -1,14 +1,19 @@
-import { ModuleSelectSchema } from '@trg_package/schemas-dashboard/types';
-import * as z from 'zod';
+import { ModuleInsertSchema, ModuleSelectSchema } from '@trg_package/schemas-dashboard/types';
 import { UseFormReturn } from 'react-hook-form';
+import * as z from 'zod';
 
-export const formSchema = ModuleSelectSchema.pick({
-  id: true,
-  name: true,
-  isPrivate: true,
-  icon: true
+export const InsertFormSchema = ModuleInsertSchema.pick({
+  name: true, id: true, icon: true, isPrivate: true
 });
-export type State = z.infer<typeof formSchema>;
+export type InsertState = z.infer<typeof InsertFormSchema>;
+
+export const SelectFormSchema = ModuleSelectSchema.pick({
+  name: true, id: true, icon: true, isPrivate: true
+});
+export type SelectState = z.infer<typeof SelectFormSchema>;
+
+export type FormState = SelectState | InsertState;
+
 export type StateAsProps = {
-  form: UseFormReturn<State>;
+  form: UseFormReturn<FormState>;
 };

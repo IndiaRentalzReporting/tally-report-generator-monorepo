@@ -14,7 +14,13 @@ import {
   SelectValue,
   Skeleton,
   Switch,
-  DataTable
+  DataTable,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from '@trg_package/vite/components';
 import { StateAsProps } from './interface';
 import { services as moduleService } from '@/services/Modules';
@@ -27,10 +33,9 @@ interface ColumnData {
 }
 
 const Fields: React.FC<StateAsProps> = ({
-  role,
-  setRole,
   modulePermissions,
-  setModulePermissions
+  setModulePermissions,
+  form
 }) => {
   const [columns, setColumns] = React.useState<ColumnDef<ColumnData>[]>([]);
   const [tableData, setTableData] = React.useState<Array<ColumnData>>([]);
@@ -55,7 +60,7 @@ const Fields: React.FC<StateAsProps> = ({
 
   const { data: allRolesWithNoPermission, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleService.read(),
-    select: (data) => data.data.roles.filter((r) => (!role ? r.permission.length === 0 : true)),
+    select: (data) => data.data.roles.filter((r) => (!form.getValues('role.id') ? r.permission.length === 0 : true)),
     queryKey: ['roles', 'getAll']
   });
 
@@ -99,8 +104,7 @@ const Fields: React.FC<StateAsProps> = ({
         return (
           <Switch
             checked={!!isCheckedByDefault}
-            onCheckedChange={(checked) => handlePermissionChange(checked, module_id, action.id)
-            }
+            onCheckedChange={(checked) => handlePermissionChange(checked, module_id, action.id)}
           />
         );
       }
@@ -116,23 +120,39 @@ const Fields: React.FC<StateAsProps> = ({
 
   return (
     <>
-      <Select onValueChange={setRole} value={role} required>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a Role" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Roles</SelectLabel>
-            <Skeleton isLoading={fetchingRoles}>
-              {allRolesWithNoPermission?.map((rwnp) => (
-                <SelectItem key={rwnp.id} value={rwnp.id}>
-                  {rwnp.name}
-                </SelectItem>
-              ))}
-            </Skeleton>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        <FormField
+          control={form.control}
+          name="role.id"
+          render={({ field }) => (
+            <FormItem className='flex-grow'>
+              <FormLabel>Role</FormLabel>
+              <FormControl>
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Roles</SelectLabel>
+                      <Skeleton isLoading={fetchingRoles}>
+                        {allRolesWithNoPermission?.map((rwnp) => (
+                          <SelectItem key={rwnp.id} value={rwnp.id}>
+                            {rwnp.name}
+                          </SelectItem>
+                        ))}
+                      </Skeleton>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       <CardHeader className="px-0 py-2">
         <CardDescription>Assign permissions to your permission</CardDescription>
       </CardHeader>

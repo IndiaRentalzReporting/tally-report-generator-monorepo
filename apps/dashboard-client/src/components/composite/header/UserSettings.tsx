@@ -1,6 +1,6 @@
 import {
   ChevronsUpDown,
-  Computer, CreditCard, LogOut, Moon, Sun, UserIcon, Users
+  Computer, CreditCard, KeyIcon, LogOut, Moon, Sun, UserIcon, Users
 } from 'lucide-react';
 import {
   Button,
@@ -65,6 +65,7 @@ const UserSettings = () => {
         </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
+            <KeyIcon className="mr-2 h-4 w-4"/>
             API Keys
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>

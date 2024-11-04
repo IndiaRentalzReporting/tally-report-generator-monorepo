@@ -13,24 +13,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { services } from '@/services/Modules';
 import Fields from './Fields';
-import { State, formSchema } from './interface';
+import { InsertState, InsertFormSchema, FormState } from './interface';
 
 const CreateModule: React.FC = () => {
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema.omit({ id: true })),
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema),
   });
 
   const queryClient = useQueryClient();
   const { mutateAsync: createModule, isPending: loadingCreateModule } = useMutation({
-    mutationFn: (moduleDetails: Omit<State, 'id'>) => services.createOne(moduleDetails),
+    mutationFn: (moduleDetails: Omit<InsertState, 'id'>) => services.createOne(moduleDetails),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modules', 'getAll'] });
     }
   });
 
-  const handleSubmit = async (values: State) => {
+  const handleSubmit = async (values: FormState) => {
     createModule(values);
-    form.reset();
+    form.resetField('name', { defaultValue: '' });
   };
 
   return (

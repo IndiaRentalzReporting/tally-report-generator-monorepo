@@ -1,19 +1,24 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import React, { FormEventHandler, useEffect } from 'react';
-import { Button, Skeleton } from '@trg_package/vite/components';
+import React, { useEffect } from 'react';
+import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import {
   PermissionSelect,
   ModuleAction,
   ModulePermissions
 } from '@trg_package/schemas-dashboard/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { services as permissionService } from '@/services/Permissions';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
 import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
+import { FormState, SelectFormSchema } from './interface';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
-  const [selectedRole, setSelectedRole] = React.useState<string>(id);
+  const form = useForm<FormState>({
+    resolver: zodResolver(SelectFormSchema)
+  });
   const [modulePermissions, setModulePermission] = React.useState<ModulePermissions>({});
 
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
@@ -59,7 +64,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: FormState) => {
       const prettyPermissions: Array<
       ModuleAction & { permission_id: string }
       > = addPermissionId(
@@ -76,7 +81,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
           data: { permission }
         } = await permissionService.createOne({
           module_id,
-          role_id: selectedRole
+          role_id: values.role.id
         });
         for (const action_id of action_ids) {
           await actionService.read({ id: action_id });
@@ -94,29 +99,30 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
     }
   });
 
-  const handleUpdatePermission: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    createPermission();
+  const handleSubmit = (values: FormState) => {
+    createPermission(values);
+    form.reset();
   };
 
   return (
-    <form onSubmit={handleUpdatePermission} className="flex flex-col gap-4">
-      <Skeleton isLoading={loadingPermissions}>
-        <Fields
-          modulePermissions={modulePermissions}
-          setModulePermissions={setModulePermission}
-          role={id}
-          setRole={setSelectedRole}
-        />
-      </Skeleton>
-      <Button
-        type="submit"
-        className="w-min mt-2"
-        isLoading={createPermissionLoading}
-      >
-        Create PermissionSelect
-      </Button>
-    </form>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-4">
+        <Skeleton isLoading={loadingPermissions}>
+          <Fields
+            modulePermissions={modulePermissions}
+            setModulePermissions={setModulePermission}
+            form={form}
+          />
+        </Skeleton>
+        <Button
+          type="submit"
+          className="w-min mt-2"
+          isLoading={createPermissionLoading}
+        >
+          Create PermissionSelect
+        </Button>
+      </form>
+    </Form>
   );
 };
 

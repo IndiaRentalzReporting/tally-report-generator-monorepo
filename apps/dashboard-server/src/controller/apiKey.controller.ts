@@ -3,7 +3,7 @@ import {
   ApiKeyInsert,
   ApiKeySelect
 } from '@trg_package/schemas-dashboard/types';
-import { encrypt } from '../utils/crypto';
+import { decrypt, encrypt } from '../utils/crypto';
 
 export const readAll = async (
   req: Request<object, Partial<ApiKeySelect>>,
@@ -58,11 +58,13 @@ export const createOne = async (
     const data = req.body;
     const { tenant } = req.user!;
     const encryptedData = encrypt(JSON.stringify({ tenant }));
-    const key = Buffer.from(encryptedData).toString('base64');
+    console.log({ encryptedData });
+    const decryptedData = decrypt(encryptedData);
+    console.log({ decryptedData });
 
     const apiKey = await req.apiKeyService.createOne({
       ...data,
-      key
+      key: encryptedData
     });
     return res.json({ apiKey });
   } catch (e) {

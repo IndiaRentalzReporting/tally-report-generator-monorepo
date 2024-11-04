@@ -5,39 +5,34 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { services } from '@/services/Roles';
 import Fields from './Fields';
-import { State } from './interface';
-import { formSchema } from '../Actions/interface';
+import { FormState, InsertFormSchema, InsertState } from './interface';
 
 const Create: React.FC = () => {
-  const form = useForm<State>({
-    resolver: zodResolver(formSchema.omit({ id: true })),
+  const form = useForm<FormState>({
+    resolver: zodResolver(InsertFormSchema),
   });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: createRole, isPending: loadingCreateRole } = useMutation(
-    {
-      mutationFn: (roleData: Omit<State, 'id'>) => services.createOne(roleData),
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
-      }
+  const { mutateAsync: createAction, isPending: loadingCreateAction } = useMutation({
+    mutationFn: (actionData: Omit<InsertState, 'id'>) => services.createOne(actionData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
     }
-  );
+  });
 
-  const handleSubmit = (values: State) => {
-    createRole(values);
-    form.reset();
+  const handleSubmit = async (values: FormState) => {
+    createAction(values);
+    form.resetField('name', { defaultValue: '' });
   };
 
   return (
     <Form {...form}>
-      <form className="h-full flex flex-col gap-4" onSubmit={() => {
-        console.log(form);
-        return form.handleSubmit(handleSubmit);
-      }}>
+      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
         <Fields form={form} />
         <Button
           type="submit"
-          isLoading={loadingCreateRole}
+          isLoading={loadingCreateAction}
           className="w-full mt-auto"
         >
           Create

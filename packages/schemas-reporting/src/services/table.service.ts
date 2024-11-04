@@ -1,7 +1,7 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
-import { TableInsert } from '@/schemas/table';
+import { TableInsert } from '@/schemas/tables';
 import { TableSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
 

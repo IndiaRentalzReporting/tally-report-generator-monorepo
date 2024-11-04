@@ -3,7 +3,7 @@ import { UpdateEntity } from './Update';
 
 interface ActionsCellProps {
   module: {
-    id: string;
+    id: string | undefined;
     name: string;
     type: string;
   };
@@ -11,7 +11,9 @@ interface ActionsCellProps {
 
 const ActionsCell: React.FC<ActionsCellProps> = ({
   module: { id, name, type }
-}) => (
+}) => {
+  if (!id) throw new Error('Entity ID is required');
+  return (
     <span className="flex gap-4 items-center">
       <DeleteEntity
         module={{
@@ -28,6 +30,7 @@ const ActionsCell: React.FC<ActionsCellProps> = ({
         }}
       />
     </span>
-);
+  );
+};
 
 export default ActionsCell;

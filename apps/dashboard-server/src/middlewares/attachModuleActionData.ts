@@ -10,10 +10,10 @@ export const attachModuleActionData = async (
   const module = pathParams[3];
   const action = pathParams[4];
 
-  const Y = await req.actionService.findOne({
+  await req.actionService.findOne({
     name: action?.toUpperCase()
   });
-  const X = await req.moduleService.findOne({
+  await req.moduleService.findOne({
     name: module?.toUpperCase()
   });
 
