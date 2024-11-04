@@ -53,26 +53,26 @@ export class TallyService<
           .values(data.map((obj) => ({ ...obj, companyId })));
 
         const subquery = tx
-          .select({ masterID: tempSchema.masterID })
+          .select({ masterId: tempSchema.masterId })
           .from(tempSchema)
-          .innerJoin(tableSchema, eq(tempSchema.masterID, tableSchema.masterID))
-          .where(ne(tableSchema.alterID, tempSchema.alterID));
+          .innerJoin(tableSchema, eq(tempSchema.masterId, tableSchema.masterId))
+          .where(ne(tableSchema.alterId, tempSchema.alterId));
 
         await tx
           .delete(tableSchema)
-          .where(inArray(tableSchema.masterID, subquery));
+          .where(inArray(tableSchema.masterId, subquery));
 
         const insertSubquery: Array<(typeof tableSchema)['$inferSelect']> = await tx
           .select()
           .from(tempSchema)
           .where(
             notInArray(
-              tempSchema.masterID,
-              tx.select({ masterID: tableSchema.masterID }).from(tableSchema)
+              tempSchema.masterId,
+              tx.select({ masterId: tableSchema.masterId }).from(tableSchema)
             )
           );
 
-        await tx.insert(tableSchema).values(insertSubquery);
+        if (insertSubquery.length > 0) { await tx.insert(tableSchema).values(insertSubquery); }
       });
     } catch (err) {
       throw err;

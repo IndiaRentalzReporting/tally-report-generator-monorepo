@@ -6,8 +6,7 @@ import {
   TableSelect,
   GeneratedReportFilters,
   RuntimeFilters,
-  ColumnSelect,
-  GeneratedReportData
+  ColumnSelect
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
@@ -154,7 +153,7 @@ export const getReportData = async (
 
     const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    const data = await req.reportService.runConfigQuery<GeneratedReportData>(queryConfig.dataSource + filterQuery);
+    const data = await req.reportService.runConfigQuery<GeneratedReportFilters>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery));
 
     return res.json({
       data

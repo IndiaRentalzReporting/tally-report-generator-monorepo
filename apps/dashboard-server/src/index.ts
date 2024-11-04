@@ -16,6 +16,7 @@ import {
   ReportService,
   TableService
 } from '@trg_package/schemas-reporting/services';
+import { TenantSelect } from '@trg_package/schemas-auth/types';
 import * as dashboardSchemas from './models/schemas';
 import config from './config';
 import expressLoader from './loaders/express';
@@ -52,6 +53,7 @@ declare global {
       tableService: TableService;
       columnService: ColumnService;
       reportService: ReportService;
+      decryptedApiKey : TenantSelect;
 
       dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
       dashboardConnection: Sql<{}> | null;

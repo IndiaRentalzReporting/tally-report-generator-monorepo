@@ -112,7 +112,7 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
 }
 
 export async function getFilterQuery(filters : { [K : string] : typeof FilterOperations[keyof typeof FilterOperations] ['params'] },filterConfig : NonNullable<NonNullable<ReportSelect['queryConfig']>['filters']>) {
-  const conditionArr : string[] = [];
+  const conditionArr : { having: string[],where: string[] } = { having: [],where: [] };
 
   Object.entries(filters).forEach(([filterName,params]) => {
     if (filterName in filterConfig) {

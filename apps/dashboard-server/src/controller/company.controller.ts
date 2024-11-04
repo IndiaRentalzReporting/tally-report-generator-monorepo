@@ -29,14 +29,14 @@ export const createOne = async (
 
 export const readAll = async (
   req: Request<object, Partial<CompanySelect>>,
-  res: Response<{ companys: CompanySelect[] }>,
+  res: Response<{ companies: CompanySelect[] }>,
   next: NextFunction
 ) => {
   try {
-    const companys = await req.companyService.findMany({
+    const companies = await req.companyService.findMany({
       ...req.query
     });
-    return res.json({ companys });
+    return res.json({ companies });
   } catch (e) {
     return next(e);
   }
