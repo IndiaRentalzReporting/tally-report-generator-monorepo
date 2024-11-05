@@ -66,3 +66,8 @@ export type GeneratedReportFilters = {
 export type RuntimeFilters = {
   [K : string] : typeof FilterOperations[FilterTypes]['params']
 };
+
+export const FilterValueSchema = z.union([
+  z.object({ value: z.union([z.string(), z.array(z.string())]) }),
+  z.object({ from: z.string(), to: z.string() })
+]);

@@ -10,7 +10,7 @@ import {
 } from '@/schemas/reports/columns';
 import { ReportConditionInsertSchema, ConditionOperations } from '@/schemas/reports/conditions';
 import {
-  ReportFilterInsertSchema, FilterOperations, GeneratedReportFilters, RuntimeFilters
+  ReportFilterInsertSchema, FilterOperations, GeneratedReportFilters, RuntimeFilters, FilterValueSchema
 } from '@/schemas/reports/filters';
 import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
 
@@ -31,6 +31,7 @@ export {
   type GeneratedReportData,
   type GeneratedReportFilters,
   type RuntimeFilters,
+  FilterValueSchema,
 
   type ReportInsert,
   type ReportSelect,
