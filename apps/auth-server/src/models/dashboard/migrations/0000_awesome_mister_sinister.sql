@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS "tallyGroups" (
 	"aliasName" varchar(200),
 	"parent" text,
 	"primaryGroup" varchar(200),
-	"natureofGroup" varchar(200),
+	"natureOfGroup" varchar(200),
 	CONSTRAINT "tallyGroups_masterId_unique" UNIQUE("masterId")
 );
 --> statement-breakpoint
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS "tempTallyGroups" (
 	"aliasName" varchar(200),
 	"parent" text,
 	"primaryGroup" varchar(200),
-	"natureofGroup" varchar(200),
+	"natureOfGroup" varchar(200),
 	CONSTRAINT "tempTallyGroups_masterId_unique" UNIQUE("masterId")
 );
 --> statement-breakpoint

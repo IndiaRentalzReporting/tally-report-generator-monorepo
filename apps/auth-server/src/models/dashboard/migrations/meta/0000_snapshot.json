@@ -1,5 +1,5 @@
 {
-  "id": "bde8e1a8-63b0-4b8d-8bce-30e2fdffb76c",
+  "id": "384e0fae-0593-4f3f-901a-6ba9f341c406",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -932,8 +932,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "natureofGroup": {
-          "name": "natureofGroup",
+        "natureOfGroup": {
+          "name": "natureOfGroup",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
@@ -1011,8 +1011,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "natureofGroup": {
-          "name": "natureofGroup",
+        "natureOfGroup": {
+          "name": "natureOfGroup",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false

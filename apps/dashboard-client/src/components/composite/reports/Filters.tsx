@@ -1,8 +1,10 @@
 import { PlusCircle, TrashIcon } from 'lucide-react';
 import React from 'react';
-import { Button } from '@trg_package/vite/components';
+import {
+  Button, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, Select
+} from '@trg_package/vite/components';
+import { FilterOperations } from '@trg_package/schemas-reporting/types';
 import { Filter, useReports } from '@/providers/ReportsProvider';
-import Select from './Select';
 
 const Filters: React.FC = () => {
   const { filters, addFilter, removeFilter } = useReports();
@@ -44,45 +46,59 @@ const FilterComponent: React.FC<{
     UF(filter.column.id, data);
   };
 
+  const operations = Object.keys(FilterOperations).filter((operatorName) => {
+    const operation = FilterOperations[operatorName as keyof typeof FilterOperations];
+    const operationFor = operation.for;
+    return filter.column ? operationFor.includes(filter.column.type) : [];
+  });
+
   return (
     <div className="mb-2 space-y-2">
       <div className="grid grid-cols-[2fr_2fr_auto] gap-4">
         <Select
-          label="Column"
           value={filter.column.displayName}
-          options={availableColumns.map(({ column }) => {
-            if (!column.displayName) {
-              return {
-                label: 'No Name',
-                value: 'No Name'
-              };
-            }
-            return {
-              label: column.displayName,
-              value: column.displayName
-            };
-          })}
-          onChange={(displayName) => {
+          onValueChange={(displayName) => {
             updateFilter({
               column: fetchedColumns
-                .find((col) => col.column.displayName === displayName)?.column
+                .find((col) => col.column.displayName === displayName)?.column,
+              filterType: undefined
             });
           }}
-        />
-
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Column" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Column</SelectLabel>
+              {availableColumns.map(({ column }) => (
+                <SelectItem key={column.displayName} value={column.displayName}>
+                  {column.displayName}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         <Select
-          label="Type"
           value={filter.filterType}
-          options={['select', 'search', 'default'].map((type) => ({
-            label: type,
-            value: type
-          }))}
-          onChange={(filterType: string) => {
-            updateFilter({ filterType: filterType as 'select' | 'search' | 'default' });
+          onValueChange={(filterType: string) => {
+            updateFilter({ filterType: filterType as 'select' | 'search' | 'between' });
           }}
-          disabled={!filter.column}
-          className="justify-self-end"
-        />
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Filter Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Filter Type</SelectLabel>
+              {operations.map((operation) => (
+                <SelectItem key={operation} value={operation}>
+                  {operation}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
         <Button
           onClick={removeFilter}

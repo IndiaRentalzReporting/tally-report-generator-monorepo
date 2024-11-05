@@ -10,10 +10,10 @@ const Update: React.FC = () => {
   return (
     <>
       <Sidebar />
-      <main className="flex flex-col" style={{ width: 'calc(100% - var(--sidebar-width))' }}>
-        <DataTable data={[Object]} />
+      <main className="flex flex-col p-6 space-y-6" style={{ width: 'calc(100% - var(--sidebar-width))' }}>
+        <DataTable data={[]} />
         <ReportSettings />
-        <Button onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
+        <Button className='w-min' onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
       </main>
     </>
   );

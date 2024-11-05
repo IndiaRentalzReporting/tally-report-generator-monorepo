@@ -6,7 +6,9 @@ import {
   TableSelect,
   GeneratedReportFilters,
   RuntimeFilters,
-  ColumnSelect
+  ColumnSelect,
+  GeneratedReportData,
+  GeneratedReportColumns
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
@@ -112,7 +114,9 @@ export const getSelectData = async (
   const column = await req.columnService.findOne({ id: columnId });
   const table = await req.tableService.findOne({ id: column.tableId });
 
-  const selectData = await req.reportService.runConfigQuery<DataSelectType>(`SELECT tb."${column.name}" as label,tb."${column.name}" as value from public."${table.name}" tb`);
+  const selectData = await req.reportService.runConfigQuery<DataSelectType>(`
+    SELECT tb."${column.name}" as label,tb."${column.name}" as value from public."${table.name}" tb
+  `);
   if (!selectData || selectData.length === 0) { throw new BadRequestError('No Data found in the table'); }
   return res.json({ data: selectData });
 };
@@ -134,7 +138,7 @@ export const getAllTables = async (
 
 export const getReportData = async (
   req : Request<Pick<ReportSelect,'id'>,object,{ filters : RuntimeFilters }>,
-  res : Response,
+  res : Response<{ data: Array<GeneratedReportData> }>,
   next: NextFunction
 ) => {
   try {
@@ -153,7 +157,7 @@ export const getReportData = async (
 
     const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    const data = await req.reportService.runConfigQuery<GeneratedReportFilters>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery));
+    const data = await req.reportService.runConfigQuery<Array<GeneratedReportData>>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery));
 
     return res.json({
       data
@@ -165,7 +169,7 @@ export const getReportData = async (
 
 export const getReportColumns = async (
   req : Request<Pick<ReportSelect,'id'>>,
-  res : Response<Pick<NonNullable<ReportSelect['queryConfig']>,'columns'>>,
+  res : Response<{ columns: Array<GeneratedReportColumns> }>,
   next: NextFunction
 ) => {
   try {
@@ -177,7 +181,7 @@ export const getReportColumns = async (
     }
 
     return res.json({
-      columns: queryConfig?.columns
+      columns: queryConfig?.columns ?? []
     });
   } catch (e) {
     return next(e);
@@ -186,7 +190,7 @@ export const getReportColumns = async (
 
 export const getReportFilters = async (
   req : Request<Pick<ReportSelect,'id'>>,
-  res : Response<{ filters : GeneratedReportFilters[] }>,
+  res : Response<{ filters : Array<GeneratedReportFilters> }>,
   next : NextFunction
 ) => {
   try {
@@ -199,7 +203,7 @@ export const getReportFilters = async (
       return res.json({ filters: [] });
     }
 
-    const filterArr : GeneratedReportFilters[] = [];
+    const filterArr : Array<GeneratedReportFilters> = [];
 
     for (const [alias, config] of Object.entries(filters)) {
       let filterData = null;

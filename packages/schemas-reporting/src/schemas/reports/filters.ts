@@ -28,7 +28,7 @@ export type FilterTypes = keyof typeof FilterOperations;
 
 export const ReportFilterInsertSchema = z.object({
   column: DetailedColumnInsertSchema,
-  filterType: z.enum(['default','search','select'])
+  filterType: z.enum(['between','search','select'])
 });
 
 export type ReportFilterInsert = {
@@ -48,10 +48,21 @@ export type ReportFilterSelect = {
 
 export type ReportFilterConfig = {
   [K : DetailedColumnSelect['alias']] : {
-    filterType : FilterTypes,
+    filterType : FilterTypes | undefined,
     dataSource : string | null,
     heading : DetailedColumnSelect['heading']
     queryCondition : string,
     conditionType : 'where' | 'having'
   }
+};
+
+export type GeneratedReportFilters = {
+  data : Array<{ label : string,value : string }> | null
+  label : string,
+  fieldName : string
+  filterType : FilterTypes | undefined;
+};
+
+export type RuntimeFilters = {
+  [K : string] : typeof FilterOperations[FilterTypes]['params']
 };
