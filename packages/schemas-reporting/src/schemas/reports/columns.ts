@@ -50,3 +50,5 @@ export type ReportColumnConfig = {
   alias : string,
   heading : string
 };
+
+export type GeneratedReportColumns = ReportColumnConfig;

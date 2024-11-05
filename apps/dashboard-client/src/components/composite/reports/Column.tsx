@@ -13,17 +13,23 @@ import {
   Checkbox,
   Input,
   Label,
-  When
+  When,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
 } from '@trg_package/vite/components';
 import { ColumnOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
-import { Column, useReports } from '@/providers/ReportsProvider';
-import Select from './Select';
+import { type Column, useReports } from '@/providers/ReportsProvider';
 
 interface IUpdateEntityProps {
   column: Column;
 }
 
-const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
+const Column: React.FC<IUpdateEntityProps> = ({ column }) => {
   const {
     columns, updateColumn, setGroupBy
   } = useReports();
@@ -67,7 +73,7 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
                 <Label htmlFor="heading">Heading</Label>
                 <Input
                   id="heading"
-                  value={localExtra.heading || ''}
+                  value={localExtra.heading}
                   onChange={({ target: { value: heading } }) => setLocalExtra((prev) => ({
                     ...prev,
                     heading
@@ -79,19 +85,28 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
               <div className="space-y-2">
                 <Label htmlFor="operation">Operation</Label>
                 <Select
-                  label="Operation"
                   value={localExtra.operation}
-                  options={operations.map((op) => ({
-                    label: op,
-                    value: op
-                  }))}
-                  onChange={(operation) => {
+                  onValueChange={(operation) => {
                     setGroupBy((prev) => prev.filter(
                       (group) => group.column.displayName !== column.column.displayName
                     ));
                     setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
                   }}
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Operation" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Operation</SelectLabel>
+                      {operations.map((operation) => (
+                        <SelectItem key={operation} value={operation}>
+                          {operation}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
 
               <When condition={selectedColumn?.column.type === 'number'}>
@@ -120,4 +135,4 @@ const UpdateColumn: React.FC<IUpdateEntityProps> = ({ column }) => {
   );
 };
 
-export default UpdateColumn;
+export default Column;

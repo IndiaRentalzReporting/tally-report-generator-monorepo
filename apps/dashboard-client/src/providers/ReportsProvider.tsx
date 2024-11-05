@@ -7,6 +7,8 @@ import {
 } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
+  GeneratedReportColumns,
+  GeneratedReportData,
   GeneratedReportFilters,
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
@@ -49,13 +51,9 @@ interface ReportsProviderState {
   }>, Error>
   isUpdatingReport: boolean
 
-  fetchData: UseMutateAsyncFunction<AxiosResponse<{
-    data: unknown[];
-  }, any>, Error, void, unknown>,
-  fetchColumns: UseMutateAsyncFunction<AxiosResponse<Array<Pick<NonNullable<ReportSelect['queryConfig']>, 'columns'>>>>,
-  fetchFilters: UseMutateAsyncFunction<AxiosResponse<{
-    filters: GeneratedReportFilters[];
-  }, any>, Error, void, unknown>,
+  reportData: Array<GeneratedReportData>,
+  reportColumns: Array<GeneratedReportColumns>,
+  reportFilters: Array<GeneratedReportFilters>,
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -120,16 +118,25 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
   });
 
-  const { mutateAsync: fetchData } = useMutation({
-    mutationFn: () => getReportData(report.id)
+  const { data: reportData = [] } = useQuery({
+    queryFn: () => getReportData(report.id),
+    queryKey: ['reports', 'data', report.id],
+    select: (data) => data.data.data,
+    enabled: !!report.id
   });
 
-  const { mutateAsync: fetchColumns } = useMutation({
-    mutationFn: () => getReportColumns(report.id)
+  const { data: reportColumns = [] } = useQuery({
+    queryFn: () => getReportColumns(report.id),
+    queryKey: ['reports', 'columns', report.id],
+    select: (data) => data.data.columns,
+    enabled: !!report.id
   });
 
-  const { mutateAsync: fetchFilters } = useMutation({
-    mutationFn: () => getReportFilters(report.id)
+  const { data: reportFilters = [] } = useQuery({
+    queryFn: () => getReportFilters(report.id),
+    queryKey: ['reports', 'filters', report.id],
+    select: (data) => data.data.filters,
+    enabled: !!report.id
   });
 
   const availableColumns = useMemo(() => {
@@ -163,7 +170,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       column: dummyColumn,
       operator: undefined,
       params: undefined,
-      join: undefined
+      join: undefined,
+      conditionType: undefined
     };
     setConditions((prev) => [...prev, newCondition]);
   }, [conditions, fetchedColumns]);
@@ -184,9 +192,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     if (hasDummyFilter || filters.length === fetchedColumns.length) return;
 
     const newFilter: Filter = {
+      columnName: undefined,
       column: dummyColumn,
-      filterType: 'default',
-      conditionType: undefined
+      filterType: 'between',
+      conditionType: undefined,
     };
     setFilters((prev) => [...prev, newFilter]);
   }, [filters, fetchedColumns]);
@@ -221,9 +230,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     setGroupBy,
     updateReport,
     isUpdatingReport,
-    fetchColumns,
-    fetchData,
-    fetchFilters
+    reportColumns,
+    reportData,
+    reportFilters
   }), [
     fetchedColumns,
     fetchingColumns,
@@ -244,9 +253,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     setGroupBy,
     updateReport,
     isUpdatingReport,
-    fetchColumns,
-    fetchData,
-    fetchFilters
+    reportColumns,
+    reportData,
+    reportFilters
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;

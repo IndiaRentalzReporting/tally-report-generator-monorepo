@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table';
-
 import {
   Button,
   Table as TB,
@@ -15,19 +14,18 @@ import {
   TableRow
 } from '@trg_package/vite/components';
 import { Trash } from 'lucide-react';
-
 import { useCallback, useEffect, useState } from 'react';
-import { DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
+import { DetailedColumnSelect, GeneratedReportData } from '@trg_package/schemas-reporting/types';
+import UpdateColumn from './Column';
 import { Column, useReports } from '@/providers/ReportsProvider';
-import UpdateColumn from './UpdateColumn';
 
 interface TableProps<TData> {
-  data: TData[];
+  data: TData[]
 }
 
-const Table = <TData,>({ data }: TableProps<TData>) => {
+const Table = <TData extends GeneratedReportData[number]>({ data }: TableProps<TData>) => {
   const {
-    columns, removeColumn, updateReport, isUpdatingReport
+    columns, removeColumn
   } = useReports();
   const [columnDef, setColumnDef] = useState<ColumnDef<TData>[]>([]);
 
@@ -66,7 +64,6 @@ const Table = <TData,>({ data }: TableProps<TData>) => {
   });
 
   return (
-    <div className="p-6 space-y-6">
       <div className="rounded-md border w-full overflow-x-auto">
         <TB>
           <TableHeader>
@@ -116,7 +113,6 @@ const Table = <TData,>({ data }: TableProps<TData>) => {
           </TableBody>
         </TB>
       </div>
-    </div>
   );
 };
 

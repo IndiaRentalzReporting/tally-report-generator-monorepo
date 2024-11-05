@@ -11,13 +11,18 @@ import {
   Calendar,
   MultiSelect,
   Skeleton,
-
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+  Select
 } from '@trg_package/vite/components';
 import { ConditionOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import moment from 'moment';
 import { useQuery } from '@tanstack/react-query';
 import { Condition, useReports } from '@/providers/ReportsProvider';
-import Select from './Select';
 import { getColumnData } from '@/services/Columns';
 
 const Conditions: React.FC = () => {
@@ -73,15 +78,9 @@ const ConditionItem: React.FC<{
   return (
     <div className="flex items-center space-x-4 space-y-2">
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
-        <Select
-          label="Column"
+      <Select
           value={condition.column.displayName}
-          options={availableColumns
-            .map(({ column }) => ({
-              label: column.displayName,
-              value: column.displayName
-            }))}
-          onChange={(id) => {
+          onValueChange={(id) => {
             updateCondition({
               column: fetchedColumns
                 .find((col) => col.column.displayName === id)?.column,
@@ -90,22 +89,45 @@ const ConditionItem: React.FC<{
               params: undefined
             });
           }}
-        />
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Columns" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Columns</SelectLabel>
+              {availableColumns.map(({ column }) => (
+                <SelectItem key={column.displayName} value={column.displayName}>
+                  {column.displayName}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
         <When condition={!!condition.column.id}>
           <Select
-            label="Operator"
             value={condition.operator}
-            options={operations.map((op) => ({
-              label: op,
-              value: op
-            }))}
-            onChange={(operator) => updateCondition({
+            onValueChange={(operator) => updateCondition({
               operator: operator as ReportSelect['conditions'][number]['operator'],
               params: undefined,
               join: undefined
-            },)}
-          />
+            })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Operator" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Operator</SelectLabel>
+                {operations.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           <When condition={!!values && !!Object.keys(values).length}>
             {values && Object.keys(values).map((param) => (
@@ -159,20 +181,26 @@ const ConditionItem: React.FC<{
                     />
             ))}
           </When>
-
           <Select
-            label="Join"
-            value={condition.join || ''}
-            options={['AND', 'OR', 'AND NOT', 'OR NOT'].map((join) => ({
-              label: join,
-              value: join
-            }))}
-            onChange={(join: string) => updateCondition({
+            value={condition.join}
+            onValueChange={(join: string) => updateCondition({
               join: join as ReportSelect['conditions'][number]['join']
-            })
-            }
-            className="justify-self-end"
-          />
+            })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Join" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Join</SelectLabel>
+                {['AND', 'OR', 'AND NOT', 'OR NOT'].map((join) => (
+                  <SelectItem key={join} value={join}>
+                    {join}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </When>
       </div>
 

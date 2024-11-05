@@ -11,6 +11,7 @@ import { ModuleMapper } from './components/utility';
 import DashboardLayout from './components/composite/dashboard/Layout';
 import ReportLayout from './components/composite/reports/Layout';
 import Update from './components/composite/reports/Update';
+import Read from './components/composite/reports/Read';
 
 const App = () => {
   const { permissions, loading } = useAuth();
@@ -34,6 +35,7 @@ const App = () => {
           ))}
         </Route>
         <Route path="/reports" element={<ReportLayout />}>
+          <Route path=":reportId" element={<Read />} />
           <Route path=":reportId/update" element={<Update />} />
         </Route>
         <Route path="*" element={<Navigate to="/dashboard" />} />

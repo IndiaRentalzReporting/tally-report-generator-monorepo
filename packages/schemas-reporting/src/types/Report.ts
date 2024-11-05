@@ -5,16 +5,14 @@ import {
   ReportSelectSchema,
   ReportInsertSchema as InsertSchema,
 } from '@/schemas/reports';
-import { ReportColumnInsertSchema, ColumnOperations } from '@/schemas/reports/columns';
-import { ReportConditionInsertSchema, ConditionOperations } from '@/schemas/reports/conditions';
-import { ReportFilterInsertSchema, FilterOperations } from '@/schemas/reports/filters';
-import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
 import {
-  GeneratedReportColumns,
-  GeneratedReportData,
-  GeneratedReportFilters,
-  RuntimeFilters
-} from '@/schemas/reports/generator';
+  ReportColumnInsertSchema, ColumnOperations, ReportColumnConfig, GeneratedReportColumns
+} from '@/schemas/reports/columns';
+import { ReportConditionInsertSchema, ConditionOperations } from '@/schemas/reports/conditions';
+import {
+  ReportFilterInsertSchema, FilterOperations, GeneratedReportFilters, RuntimeFilters
+} from '@/schemas/reports/filters';
+import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
 
 const ReportInsertSchema = InsertSchema.extend({
   columns: z.array(ReportColumnInsertSchema),
@@ -22,6 +20,8 @@ const ReportInsertSchema = InsertSchema.extend({
   filters: z.array(ReportFilterInsertSchema),
   groupBy: z.array(ReportGroupByInsertSchema)
 });
+
+type GeneratedReportData = { [T in ReportColumnConfig['alias'] ] : string };
 
 export {
   ColumnOperations,

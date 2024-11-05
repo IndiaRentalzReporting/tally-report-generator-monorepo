@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import { Link } from 'react-router-dom';
 import { FormState } from './interface';
 import Action from '@/components/composite/dashboard/Action';
 import SortingButton from '@/components/composite/SortingButton';
@@ -10,9 +11,11 @@ export const columns: ColumnDef<FormState>[] = [
     cell: ({ row }) => {
       const report = row.original;
       return (
-        <span className="flex gap-4 items-center">
-          {report.name}
-        </span>
+        <Link to={`/reports/${report.id}`}>
+          <span className="flex gap-4 items-center">
+            {report.name}
+          </span>
+        </Link>
       );
     }
   },
