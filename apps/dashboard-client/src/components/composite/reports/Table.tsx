@@ -23,7 +23,7 @@ interface TableProps<TData> {
   data: TData[]
 }
 
-const Table = <TData extends GeneratedReportData[number]>({ data }: TableProps<TData>) => {
+const Table = <TData extends GeneratedReportData>({ data }: TableProps<TData>) => {
   const {
     columns, removeColumn
   } = useReports();
