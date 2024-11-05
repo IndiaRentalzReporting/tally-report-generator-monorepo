@@ -21,7 +21,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, Partial<UserSelect>>,
+  req: Request<object,object,object, Partial<UserSelect>>,
   res: Response<{ users: SafeUserSelect[] }>,
   next: NextFunction
 ) => {

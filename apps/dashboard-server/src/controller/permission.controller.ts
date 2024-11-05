@@ -5,7 +5,7 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request<object, Partial<PermissionSelect>>,
+  req: Request<object,object,object, Partial<PermissionSelect>>,
   res: Response<{ permissions: PermissionSelect[] }>,
   next: NextFunction
 ) => {

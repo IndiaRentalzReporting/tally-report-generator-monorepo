@@ -6,7 +6,7 @@ import {
 import { encrypt } from '../utils/crypto';
 
 export const readAll = async (
-  req: Request<object, Partial<ApiKeySelect>>,
+  req: Request<object, object,object, Partial<ApiKeySelect>>,
   res: Response<{ apiKeys: ApiKeySelect[] }>,
   next: NextFunction
 ) => {
