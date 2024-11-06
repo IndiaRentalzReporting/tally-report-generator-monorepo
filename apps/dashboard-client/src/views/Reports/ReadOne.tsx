@@ -20,7 +20,12 @@ import {
   PaginationPrevious,
   PaginationLink,
   PaginationNext,
-  Table
+  Table,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@trg_package/vite/components';
 import clsx from 'clsx';
 import { useReports } from '@/providers/ReportsProvider';
@@ -79,76 +84,84 @@ const ReadReport: React.FC = () => {
   });
 
   return (
-    <>
-      <div className="rounded-md border w-full overflow-x-auto">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length && reportColumns.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className="hover:bg-muted/0"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+    <Card>
+      <CardHeader>
+        <CardTitle>Report</CardTitle>
+        <CardDescription>
+          Your report is ready!
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div className="rounded-md border w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={reportColumns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem
-            onClick={() => table.previousPage()}
-            className={clsx(!table.getCanPreviousPage() && 'pointer-events-none opacity-50')}
-          >
-            <PaginationPrevious/>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink>{pagination.pageIndex}</PaginationLink>
-          </PaginationItem>
-          <PaginationItem
-            onClick={() => table.nextPage()}
-            className={clsx(!table.getCanNextPage() && 'pointer-events-none opacity-50')}
-          >
-            <PaginationNext/>
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length && reportColumns.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    className="hover:bg-muted/0"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={reportColumns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem
+              onClick={() => table.previousPage()}
+              className={clsx(!table.getCanPreviousPage() && 'pointer-events-none opacity-50')}
+            >
+              <PaginationPrevious/>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink>{pagination.pageIndex}</PaginationLink>
+            </PaginationItem>
+            <PaginationItem
+              onClick={() => table.nextPage()}
+              className={clsx(!table.getCanNextPage() && 'pointer-events-none opacity-50')}
+            >
+              <PaginationNext/>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </CardContent>
+    </Card>
   );
 };
 

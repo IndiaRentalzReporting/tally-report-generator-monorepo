@@ -28,7 +28,7 @@ const Create: React.FC = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
       form.reset();
-      navigate(`/dashboard/reports/${data.data.report.id}/update`);
+      navigate(`/dashboard/reports/update/${data.data.report.id}`);
     }
   });
 

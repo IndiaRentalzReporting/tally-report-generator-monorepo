@@ -35,7 +35,7 @@ const Table = <TData extends GeneratedReportData>({ data }: TableProps<TData>) =
       accessorKey: column.column.displayName || 'No Name',
       header: () => (
         <div className="flex items-center gap-4">
-          <span>{column.column.displayName}</span>
+          <span className='w-max'>{column.column.displayName}</span>
           <Button
             className="flex items-center justify-center"
             variant="ghost"
