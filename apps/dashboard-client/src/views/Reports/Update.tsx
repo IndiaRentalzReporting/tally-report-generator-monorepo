@@ -1,6 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
-import { Button, Form, Skeleton } from '@trg_package/vite/components';
+import {
+  Button, Form, Skeleton
+} from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { ExternalLink } from 'lucide-react';
@@ -37,31 +40,31 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   };
 
   return (
-    <Form {...form}>
-      <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
-        <Skeleton isLoading={loadingReport}>
-          <Fields
-            form={form}
-            disabledFields={{
-              baseEntity: true
-            }}
-          />
-          <Link to={`/reports/${reportData?.id}/update`} className='flex items-center gap-2 self-end'>
-            <span className='text-sm'>Edit</span>
-            <ExternalLink size={20} />
-          </Link>
-        </Skeleton>
-        <div className='flex items-center gap-2 justify-between'>
-          <Button
-            isLoading={updatingReport}
-            type="submit"
-            className="mt-auto"
-          >
-            Update
-          </Button>
-        </div>
-      </form>
-    </Form>
+        <Form {...form}>
+          <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+            <Skeleton isLoading={loadingReport}>
+              <Fields
+                form={form}
+                disabledFields={{
+                  baseEntity: true
+                }}
+              />
+              <Link to={`/dashboard/reports/update/${reportData?.id}`} className='flex items-center gap-2 self-end'>
+                <span className='text-sm'>Edit</span>
+                <ExternalLink size={20} />
+              </Link>
+            </Skeleton>
+            <div className='flex items-center gap-2 justify-between'>
+              <Button
+                isLoading={updatingReport}
+                type="submit"
+                className="mt-auto"
+              >
+                Update
+              </Button>
+            </div>
+          </form>
+        </Form>
   );
 };
 

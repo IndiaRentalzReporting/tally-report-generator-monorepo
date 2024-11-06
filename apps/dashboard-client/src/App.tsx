@@ -6,38 +6,51 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { useAuth } from '@trg_package/vite/providers';
-import { Loading, PrivateRoutes } from '@trg_package/vite/components';
-import { ModuleMapper } from './components/utility';
+import { Loading, PrivateRoutes, Skeleton } from '@trg_package/vite/components';
+import React, { Suspense, lazy } from 'react';
+import {
+  ActionSelect,
+  ModuleSelect
+} from '@trg_package/schemas-dashboard/types';
 import DashboardLayout from './components/composite/dashboard/Layout';
-import ReportLayout from './components/composite/reports/Layout';
-import Update from './components/composite/reports/Update';
-import Read from './components/composite/reports/Read';
+import ReportingLayout from './components/composite/reports/Layout';
 
 const App = () => {
   const { permissions, loading } = useAuth();
-
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route element={<PrivateRoutes />}>
         <Route index element={<Navigate to="/dashboard" />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          {permissions.map(({ module: { name }, actions }) => (
-            <Route path={name.toLowerCase()} key={name}>
-              <Route index element={<ModuleMapper module={name} />} />
-              {actions.map<React.ReactNode>((action) => (
-                <Route
-                  path={`${action.toLowerCase()}`}
-                  key={action}
-                  element={<ModuleMapper module={name} action={action} />}
-                />
-              ))}
+        {permissions.map(({ module: { name }, actions }) => (
+          <>
+            <Route path='/dashboard' element={<DashboardLayout />}>
+              <Route path={name.toLowerCase()} key={name}>
+                {actions.map<React.ReactNode>((action) => (
+                  <Route
+                    path={`${action.toLowerCase()}`}
+                    key={action}
+                    element={<ModuleMapper module={name} action={action} />}
+                  />
+                ))}
+              </Route>
             </Route>
-          ))}
-        </Route>
-        <Route path="/reports" element={<ReportLayout />}>
-          <Route path=":reportId" element={<Read />} />
-          <Route path=":reportId/update" element={<Update />} />
-        </Route>
+            {
+              name === 'REPORTS'
+              && <Route path='/dashboard' element={<ReportingLayout/>}>
+                  <Route path={name.toLowerCase()} key={name}>
+                    {actions.map<React.ReactNode>((action) => (
+                      (action === 'READ' || action === 'UPDATE')
+                        && <Route
+                            path={`${action.toLowerCase()}/:reportId`}
+                            key={action}
+                            element={<ModuleMapper module={name} action={`${action}One`} />}
+                          />
+                    ))}
+                  </Route>
+                </Route>
+            }
+          </>
+        ))}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>
     ])
@@ -47,3 +60,23 @@ const App = () => {
 };
 
 export default App;
+
+interface IModuleMapperProps {
+  module: ModuleSelect['name'];
+  action: ActionSelect['name'];
+}
+
+export const ModuleMapper: React.FC<IModuleMapperProps> = ({
+  module,
+  action
+}) => {
+  const Component = lazy(
+    () => import(`./views/${module}/${action}`)
+  );
+
+  return (
+    <Suspense fallback={<Skeleton isLoading className="h-full" />}>
+      <Component />
+    </Suspense>
+  );
+};

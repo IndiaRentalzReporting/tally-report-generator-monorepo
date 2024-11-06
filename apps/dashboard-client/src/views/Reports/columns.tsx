@@ -11,7 +11,7 @@ export const columns: ColumnDef<FormState>[] = [
     cell: ({ row }) => {
       const report = row.original;
       return (
-        <Link to={`/reports/${report.id}`}>
+        <Link to={`/dashboard/reports/read/${report.id}`}>
           <span className="flex gap-4 items-center">
             {report.name}
           </span>

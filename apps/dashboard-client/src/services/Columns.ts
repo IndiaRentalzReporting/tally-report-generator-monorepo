@@ -43,9 +43,13 @@ export const getReportColumns = async (reportId: string): AxiosPromise<{
   columns: Array<GeneratedReportColumns>
 }> => columnsAxios.get(`/read/reportColumns/${reportId}`);
 
-export const getReportData = async (reportId: string): AxiosPromise<{
+export const getReportData = async (
+  reportId: string,
+  pageSize?: number,
+  pageIndex?: number
+): AxiosPromise<{
   data: Array<GeneratedReportData>
-}> => columnsAxios.get(`/read/reportData/${reportId}`);
+}> => columnsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}`);
 
 export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : Array<GeneratedReportFilters>

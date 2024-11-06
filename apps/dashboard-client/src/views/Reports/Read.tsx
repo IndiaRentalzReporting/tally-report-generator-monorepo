@@ -1,5 +1,5 @@
+/* eslint-disable no-nested-ternary */
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 import {
   Card,
   CardHeader,
@@ -7,13 +7,23 @@ import {
   CardDescription,
   CardContent,
   Skeleton,
-  DataTable
+  DataTable,
+  When
 } from '@trg_package/vite/components';
+import React from 'react';
+
 import { services } from '@/services/Reports';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
 
+import { useIsAllowed } from '@/hooks';
+
 const Read: React.FC = () => {
+  const isReadAllowed = useIsAllowed({
+    module: 'Reports',
+    action: 'Read'
+  });
+
   const { data: allActions = [], isFetching: fetchingActions } = useQuery({
     queryFn: () => services.read(),
     select: (data) => data.data.reports.map((report) => SelectFormSchema.parse(report)),
@@ -21,30 +31,32 @@ const Read: React.FC = () => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Reports</CardTitle>
-        <CardDescription>
-          Read, Update or Edit actions based on your permissions
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Skeleton isLoading={fetchingActions}>
-          <DataTable
-            columns={columns}
-            data={allActions}
-            grouping={{
-              rowGrouping: [],
-              setRowGrouping: () => null
-            }}
-            selection={{
-              rowSelection: {},
-              setRowSelection: () => null
-            }}
-          />
-        </Skeleton>
-      </CardContent>
-    </Card>
+    <When condition={isReadAllowed}>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Reports</CardTitle>
+          <CardDescription>
+            Read, Update or Edit actions based on your permissions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Skeleton isLoading={fetchingActions}>
+            <DataTable
+              columns={columns}
+              data={allActions}
+              grouping={{
+                rowGrouping: [],
+                setRowGrouping: () => null
+              }}
+              selection={{
+                rowSelection: {},
+                setRowSelection: () => null
+              }}
+            />
+          </Skeleton>
+        </CardContent>
+      </Card>
+    </When>
   );
 };
 

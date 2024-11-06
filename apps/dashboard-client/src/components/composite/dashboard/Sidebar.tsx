@@ -14,7 +14,8 @@ import {
   SidebarMenuButton,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarSeparator
+  SidebarSeparator,
+  SidebarGroupLabel
 } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
@@ -40,6 +41,7 @@ const Sidebar: React.FC = () => {
       </SidebarHeader>
       <SidebarContent className="flex-1">
         <SidebarGroup>
+          <SidebarGroupLabel>Routes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map(({

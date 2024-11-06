@@ -42,9 +42,15 @@ const Read: React.FC = () => {
   const form = useForm<FormState>({
     resolver: zodResolver(formSchema),
   });
+
   const isUpdateAllowed = useIsAllowed({
     module: 'Users',
     action: 'Update'
+  });
+
+  const isReadAllowed = useIsAllowed({
+    module: 'Users',
+    action: 'Read'
   });
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -86,81 +92,83 @@ const Read: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Users</CardTitle>
-        <CardDescription>
-          Read, Update or Delete users based on your permissions
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="flex flex-col gap-4"
-          >
-            <When condition={isUpdateAllowed}>
-              <FormField
-                control={form.control}
-                name="id"
-                render={({ field }) => (
-                  <FormItem className='flex-grow'>
-                    <FormLabel>Base Entity</FormLabel>
-                    <FormControl>
-                      <Select
-                        {...field}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a Role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Roles</SelectLabel>
-                            <Skeleton isLoading={fetchingRoles}>
-                              {allRoles.map((role) => (
-                                <SelectItem key={role.id} value={role.id}>
-                                  {role.name}
-                                </SelectItem>
-                              ))}
-                            </Skeleton>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </When>
-            <Skeleton isLoading={fetchingUsers}>
-              <DataTable
-                columns={columns}
-                data={allUsers}
-                selection={{
-                  rowSelection,
-                  setRowSelection
-                }}
-                grouping={{
-                  rowGrouping: [],
-                  setRowGrouping: () => null
-                }}
-              />
-            </Skeleton>
-            <When condition={isUpdateAllowed}>
-              <Button
-                className="mt-8 max-w-fit"
-                type="submit"
-                isLoading={assignRoleLoading}
-              >
-                Assign Role
-              </Button>
-            </When>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <When condition={isReadAllowed}>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Users</CardTitle>
+          <CardDescription>
+            Read, Update or Delete users based on your permissions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="flex flex-col gap-4"
+            >
+              <When condition={isUpdateAllowed}>
+                <FormField
+                  control={form.control}
+                  name="id"
+                  render={({ field }) => (
+                    <FormItem className='flex-grow'>
+                      <FormLabel>Base Entity</FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a Role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Roles</SelectLabel>
+                              <Skeleton isLoading={fetchingRoles}>
+                                {allRoles.map((role) => (
+                                  <SelectItem key={role.id} value={role.id}>
+                                    {role.name}
+                                  </SelectItem>
+                                ))}
+                              </Skeleton>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </When>
+              <Skeleton isLoading={fetchingUsers}>
+                <DataTable
+                  columns={columns}
+                  data={allUsers}
+                  selection={{
+                    rowSelection,
+                    setRowSelection
+                  }}
+                  grouping={{
+                    rowGrouping: [],
+                    setRowGrouping: () => null
+                  }}
+                />
+              </Skeleton>
+              <When condition={isUpdateAllowed}>
+                <Button
+                  className="mt-8 max-w-fit"
+                  type="submit"
+                  isLoading={assignRoleLoading}
+                >
+                  Assign Role
+                </Button>
+              </When>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </When>
   );
 };
 
