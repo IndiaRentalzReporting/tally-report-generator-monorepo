@@ -43,7 +43,6 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   ): NavItemWithChildren[] => p.map((permission) => {
     const {
       module: { name, icon }
-      // actions
     } = permission;
     const moduleName = name.toLowerCase();
     // const children: NavItem[] = actions.map((action) => {
@@ -56,7 +55,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
     //   };
     // });
     return {
-      to: `/dashboard/${moduleName}`,
+      to: `/dashboard/${moduleName}/read`,
       name,
       children: [],
       icon

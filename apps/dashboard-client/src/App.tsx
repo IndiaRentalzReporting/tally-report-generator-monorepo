@@ -13,28 +13,44 @@ import {
   ModuleSelect
 } from '@trg_package/schemas-dashboard/types';
 import DashboardLayout from './components/composite/dashboard/Layout';
+import ReportingLayout from './components/composite/reports/Layout';
 
 const App = () => {
   const { permissions, loading } = useAuth();
-
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route element={<PrivateRoutes />}>
         <Route index element={<Navigate to="/dashboard" />} />
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          {permissions.map(({ module: { name }, actions }) => (
-            <Route path={name.toLowerCase()} key={name}>
-              <Route index element={<ModuleMapper module={name} />} />
-              {actions.map<React.ReactNode>((action) => (
-                <Route
-                  path={`${action.toLowerCase()}`}
-                  key={action}
-                  element={<ModuleMapper module={name} action={action} />}
-                />
-              ))}
+        {permissions.map(({ module: { name }, actions }) => (
+          <>
+            <Route path='/dashboard' element={<DashboardLayout />}>
+              <Route path={name.toLowerCase()} key={name}>
+                {actions.map<React.ReactNode>((action) => (
+                  <Route
+                    path={`${action.toLowerCase()}`}
+                    key={action}
+                    element={<ModuleMapper module={name} action={action} />}
+                  />
+                ))}
+              </Route>
             </Route>
-          ))}
-        </Route>
+            {
+              name === 'REPORTS'
+              && <Route path='/dashboard' element={<ReportingLayout/>}>
+                  <Route path={name.toLowerCase()} key={name}>
+                    {actions.map<React.ReactNode>((action) => (
+                      (action === 'READ' || action === 'UPDATE')
+                        && <Route
+                            path={`${action.toLowerCase()}/:reportId`}
+                            key={action}
+                            element={<ModuleMapper module={name} action={`${action}One`} />}
+                          />
+                    ))}
+                  </Route>
+                </Route>
+            }
+          </>
+        ))}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>
     ])
@@ -47,7 +63,7 @@ export default App;
 
 interface IModuleMapperProps {
   module: ModuleSelect['name'];
-  action?: ActionSelect['name'];
+  action: ActionSelect['name'];
 }
 
 export const ModuleMapper: React.FC<IModuleMapperProps> = ({
@@ -55,7 +71,7 @@ export const ModuleMapper: React.FC<IModuleMapperProps> = ({
   action
 }) => {
   const Component = lazy(
-    () => import(`./views/${module}${action ? `/${action}` : ''}`)
+    () => import(`./views/${module}/${action}`)
   );
 
   return (

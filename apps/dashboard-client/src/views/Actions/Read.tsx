@@ -7,13 +7,20 @@ import {
   CardDescription,
   CardContent,
   Skeleton,
-  DataTable
+  DataTable,
+  When
 } from '@trg_package/vite/components';
 import { services } from '@/services/Actions';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
+import { useIsAllowed } from '@/hooks';
 
 const Read: React.FC = () => {
+  const isReadAllowed = useIsAllowed({
+    module: 'Actions',
+    action: 'Read'
+  });
+
   const { data: allActions = [], isFetching: fetchingActions } = useQuery({
     queryFn: () => services.read(),
     select: (data) => data.data.actions.map((action) => SelectFormSchema.parse(action)),
@@ -21,30 +28,32 @@ const Read: React.FC = () => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Actions</CardTitle>
-        <CardDescription>
-          Read, Update or Edit actions based on your permissions
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Skeleton isLoading={fetchingActions}>
-          <DataTable
-            columns={columns}
-            data={allActions}
-            grouping={{
-              rowGrouping: [],
-              setRowGrouping: () => null
-            }}
-            selection={{
-              rowSelection: {},
-              setRowSelection: () => null
-            }}
-          />
-        </Skeleton>
-      </CardContent>
-    </Card>
+    <When condition={isReadAllowed}>
+      <Card>
+        <CardHeader>
+          <CardTitle>All Actions</CardTitle>
+          <CardDescription>
+            Read, Update or Edit actions based on your permissions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Skeleton isLoading={fetchingActions}>
+            <DataTable
+              columns={columns}
+              data={allActions}
+              grouping={{
+                rowGrouping: [],
+                setRowGrouping: () => null
+              }}
+              selection={{
+                rowSelection: {},
+                setRowSelection: () => null
+              }}
+            />
+          </Skeleton>
+        </CardContent>
+      </Card>
+    </When>
   );
 };
 

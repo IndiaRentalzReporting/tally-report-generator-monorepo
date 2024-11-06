@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import {
-  Button, Form, Skeleton, Card, CardContent, CardDescription, CardHeader, CardTitle
+  Button, Form, Skeleton
 } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,11 +11,6 @@ import { Link } from 'react-router-dom';
 import { services } from '@/services/Reports';
 import Fields from './Fields';
 import { FormState, SelectFormSchema, SelectState } from './interface';
-import DataTable from '@/components/composite/reports/Table';
-import { useReports } from '@/providers/ReportsProvider';
-import Conditions from '@/components/composite/reports/Conditions';
-import Filters from '@/components/composite/reports/Filters';
-import GroupBy from '@/components/composite/reports/GroupBy';
 
 const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const queryClient = useQueryClient();
@@ -45,9 +40,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   };
 
   return (
-    isReportRoute
-      ? <UpdateReport/>
-      : <Form {...form}>
+        <Form {...form}>
           <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
             <Skeleton isLoading={loadingReport}>
               <Fields
@@ -56,7 +49,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
                   baseEntity: true
                 }}
               />
-              <Link to={`/dashboard/reports/update?id=${reportData?.id}`} className='flex items-center gap-2 self-end'>
+              <Link to={`/dashboard/reports/update/${reportData?.id}`} className='flex items-center gap-2 self-end'>
                 <span className='text-sm'>Edit</span>
                 <ExternalLink size={20} />
               </Link>
@@ -76,26 +69,3 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
 };
 
 export default Update;
-
-const UpdateReport: React.FC = () => {
-  const { updateReport, isUpdatingReport } = useReports();
-  return (
-    <main className="flex flex-col space-y-6">
-      <DataTable data={[{}]} />
-      <Card>
-        <CardHeader>
-          <CardTitle>Report Settings</CardTitle>
-          <CardDescription />
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <GroupBy />
-            <Conditions />
-            <Filters />
-          </div>
-        </CardContent>
-      </Card>
-      <Button className='w-min' onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
-    </main>
-  );
-};
