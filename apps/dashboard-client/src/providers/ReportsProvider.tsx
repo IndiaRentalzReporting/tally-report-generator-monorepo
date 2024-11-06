@@ -3,6 +3,9 @@ import React, {
   createContext
 } from 'react';
 import {
+  keepPreviousData,
+  QueryObserverResult,
+  RefetchOptions,
   UseMutateAsyncFunction, useMutation, useQuery, useQueryClient
 } from '@tanstack/react-query';
 import {
@@ -13,6 +16,7 @@ import {
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
+import { PaginationState } from '@tanstack/react-table';
 import {
   services as columnService, getReportData, getReportColumns, getReportFilters
 } from '@/services/Columns';
@@ -52,8 +56,18 @@ interface ReportsProviderState {
   isUpdatingReport: boolean
 
   reportData: Array<GeneratedReportData>,
+  fetchReportData: (options?: RefetchOptions) =>
+  Promise<QueryObserverResult<Array<GeneratedReportData>>>,
+  pagination: PaginationState,
+  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
+
   reportColumns: Array<GeneratedReportColumns>,
+  fetchReportColumns: (options?: RefetchOptions) =>
+  Promise<QueryObserverResult<Array<GeneratedReportColumns>>>,
+
   reportFilters: Array<GeneratedReportFilters>,
+  fetchReportFilters: (options?: RefetchOptions) =>
+  Promise<QueryObserverResult<Array<GeneratedReportFilters>>>
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -118,25 +132,31 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
   });
 
-  const { data: reportData = [] } = useQuery({
-    queryFn: () => getReportData(report.id),
-    queryKey: ['reports', 'data', report.id],
-    select: (data) => data.data.data,
-    enabled: !!report.id
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
   });
 
-  const { data: reportColumns = [] } = useQuery({
+  const { data: reportData = [], refetch: fetchReportData, isPlaceholderData } = useQuery({
+    queryFn: () => getReportData(report.id, pagination.pageSize, pagination.pageIndex),
+    queryKey: ['reports', 'data', report.id, pagination.pageSize, pagination.pageIndex],
+    select: (data) => data.data.data,
+    placeholderData: keepPreviousData,
+    enabled: false
+  });
+
+  const { data: reportColumns = [], refetch: fetchReportColumns } = useQuery({
     queryFn: () => getReportColumns(report.id),
     queryKey: ['reports', 'columns', report.id],
     select: (data) => data.data.columns,
-    enabled: !!report.id
+    enabled: false
   });
 
-  const { data: reportFilters = [] } = useQuery({
+  const { data: reportFilters = [], refetch: fetchReportFilters } = useQuery({
     queryFn: () => getReportFilters(report.id),
     queryKey: ['reports', 'filters', report.id],
     select: (data) => data.data.filters,
-    enabled: !!report.id
+    enabled: false
   });
 
   const availableColumns = useMemo(() => {
@@ -218,21 +238,33 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     addColumn,
     removeColumn,
     updateColumn,
+
     conditions,
     addCondition,
     removeCondition,
     updateCondition,
+
     filters,
     addFilter,
     removeFilter,
     updateFilter,
+
     groupBy,
     setGroupBy,
     updateReport,
+
     isUpdatingReport,
+
     reportColumns,
+    fetchReportColumns,
+
     reportData,
-    reportFilters
+    pagination,
+    setPagination,
+    fetchReportData,
+
+    reportFilters,
+    fetchReportFilters
   }), [
     fetchedColumns,
     fetchingColumns,
@@ -255,7 +287,12 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     isUpdatingReport,
     reportColumns,
     reportData,
-    reportFilters
+    pagination,
+    setPagination,
+    reportFilters,
+    fetchReportColumns,
+    fetchReportData,
+    fetchReportFilters
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;

@@ -17,7 +17,6 @@ export function validateSchema(validator: IValidator) {
         req.params = await validator.params.parseAsync(req.params);
       }
       if (validator.query) {
-        console.log(req.query);
         req.query = await validator.query.parseAsync(req.query);
       }
       return next();
@@ -26,7 +25,6 @@ export function validateSchema(validator: IValidator) {
       if (err instanceof ZE) {
         error = new ZodError(err.message);
       }
-      console.error('Could not parse the request');
       next(error);
     }
   };

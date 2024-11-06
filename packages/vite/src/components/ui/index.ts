@@ -23,3 +23,4 @@ export * from './sidebar';
 export * from './popover';
 export * from './command';
 export * from './calendar';
+export * from './pagination';
