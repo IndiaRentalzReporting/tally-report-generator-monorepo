@@ -97,7 +97,7 @@ export function getQueryConfig(tableQuery : string, report : ReportInsert) : Rep
   const groupByQuery = (groupBy ?? []).length > 0 ? getGroupByQuery(groupBy ?? []) : ' ';
   const filterConfig = (filters ?? []).length > 0 ? getFilterConfig(filters ?? []) : null;
 
-  const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} {WHERE} ${groupByQuery} {HAVING}`;
+  const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} {WHERE} ${groupByQuery} {HAVING} {LIMIT}`;
 
   const columnArr : NonNullable<ReportSelect['queryConfig']>['columns'] = [];
   columns?.forEach((e) => {

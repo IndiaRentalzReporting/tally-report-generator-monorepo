@@ -5,7 +5,7 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request<object, Partial<ActionSelect>>,
+  req: Request<object, object,object,Partial<ActionSelect>>,
   res: Response<{ actions: ActionSelect[] }>,
   next: NextFunction
 ) => {

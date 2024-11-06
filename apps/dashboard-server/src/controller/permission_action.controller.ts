@@ -22,7 +22,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, Partial<PermissionActionSelect>>,
+  req: Request<object,object,object, Partial<PermissionActionSelect>>,
   res: Response<{ permissionActions: PermissionActionSelect[] }>,
   next: NextFunction
 ) => {

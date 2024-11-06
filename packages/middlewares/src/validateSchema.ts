@@ -7,17 +7,17 @@ interface IValidator {
   params?: AnyZodObject;
   query?: AnyZodObject;
 }
-export function validateSchema(validator: IValidator) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+export function validateSchema<TBody = any, TParams = any, TQuery = any>(validator: IValidator) {
+  return async (req: Request<TParams,any,TBody,TQuery>, res: Response, next: NextFunction) => {
     try {
       if (validator.body) {
-        req.body = await validator.body.parseAsync(req.body);
+        req.body = await validator.body.parseAsync(req.body) as TBody;
       }
       if (validator.params) {
-        req.params = await validator.params.parseAsync(req.params);
+        req.params = await validator.params.parseAsync(req.params) as TParams;
       }
       if (validator.query) {
-        req.query = await validator.query.parseAsync(req.query);
+        req.query = await validator.query.parseAsync(req.query) as TQuery;
       }
       return next();
     } catch (err) {

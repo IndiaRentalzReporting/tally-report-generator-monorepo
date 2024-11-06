@@ -18,7 +18,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, Partial<ModuleSelect>>,
+  req: Request<object,object,object, Partial<ModuleSelect>>,
   res: Response<{ modules: ModuleSelect[] }>,
   next: NextFunction
 ) => {

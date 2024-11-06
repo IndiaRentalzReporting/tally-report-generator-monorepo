@@ -28,7 +28,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, Partial<CompanySelect>>,
+  req: Request<object, object,object, Partial<CompanySelect>>,
   res: Response<{ companies: CompanySelect[] }>,
   next: NextFunction
 ) => {

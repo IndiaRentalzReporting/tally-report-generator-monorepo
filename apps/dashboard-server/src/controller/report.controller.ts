@@ -35,7 +35,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, Partial<ReportSelect>>,
+  req: Request<object, object,object,Partial<ReportSelect>>,
   res: Response<{ reports: ReportSelect[] }>,
   next: NextFunction
 ) => {
@@ -137,7 +137,7 @@ export const getAllTables = async (
 };
 
 export const getReportData = async (
-  req : Request<Pick<ReportSelect,'id'>,object,{ filters : RuntimeFilters }>,
+  req : Request<Pick<ReportSelect,'id'>,object,object,{ pageSize: number,pageIndex : number,filters? : RuntimeFilters }>,
   res : Response<{ data: Array<GeneratedReportData> }>,
   next: NextFunction
 ) => {
@@ -152,12 +152,13 @@ export const getReportData = async (
     if (queryConfig === null || queryConfig.dataSource === '') throw new CustomError('This report is not configured yet, please configure the report to view it',400);
 
     const {
-      filters
-    } = req.body;
+      filters,pageIndex,pageSize
+    } = req.query;
 
     const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    const data = await req.reportService.runConfigQuery<Array<GeneratedReportData>>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery));
+    const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex - 1))}` : '';
+    const data = await req.reportService.runConfigQuery<Array<GeneratedReportData>>(queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery).replace('{LIMIT}',limitQuery));
 
     return res.json({
       data
