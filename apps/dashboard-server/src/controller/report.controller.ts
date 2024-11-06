@@ -157,7 +157,7 @@ export const getReportData = async (
 
     const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex - 1))}` : '';
+    const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex))}` : '';
     const query = queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery);
     const data = await req.reportService.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));
     const totalCount = await req.reportService.runConfigQuery<Array<{ totalCount : number }>>(`SELECT COUNT(*) as "totalCount" FROM (${query.replace('{LIMIT}','')})`);

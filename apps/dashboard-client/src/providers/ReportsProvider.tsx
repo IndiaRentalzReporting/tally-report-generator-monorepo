@@ -55,9 +55,10 @@ interface ReportsProviderState {
   }>, Error>
   isUpdatingReport: boolean
 
-  reportData: Array<GeneratedReportData>,
-  fetchReportData: (options?: RefetchOptions) =>
-  Promise<QueryObserverResult<Array<GeneratedReportData>>>,
+  reportData: {
+    data: Array<GeneratedReportData>,
+    totalCount: number
+  },
   pagination: PaginationState,
   setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
 
@@ -137,12 +138,16 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     pageSize: 10,
   });
 
-  const { data: reportData = [], refetch: fetchReportData, isPlaceholderData } = useQuery({
-    queryFn: () => getReportData(report.id, pagination.pageSize, pagination.pageIndex),
-    queryKey: ['reports', 'data', report.id, pagination.pageSize, pagination.pageIndex],
-    select: (data) => data.data.data,
-    placeholderData: keepPreviousData,
-    enabled: false
+  const {
+    data: reportData = {
+      data: [],
+      totalCount: 0
+    },
+  } = useQuery({
+    queryFn: () => getReportData(report.id, pagination),
+    queryKey: ['reports', 'data', report.id, pagination],
+    select: (data) => data.data,
+    placeholderData: keepPreviousData
   });
 
   const { data: reportColumns = [], refetch: fetchReportColumns } = useQuery({
@@ -261,7 +266,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     reportData,
     pagination,
     setPagination,
-    fetchReportData,
 
     reportFilters,
     fetchReportFilters
@@ -291,7 +295,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     setPagination,
     reportFilters,
     fetchReportColumns,
-    fetchReportData,
     fetchReportFilters
   ]);
 

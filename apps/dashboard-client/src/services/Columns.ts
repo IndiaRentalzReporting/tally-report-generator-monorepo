@@ -45,10 +45,16 @@ export const getReportColumns = async (reportId: string): AxiosPromise<{
 
 export const getReportData = async (
   reportId: string,
-  pageSize?: number,
-  pageIndex?: number
+  {
+    pageSize,
+    pageIndex
+  }:{
+    pageSize: number,
+    pageIndex: number
+  }
 ): AxiosPromise<{
-  data: Array<GeneratedReportData>
+  data: Array<GeneratedReportData>,
+  totalCount: number
 }> => columnsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}`);
 
 export const getReportFilters = async (reportId: string): AxiosPromise<{

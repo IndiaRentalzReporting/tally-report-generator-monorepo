@@ -34,7 +34,6 @@ import SortingButton from '@/components/composite/SortingButton';
 const ReadReport: React.FC = () => {
   const {
     fetchReportColumns,
-    fetchReportData,
     fetchReportFilters,
     reportData,
     reportColumns,
@@ -43,7 +42,6 @@ const ReadReport: React.FC = () => {
   } = useReports();
 
   useEffect(() => {
-    fetchReportData();
     fetchReportColumns();
     fetchReportFilters();
   }, []);
@@ -67,18 +65,16 @@ const ReadReport: React.FC = () => {
   }, [reportColumns, createColumnDef]);
 
   const table = useReactTable({
-    data: reportData,
+    data: reportData.data,
     columns: columnDef,
     manualPagination: true,
-    rowCount: reportData.length,
+    rowCount: reportData.totalCount,
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     state: {
-      sorting
-    },
-    initialState: {
+      sorting,
       pagination
     }
   });
@@ -150,7 +146,7 @@ const ReadReport: React.FC = () => {
               <PaginationPrevious/>
             </PaginationItem>
             <PaginationItem>
-              <PaginationLink>{pagination.pageIndex}</PaginationLink>
+              <PaginationLink>{pagination.pageIndex + 1}</PaginationLink>
             </PaginationItem>
             <PaginationItem
               onClick={() => table.nextPage()}
