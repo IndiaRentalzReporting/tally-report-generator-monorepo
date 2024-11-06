@@ -144,9 +144,6 @@ const ConditionItem: React.FC<{
                         <Button
                           variant="outline"
                           className={`justify-start text-left font-normal ${!condition.params && 'text-muted-foreground'} overflow-x-auto`}
-                          style={{
-                            scrollbarWidth: 'none',
-                          }}
                         >
                           <CalendarIcon className="mr-2 h-4 min-w-4" />
                           {
@@ -237,9 +234,6 @@ const ConditionParamsSelect = ({
             <Button
               variant="outline"
               className={`justify-start text-left font-normal ${!condition.params && 'text-muted-foreground'} overflow-x-auto`}
-              style={{
-                scrollbarWidth: 'none',
-              }}
             >
               <CalendarIcon className="mr-2 h-4 min-w-4" />
               {
