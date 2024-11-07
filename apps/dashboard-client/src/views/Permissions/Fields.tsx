@@ -1,10 +1,16 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ColumnDef } from '@tanstack/react-table';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import {
-  CardDescription,
-  CardHeader,
+  DataTable,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Label,
   Select,
   SelectContent,
   SelectGroup,
@@ -12,20 +18,15 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  Skeleton,
-  Switch,
-  DataTable,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+  Skeleton
 } from '@trg_package/vite/components';
-import { services as moduleService } from '@/services/Modules';
+import { useFieldArray } from 'react-hook-form';
 import { services as roleService } from '@/services/Roles';
+import { services as moduleService } from '@/services/Modules';
 import { services as actionService } from '@/services/Actions';
 import { StateAsProps } from './interface';
+import { columns } from './columns';
+import { SortingButton } from '@/components/composite';
 
 interface ColumnData {
   module_name: ModuleSelect['name'];
@@ -33,147 +34,135 @@ interface ColumnData {
 }
 
 const Fields: React.FC<StateAsProps> = ({
-  modulePermissions,
-  setModulePermissions,
   form
 }) => {
-  const [columns, setColumns] = React.useState<ColumnDef<ColumnData>[]>([]);
-  const [tableData, setTableData] = React.useState<Array<ColumnData>>([]);
+  const { fields, append, replace } = useFieldArray({
+    control: form.control,
+    name: 'permissions'
+  });
 
-  const { data: modules, isFetching: fetchingModules } = useQuery({
+  const { data: roles = [], isFetching: fetchingRoles } = useQuery({
+    queryFn: async () => roleService.read(),
+    select: (data) => data.data.roles.filter((role) => !role.permission.length),
+    queryKey: ['roles', 'getAll']
+  });
+
+  const { data: actions = [], isFetching: fetchingActions } = useQuery({
+    queryFn: () => actionService.read(),
+    select: (data) => data.data.actions,
+    queryKey: ['Actions', 'getAll']
+  });
+
+  const { data: modules = [], isFetching: fetchingModules } = useQuery({
     queryFn: () => moduleService.read(),
-    select(data) {
-      return data.data.modules;
-    },
+    select: (data) => data.data.modules,
     queryKey: ['Modules', 'getAll']
   });
 
   useEffect(() => {
-    if (!modules) return;
-    const columnData = modules.map(({ name: module_name, id: module_id }) => ({
-      module_name,
-      module_id
+    if (modules && !fetchingModules) {
+      replace([]);
+      modules.map((module) => {
+        append({
+          module: {
+            id: module.id,
+            name: module.name
+          },
+          role: fields[0]?.role ?? { name: 'No name role', id: 'No id role' },
+          permissionAction: actions.map(({ id, name }) => ({
+            action: {
+              id, name, checked: false, static: false
+            }
+          }))
+        });
+      });
+    }
+  }, [modules, fetchingModules, form, actions, append, replace]);
+
+  console.log(form.getValues('permissions'));
+
+  console.log(fields);
+
+  const handleRoleChange = (newRoleId: string) => {
+    const values = form.getValues('permissions').map((permission) => ({
+      ...permission,
+      role: { id: newRoleId, name: roles.find((role) => role.id === newRoleId)?.name ?? 'No name role' }
     }));
-
-    setTableData(columnData);
-  }, [modules]);
-
-  const { data: allRolesWithNoPermission, isFetching: fetchingRoles } = useQuery({
-    queryFn: async () => roleService.read(),
-    select: (data) => data.data.roles.filter((r) => (!form.getValues('role.id') ? r.permission.length === 0 : true)),
-    queryKey: ['Roles', 'getAll']
-  });
-
-  const handlePermissionChange = useCallback(
-    (checked: boolean, module_id: string, action_id: string) => {
-      setModulePermissions((prev) => ({
-        ...prev,
-        [module_id]: {
-          ...prev[module_id],
-          [action_id]: checked
-        }
-      }));
-    },
-    [setModulePermissions]
-  );
-
-  const { data: actions, isFetching: fetchingActions } = useQuery({
-    queryFn: () => actionService.read(),
-    select(data) {
-      return data.data.actions;
-    },
-    queryKey: ['Actions', 'getAll']
-  });
-
-  useEffect(() => {
-    if (!actions) return;
-    const actionColumns = actions.map<ColumnDef<ColumnData>>((action) => ({
-      id: `Action${action.id}`,
-      header: action.name,
-      // eslint-disable-next-line react/no-unstable-nested-components
-      cell: ({
-        row: {
-          original: { module_id }
-        }
-      }) => {
-        let isCheckedByDefault = false;
-        const module = modulePermissions[module_id];
-        if (module) {
-          isCheckedByDefault = module[action.id] ?? false;
-        }
-        return (
-          <Switch
-            checked={!!isCheckedByDefault}
-            onCheckedChange={(checked) => handlePermissionChange(checked, module_id, action.id)}
-          />
-        );
-      }
-    }));
-    setColumns([
-      {
-        accessorKey: 'module_name',
-        header: 'ModuleSelect Name'
-      },
-      ...actionColumns
-    ]);
-  }, [actions, modulePermissions, handlePermissionChange]);
+    form.setValue(
+      'permissions',
+      values
+    );
+  };
 
   return (
-    <>
-        <FormField
-          control={form.control}
-          name="role.id"
-          render={({ field }) => (
-            <FormItem className='flex-grow'>
-              <FormLabel>Role</FormLabel>
-              <FormControl>
-                <Select
-                  {...field}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Roles</SelectLabel>
-                      <Skeleton isLoading={fetchingRoles}>
-                        {allRolesWithNoPermission?.map((rwnp) => (
-                          <SelectItem key={rwnp.id} value={rwnp.id}>
-                            {rwnp.name}
-                          </SelectItem>
-                        ))}
-                      </Skeleton>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      <CardHeader className="px-0 py-2">
-        <CardDescription>Assign permissions to your permission</CardDescription>
-      </CardHeader>
-      <Skeleton
-        isLoading={fetchingActions || fetchingModules}
-        className="w-full h-20"
-      >
-        <DataTable
-          columns={columns}
-          data={tableData}
-          grouping={{
-            rowGrouping: [],
-            setRowGrouping: () => null
-          }}
-          selection={{
-            rowSelection: {},
-            setRowSelection: () => null
-          }}
-        />
-      </Skeleton>
-    </>
+    <div>
+      <FormField
+        control={form.control}
+        name="permissions.0.role.id"
+        render={({ field }) => (
+          <FormItem className='flex-grow'>
+            <FormLabel>Role</FormLabel>
+            <FormControl>
+              <Select
+                {...field}
+                onValueChange={handleRoleChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Roles</SelectLabel>
+                    <Skeleton isLoading={fetchingRoles}>
+                      {roles?.map((rwnp) => (
+                        <SelectItem key={rwnp.id} value={rwnp.id}>
+                          {rwnp.name}
+                        </SelectItem>
+                      ))}
+                    </Skeleton>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <DataTable
+        columns={[...columns
+          .filter((column) => column.id !== 'Role Name')
+          .filter((column) => column.id !== 'Actions on Modules'), {
+          id: 'Actions on Modules',
+          accessorKey: 'permissionActions',
+          header: ({ column }) => <SortingButton column={column} label="Actions" />,
+          cell: ({ row }) => {
+            const { permissionAction } = row.original;
+            const permissionActions = permissionAction.map((p) => p.action.name);
+            return (
+              <div className="flex items-center gap-2">
+                {permissionActions.map((action, index) => (
+                  <div>
+                    <Label>{action}</Label>
+                    <Input type='checkbox' {...form.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)} />
+                  </div>
+                ))}
+              </div>
+            );
+          }
+        }
+        ]}
+        data={fields}
+        grouping={{
+          rowGrouping: [],
+          setRowGrouping: () => null
+        }}
+        selection={{
+          rowSelection: {},
+          setRowSelection: () => null
+        }}
+      />
+    </div>
   );
 };
 

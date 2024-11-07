@@ -15,7 +15,6 @@ import { services } from '@/services/Permissions';
 import { useIsAllowed } from '@/hooks';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
-import Fields from './Fields copy';
 
 const Read: React.FC = () => {
   const isReadAllowed = useIsAllowed({
@@ -28,7 +27,13 @@ const Read: React.FC = () => {
     queryFn: () => services.read(),
     select: (data) => data.data.permissions
       .filter(({ module }) => !!module)
-      .map((permission) => SelectFormSchema.parse(permission)),
+      .map((permission) => SelectFormSchema.parse({
+        ...permission,
+        permissionId: permission.id,
+        permissionAction: permission.permissionAction.map(
+          (pa) => ({ action: { ...pa.action, checked: true } })
+        )
+      })),
     queryKey: ['Permissions', 'getAll']
   });
 
@@ -62,4 +67,4 @@ const Read: React.FC = () => {
   );
 };
 
-export default Fields;
+export default Read;

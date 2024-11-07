@@ -1,7 +1,5 @@
-import { Dispatch, SetStateAction } from 'react';
 import {
   ActionSelectSchema,
-  ModulePermissions,
   ModuleSelectSchema,
   PermissionInsertSchema,
   PermissionSelectSchema,
@@ -50,22 +48,10 @@ export const SelectFormSchema = PermissionSelectSchema.pick({
 });
 export type SelectState = z.infer<typeof SelectFormSchema>;
 
-export type FormState = InsertState | SelectState;
-
-export const initialState: InsertState = {
-  module: {
-    name: '',
-    id: ''
-  },
-  permissionAction: [],
-  role: {
-    name: '',
-    id: ''
-  }
+export type FormState = {
+  permissions: Array<InsertState | SelectState>
 };
 
 export interface StateAsProps {
-  modulePermissions: ModulePermissions;
-  setModulePermissions: Dispatch<SetStateAction<ModulePermissions>>;
   form: UseFormReturn<FormState>
 }

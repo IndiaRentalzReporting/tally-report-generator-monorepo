@@ -1,14 +1,14 @@
 import { ColumnDef } from '@tanstack/react-table';
 import Action from '@/components/composite/dashboard/Action';
 import { SortingButton } from '@/components/composite/SortingButton';
-import { FormState } from './interface';
+import { InsertState, SelectState } from './interface';
 
-export const columns: ColumnDef<FormState>[] = [
+export const columns: ColumnDef<InsertState | SelectState>[] = [
   {
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
     header: ({ column }) => <SortingButton column={column} label="Role Name" />,
-    getGroupingValue: (row) => `${row.role.name}}`
+    getGroupingValue: (row) => `${row.role?.name}}`
   },
   {
     id: 'Module Name',
