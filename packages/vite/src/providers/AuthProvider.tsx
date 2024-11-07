@@ -15,9 +15,9 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
+import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
-import { useToast } from '$/lib/hooks';
 
 interface AuthProviderState {
   user: DetailedUser | null;

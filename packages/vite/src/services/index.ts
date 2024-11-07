@@ -27,16 +27,12 @@ const services = {
     tenant: TenantInsert;
     user: UserInsert;
   }): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/onboard', data),
-  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> =>
-    authAxios.post('/sign-up', data),
-  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> =>
-    authAxios.post('/sign-in', data),
+  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
+  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/sign-in', data),
   forgotPassword: (data: {
     email: UserSelect['email'];
-  }): AxiosPromise<{ message: string }> =>
-    authAxios.post('/forgot-password', data),
-  checkResetPassword: (token: string): AxiosPromise<{ token: string }> =>
-    authAxios.post(`/check-reset-password/${token}`),
+  }): AxiosPromise<{ message: string }> => authAxios.post('/forgot-password', data),
+  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => authAxios.post(`/check-reset-password/${token}`),
   resetPassword: (data: {
     token: string;
     password: string;

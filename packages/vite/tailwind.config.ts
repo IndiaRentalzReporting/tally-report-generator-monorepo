@@ -2,10 +2,10 @@ import type { Config } from 'tailwindcss';
 import sharedConfig from '@trg_package/config-tailwind';
 
 const config: Pick<Config, 'prefix' | 'presets' | 'content'> = {
-    darkMode: ['class'],
-    content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: ['class'],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   presets: [sharedConfig],
-    theme: {
+  theme: {
     	extend: {
     		keyframes: {
     			'accordion-down': {
@@ -42,7 +42,7 @@ const config: Pick<Config, 'prefix' | 'presets' | 'content'> = {
     			}
     		}
     	}
-    }
+  }
 };
 
 export default config;
