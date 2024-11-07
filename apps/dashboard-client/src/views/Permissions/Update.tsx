@@ -1,6 +1,8 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import React from 'react';
-import { Button, Form, Skeleton } from '@trg_package/vite/components';
+import {
+  Button, Form, Skeleton
+} from '@trg_package/vite/components';
 import {
   PermissionSelect
 } from '@trg_package/schemas-dashboard/types';
@@ -13,22 +15,16 @@ import { FormState, SelectFormSchema, SelectState } from './interface';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
-    queryFn: () => permissionService.read({ id }),
-    select: (data) => data.data.permissions.map((permission) => {
-      try {
-        SelectFormSchema.parse(permission);
-      } catch (error) {
-        console.error(error);
-      }
-      return SelectFormSchema.parse({
+    queryFn: () => permissionService.read({ role_id: id }),
+    select: (data) => data.data.permissions
+      .map((permission) => SelectFormSchema.parse({
         ...permission,
         permissionId: permission.id,
         permissionAction: permission.permissionAction.map(
           (pa) => ({ action: { ...pa.action, checked: true } })
         )
-      });
-    }),
-    queryKey: ['Roles', 'getOne', id]
+      })),
+    queryKey: ['Roles', 'getOne', id],
   });
 
   const form = useForm<FormState>({

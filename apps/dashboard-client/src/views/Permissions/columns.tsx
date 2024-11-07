@@ -42,7 +42,7 @@ export const columns: ColumnDef<InsertState | SelectState>[] = [
       return (
         <Action
           module={{
-            id: permission.permissionId,
+            id: permission.role.id,
             name: permission.role.name,
             type: 'Permissions'
           }}

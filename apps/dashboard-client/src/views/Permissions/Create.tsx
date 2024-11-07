@@ -10,7 +10,7 @@ import { FormState, InsertFormSchema, InsertState } from './interface';
 const Create: React.FC = () => {
   const form = useForm<FormState>({
     resolver: zodResolver(z.object({ permissions: z.array(InsertFormSchema) })),
-    defaultValues: {
+    values: {
       permissions: []
     }
   });

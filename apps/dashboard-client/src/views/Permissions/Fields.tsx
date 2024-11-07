@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
 import {
   DataTable,
   FormControl,
@@ -28,11 +27,6 @@ import { StateAsProps } from './interface';
 import { columns } from './columns';
 import { SortingButton } from '@/components/composite';
 
-interface ColumnData {
-  module_name: ModuleSelect['name'];
-  module_id: ModuleSelect['id'];
-}
-
 const Fields: React.FC<StateAsProps> = ({
   form
 }) => {
@@ -44,7 +38,7 @@ const Fields: React.FC<StateAsProps> = ({
   const { data: roles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleService.read(),
     select: (data) => data.data.roles.filter((role) => !role.permission.length),
-    queryKey: ['roles', 'getAll']
+    queryKey: ['Roles', 'getAll']
   });
 
   const { data: actions = [], isFetching: fetchingActions } = useQuery({
@@ -60,28 +54,22 @@ const Fields: React.FC<StateAsProps> = ({
   });
 
   useEffect(() => {
-    if (modules && !fetchingModules) {
+    if (modules && !form.getValues('permissions').length) {
       replace([]);
-      modules.map((module) => {
-        append({
-          module: {
-            id: module.id,
-            name: module.name
-          },
-          role: fields[0]?.role ?? { name: 'No name role', id: 'No id role' },
-          permissionAction: actions.map(({ id, name }) => ({
-            action: {
-              id, name, checked: false, static: false
-            }
-          }))
-        });
-      });
+      modules.map((module) => append({
+        module: {
+          id: module.id,
+          name: module.name
+        },
+        role: form.getValues('permissions')[0]?.role ?? { name: 'No name role', id: 'No id role' },
+        permissionAction: actions.map(({ id, name }) => ({
+          action: {
+            id, name, checked: false
+          }
+        }))
+      }));
     }
-  }, [modules, fetchingModules, form, actions, append, replace]);
-
-  console.log(form.getValues('permissions'));
-
-  console.log(fields);
+  }, [modules, actions, append, replace]);
 
   const handleRoleChange = (newRoleId: string) => {
     const values = form.getValues('permissions').map((permission) => ({
@@ -101,7 +89,7 @@ const Fields: React.FC<StateAsProps> = ({
         name="permissions.0.role.id"
         render={({ field }) => (
           <FormItem className='flex-grow'>
-            <FormLabel>Role</FormLabel>
+            <FormLabel>Base Entity</FormLabel>
             <FormControl>
               <Select
                 {...field}
@@ -114,9 +102,9 @@ const Fields: React.FC<StateAsProps> = ({
                   <SelectGroup>
                     <SelectLabel>Roles</SelectLabel>
                     <Skeleton isLoading={fetchingRoles}>
-                      {roles?.map((rwnp) => (
-                        <SelectItem key={rwnp.id} value={rwnp.id}>
-                          {rwnp.name}
+                      {roles.map((role) => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
                         </SelectItem>
                       ))}
                     </Skeleton>
@@ -129,39 +117,41 @@ const Fields: React.FC<StateAsProps> = ({
           </FormItem>
         )}
       />
-      <DataTable
-        columns={[...columns
-          .filter((column) => column.id !== 'Role Name')
-          .filter((column) => column.id !== 'Actions on Modules'), {
-          id: 'Actions on Modules',
-          accessorKey: 'permissionActions',
-          header: ({ column }) => <SortingButton column={column} label="Actions" />,
-          cell: ({ row }) => {
-            const { permissionAction } = row.original;
-            const permissionActions = permissionAction.map((p) => p.action.name);
-            return (
-              <div className="flex items-center gap-2">
-                {permissionActions.map((action, index) => (
-                  <div>
-                    <Label>{action}</Label>
-                    <Input type='checkbox' {...form.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)} />
-                  </div>
-                ))}
-              </div>
-            );
+      <Skeleton isLoading={fetchingActions || fetchingModules }>
+        <DataTable
+          columns={[...columns
+            .filter((column) => column.id !== 'Role Name')
+            .filter((column) => column.id !== 'Actions on Modules'), {
+            id: 'Actions on Modules',
+            accessorKey: 'permissionActions',
+            header: ({ column }) => <SortingButton column={column} label="Actions" />,
+            cell: ({ row }) => {
+              const { permissionAction } = row.original;
+              const permissionActions = permissionAction.map((p) => p.action.name);
+              return (
+                <div className="flex items-center gap-2">
+                  {permissionActions.map((action, index) => (
+                    <div>
+                      <Label>{action}</Label>
+                      <Input type='checkbox' {...form.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)} />
+                    </div>
+                  ))}
+                </div>
+              );
+            }
           }
-        }
-        ]}
-        data={fields}
-        grouping={{
-          rowGrouping: [],
-          setRowGrouping: () => null
-        }}
-        selection={{
-          rowSelection: {},
-          setRowSelection: () => null
-        }}
-      />
+          ]}
+          data={fields}
+          grouping={{
+            rowGrouping: [],
+            setRowGrouping: () => null
+          }}
+          selection={{
+            rowSelection: {},
+            setRowSelection: () => null
+          }}
+        />
+      </Skeleton>
     </div>
   );
 };

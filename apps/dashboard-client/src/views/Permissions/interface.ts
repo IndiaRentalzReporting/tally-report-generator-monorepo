@@ -23,7 +23,6 @@ export const ActionSchema = ActionSelectSchema.pick({
   id: true
 }).extend({
   checked: z.boolean(),
-  static: z.boolean().optional().default(true)
 });
 
 export const PermissionActionSchema = z.array(z.object({
