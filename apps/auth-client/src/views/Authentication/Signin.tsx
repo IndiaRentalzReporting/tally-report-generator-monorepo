@@ -27,7 +27,7 @@ const formSchema = UserSelectSchema.pick({
 });
 type State = z.infer<typeof formSchema>;
 
-export const SigninForm = () => {
+export const SignInForm = () => {
   const {
     signIn: { mutation: signIn, isLoading }
   } = useAuth();

@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserSelectSchema } from '@trg_package/schemas-auth/types';
 import * as z from 'zod';
-import { services } from './services';
+import { services } from '@/services';
 
 const formSchema = UserSelectSchema.pick({ email: true });
 type State = z.infer<typeof formSchema>;

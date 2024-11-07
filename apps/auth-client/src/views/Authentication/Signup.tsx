@@ -32,7 +32,7 @@ const formSchema = UserSelectSchema.pick({
 
 type State = z.infer<typeof formSchema>;
 
-export const SignupForm = () => {
+export const SignUpForm = () => {
   const {
     onboard: { isLoading, mutation: onboard },
   } = useAuth();

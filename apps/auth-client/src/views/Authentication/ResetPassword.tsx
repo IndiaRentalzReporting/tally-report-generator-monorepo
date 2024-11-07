@@ -26,7 +26,7 @@ import { UserSelectSchema } from '@trg_package/schemas-auth/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { services } from './services';
+import { services } from '@/services';
 
 const formSchema = UserSelectSchema.pick({ password: true }).extend({
   confirmPassword: UserSelectSchema.shape.password
