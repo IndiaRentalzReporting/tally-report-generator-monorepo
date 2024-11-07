@@ -16,8 +16,8 @@ const Create: React.FC = () => {
   const { mutateAsync: createAction, isPending: loadingCreateAction } = useMutation({
     mutationFn: (actionData: Omit<InsertState, 'id'>) => services.createOne(actionData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
     }
   });
 

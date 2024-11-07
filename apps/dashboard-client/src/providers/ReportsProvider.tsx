@@ -132,7 +132,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
         tables,
       });
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports', 'getOne', report.id] })
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] })
   });
 
   const [pagination, setPagination] = useState<PaginationState>({
@@ -147,21 +147,21 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     },
   } = useQuery({
     queryFn: () => getReportData(report.id, pagination),
-    queryKey: ['reports', 'data', report.id, pagination],
+    queryKey: ['Reports', 'data', report.id, pagination],
     select: (data) => data.data,
     placeholderData: keepPreviousData
   });
 
   const { data: reportColumns = [], refetch: fetchReportColumns } = useQuery({
     queryFn: () => getReportColumns(report.id),
-    queryKey: ['reports', 'columns', report.id],
+    queryKey: ['Reports', 'columns', report.id],
     select: (data) => data.data.columns,
     enabled: false
   });
 
   const { data: reportFilters = [], refetch: fetchReportFilters } = useQuery({
     queryFn: () => getReportFilters(report.id),
-    queryKey: ['reports', 'filters', report.id],
+    queryKey: ['Reports', 'filters', report.id],
     select: (data) => data.data.filters,
     enabled: false
   });

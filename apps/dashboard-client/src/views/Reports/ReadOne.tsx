@@ -29,7 +29,7 @@ import {
 } from '@trg_package/vite/components';
 import clsx from 'clsx';
 import { useReports } from '@/providers/ReportsProvider';
-import SortingButton from '@/components/composite/SortingButton';
+import { SortingButton } from '@/components/composite/SortingButton';
 
 const ReadReport: React.FC = () => {
   const {

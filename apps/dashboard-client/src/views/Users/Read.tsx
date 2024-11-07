@@ -58,13 +58,13 @@ const Read: React.FC = () => {
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
     queryFn: () => userServices.read(),
     select: (data) => data.data.users.map((user) => UserSelectFormSchema.parse({ ...user, password: '********' })),
-    queryKey: ['users', 'getAll']
+    queryKey: ['Users', 'getAll']
   });
 
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleServices.read(),
     select: (data) => data.data.roles.map((role) => RoleSelectFormSchema.parse(role)),
-    queryKey: ['roles', 'getAll']
+    queryKey: ['Roles', 'getAll']
   });
 
   const queryClient = useQueryClient();
@@ -82,7 +82,7 @@ const Read: React.FC = () => {
     },
     onSettled() {
       setRowSelection({});
-      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
     }
   });
 

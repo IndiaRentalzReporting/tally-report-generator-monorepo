@@ -12,7 +12,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: roleData, isFetching: loadingRole } = useQuery({
     queryFn: () => services.read({ id }),
     select: (data) => SelectFormSchema.parse(data.data.roles[0]),
-    queryKey: ['roles', 'getOne', id]
+    queryKey: ['Roles', 'getOne', id]
   });
 
   const form = useForm<FormState>({
@@ -23,7 +23,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { mutateAsync: updateRole, isPending: updatingRole } = useMutation({
     mutationFn: (roleUpdate: Omit<SelectState, 'id'>) => services.updateOne({ id }, roleUpdate),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Roles', 'getAll'] });
     }
   });
 

@@ -35,11 +35,11 @@ const App = () => {
               </Route>
             </Route>
             {
-              name === 'REPORTS'
+              name === 'Reports'
               && <Route path='/dashboard' element={<ReportingLayout/>}>
                   <Route path={name} key={name}>
                     {actions.map<React.ReactNode>((action) => (
-                      (action === 'READ' || action === 'UPDATE')
+                      (action === 'Read' || action === 'Update')
                         && <Route
                             path={`${action}/:reportId`}
                             key={action}
@@ -51,7 +51,7 @@ const App = () => {
             }
           </>
         ))}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        {/* <Route path="*" element={<Navigate to="/dashboard" />} /> */}
       </Route>
     ])
   );

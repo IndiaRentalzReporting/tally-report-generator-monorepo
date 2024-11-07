@@ -24,7 +24,7 @@ const ReadModule: React.FC = () => {
   const { data: allModules = [], isFetching: fetchingModules } = useQuery({
     queryFn: async () => services.read(),
     select: (data) => data.data.modules.map((module) => SelectFormSchema.parse(module)),
-    queryKey: ['modules', 'getAll']
+    queryKey: ['Modules', 'getAll']
   });
 
   return (

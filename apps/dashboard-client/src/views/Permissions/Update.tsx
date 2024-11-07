@@ -24,7 +24,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
     queryFn: () => permissionService.read({ role_id: id }),
     select: (data) => data.data.permissions,
-    queryKey: ['roles', 'getOne', id]
+    queryKey: ['Roles', 'getOne', id]
   });
 
   useEffect(() => {
@@ -93,8 +93,8 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['permission', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Permission', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
       setModulePermission({});
     }
   });

@@ -35,7 +35,7 @@ const Read: React.FC = () => {
         }
         return SelectFormSchema.parse(permission);
       }),
-    queryKey: ['permissions', 'getAll']
+    queryKey: ['Permissions', 'getAll']
   });
 
   return (

@@ -13,7 +13,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: actionData, isFetching: loadingAction } = useQuery({
     queryFn: () => services.read({ id }),
     select: (data) => SelectFormSchema.parse(data.data.actions[0]),
-    queryKey: ['actions', 'getOne', id]
+    queryKey: ['Actions', 'getOne', id]
   });
 
   const form = useForm<FormState>({
@@ -24,9 +24,9 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { mutateAsync: updateAction, isPending: updatingAction } = useMutation({
     mutationFn: (actionUpdate: Omit<FormState, 'id'>) => services.updateOne({ id }, actionUpdate),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getOne', id] });
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Actions', 'getOne', id] });
+      queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
     }
   });
 

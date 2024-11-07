@@ -45,7 +45,7 @@ const Fields: React.FC<StateAsProps> = ({
     select(data) {
       return data.data.modules;
     },
-    queryKey: ['modules', 'getAll']
+    queryKey: ['Modules', 'getAll']
   });
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const Fields: React.FC<StateAsProps> = ({
   const { data: allRolesWithNoPermission, isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleService.read(),
     select: (data) => data.data.roles.filter((r) => (!form.getValues('role.id') ? r.permission.length === 0 : true)),
-    queryKey: ['roles', 'getAll']
+    queryKey: ['Roles', 'getAll']
   });
 
   const handlePermissionChange = useCallback(
@@ -82,7 +82,7 @@ const Fields: React.FC<StateAsProps> = ({
     select(data) {
       return data.data.actions;
     },
-    queryKey: ['actions', 'getAll']
+    queryKey: ['Actions', 'getAll']
   });
 
   useEffect(() => {
