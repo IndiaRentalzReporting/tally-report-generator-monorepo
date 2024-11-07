@@ -15,6 +15,7 @@ import { services } from '@/services/Permissions';
 import { useIsAllowed } from '@/hooks';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
+import Fields from './Fields copy';
 
 const Read: React.FC = () => {
   const isReadAllowed = useIsAllowed({
@@ -61,4 +62,4 @@ const Read: React.FC = () => {
   );
 };
 
-export default Read;
+export default Fields;

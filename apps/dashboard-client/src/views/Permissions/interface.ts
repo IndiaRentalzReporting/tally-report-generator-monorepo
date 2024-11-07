@@ -23,6 +23,9 @@ export const RoleSchema = RoleSelectSchema.pick({
 export const ActionSchema = ActionSelectSchema.pick({
   name: true,
   id: true
+}).extend({
+  checked: z.boolean(),
+  static: z.boolean().optional().default(true)
 });
 
 export const PermissionActionSchema = z.array(z.object({
@@ -30,8 +33,8 @@ export const PermissionActionSchema = z.array(z.object({
 }));
 
 export const InsertFormSchema = PermissionInsertSchema.pick({
-  id: true,
 }).extend({
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema
@@ -39,8 +42,8 @@ export const InsertFormSchema = PermissionInsertSchema.pick({
 export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
-  id: true,
 }).extend({
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema
@@ -50,7 +53,6 @@ export type SelectState = z.infer<typeof SelectFormSchema>;
 export type FormState = InsertState | SelectState;
 
 export const initialState: InsertState = {
-  id: '',
   module: {
     name: '',
     id: ''

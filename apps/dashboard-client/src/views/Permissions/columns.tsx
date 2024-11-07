@@ -7,7 +7,7 @@ export const columns: ColumnDef<FormState>[] = [
   {
     id: 'Role Name',
     accessorFn: (row) => row.role.name,
-    header: ({ column }) => <SortingButton column={column} label="Name" />,
+    header: ({ column }) => <SortingButton column={column} label="Role Name" />,
     getGroupingValue: (row) => `${row.role.name}}`
   },
   {
@@ -40,13 +40,13 @@ export const columns: ColumnDef<FormState>[] = [
     aggregatedCell: ({ row }) => {
       const permission = row.original;
       return (
-          <Action
-            module={{
-              id: permission.id,
-              name: permission.role.name,
-              type: 'Permissions'
-            }}
-          />
+        <Action
+          module={{
+            id: permission.permissionId,
+            name: permission.role.name,
+            type: 'Permissions'
+          }}
+        />
       );
     }
   }
