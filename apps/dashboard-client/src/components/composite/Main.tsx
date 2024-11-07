@@ -1,12 +1,11 @@
 import React from 'react';
-import { Outlet, useLocation } from 'react-router';
+import { Outlet } from 'react-router';
 import { useSidebar, When } from '@trg_package/vite/components';
-import Create from './dashboard/Create';
 import { useNav } from '@/providers/NavigationProvider';
+import Create from './dashboard/Create';
 
-const Main: React.FC = () => {
+export const Main: React.FC = () => {
   const { currentModule } = useNav();
-  const { pathname } = useLocation();
   const { state } = useSidebar();
 
   return (
@@ -23,5 +22,3 @@ const Main: React.FC = () => {
     </main>
   );
 };
-
-export default Main;

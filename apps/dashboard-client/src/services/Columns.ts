@@ -1,10 +1,7 @@
 import {
   ColumnInsert,
   ColumnSelect,
-  DetailedColumnSelect,
-  GeneratedReportColumns,
-  GeneratedReportData,
-  GeneratedReportFilters
+  DetailedColumnSelect
 } from '@trg_package/schemas-reporting/types';
 import createAxiosClient from '@trg_package/vite/client';
 import { AxiosPromise } from 'axios';
@@ -38,25 +35,3 @@ export const getColumnData = async (columnId: string): AxiosPromise<Array<{
   label: string;
   value: string;
 }>> => columnsAxios.get(`/read/selectData/${columnId}`);
-
-export const getReportColumns = async (reportId: string): AxiosPromise<{
-  columns: Array<GeneratedReportColumns>
-}> => columnsAxios.get(`/read/reportColumns/${reportId}`);
-
-export const getReportData = async (
-  reportId: string,
-  {
-    pageSize,
-    pageIndex
-  }:{
-    pageSize: number,
-    pageIndex: number
-  }
-): AxiosPromise<{
-  data: Array<GeneratedReportData>,
-  totalCount: number
-}> => columnsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}`);
-
-export const getReportFilters = async (reportId: string): AxiosPromise<{
-  filters : Array<GeneratedReportFilters>
-}> => columnsAxios.get(`/read/reportFilters/${reportId}`);

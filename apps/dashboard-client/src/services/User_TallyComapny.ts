@@ -8,7 +8,7 @@ import { CrudServices } from '.';
 const userTallyCompanysAxios = createAxiosClient(
   { dashboard: true },
   {
-    baseURL: '/v1/permission_actions',
+    baseURL: '/v1/user_tallyCompany',
     withCredentials: true
   }
 );

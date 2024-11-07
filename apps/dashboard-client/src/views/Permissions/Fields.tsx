@@ -22,10 +22,10 @@ import {
   FormLabel,
   FormMessage
 } from '@trg_package/vite/components';
-import { StateAsProps } from './interface';
 import { services as moduleService } from '@/services/Modules';
 import { services as roleService } from '@/services/Roles';
 import { services as actionService } from '@/services/Actions';
+import { StateAsProps } from './interface';
 
 interface ColumnData {
   module_name: ModuleSelect['name'];

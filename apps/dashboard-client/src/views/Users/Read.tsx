@@ -30,8 +30,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { services as userServices } from '@/services/Users';
 import { services as roleServices } from '@/services/Roles';
-import { columns } from './columns';
 import { useIsAllowed } from '@/hooks';
+import { columns } from './columns';
 import { SelectFormSchema as UserSelectFormSchema } from './interface';
 import { InsertFormSchema, SelectFormSchema as RoleSelectFormSchema } from '../Roles/interface';
 

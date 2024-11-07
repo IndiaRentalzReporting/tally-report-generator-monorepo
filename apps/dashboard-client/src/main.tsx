@@ -5,7 +5,6 @@ import App from './App';
 import '@trg_package/vite/components/styles.css';
 import './globals.css';
 import { RootLayout } from './components/composite';
-
 // maintain precedence of tailwindcss
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

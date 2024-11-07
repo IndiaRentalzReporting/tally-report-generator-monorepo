@@ -17,8 +17,8 @@ import {
   Skeleton
 } from '@trg_package/vite/components';
 import { useQuery } from '@tanstack/react-query';
-import { StateAsProps } from './interface';
 import { services as tableService } from '@/services/Tables';
+import { StateAsProps } from './interface';
 
 const Fields: React.FC<StateAsProps> = ({ form, disabledFields }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({

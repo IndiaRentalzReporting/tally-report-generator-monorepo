@@ -45,15 +45,6 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
       module: { name, icon }
     } = permission;
     const moduleName = name.toLowerCase();
-    // const children: NavItem[] = actions.map((action) => {
-    //   const moduleAction = action.toLowerCase() as Lowercase<
-    //     ActionSelect['name']
-    //   >;
-    //   return {
-    //     to: `/dashboard/${moduleName}/${moduleAction}`,
-    //     name: action
-    //   };
-    // });
     return {
       to: `/dashboard/${moduleName}/read`,
       name,

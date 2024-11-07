@@ -21,7 +21,7 @@ import { useIsAllowed } from '@/hooks';
 interface ICreateDrawerProps {
   module: ModuleSelect['name'];
 }
-const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
+const Create: React.FC<ICreateDrawerProps> = ({ module }) => {
   const isCreateAllowed = useIsAllowed({
     module,
     action: 'Create'
@@ -58,4 +58,4 @@ const CreateDrawer: React.FC<ICreateDrawerProps> = ({ module }) => {
   );
 };
 
-export default CreateDrawer;
+export default Create;

@@ -1,5 +1,5 @@
-import { DeleteEntity } from './Delete';
-import { UpdateEntity } from './Update';
+import DeleteEntity from './Delete';
+import UpdateEntity from './Update';
 
 interface ActionsCellProps {
   module: {
@@ -9,7 +9,7 @@ interface ActionsCellProps {
   };
 }
 
-const ActionsCell: React.FC<ActionsCellProps> = ({
+const Action: React.FC<ActionsCellProps> = ({
   module: { id, name, type }
 }) => {
   if (!id) throw new Error('Entity ID is required');
@@ -33,4 +33,4 @@ const ActionsCell: React.FC<ActionsCellProps> = ({
   );
 };
 
-export default ActionsCell;
+export default Action;

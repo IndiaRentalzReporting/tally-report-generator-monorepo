@@ -16,8 +16,8 @@ import {
 import { Trash } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { DetailedColumnSelect, GeneratedReportData } from '@trg_package/schemas-reporting/types';
-import UpdateColumn from './Column';
 import { Column, useReports } from '@/providers/ReportsProvider';
+import UpdateColumn from './Column';
 
 interface TableProps<TData> {
   data: TData[]

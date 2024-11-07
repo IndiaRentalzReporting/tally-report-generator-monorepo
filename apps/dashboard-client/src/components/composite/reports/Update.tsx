@@ -2,9 +2,9 @@ import React from 'react';
 import {
   Button, Card, CardContent, CardDescription, CardHeader, CardTitle
 } from '@trg_package/vite/components';
+import { useReports } from '@/providers/ReportsProvider';
 import Sidebar from './Sidebar';
 import DataTable from './Table';
-import { useReports } from '@/providers/ReportsProvider';
 import Conditions from './Conditions';
 import Filters from './Filters';
 import GroupBy from './GroupBy';

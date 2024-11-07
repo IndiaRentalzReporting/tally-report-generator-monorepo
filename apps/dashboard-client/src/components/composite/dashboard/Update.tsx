@@ -27,7 +27,7 @@ interface IUpdateEntityProps {
   };
 }
 
-export const UpdateEntity: React.FC<IUpdateEntityProps> = ({
+const Update: React.FC<IUpdateEntityProps> = ({
   module: { id, type },
   className = '',
   size = 20
@@ -70,3 +70,5 @@ export const UpdateEntity: React.FC<IUpdateEntityProps> = ({
     </If>
   );
 };
+
+export default Update;

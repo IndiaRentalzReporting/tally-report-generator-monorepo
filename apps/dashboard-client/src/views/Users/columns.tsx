@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@trg_package/vite/components';
 import Action from '@/components/composite/dashboard/Action';
-import SortingButton from '@/components/composite/SortingButton';
+import { SortingButton } from '@/components/composite/SortingButton';
 import { FormState } from './interface';
 
 export const columns: ColumnDef<FormState>[] = [

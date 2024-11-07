@@ -8,7 +8,7 @@ import { services } from '@/services/Reports';
 import { NavigationProvider } from '@/providers/NavigationProvider';
 import Sidebar from './Sidebar';
 import DashboardLayout from '../dashboard/Layout';
-import Main from '../Main';
+import { Main } from '../Main';
 
 const ReportingLayout: React.FC = () => {
   const { reportId } = useParams<{ reportId: string }>();

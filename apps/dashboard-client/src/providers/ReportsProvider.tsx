@@ -18,9 +18,11 @@ import {
 import { AxiosResponse } from 'axios';
 import { PaginationState } from '@tanstack/react-table';
 import {
-  services as columnService, getReportData, getReportColumns, getReportFilters
+  services as columnService
 } from '@/services/Columns';
-import { services as reportService } from '@/services/Reports';
+import {
+  services as reportService, getReportData, getReportColumns, getReportFilters
+} from '@/services/Reports';
 
 export type Column = ReportSelect['columns'][number];
 export type Condition = ReportSelect['conditions'][number];

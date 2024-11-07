@@ -12,9 +12,9 @@ import {
   When
 } from '@trg_package/vite/components';
 import { services } from '@/services/Permissions';
+import { useIsAllowed } from '@/hooks';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
-import { useIsAllowed } from '@/hooks';
 
 const Read: React.FC = () => {
   const isReadAllowed = useIsAllowed({

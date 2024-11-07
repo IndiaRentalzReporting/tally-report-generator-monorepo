@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Form, Skeleton } from '@trg_package/vite/components';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Fields from './Fields';
 import { services } from '@/services/Modules';
+import Fields from './Fields';
 import { SelectState, SelectFormSchema, FormState } from './interface';
 
 const Edit: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {

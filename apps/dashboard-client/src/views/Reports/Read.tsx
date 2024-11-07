@@ -13,10 +13,9 @@ import {
 import React from 'react';
 
 import { services } from '@/services/Reports';
+import { useIsAllowed } from '@/hooks';
 import { columns } from './columns';
 import { SelectFormSchema } from './interface';
-
-import { useIsAllowed } from '@/hooks';
 
 const Read: React.FC = () => {
   const isReadAllowed = useIsAllowed({

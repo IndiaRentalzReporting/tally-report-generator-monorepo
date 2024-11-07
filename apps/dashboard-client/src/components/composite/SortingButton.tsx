@@ -8,7 +8,7 @@ interface HeaderButtonProps<TData> {
   label: string;
 }
 
-const SortingButton = <TData,>({ column, label }: HeaderButtonProps<TData>) => {
+export const SortingButton = <TData,>({ column, label }: HeaderButtonProps<TData>) => {
   const handleSort = useCallback(() => {
     column.toggleSorting(column.getIsSorted() === 'asc');
   }, [column]);
@@ -24,5 +24,3 @@ const SortingButton = <TData,>({ column, label }: HeaderButtonProps<TData>) => {
     </Button>
   );
 };
-
-export default SortingButton;

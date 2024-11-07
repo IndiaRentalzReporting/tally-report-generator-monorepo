@@ -17,7 +17,7 @@ interface IDeleteEntityProps {
   };
 }
 
-export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
+const Delete: React.FC<IDeleteEntityProps> = ({
   module: { id, name, type }
 }) => {
   const queryClient = useQueryClient();
@@ -86,3 +86,5 @@ export const DeleteEntity: React.FC<IDeleteEntityProps> = ({
     </If>
   );
 };
+
+export default Delete;

@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-import { FormState } from './interface';
 import Action from '@/components/composite/dashboard/Action';
-import SortingButton from '@/components/composite/SortingButton';
+import { SortingButton } from '@/components/composite/SortingButton';
+import { FormState } from './interface';
 
 export const columns: ColumnDef<FormState>[] = [
   {

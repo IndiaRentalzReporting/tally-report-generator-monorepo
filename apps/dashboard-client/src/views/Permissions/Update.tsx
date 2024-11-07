@@ -11,8 +11,8 @@ import { useForm } from 'react-hook-form';
 import { services as permissionService } from '@/services/Permissions';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
-import Fields from './Fields';
 import { createPermissionsUsingModulePermissions } from '@/utils/convertPermissionsUsingModulePermissions';
+import Fields from './Fields';
 import { FormState, SelectFormSchema } from './interface';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
