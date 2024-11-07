@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { ApiKeyInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { ApiKeyInsertSchema, ApiKeySelectSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   deleteOne,
@@ -22,17 +22,17 @@ apiKeyRouter.post(
 apiKeyRouter.get(
   '/read',
   validateSchema({
-    query: ApiKeyInsertSchema.partial()
+    query: ApiKeySelectSchema.partial()
   }),
   readAll
 );
 apiKeyRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ApiKeyInsertSchema.pick({
+    body: ApiKeySelectSchema.pick({
       name: true
-    }),
-    params: ApiKeyInsertSchema.pick({
+    }).partial(),
+    params: ApiKeySelectSchema.pick({
       id: true
     })
   }),
@@ -41,7 +41,7 @@ apiKeyRouter.patch(
 apiKeyRouter.delete(
   '/delete/:id',
   validateSchema({
-    params: ApiKeyInsertSchema.pick({
+    params: ApiKeySelectSchema.pick({
       id: true
     })
   }),

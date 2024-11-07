@@ -22,7 +22,7 @@ export const readAll = async (
 };
 
 export const updateOne = async (
-  req: Request<Pick<ApiKeySelect, 'id'>, object, Pick<ApiKeyInsert, 'name'>>,
+  req: Request<Pick<ApiKeySelect, 'id'>, object, Partial<ApiKeySelect>>,
   res: Response<{ apiKey: ApiKeySelect }>,
   next: NextFunction
 ) => {
@@ -50,7 +50,7 @@ export const deleteOne = async (
 };
 
 export const createOne = async (
-  req: Request<object, object, Pick<ApiKeyInsert, 'name'>>,
+  req: Request<object, object, ApiKeyInsert>,
   res: Response<{ apiKey: ApiKeySelect }>,
   next: NextFunction
 ) => {

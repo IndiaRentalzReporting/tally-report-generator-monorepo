@@ -27,8 +27,7 @@ const Delete: React.FC<IDeleteEntityProps> = ({
 
   useEffect(() => {
     const loadServices = async () => {
-      const module = type.toLowerCase();
-      const { services: { deleteOne: DO } } = await import(`../../../services/${module}`);
+      const { services: { deleteOne: DO } } = await import(`../../../services/${type}`);
       setDeleteOneService(() => DO);
     };
 
@@ -44,7 +43,7 @@ const Delete: React.FC<IDeleteEntityProps> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [type.toLowerCase(), 'getAll']
+        queryKey: [type, 'getAll']
       });
     }
   });

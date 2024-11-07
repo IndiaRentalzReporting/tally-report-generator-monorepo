@@ -22,7 +22,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object,object,object, Partial<PermissionActionSelect>>,
+  req: Request<object, object, object, Partial<PermissionActionSelect>>,
   res: Response<{ permissionActions: PermissionActionSelect[] }>,
   next: NextFunction
 ) => {
@@ -40,8 +40,8 @@ export const readAll = async (
 export const updateOne = async (
   req: Request<
   Pick<PermissionActionSelect, 'action_id' | 'permission_id'>,
-    object,
-  PermissionActionSelect
+  object,
+  Partial<PermissionActionSelect>
   >,
   res: Response<{ permissionAction: PermissionActionSelect }>,
   next: NextFunction

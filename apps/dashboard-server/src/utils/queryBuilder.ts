@@ -87,7 +87,7 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
 
   return filterConfig;
 }
-export function getQueryConfig(tableQuery : string, report : ReportInsert) : ReportInsert['queryConfig'] {
+export function getQueryConfig(tableQuery: string, report: Partial<ReportSelect>) : ReportInsert['queryConfig'] {
   const {
     columns,conditions,groupBy,filters
   } = report;

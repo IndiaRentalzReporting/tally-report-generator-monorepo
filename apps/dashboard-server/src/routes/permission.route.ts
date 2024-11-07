@@ -38,7 +38,7 @@ permissionRouter.post(
     body: PermissionSelectSchema.pick({
       module_id: true,
       role_id: true
-    }),
+    }).partial(),
     params: PermissionSelectSchema.pick({
       id: true
     })

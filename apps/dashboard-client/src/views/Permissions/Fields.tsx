@@ -89,7 +89,7 @@ const Fields: React.FC<StateAsProps> = ({
     if (!actions) return;
     const actionColumns = actions.map<ColumnDef<ColumnData>>((action) => ({
       id: `Action${action.id}`,
-      header: action.name.toUpperCase(),
+      header: action.name,
       // eslint-disable-next-line react/no-unstable-nested-components
       cell: ({
         row: {

@@ -38,7 +38,7 @@ userTallyCompanyRouter.post(
     body: UserTallyCompanySelectSchema.pick({
       user_id: true,
       tallyCompany_id: true
-    }),
+    }).partial(),
     params: UserTallyCompanySelectSchema.pick({
       user_id: true,
       tallyCompany_id: true
@@ -50,7 +50,7 @@ userTallyCompanyRouter.post(
 userTallyCompanyRouter.delete(
   '/delete/:user_id/:tallyCompany_id',
   validateSchema({
-    params: UserTallyCompanyInsertSchema.pick({
+    params: UserTallyCompanySelectSchema.pick({
       user_id: true,
       tallyCompany_id: true
     })

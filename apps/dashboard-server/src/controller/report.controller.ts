@@ -19,9 +19,9 @@ type ReportResponse<isArray extends boolean = false> = isArray extends true
 
 export const createOne = async (
   req: Request<
-    object,
+  object,
   ReportResponse,
-  Pick<ReportInsert, 'name' | 'baseEntity' | 'description'>
+  ReportInsert
   >,
   res: Response<ReportResponse>,
   next: NextFunction
@@ -35,7 +35,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object, object,object,Partial<ReportSelect>>,
+  req: Request<object, object, object, Partial<ReportSelect>>,
   res: Response<{ reports: ReportSelect[] }>,
   next: NextFunction
 ) => {
@@ -50,7 +50,7 @@ export const readAll = async (
 };
 
 export const updateOne = async (
-  req: Request<Pick<ReportSelect, 'id'>, object, ReportInsert>,
+  req: Request<Pick<ReportSelect, 'id'>, object, Partial<ReportSelect>>,
   res: Response<ReportResponse>,
   next: NextFunction
 ) => {

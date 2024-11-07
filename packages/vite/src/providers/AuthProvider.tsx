@@ -18,6 +18,7 @@ import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
+import { toTitleCase } from '$/utils/toTitleCase';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -169,8 +170,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   ): Permissions[] => permissions
     ?.filter(({ module }) => !!module)
     .map(({ module, permissionAction }) => ({
-      module: { name: module.name, icon: module.icon },
-      actions: permissionAction.map(({ action }) => action.name)
+      module: { name: toTitleCase(module.name), icon: module.icon },
+      actions: permissionAction.map(({ action }) => toTitleCase(action.name))
     })) ?? [];
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { UserInsertSchema, UserSelectSchema } from '@trg_package/schemas-dashboard/types';
 import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   createOne,
@@ -29,21 +29,20 @@ userRouter.post(
 userRouter.get(
   '/read',
   validateSchema({
-    query: UserInsertSchema.partial()
+    query: UserSelectSchema.partial()
   }),
   readAll
 );
 userRouter.patch(
   '/update/:id',
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: UserSelectSchema.pick({
       first_name: true,
       last_name: true,
       email: true,
       password: true,
-      role_id: true
     }).partial(),
-    params: UserInsertSchema.pick({
+    params: UserSelectSchema.pick({
       id: true
     })
   }),
@@ -52,7 +51,7 @@ userRouter.patch(
 userRouter.delete(
   '/delete/:id',
   validateSchema({
-    params: UserInsertSchema.pick({
+    params: UserSelectSchema.pick({
       id: true
     })
   }),

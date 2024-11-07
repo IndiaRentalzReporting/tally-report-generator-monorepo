@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { RoleInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { RoleInsertSchema, RoleSelectSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   readAll,
@@ -23,7 +23,7 @@ roleRouter.post(
 roleRouter.get(
   '/read',
   validateSchema({
-    query: RoleInsertSchema.partial()
+    query: RoleSelectSchema.partial()
   }),
   readAll
 );
@@ -31,10 +31,10 @@ roleRouter.get(
 roleRouter.patch(
   '/update/:id',
   validateSchema({
-    body: RoleInsertSchema.pick({
+    body: RoleSelectSchema.pick({
       name: true
-    }),
-    params: RoleInsertSchema.pick({
+    }).partial(),
+    params: RoleSelectSchema.pick({
       id: true
     })
   }),
@@ -44,7 +44,7 @@ roleRouter.patch(
 roleRouter.delete(
   '/delete/:id',
   validateSchema({
-    params: RoleInsertSchema.pick({
+    params: RoleSelectSchema.pick({
       id: true
     })
   }),

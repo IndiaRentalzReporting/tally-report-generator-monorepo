@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { ModuleInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { ModuleInsertSchema, ModuleSelectSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   readAll,
@@ -24,19 +24,19 @@ moduleRouter.post(
 moduleRouter.get(
   '/read',
   validateSchema({
-    query: ModuleInsertSchema.partial()
+    query: ModuleSelectSchema.partial()
   }),
   readAll
 );
 moduleRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ModuleInsertSchema.pick({
+    body: ModuleSelectSchema.pick({
       name: true,
       isPrivate: true,
       icon: true
     }).partial(),
-    params: ModuleInsertSchema.pick({
+    params: ModuleSelectSchema.pick({
       id: true
     })
   }),
@@ -45,7 +45,7 @@ moduleRouter.patch(
 moduleRouter.delete(
   '/delete/:id',
   validateSchema({
-    params: ModuleInsertSchema.pick({
+    params: ModuleSelectSchema.pick({
       id: true
     })
   }),
