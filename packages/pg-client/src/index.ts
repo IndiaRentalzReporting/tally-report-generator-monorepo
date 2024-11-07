@@ -22,7 +22,9 @@ export const createClient = <T extends Record<string, unknown>>(
 ): { client: PostgresJsDatabase<T>; connection: postgres.Sql } => {
   try {
     const connection = postgres(URL, {
-      max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : undefined
+      max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : 10,
+      idle_timeout: 1000 * 60 * 5, // Close idle connections after 300 seconds
+      connect_timeout: 1000 * 30, // Set a 10-second timeout for new connections
     });
     const client = drizzle(connection, {
       schema,

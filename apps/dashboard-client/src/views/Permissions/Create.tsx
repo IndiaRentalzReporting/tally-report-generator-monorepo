@@ -40,9 +40,9 @@ const Create: React.FC = () => {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['permissions', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['actions', 'getAll'] });
-      queryClient.invalidateQueries({ queryKey: ['roles', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Roles', 'getAll'] });
       setModulePermission({});
     }
   });

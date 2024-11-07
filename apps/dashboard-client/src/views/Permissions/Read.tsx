@@ -27,14 +27,7 @@ const Read: React.FC = () => {
     queryFn: () => services.read(),
     select: (data) => data.data.permissions
       .filter(({ module }) => !!module)
-      .map((permission) => {
-        try {
-          SelectFormSchema.parse(permission);
-        } catch (error) {
-          console.error(error);
-        }
-        return SelectFormSchema.parse(permission);
-      }),
+      .map((permission) => SelectFormSchema.parse(permission)),
     queryKey: ['Permissions', 'getAll']
   });
 
