@@ -2,9 +2,9 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { CustomError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { ReportSelect } from '@/types';
 import { ReportSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
-import { ReportSelect } from '@/types';
 
 export class ReportService extends BaseServiceNew<
   typeof reportingSchemas,

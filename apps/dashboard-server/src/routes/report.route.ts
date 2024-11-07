@@ -8,6 +8,7 @@ import {
   FilterValueSchema
 } from '@trg_package/schemas-reporting/types';
 import z from 'zod';
+import { validateReport } from '@/middlewares/validateReport';
 import {
   createOne,
   deleteOne,
@@ -20,7 +21,6 @@ import {
   readAll,
   updateOne
 } from '../controller/report.controller';
-import { validateReport } from '@/middlewares/validateReport';
 
 const reportRouter = Router();
 
