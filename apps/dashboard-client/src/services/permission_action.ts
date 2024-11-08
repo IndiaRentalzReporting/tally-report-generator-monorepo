@@ -5,7 +5,7 @@ import { CrudServices } from '.';
 const permissionActionsAxios = createAxiosClient(
   { dashboard: true },
   {
-    baseURL: '/v1/permission_actions',
+    baseURL: '/v1/permission_action',
     withCredentials: true
   }
 );

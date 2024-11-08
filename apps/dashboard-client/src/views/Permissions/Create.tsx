@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import {
@@ -24,7 +26,9 @@ import * as z from 'zod';
 import { services as roleService } from '@/services/Roles';
 import { services as moduleService } from '@/services/Modules';
 import { services as actionService } from '@/services/Actions';
-import { FormState, InsertFormSchema, InsertState } from './interface';
+import { services as permissionService } from '@/services/Permissions';
+import { services as permission_actionService } from '@/services/Permission_Action';
+import { FormState, InsertFormSchema, RoleSchema } from './interface';
 import Fields from './Fields';
 
 const Create: React.FC = () => {
@@ -87,7 +91,28 @@ const Create: React.FC = () => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: createPermission, isPending: createPermissionLoading } = useMutation({
-    mutationFn: async (values: InsertState) => {
+    mutationFn: async (permissionsSubmit: FormState['permissions']) => {
+      const checkedPermissions = permissionsSubmit.map((permission) => InsertFormSchema.extend({
+        role: RoleSchema
+      }).parse({
+        ...permission,
+        permissionAction: permission.permissionAction.filter((pa) => pa.action.checked)
+      }));
+      for (const { module, role, permissionAction } of checkedPermissions) {
+        const { data: { permission: { id: permission_id } } } = await permissionService.createOne({
+          module_id: module.id,
+          role_id: role.id
+        });
+        for (const { action } of permissionAction) {
+          await actionService.read({
+            id: action.id
+          });
+          await permission_actionService.createOne({
+            permission_id,
+            action_id: action.id
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
@@ -97,8 +122,8 @@ const Create: React.FC = () => {
   });
 
   const handleSubmit = (values: FormState) => {
-    console.log(values);
-    form.reset();
+    createPermission(values.permissions);
+    // form.reset();
   };
 
   return (

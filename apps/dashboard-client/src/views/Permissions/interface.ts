@@ -31,6 +31,7 @@ export const PermissionActionSchema = z.array(z.object({
 
 export const InsertFormSchema = PermissionInsertSchema.pick({
 }).extend({
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema.optional(),
   permissionAction: PermissionActionSchema
@@ -39,6 +40,7 @@ export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
 }).extend({
+  permissionId: PermissionSelectSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema

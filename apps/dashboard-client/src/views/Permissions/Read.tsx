@@ -28,6 +28,7 @@ const Read: React.FC = () => {
     select: (data) => data.data.permissions
       .map((permission) => SelectFormSchema.parse({
         ...permission,
+        permissionId: permission.id,
         permissionAction: permission.permissionAction.map(
           (pa) => ({ action: { ...pa.action, checked: true } })
         )

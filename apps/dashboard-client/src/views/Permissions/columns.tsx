@@ -29,13 +29,14 @@ export const columns = (form?: UseFormReturn<FormState>)
         <div className="flex items-center gap-2">
           {actions.map((action, index) => (
             <div key={action.id}>
-              <Label>{action.name}</Label>
-              <Input
-                type='checkbox'
-                disabled={!form}
-                defaultChecked={action.checked}
-                {...form?.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)}
-              />
+              <Label>{action.name}
+                <Input
+                  type='checkbox'
+                  disabled={!form}
+                  defaultChecked={action.checked}
+                  {...form?.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)}
+                />
+              </Label>
             </div>
           ))}
         </div>
