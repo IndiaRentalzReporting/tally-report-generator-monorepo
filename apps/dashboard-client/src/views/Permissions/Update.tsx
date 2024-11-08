@@ -25,12 +25,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { services as permissionService } from '@/services/Permissions';
+import { services as moduleService } from '@/services/Modules';
 import { services as actionService } from '@/services/Actions';
 import { services as permission_actionService } from '@/services/Permission_Action';
+import {
+  ActionSchema, FormState, ModuleSchema, SelectFormSchema
+} from './interface';
 import Fields from './Fields';
-import { ActionSchema, FormState, SelectFormSchema } from './interface';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
+  const { data: modules = [], isFetching: fetchingModules } = useQuery({
+    queryFn: () => moduleService.read(),
+    select: (data) => data.data.modules.map((module) => ModuleSchema.parse(module)),
+    queryKey: ['Modules', 'getAll']
+  });
+
   const { data: actions = [] } = useQuery({
     queryFn: () => actionService.read(),
     select: (data) => data.data.actions.map((action) => ActionSchema.parse(action)),
@@ -39,17 +48,31 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
 
   const { data: permissions = [], isFetching: loadingPermissions } = useQuery({
     queryFn: () => permissionService.read({ role_id: id }),
-    select: (data) => data.data.permissions
-      .map((permission) => SelectFormSchema.parse({
+    select: (data) => {
+      const existingPermissions = data.data.permissions.map((permission) => SelectFormSchema.parse({
         ...permission,
         permissionId: permission.id,
         permissionAction: actions.map((action) => ({
           action: {
             ...action,
-            checked: permission.permissionAction.some((pa) => pa.action.id === action.id)
-          }
-        }))
-      })),
+            checked: permission.permissionAction.some((pa) => pa.action.id === action.id),
+          },
+        })),
+      }));
+
+      const existingModuleIds = new Set(existingPermissions.map((p) => p.module.id));
+      const missingModules = modules.filter((module) => !existingModuleIds.has(module.id));
+
+      const missingPermissions = missingModules.map((module) => ({
+        module,
+        role: { id, name: 'Name not available' },
+        permissionAction: actions.map((action) => ({
+          action: { ...action, checked: false },
+        })),
+      }));
+
+      return [...existingPermissions, ...missingPermissions];
+    },
     queryKey: ['Roles', 'getOne', id],
     enabled: !!actions
   });
@@ -76,24 +99,29 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
       for (const {
         module, role, permissionAction, permissionId
       } of checkedPermissions) {
-        await permissionService.deleteOne({ id: permissionId });
-        const { data: { permission: { id: permission_id } } } = await permissionService.createOne({
-          module_id: module.id,
-          role_id: role.id
-        });
-        for (const { action } of permissionAction) {
-          await actionService.read({
-            id: action.id
-          });
-          await permission_actionService.createOne({
-            permission_id,
-            action_id: action.id
-          });
+        if (permissionId) {
+          await permissionService.deleteOne({ id: permissionId });
+        }
+        if (permissionAction.length) {
+          const { data: { permission: { id: permission_id } } } = await permissionService
+            .createOne({
+              module_id: module.id,
+              role_id: role.id
+            });
+          for (const { action } of permissionAction) {
+            await actionService.read({
+              id: action.id
+            });
+            await permission_actionService.createOne({
+              permission_id,
+              action_id: action.id
+            });
+          }
         }
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Permission', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
     }
   });

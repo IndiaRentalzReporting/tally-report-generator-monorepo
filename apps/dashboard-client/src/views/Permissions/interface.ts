@@ -40,7 +40,7 @@ export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
 }).extend({
-  permissionId: PermissionSelectSchema.shape.id,
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema
