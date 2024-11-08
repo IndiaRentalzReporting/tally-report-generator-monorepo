@@ -6,7 +6,7 @@ import {
   RoleSelectSchema
 } from '@trg_package/schemas-dashboard/types';
 import * as z from 'zod';
-import { UseFormReturn } from 'react-hook-form';
+import { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 
 export const ModuleSchema = ModuleSelectSchema.pick({
   id: true,
@@ -31,16 +31,14 @@ export const PermissionActionSchema = z.array(z.object({
 
 export const InsertFormSchema = PermissionInsertSchema.pick({
 }).extend({
-  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
-  role: RoleSchema,
+  role: RoleSchema.optional(),
   permissionAction: PermissionActionSchema
 });
 export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
 }).extend({
-  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema
@@ -53,4 +51,5 @@ export type FormState = {
 
 export interface StateAsProps {
   form: UseFormReturn<FormState>
+  fields: FieldArrayWithId<FormState, 'permissions', 'id'>[]
 }

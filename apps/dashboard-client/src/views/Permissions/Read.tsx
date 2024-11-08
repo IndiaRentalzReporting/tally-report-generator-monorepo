@@ -28,7 +28,6 @@ const Read: React.FC = () => {
     select: (data) => data.data.permissions
       .map((permission) => SelectFormSchema.parse({
         ...permission,
-        permissionId: permission.id,
         permissionAction: permission.permissionAction.map(
           (pa) => ({ action: { ...pa.action, checked: true } })
         )
@@ -48,7 +47,7 @@ const Read: React.FC = () => {
         <CardContent className="flex flex-col gap-4">
           <Skeleton isLoading={fetchingPermissions}>
             <DataTable
-              columns={columns}
+              columns={columns()}
               data={allPermissions}
               grouping={{
                 rowGrouping,
