@@ -43,12 +43,14 @@ export const columns = (form?: UseFormReturn<FormState>)
                 }}
               >
                 <div className='flex items-center gap-2'>
-                  <input
-                    className='peer'
-                    type='checkbox'
-                    disabled={!form}
-                    {...form?.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)}
-                  />
+                  {
+                    form && <input
+                      className='peer'
+                      type='checkbox'
+                      disabled={!form}
+                      {...form?.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)}
+                    />
+                  }
                   {action.name}
                 </div>
               </label>
