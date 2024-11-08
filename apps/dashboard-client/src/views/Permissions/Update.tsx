@@ -115,22 +115,22 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
             <FormItem className='flex-grow'>
               <FormLabel>Base Entity</FormLabel>
               <FormControl>
-                <Select
-                  {...field}
-                  disabled
-                  defaultValue={id}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a Role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <Skeleton isLoading={loadingPermissions}>
-                      <SelectItem value={id}>
-                        {permissions[0]?.role.name}
-                      </SelectItem>
-                    </Skeleton>
-                  </SelectContent>
-                </Select>
+                <Skeleton isLoading={loadingPermissions}>
+                  <Select
+                    {...field}
+                    disabled
+                    defaultValue={id}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value={id}>
+                          {permissions[0]?.role.name}
+                        </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Skeleton>
               </FormControl>
               <FormDescription />
               <FormMessage />
