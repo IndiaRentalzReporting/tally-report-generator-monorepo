@@ -62,7 +62,6 @@ const Create: React.FC = () => {
           action: {
             id,
             name,
-            checked: false,
           }
         }))
       }))

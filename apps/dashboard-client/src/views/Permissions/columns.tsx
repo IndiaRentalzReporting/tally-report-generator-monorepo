@@ -33,7 +33,6 @@ export const columns = (form?: UseFormReturn<FormState>)
                 <Input
                   type='checkbox'
                   disabled={!form}
-                  defaultChecked={action.checked}
                   {...form?.register(`permissions.${row.index}.permissionAction.${index}.action.checked`)}
                 />
               </Label>
