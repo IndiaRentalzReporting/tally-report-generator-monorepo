@@ -24,7 +24,7 @@ const Fields: React.FC<StateAsProps> = ({ form, disabledFields }) => {
   const { data: baseEntities, isFetching: fetchingTables } = useQuery({
     queryFn: async () => tableService.read(),
     select: (data) => data.data.tables,
-    queryKey: ['tables', 'getAll']
+    queryKey: ['Tables', 'getAll']
   });
   return (
     <div className="flex flex-col gap-4">

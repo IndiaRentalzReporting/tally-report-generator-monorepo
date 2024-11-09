@@ -38,7 +38,7 @@ export const createOne = async (
 };
 
 export const updateOne = async (
-  req: Request<Pick<PermissionSelect, 'id'>, object, PermissionSelect>,
+  req: Request<Pick<PermissionSelect, 'id'>, object, Partial<PermissionSelect>>,
   res: Response<{ permission: PermissionSelect }>,
   next: NextFunction
 ) => {

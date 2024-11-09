@@ -38,7 +38,7 @@ permissionActionRouter.post(
     body: PermissionActionSelectSchema.pick({
       action_id: true,
       permission_id: true
-    }),
+    }).partial(),
     params: PermissionActionSelectSchema.pick({
       action_id: true,
       permission_id: true
@@ -50,7 +50,7 @@ permissionActionRouter.post(
 permissionActionRouter.delete(
   '/delete/:action_id/:permission_id',
   validateSchema({
-    params: PermissionActionInsertSchema.pick({
+    params: PermissionActionSelectSchema.pick({
       action_id: true,
       permission_id: true
     })

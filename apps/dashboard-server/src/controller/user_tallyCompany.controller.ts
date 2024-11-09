@@ -22,7 +22,7 @@ export const createOne = async (
 };
 
 export const readAll = async (
-  req: Request<object,object,object, Partial<UserTallyCompanySelect>>,
+  req: Request<object, object, object, Partial<UserTallyCompanySelect>>,
   res: Response<{ userTallyCompanys: UserTallyCompanySelect[] }>,
   next: NextFunction
 ) => {
@@ -40,8 +40,8 @@ export const readAll = async (
 export const updateOne = async (
   req: Request<
   Pick<UserTallyCompanySelect, 'user_id' | 'tallyCompany_id'>,
-    object,
-  UserTallyCompanySelect
+  object,
+  Partial<UserTallyCompanySelect>
   >,
   res: Response<{ userTallyCompany: UserTallyCompanySelect }>,
   next: NextFunction

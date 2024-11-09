@@ -1,14 +1,12 @@
-import { Dispatch, SetStateAction } from 'react';
 import {
   ActionSelectSchema,
-  ModulePermissions,
   ModuleSelectSchema,
   PermissionInsertSchema,
   PermissionSelectSchema,
   RoleSelectSchema
 } from '@trg_package/schemas-dashboard/types';
 import * as z from 'zod';
-import { UseFormReturn } from 'react-hook-form';
+import { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 
 export const ModuleSchema = ModuleSelectSchema.pick({
   id: true,
@@ -23,6 +21,8 @@ export const RoleSchema = RoleSelectSchema.pick({
 export const ActionSchema = ActionSelectSchema.pick({
   name: true,
   id: true
+}).extend({
+  checked: z.boolean().default(false).optional(),
 });
 
 export const PermissionActionSchema = z.array(z.object({
@@ -30,40 +30,28 @@ export const PermissionActionSchema = z.array(z.object({
 }));
 
 export const InsertFormSchema = PermissionInsertSchema.pick({
-  id: true,
 }).extend({
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
-  role: RoleSchema,
+  role: RoleSchema.optional(),
   permissionAction: PermissionActionSchema
 });
 export type InsertState = z.infer<typeof InsertFormSchema>;
 
 export const SelectFormSchema = PermissionSelectSchema.pick({
-  id: true,
-}).merge(z.object({
+}).extend({
+  permissionId: PermissionInsertSchema.shape.id,
   module: ModuleSchema,
   role: RoleSchema,
   permissionAction: PermissionActionSchema
-}));
+});
 export type SelectState = z.infer<typeof SelectFormSchema>;
 
-export type FormState = InsertState | SelectState;
-
-export const initialState: InsertState = {
-  id: '',
-  module: {
-    name: '',
-    id: ''
-  },
-  permissionAction: [],
-  role: {
-    name: '',
-    id: ''
-  }
+export type FormState = {
+  permissions: Array<InsertState | SelectState>
 };
 
 export interface StateAsProps {
-  modulePermissions: ModulePermissions;
-  setModulePermissions: Dispatch<SetStateAction<ModulePermissions>>;
   form: UseFormReturn<FormState>
+  fields: FieldArrayWithId<FormState, 'permissions', 'id'>[]
 }

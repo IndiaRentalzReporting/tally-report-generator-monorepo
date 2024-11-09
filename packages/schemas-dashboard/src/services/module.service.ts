@@ -34,12 +34,12 @@ export class ModuleService extends BaseServiceNew<
   public async createOne(data: ModuleInsert): Promise<ModuleSelect> {
     const module = await super.createOne(data);
 
-    await this.extendSuperuserModules(module.id);
+    await this.extendSuperuserModules(module);
 
     return module;
   }
 
-  private async extendSuperuserModules(module_id: string) {
+  private async extendSuperuserModules(module: ModuleSelect) {
     const name = 'SUPERUSER';
 
     const role = await this.RoleService.findOne({
@@ -53,9 +53,10 @@ export class ModuleService extends BaseServiceNew<
 
     const { id: role_id } = role;
 
-    const { id: permission_id } = await this.PermissionService.createOne({
-      module_id,
-      role_id
+    const permission = await this.PermissionService.createOne({
+      role_id,
+      module_id: module.id,
+      isPrivate: module.isPrivate
     });
 
     const actions = await this.ActionService.findMany({}).catch((e) => {
@@ -67,7 +68,8 @@ export class ModuleService extends BaseServiceNew<
 
     for (const { id: action_id } of actions) {
       await this.PermissionActionService.createOne({
-        permission_id,
+        permission_id: permission.id,
+        isPrivate: permission.isPrivate,
         action_id
       });
     }

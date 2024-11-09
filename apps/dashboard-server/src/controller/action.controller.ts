@@ -5,7 +5,7 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request<object, object,object,Partial<ActionSelect>>,
+  req: Request<object, object, object, Partial<ActionSelect>>,
   res: Response<{ actions: ActionSelect[] }>,
   next: NextFunction
 ) => {
@@ -21,7 +21,7 @@ export const readAll = async (
 };
 
 export const updateOne = async (
-  req: Request<Pick<ActionSelect, 'id'>, object, Pick<ActionInsert, 'name'>>,
+  req: Request<Pick<ActionSelect, 'id'>, object, Partial<ActionSelect>>,
   res: Response<{ action: ActionSelect }>,
   next: NextFunction
 ) => {
@@ -49,7 +49,7 @@ export const deleteOne = async (
 };
 
 export const createOne = async (
-  req: Request<object, object, Pick<ActionInsert, 'name'>>,
+  req: Request<object, object, ActionInsert>,
   res: Response<{ action: ActionSelect }>,
   next: NextFunction
 ) => {

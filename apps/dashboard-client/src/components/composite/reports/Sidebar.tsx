@@ -101,7 +101,7 @@ const ReportsSidebar: React.FC = () => {
                         key={column.column.id}
                         onClick={() => addColumn(column.column.id)}
                       >
-                        <SidebarMenuButton>
+                        <SidebarMenuButton className='h-auto'>
                           <Plus /> <span className="sr-only">Add Column</span>
                           {column.column.displayName}
                         </SidebarMenuButton>

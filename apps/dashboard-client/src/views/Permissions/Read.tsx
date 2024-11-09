@@ -26,16 +26,14 @@ const Read: React.FC = () => {
   const { data: allPermissions = [], isFetching: fetchingPermissions } = useQuery({
     queryFn: () => services.read(),
     select: (data) => data.data.permissions
-      .filter(({ module }) => !!module)
-      .map((permission) => {
-        try {
-          SelectFormSchema.parse(permission);
-        } catch (error) {
-          console.error(error);
-        }
-        return SelectFormSchema.parse(permission);
-      }),
-    queryKey: ['permissions', 'getAll']
+      .map((permission) => SelectFormSchema.parse({
+        ...permission,
+        permissionId: permission.id,
+        permissionAction: permission.permissionAction.map(
+          (pa) => ({ action: { ...pa.action, checked: true } })
+        )
+      })),
+    queryKey: ['Permissions', 'getAll']
   });
 
   return (
@@ -50,7 +48,7 @@ const Read: React.FC = () => {
         <CardContent className="flex flex-col gap-4">
           <Skeleton isLoading={fetchingPermissions}>
             <DataTable
-              columns={columns}
+              columns={columns()}
               data={allPermissions}
               grouping={{
                 rowGrouping,

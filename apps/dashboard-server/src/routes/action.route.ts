@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
-import { ActionInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { ActionInsertSchema, ActionSelectSchema } from '@trg_package/schemas-dashboard/types';
 import {
   createOne,
   deleteOne,
@@ -22,17 +22,17 @@ actionRouter.post(
 actionRouter.get(
   '/read',
   validateSchema({
-    query: ActionInsertSchema.partial()
+    query: ActionSelectSchema.partial()
   }),
   readAll
 );
 actionRouter.patch(
   '/update/:id',
   validateSchema({
-    body: ActionInsertSchema.pick({
+    body: ActionSelectSchema.pick({
       name: true
-    }),
-    params: ActionInsertSchema.pick({
+    }).partial(),
+    params: ActionSelectSchema.pick({
       id: true
     })
   }),
@@ -41,7 +41,7 @@ actionRouter.patch(
 actionRouter.delete(
   '/delete/:id',
   validateSchema({
-    params: ActionInsertSchema.pick({
+    params: ActionSelectSchema.pick({
       id: true
     })
   }),

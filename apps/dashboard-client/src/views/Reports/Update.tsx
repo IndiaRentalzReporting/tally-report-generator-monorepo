@@ -17,18 +17,18 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: reportData, isFetching: loadingReport } = useQuery({
     queryFn: () => services.read({ id }),
     select: (data) => SelectFormSchema.parse(data.data.reports[0]),
-    queryKey: ['reports', 'getOne', id]
+    queryKey: ['Reports', 'getOne', id]
   });
 
   const form = useForm<FormState>({
-    resolver: zodResolver(SelectFormSchema),
+    resolver: zodResolver(SelectFormSchema.omit({ baseEntity: true })),
     values: reportData
   });
 
   const { mutateAsync: updateReport, isPending: updatingReport } = useMutation({
     mutationFn: (reportUpdate: FormState) => services.updateOne({ id }, reportUpdate),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reports', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'getAll'] });
     }
   });
 

@@ -9,7 +9,8 @@ import {
   StockItemInsertSchema,
   UnitInsertSchema,
   VoucherInsertSchema,
-  InventoryVoucherInsertSchema
+  InventoryVoucherInsertSchema,
+  CompanySelectSchema
 } from '@trg_package/schemas-tally/types';
 import z from 'zod';
 import { attachPGDashboard, attachServices, decryptApiKey } from '@/middlewares';
@@ -24,7 +25,12 @@ companyRouter.use(attachServices);
 companyRouter.post(
   '/create',
   validateSchema({
-    body: CompanyInsertSchema
+    body: CompanyInsertSchema.pick({
+      name: true,
+      guid: true,
+      masterId: true,
+      alterId: true
+    })
   }),
   createOne
 );
@@ -32,7 +38,7 @@ companyRouter.post(
 companyRouter.get(
   '/read',
   validateSchema({
-    query: CompanyInsertSchema.partial()
+    query: CompanySelectSchema.partial()
   }),
   readAll
 );
@@ -50,10 +56,8 @@ companyRouter.post(
         unit: z.array(UnitInsertSchema.strict()),
         voucher: z.array(VoucherInsertSchema.strict()),
         inventoryVoucher: z.array(InventoryVoucherInsertSchema.strict()),
-
       })
       .partial(),
-
     params: CompanyInsertSchema.pick({ guid: true })
   }),
   syncData

@@ -44,9 +44,9 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
     const {
       module: { name, icon }
     } = permission;
-    const moduleName = name.toLowerCase();
+    const moduleName = name;
     return {
-      to: `/dashboard/${moduleName}/read`,
+      to: `/dashboard/${moduleName}/Read`,
       name,
       children: [],
       icon
@@ -62,7 +62,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: location.pathname.split('/')[2]?.toUpperCase()
+      currentModule: location.pathname.split('/')[2]
     }));
   }, [location, permissions]);
 

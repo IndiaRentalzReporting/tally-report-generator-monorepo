@@ -5,12 +5,15 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const createOne = async (
-  req: Request<object, object, { moduleDetails: ModuleInsert }>,
+  req: Request<object, object, ModuleInsert>,
   res: Response<{ module: ModuleSelect | null }>,
   next: NextFunction
 ) => {
   try {
-    const module = await req.moduleService.createOne(req.body.moduleDetails);
+    const module = await req.moduleService.createOne({
+      ...req.body,
+      name: req.body.name.toUpperCase()
+    });
     return res.json({ module });
   } catch (e) {
     return next(e);

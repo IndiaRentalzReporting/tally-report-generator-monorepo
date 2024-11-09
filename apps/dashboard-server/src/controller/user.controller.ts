@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  RoleSelect,
   UserSelect,
   DetailedUser,
   UserInsert
@@ -44,36 +43,8 @@ export const readAll = async (
   }
 };
 
-export const updateRole = async (
-  req: Request<
-    object,
-    object,
-  { userIds: UserSelect['id'][]; roleId: RoleSelect['id'] }
-  >,
-  res: Response<{ userIds: string[] }>,
-  next: NextFunction
-) => {
-  const { userIds, roleId } = req.body;
-  try {
-    const updatedUserIds = userIds.map(async (user_id) => {
-      const { id } = await req.userService.updateOne(
-        { id: user_id },
-        {
-          role_id: roleId
-        }
-      );
-
-      return id;
-    });
-
-    return Promise.all(updatedUserIds).then((res) => res);
-  } catch (e) {
-    return next(e);
-  }
-};
-
 export const updateOne = async (
-  req: Request<Pick<UserSelect, 'id'>, object, Partial<UserInsert>>,
+  req: Request<Pick<UserSelect, 'id'>, object, Partial<UserSelect>>,
   res: Response<{ user: Omit<UserSelect, 'password'> }>,
   next: NextFunction
 ) => {

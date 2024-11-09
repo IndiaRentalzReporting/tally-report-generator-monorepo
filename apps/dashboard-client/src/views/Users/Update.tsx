@@ -23,7 +23,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
     select: (data) => SelectFormSchema.parse({ ...data.data.users[0], password: '********' }),
-    queryKey: ['users', 'getOne', id]
+    queryKey: ['Users', 'getOne', id]
   });
 
   const form = useForm<FormState>({
@@ -38,16 +38,16 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       role_id: null
     }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Users', 'getOne', id] });
+      queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
     }
   });
 
   const { mutateAsync: updateUser } = useMutation({
     mutationFn: (userUpdate: Omit<SelectState, 'id'>) => services.updateOne({ id }, userUpdate),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users', 'getOne', id] });
-      queryClient.invalidateQueries({ queryKey: ['users', 'getAll'] });
+      queryClient.invalidateQueries({ queryKey: ['Users', 'getOne', id] });
+      queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
     }
   });
 

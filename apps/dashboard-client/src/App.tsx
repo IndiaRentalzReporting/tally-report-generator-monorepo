@@ -24,10 +24,10 @@ const App = () => {
         {permissions.map(({ module: { name }, actions }) => (
           <>
             <Route path='/dashboard' element={<DashboardLayout />}>
-              <Route path={name.toLowerCase()} key={name}>
+              <Route path={name} key={name}>
                 {actions.map<React.ReactNode>((action) => (
                   <Route
-                    path={`${action.toLowerCase()}`}
+                    path={action}
                     key={action}
                     element={<ModuleMapper module={name} action={action} />}
                   />
@@ -35,13 +35,13 @@ const App = () => {
               </Route>
             </Route>
             {
-              name === 'REPORTS'
+              name === 'Reports'
               && <Route path='/dashboard' element={<ReportingLayout/>}>
-                  <Route path={name.toLowerCase()} key={name}>
+                  <Route path={name} key={name}>
                     {actions.map<React.ReactNode>((action) => (
-                      (action === 'READ' || action === 'UPDATE')
+                      (action === 'Read' || action === 'Update')
                         && <Route
-                            path={`${action.toLowerCase()}/:reportId`}
+                            path={`${action}/:reportId`}
                             key={action}
                             element={<ModuleMapper module={name} action={`${action}One`} />}
                           />

@@ -28,12 +28,12 @@ export class ActionService extends BaseServiceNew<
   public async createOne(data: ActionInsert): Promise<ActionSelect> {
     const action = await super.createOne(data);
 
-    await this.extendSuperuserActions(action.id);
+    await this.extendSuperuserActions(action);
 
     return action;
   }
 
-  private async extendSuperuserActions(action_id: string) {
+  private async extendSuperuserActions(action: ActionSelect) {
     const name = 'SUPERUSER';
 
     const role = await this.RoleService.findOne({
@@ -59,7 +59,8 @@ export class ActionService extends BaseServiceNew<
     for (const { id: permission_id } of permissions) {
       await this.PermissionActionService.createOne({
         permission_id,
-        action_id
+        action_id: action.id,
+        isPrivate: action.isPrivate
       });
     }
   }

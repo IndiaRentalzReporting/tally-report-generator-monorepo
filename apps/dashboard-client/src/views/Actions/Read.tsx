@@ -24,7 +24,7 @@ const Read: React.FC = () => {
   const { data: allActions = [], isFetching: fetchingActions } = useQuery({
     queryFn: () => services.read(),
     select: (data) => data.data.actions.map((action) => SelectFormSchema.parse(action)),
-    queryKey: ['actions', 'getAll']
+    queryKey: ['Actions', 'getAll']
   });
 
   return (

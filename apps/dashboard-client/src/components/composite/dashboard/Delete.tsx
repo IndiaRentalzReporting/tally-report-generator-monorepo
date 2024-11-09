@@ -27,8 +27,7 @@ const Delete: React.FC<IDeleteEntityProps> = ({
 
   useEffect(() => {
     const loadServices = async () => {
-      const module = type.toLowerCase();
-      const { services: { deleteOne: DO } } = await import(`../../../services/${module}`);
+      const { services: { deleteOne: DO } } = await import(`../../../services/${type}`);
       setDeleteOneService(() => DO);
     };
 
@@ -44,7 +43,7 @@ const Delete: React.FC<IDeleteEntityProps> = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [type.toLowerCase(), 'getAll']
+        queryKey: [type, 'getAll']
       });
     }
   });
@@ -63,15 +62,19 @@ const Delete: React.FC<IDeleteEntityProps> = ({
           className="text-red-500 cursor-pointer"
           size={20}
           onClick={() => {
-            toast({
+            const { dismiss } = toast({
               variant: 'destructive',
               title: `Delete ${type}`,
               description: `Are you sure you want to delete ${name} from ${type}`,
+
               action: (
                 <Button
                   isLoading={isPending}
                   type='button'
-                  onClick={() => mutateAsync()}
+                  onClick={() => {
+                    mutateAsync();
+                    dismiss();
+                  }}
                 >
                   Delete
                 </Button>

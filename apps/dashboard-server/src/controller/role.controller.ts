@@ -6,7 +6,7 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 
 export const readAll = async (
-  req: Request<object,object,object, Partial<RoleSelect>>,
+  req: Request<object, object, object, Partial<RoleSelect>>,
   res: Response<{ roles: RoleWithPermission[] }>,
   next: NextFunction
 ) => {
@@ -22,12 +22,15 @@ export const readAll = async (
 };
 
 export const createOne = async (
-  req: Request<object, object, Pick<RoleInsert, 'name'>>,
+  req: Request<object, object, RoleInsert>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction
 ) => {
   try {
-    const role = await req.roleService.createOne(req.body);
+    const role = await req.roleService.createOne({
+      ...req.body,
+      name: req.body.name.toUpperCase()
+    });
     return res.json({
       role
     });
@@ -37,7 +40,7 @@ export const createOne = async (
 };
 
 export const updateOne = async (
-  req: Request<Pick<RoleSelect, 'id'>, object, Pick<RoleSelect, 'name'>>,
+  req: Request<Pick<RoleSelect, 'id'>, object, Partial<RoleSelect>>,
   res: Response<{ role: RoleSelect }>,
   next: NextFunction
 ) => {

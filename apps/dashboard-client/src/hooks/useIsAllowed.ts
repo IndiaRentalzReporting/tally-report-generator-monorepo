@@ -14,8 +14,8 @@ export const useIsAllowed = ({
   const { permissions } = useAuth();
 
   const isAllowed = permissions.find(
-    (permission) => permission.actions.includes(action.toUpperCase())
-      && permission.module.name === module.toUpperCase()
+    (permission) => permission.actions.includes(action)
+      && permission.module.name === module
   );
 
   if (isAllowed) return true;
