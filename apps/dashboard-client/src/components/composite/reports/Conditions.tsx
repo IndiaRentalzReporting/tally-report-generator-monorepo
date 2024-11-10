@@ -9,7 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   Calendar,
-  MultiSelect,
   Skeleton,
   SelectContent,
   SelectGroup,
@@ -17,7 +16,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  Select
+  Select,
+  MultiSelect
 } from '@trg_package/vite/components';
 import { ConditionOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import moment from 'moment';
@@ -258,11 +258,11 @@ const ConditionParamsSelect = ({
             />
           </PopoverContent>
         </Popover>
-      : <Skeleton isLoading={loadingParamOptions}>
+      : <Skeleton isLoading={loadingParamOptions} className='h-10'>
           <MultiSelect
-            label='data'
+            title='data'
             options={paramOptions}
-            value={condition.params
+            values={condition.params
               ? condition.params[param]
               : []
             }
