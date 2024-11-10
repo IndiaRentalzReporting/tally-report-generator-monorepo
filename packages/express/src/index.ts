@@ -8,6 +8,7 @@ import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
 import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import cookieParser from 'cookie-parser';
 import config from './config';
 import { sessionsLoader } from './loaders/sessions';
 import { removePrivate } from './middleware/removePrivate';
@@ -23,6 +24,7 @@ export const expressLoader = async ({
 }): Promise<Express> => {
   const app = express();
 
+  app.use(cookieParser());
   app.use(morgan('dev'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
