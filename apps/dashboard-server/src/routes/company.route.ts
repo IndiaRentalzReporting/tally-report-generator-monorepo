@@ -13,14 +13,10 @@ import {
   CompanySelectSchema
 } from '@trg_package/schemas-tally/types';
 import z from 'zod';
-import { attachPGDashboard, attachServices, decryptApiKey } from '@/middlewares';
+
 import { createOne, readAll, syncData } from '@/controller/company.controller';
 
 const companyRouter = Router();
-
-companyRouter.use(decryptApiKey);
-companyRouter.use(attachPGDashboard);
-companyRouter.use(attachServices);
 
 companyRouter.post(
   '/create',

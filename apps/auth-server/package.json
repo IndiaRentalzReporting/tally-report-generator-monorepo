@@ -49,7 +49,6 @@
     "@trg_package/errors": "*",
     "@trg_package/express": "*",
     "@trg_package/middlewares": "*",
-    "@trg_package/pg-client": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/schemas-reporting": "^1.0.0",

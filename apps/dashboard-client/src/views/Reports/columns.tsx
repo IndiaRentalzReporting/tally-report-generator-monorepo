@@ -33,7 +33,8 @@ export const columns: ColumnDef<FormState>[] = [
             module={{
               id: report.id,
               name: report.name,
-              type: 'Reports'
+              deleteType: 'Reports',
+              updateType: 'Reports'
             }}
           />
       );

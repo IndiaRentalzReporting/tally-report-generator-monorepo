@@ -98,18 +98,21 @@ const Create: React.FC = () => {
         permissionAction: permission.permissionAction.filter((pa) => pa.action.checked)
       }));
       for (const { module, role, permissionAction } of checkedPermissions) {
-        const { data: { permission: { id: permission_id } } } = await permissionService.createOne({
-          module_id: module.id,
-          role_id: role.id
-        });
-        for (const { action } of permissionAction) {
-          await actionService.read({
-            id: action.id
-          });
-          await permission_actionService.createOne({
-            permission_id,
-            action_id: action.id
-          });
+        if (permissionAction.length) {
+          const { data: { permission: { id: permission_id } } } = await permissionService
+            .createOne({
+              module_id: module.id,
+              role_id: role.id
+            });
+          for (const { action } of permissionAction) {
+            await actionService.read({
+              id: action.id
+            });
+            await permission_actionService.createOne({
+              permission_id,
+              action_id: action.id
+            });
+          }
         }
       }
     },
@@ -122,7 +125,7 @@ const Create: React.FC = () => {
 
   const handleSubmit = (values: FormState) => {
     createPermission(values.permissions);
-    // form.reset();
+    form.reset();
   };
 
   return (

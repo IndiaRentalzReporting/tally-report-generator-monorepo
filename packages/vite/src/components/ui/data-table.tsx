@@ -157,7 +157,7 @@ export const DataTable = <TData, TValue>({
       <When condition={rowSelection !== null}>
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} row(s) selected
         </div>
       </When>
     </>

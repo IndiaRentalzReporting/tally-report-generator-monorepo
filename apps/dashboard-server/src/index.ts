@@ -1,25 +1,7 @@
-import type {
-  UserService,
-  RoleService,
-  ModuleService,
-  ActionService,
-  PermissionService,
-  ApiKeyService,
-  PermissionActionService,
-  UserTallyCompanyService
-} from '@trg_package/schemas-dashboard/services';
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import type { Sql } from 'postgres';
-import { CompanyService } from '@trg_package/schemas-tally/services';
-import {
-  ColumnService,
-  ReportService,
-  TableService
-} from '@trg_package/schemas-reporting/services';
 import { TenantSelect } from '@trg_package/schemas-auth/types';
-import * as dashboardSchemas from './models/schemas';
 import config from './config';
 import expressLoader from './loaders/express';
+import { DashboardDatabase, DashboardServices } from './middlewares';
 
 const { PORT, NODE_ENV } = config;
 
@@ -41,22 +23,12 @@ declare global {
     interface Request {
       module?: string;
       action?: string;
-      userService: UserService;
-      roleService: RoleService;
-      moduleService: ModuleService;
-      actionService: ActionService;
-      permissionService: PermissionService;
-      permissionActionService: PermissionActionService;
-      userTallyCompanyService: UserTallyCompanyService;
-      apiKeyService: ApiKeyService;
-      companyService: CompanyService;
-      tableService: TableService;
-      columnService: ColumnService;
-      reportService: ReportService;
       decryptedApiKey : TenantSelect;
 
-      dashboardDb: PostgresJsDatabase<typeof dashboardSchemas> | null;
-      dashboardConnection: Sql<{}> | null;
+      dashboard: {
+        database: DashboardDatabase
+        services: DashboardServices;
+      } ;
     }
   }
 }

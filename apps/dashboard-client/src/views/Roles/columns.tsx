@@ -18,7 +18,9 @@ export const columns: ColumnDef<FormState>[] = [
             module={{
               id: role.id,
               name: role.name,
-              type: 'Roles'
+              deleteType: 'Roles',
+              deleteSideEffect: ['Permissions'],
+              updateType: 'Roles'
             }}
           />
       );

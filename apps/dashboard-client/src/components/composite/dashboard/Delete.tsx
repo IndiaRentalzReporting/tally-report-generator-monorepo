@@ -13,12 +13,15 @@ interface IDeleteEntityProps {
   module: {
     name: string;
     id: string;
-    type: string;
+    type: {
+      main: string;
+      sideEffect?: Array<string>;
+    };
   };
 }
 
 const Delete: React.FC<IDeleteEntityProps> = ({
-  module: { id, name, type }
+  module: { id, name, type: { main, sideEffect = [] } },
 }) => {
   const queryClient = useQueryClient();
   const [deleteOneService, setDeleteOneService] = useState<
@@ -27,12 +30,12 @@ const Delete: React.FC<IDeleteEntityProps> = ({
 
   useEffect(() => {
     const loadServices = async () => {
-      const { services: { deleteOne: DO } } = await import(`../../../services/${type}`);
+      const { services: { deleteOne: DO } } = await import(`../../../services/${main}`);
       setDeleteOneService(() => DO);
     };
 
     loadServices();
-  }, [type]);
+  }, [main]);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
@@ -42,8 +45,10 @@ const Delete: React.FC<IDeleteEntityProps> = ({
       return deleteOneService({ id });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [type, 'getAll']
+      sideEffect.concat([main]).forEach((service) => {
+        queryClient.invalidateQueries({
+          queryKey: [service, 'getAll']
+        });
       });
     }
   });
@@ -51,7 +56,7 @@ const Delete: React.FC<IDeleteEntityProps> = ({
   const { toast } = useToast();
 
   const isDeleteAllowed = useIsAllowed({
-    module: type,
+    module: main,
     action: 'Delete'
   });
 
@@ -64,15 +69,14 @@ const Delete: React.FC<IDeleteEntityProps> = ({
           onClick={() => {
             const { dismiss } = toast({
               variant: 'destructive',
-              title: `Delete ${type}`,
-              description: `Are you sure you want to delete ${name} from ${type}`,
-
+              title: `Delete ${main}`,
+              description: `Are you sure you want to delete ${name} from ${main}`,
               action: (
                 <Button
                   isLoading={isPending}
                   type='button'
-                  onClick={() => {
-                    mutateAsync();
+                  onClick={async () => {
+                    await mutateAsync();
                     dismiss();
                   }}
                 >

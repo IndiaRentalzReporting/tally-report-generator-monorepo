@@ -1,6 +1,9 @@
 import { BadRequestError } from '@trg_package/errors';
 import { drizzle , PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import config from '@/config';
+
+const { DASHBOARD_PG_HOST, DASHBOARD_PG_PORT } = config;
 
 export const createUrl = ({
   db_username,
@@ -10,7 +13,7 @@ export const createUrl = ({
   db_username: string;
   db_password: string;
   db_name: string;
-}): string => `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
+}): string => `postgresql://${db_username}:${db_password}@${DASHBOARD_PG_HOST}:${DASHBOARD_PG_PORT}/${db_name}`;
 
 export const createClient = <T extends Record<string, unknown>>(
   URL: string,
@@ -23,13 +26,12 @@ export const createClient = <T extends Record<string, unknown>>(
   try {
     const connection = postgres(URL, {
       max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : 10,
-      idle_timeout: 1000 * 60 * 5, // Close idle connections after 300 seconds
-      connect_timeout: 1000 * 30, // Set a 10-second timeout for new connections
     });
     const client = drizzle(connection, {
       schema,
       logger: true
     });
+
     return {
       client,
       connection

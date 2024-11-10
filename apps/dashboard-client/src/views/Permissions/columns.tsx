@@ -71,7 +71,9 @@ export const columns = (form?: UseFormReturn<FormState>)
           module={{
             id: permission.role?.id,
             name: permission.role?.name,
-            type: 'Permissions'
+            deleteType: 'Roles',
+            deleteSideEffect: ['Permissions'],
+            updateType: 'Permissions'
           }}
         />
       );

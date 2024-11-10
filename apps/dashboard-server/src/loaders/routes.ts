@@ -6,23 +6,18 @@ import actionRouter from '@/routes/action.route';
 import permissionRouter from '@/routes/permission.route';
 import permissionActionRouter from '@/routes/permission_action.route';
 import apiKeyRouter from '@/routes/apiKey.route';
-import companyRouter from '@/routes/company.route';
 import userTallyCompanyRouter from '@/routes/user_tallyCompany.route';
 import {
   attachModuleActionData,
-  attachPGDashboard,
-  attachServices,
-  attachUser,
+  Initialization,
   isRoleAllowed
 } from '@/middlewares';
 import reportRouter from '@/routes/report.route';
 
 const routesLoader = (app: Express) => {
-  app.use('/api/v1/companies', companyRouter);
+  Initialization.initialize();
+  app.use(Initialization.attachUser);
 
-  app.use(attachUser);
-  app.use(attachPGDashboard);
-  app.use(attachServices);
   app.use(attachModuleActionData);
   app.use(isRoleAllowed);
 

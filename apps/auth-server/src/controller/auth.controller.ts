@@ -98,9 +98,6 @@ export const handleStatusCheck = (
   try {
     if (req.isAuthenticated()) {
       const { user } = req;
-      console.log({
-        user
-      });
       return res.json({
         user,
         isAuthenticated: true
