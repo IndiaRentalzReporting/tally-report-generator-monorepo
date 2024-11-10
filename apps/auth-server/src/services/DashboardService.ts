@@ -11,12 +11,12 @@ import {
   RoleSelect,
   UserSelect
 } from '@trg_package/schemas-dashboard/types';
-import { createUrl, createClient } from '@trg_package/pg-client';
 import { ColumnInsert } from '@trg_package/schemas-reporting/types';
 import {
   ColumnService,
   TableService
 } from '@trg_package/schemas-reporting/services';
+import { createUrl, createClient } from '@/models';
 import actions from '../models/dashboard/seed/Actions/data.json';
 import modules from '../models/dashboard/seed/Modules/data.json';
 import columns from '../models/dashboard/seed/Columns/data.json';

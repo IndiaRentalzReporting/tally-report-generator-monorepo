@@ -22,7 +22,9 @@ class TenantService extends BaseTenantService {
     tenantData: TenantInsert,
     userData: DashboardUserInsert
   ): Promise<{ tenant: TenantSelect; user: UserSelect }> {
-    const { db_name, db_username, db_password } = await this.createDatabase(
+    const {
+      db_name, db_username, db_password
+    } = await this.createDatabase(
       tenantData.name
     );
 
