@@ -224,7 +224,7 @@ const ConditionParamsSelect = ({
   const { data: paramOptions = [], isLoading: loadingParamOptions } = useQuery({
     queryKey: ['columns', 'selectData', condition.column.id],
     queryFn: () => getColumnData(condition.column.id),
-    select: (data) => data.data,
+    select: (data) => data.data.data,
     enabled: !!condition.column.id
   });
   return (
