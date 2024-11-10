@@ -26,6 +26,7 @@ import { createClient, createUrl } from '@/models';
 import { authAxios } from '@/utils/authAxios';
 import * as dashboardSchemas from '@/models/schemas';
 import config from '@/config';
+import { decrypt } from '@/utils/crypto';
 
 const { REDIS_PORT, REDIS_HOST } = config;
 
@@ -69,7 +70,21 @@ export class Initialization {
       const connectSID = req.cookies['connect.sid'];
 
       if (!connectSID) {
-        throw new UnauthenticatedError('No cookie found');
+        const apiKey = req.headers['x-api-key'] as string;
+
+        if (!apiKey) {
+          throw new BadRequestError('API or Cookie key is required');
+        }
+
+        try {
+          const decryptedData = decrypt(apiKey);
+          const { tenant } = JSON.parse(decryptedData) as { tenant : TenantSelect };
+
+          req.decryptedApiKey = tenant;
+          next();
+        } catch (error) {
+          throw new BadRequestError('Invalid API key');
+        }
       }
 
       const cacheKey = `user:${connectSID}`;
