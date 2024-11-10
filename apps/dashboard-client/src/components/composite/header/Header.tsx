@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '@trg_package/vite/lib/utils';
 import {
   Menu, Package2, ChevronDown
 } from 'lucide-react';
@@ -47,7 +47,7 @@ const Header: React.FC = () => {
                 <AccordionItem value={`item-${index}`} key={to}>
                   <NavLink
                     to={!children ? to : '#'}
-                    className={({ isActive }) => clsx(
+                    className={({ isActive }) => cn(
                       'mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-foreground hover:text-foreground',
                       isActive && !children && 'bg-muted text-primary',
                       children || 'hover:text-primary'
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
                     }
                   >
                     <AccordionTrigger
-                      className={clsx('pt-0 rounded-lg px-3 py-2 w-full')}
+                      className={cn('pt-0 rounded-lg px-3 py-2 w-full')}
                     >
                       <span className="flex gap-3 items-center w-full">
                         <When condition={!!icon}>
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
                         <NavLink
                           to={child.to}
                           key={child.to}
-                          className={({ isActive }) => clsx(
+                          className={({ isActive }) => cn(
                             'flex items-center gap-3 rounded-lg py-1 text-muted-foreground transition-all hover:text-primary',
                             isActive && 'text-primary'
                           )

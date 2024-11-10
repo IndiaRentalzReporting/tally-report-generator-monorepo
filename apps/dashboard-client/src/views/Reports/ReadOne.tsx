@@ -23,13 +23,13 @@ import {
   Table,
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@trg_package/vite/components';
-import clsx from 'clsx';
+import { cn } from '@trg_package/vite/lib/utils';
 import { useReports } from '@/providers/ReportsProvider';
 import { SortingButton } from '@/components/composite/SortingButton';
+import Filters from '@/components/composite/reports/ReportFilters';
 
 const ReadReport: React.FC = () => {
   const {
@@ -82,10 +82,10 @@ const ReadReport: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Report</CardTitle>
-        <CardDescription>
-          Your report is ready!
-        </CardDescription>
+        <CardTitle className='flex justify-between items-center'>
+          Report
+          <Filters/>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="rounded-md border w-full overflow-x-auto">
@@ -141,7 +141,7 @@ const ReadReport: React.FC = () => {
           <PaginationContent>
             <PaginationItem
               onClick={() => table.previousPage()}
-              className={clsx(!table.getCanPreviousPage() && 'pointer-events-none opacity-50')}
+              className={cn(!table.getCanPreviousPage() && 'pointer-events-none opacity-50')}
             >
               <PaginationPrevious/>
             </PaginationItem>
@@ -150,7 +150,7 @@ const ReadReport: React.FC = () => {
             </PaginationItem>
             <PaginationItem
               onClick={() => table.nextPage()}
-              className={clsx(!table.getCanNextPage() && 'pointer-events-none opacity-50')}
+              className={cn(!table.getCanNextPage() && 'pointer-events-none opacity-50')}
             >
               <PaginationNext/>
             </PaginationItem>

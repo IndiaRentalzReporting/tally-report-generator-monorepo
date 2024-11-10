@@ -6,7 +6,7 @@ import React from 'react';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/Reports';
 import { NavigationProvider } from '@/providers/NavigationProvider';
-import Sidebar from './Sidebar';
+import Sidebar from '../dashboard/Sidebar';
 import DashboardLayout from '../dashboard/Layout';
 import { Main } from '../Main';
 

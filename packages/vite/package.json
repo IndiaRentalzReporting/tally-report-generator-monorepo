@@ -8,6 +8,7 @@
     "./client": "./src/client/index.ts",
     "./components": "./src/components/index.ts",
     "./hooks": "./src/lib/hooks/index.ts",
+    "./lib/utils": "./src/lib/utils.ts",
     "./components/styles.css": "./dist/index.css"
   },
   "sideEffects": [

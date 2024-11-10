@@ -1,7 +1,6 @@
-import clsx from 'clsx';
 import { Package2 } from 'lucide-react';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   When,
   Sidebar as SidebarComponent,
@@ -17,11 +16,16 @@ import {
   SidebarSeparator,
   SidebarGroupLabel
 } from '@trg_package/vite/components';
+import { cn } from '@trg_package/vite/lib/utils';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
 import UserSettings from '../header/UserSettings';
+import AvailableColumns from '../reports/AvailableColumns';
 
 const Sidebar: React.FC = () => {
+  const { pathname } = useLocation();
+  const isUpdate = pathname.includes('Update');
+
   const { tenant } = useAuth();
   const { navigation } = useNav();
 
@@ -51,7 +55,7 @@ const Sidebar: React.FC = () => {
                   <SidebarMenuButton>
                     <NavLink
                       to={to}
-                      className={clsx(
+                      className={cn(
                         'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
                         children || 'hover:text-primary'
                       )}
@@ -73,6 +77,9 @@ const Sidebar: React.FC = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <When condition={isUpdate}>
+          <AvailableColumns/>
+        </When>
       </SidebarContent>
       <SidebarFooter >
         <SidebarMenu>
