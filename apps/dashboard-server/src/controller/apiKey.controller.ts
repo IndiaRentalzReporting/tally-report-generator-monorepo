@@ -11,7 +11,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const apiKeys = await req.apiKeyService.findMany({
+    const apiKeys = await req.dashboard.services.apiKey.findMany({
       ...req.query,
       isPrivate: false
     });
@@ -28,7 +28,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const apiKey = await req.apiKeyService.updateOne({ id }, req.body);
+    const apiKey = await req.dashboard.services.apiKey.updateOne({ id }, req.body);
     return res.json({ apiKey });
   } catch (e) {
     return next(e);
@@ -42,7 +42,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const apiKey = await req.apiKeyService.deleteOne({ id });
+    const apiKey = await req.dashboard.services.apiKey.deleteOne({ id });
     return res.json({ apiKey });
   } catch (e) {
     return next(e);
@@ -59,7 +59,7 @@ export const createOne = async (
     const { tenant } = req.user!;
     const encryptedData = encrypt(JSON.stringify({ tenant }));
 
-    const apiKey = await req.apiKeyService.createOne({
+    const apiKey = await req.dashboard.services.apiKey.createOne({
       ...data,
       key: encryptedData
     });

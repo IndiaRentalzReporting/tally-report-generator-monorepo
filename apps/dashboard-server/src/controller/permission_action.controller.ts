@@ -11,7 +11,7 @@ export const createOne = async (
 ) => {
   try {
     const { action_id, permission_id } = req.body;
-    const permissionAction = await req.permissionActionService.createOne({
+    const permissionAction = await req.dashboard.services.permissionAction.createOne({
       action_id,
       permission_id
     });
@@ -27,7 +27,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissionActions = await req.permissionActionService.findMany({
+    const permissionActions = await req.dashboard.services.permissionAction.findMany({
       ...req.query,
       isPrivate: false
     });
@@ -49,7 +49,7 @@ export const updateOne = async (
   try {
     const { action_id: oldActionId, permission_id: oldPermissionId } = req.params;
     const { action_id, permission_id } = req.body;
-    const permissionAction = await req.permissionActionService.updateOne(
+    const permissionAction = await req.dashboard.services.permissionAction.updateOne(
       { action_id: oldActionId, permission_id: oldPermissionId },
       {
         action_id,
@@ -71,7 +71,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { action_id, permission_id } = req.params;
-    const permission = await req.permissionActionService.deleteOne({
+    const permission = await req.dashboard.services.permissionAction.deleteOne({
       action_id,
       permission_id
     });

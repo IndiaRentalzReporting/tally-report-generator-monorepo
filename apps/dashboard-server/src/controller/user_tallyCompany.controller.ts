@@ -11,7 +11,7 @@ export const createOne = async (
 ) => {
   try {
     const { user_id, tallyCompany_id } = req.body;
-    const userTallyCompany = await req.userTallyCompanyService.createOne({
+    const userTallyCompany = await req.dashboard.services.userTallyCompany.createOne({
       user_id,
       tallyCompany_id
     });
@@ -27,7 +27,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const userTallyCompanys = await req.userTallyCompanyService.findMany({
+    const userTallyCompanys = await req.dashboard.services.userTallyCompany.findMany({
       ...req.query,
       isPrivate: false
     });
@@ -49,7 +49,7 @@ export const updateOne = async (
   try {
     const { user_id: oldActionId, tallyCompany_id: oldPermissionId } = req.params;
     const { user_id, tallyCompany_id } = req.body;
-    const userTallyCompany = await req.userTallyCompanyService.updateOne(
+    const userTallyCompany = await req.dashboard.services.userTallyCompany.updateOne(
       { user_id: oldActionId, tallyCompany_id: oldPermissionId },
       {
         user_id,
@@ -71,7 +71,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { user_id, tallyCompany_id } = req.params;
-    const permission = await req.userTallyCompanyService.deleteOne({
+    const permission = await req.dashboard.services.userTallyCompany.deleteOne({
       user_id,
       tallyCompany_id
     });

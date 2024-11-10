@@ -21,7 +21,10 @@ const EnvSchema = z.object({
   SMTP_PORT: z.coerce.number(),
   SMTP_USER: z.string(),
 
-  ENCRYPTION_KEY: z.string()
+  ENCRYPTION_KEY: z.string(),
+
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
 });
 
 expand(config());
