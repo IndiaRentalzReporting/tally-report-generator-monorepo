@@ -1,6 +1,6 @@
-import { BadRequestError } from '@trg_package/errors';
-import { drizzle , PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import { ConnectionManager } from './ConnectionManager';
 
 export const createUrl = ({
   db_username,
@@ -13,6 +13,7 @@ export const createUrl = ({
 }): string => `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
 
 export const createClient = <T extends Record<string, unknown>>(
+  tenantId: string,
   URL: string,
   schema: T,
   options: {
@@ -20,23 +21,6 @@ export const createClient = <T extends Record<string, unknown>>(
     DB_SEEDING: boolean;
   }
 ): { client: PostgresJsDatabase<T>; connection: postgres.Sql } => {
-  try {
-    const connection = postgres(URL, {
-      max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : 10,
-      idle_timeout: 1000 * 60 * 5, // Close idle connections after 300 seconds
-      connect_timeout: 1000 * 30, // Set a 10-second timeout for new connections
-    });
-    const client = drizzle(connection, {
-      schema,
-      logger: true
-    });
-    return {
-      client,
-      connection
-    };
-  } catch (e) {
-    throw new BadRequestError(
-      `Could not create Database client with URL - ${URL}: ${e}`
-    );
-  }
+  const connectionManager = ConnectionManager.getInstance();
+  return connectionManager.getOrCreateConnection(tenantId, URL, schema, options);
 };
