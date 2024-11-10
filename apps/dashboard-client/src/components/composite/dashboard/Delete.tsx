@@ -18,7 +18,7 @@ interface IDeleteEntityProps {
 }
 
 const Delete: React.FC<IDeleteEntityProps> = ({
-  module: { id, name, type }
+  module: { id, name, type },
 }) => {
   const queryClient = useQueryClient();
   const [deleteOneService, setDeleteOneService] = useState<
@@ -71,8 +71,8 @@ const Delete: React.FC<IDeleteEntityProps> = ({
                 <Button
                   isLoading={isPending}
                   type='button'
-                  onClick={() => {
-                    mutateAsync();
+                  onClick={async () => {
+                    await mutateAsync();
                     dismiss();
                   }}
                 >

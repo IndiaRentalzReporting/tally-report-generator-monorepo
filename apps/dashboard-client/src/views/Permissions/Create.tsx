@@ -122,7 +122,7 @@ const Create: React.FC = () => {
 
   const handleSubmit = (values: FormState) => {
     createPermission(values.permissions);
-    // form.reset();
+    form.reset();
   };
 
   return (

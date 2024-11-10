@@ -10,7 +10,7 @@ interface ActionsCellProps {
 }
 
 const Action: React.FC<ActionsCellProps> = ({
-  module: { id, name, type }
+  module: { id, name, type },
 }) => {
   if (!id) throw new Error('Entity ID is required');
   if (!name) throw new Error('Entity name is required');

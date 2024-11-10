@@ -34,7 +34,7 @@ import {
 import Fields from './Fields';
 
 const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
-  const { data: modules = [], isFetching: fetchingModules } = useQuery({
+  const { data: modules = [] } = useQuery({
     queryFn: () => moduleService.read(),
     select: (data) => data.data.modules.map((module) => ModuleSchema.parse(module)),
     queryKey: ['Modules', 'getAll']
@@ -73,7 +73,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
 
       return [...existingPermissions, ...missingPermissions];
     },
-    queryKey: ['Roles', 'getOne', id],
+    queryKey: ['Permissions', 'getOne', id],
     enabled: !!actions
   });
 
@@ -121,6 +121,7 @@ const Update: React.FC<Pick<PermissionSelect, 'id'>> = ({ id }) => {
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Permissions', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['Permissions', 'getAll'] });
       queryClient.invalidateQueries({ queryKey: ['Actions', 'getAll'] });
     }

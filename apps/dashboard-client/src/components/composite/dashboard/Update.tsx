@@ -18,8 +18,6 @@ import {
 import { useIsAllowed } from '@/hooks';
 
 interface IUpdateEntityProps {
-  size?: number;
-  className?: string;
   module: {
     name: string;
     id: string;
@@ -29,8 +27,6 @@ interface IUpdateEntityProps {
 
 const Update: React.FC<IUpdateEntityProps> = ({
   module: { id, type },
-  className = '',
-  size = 20
 }) => {
   const isEditAllowed = useIsAllowed({
     module: type,
@@ -44,7 +40,7 @@ const Update: React.FC<IUpdateEntityProps> = ({
       <Then>
         <Drawer>
           <DrawerTrigger asChild>
-            <Edit size={size} className={`text-green-500 ${className}`} />
+            <Edit className="text-green-500" />
           </DrawerTrigger>
           <DrawerContent className="px-6">
             <DrawerHeader className="px-0">
