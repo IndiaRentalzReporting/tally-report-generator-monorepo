@@ -5,12 +5,20 @@ interface ActionsCellProps {
   module: {
     id: string | undefined;
     name: string | undefined;
-    type: string;
+    deleteType: string;
+    deleteSideEffect?: Array<string>;
+    updateType: string;
   };
 }
 
 const Action: React.FC<ActionsCellProps> = ({
-  module: { id, name, type },
+  module: {
+    id,
+    name,
+    deleteType,
+    deleteSideEffect,
+    updateType,
+  },
 }) => {
   if (!id) throw new Error('Entity ID is required');
   if (!name) throw new Error('Entity name is required');
@@ -20,14 +28,17 @@ const Action: React.FC<ActionsCellProps> = ({
         module={{
           id,
           name,
-          type
+          type: {
+            main: deleteType,
+            sideEffect: deleteSideEffect
+          }
         }}
       />
       <UpdateEntity
         module={{
           id,
           name,
-          type
+          type: updateType
         }}
       />
     </span>

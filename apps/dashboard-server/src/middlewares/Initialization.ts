@@ -78,7 +78,7 @@ export class Initialization {
       if (cachedUser) {
         const { user } = cachedUser;
         req.user = user;
-        const database = await Initialization.initDatabase(user.tenant.id, user.tenant);
+        const database = await Initialization.initDatabase(user.tenant);
         const services = await Initialization.initServices(database);
 
         req.dashboard = { database, services };
@@ -103,11 +103,11 @@ export class Initialization {
 
       await Initialization.setCache(
         cacheKey,
-        user,
+        { user },
         req.session?.cookie?.expires?.getTime()
       );
 
-      const database = await Initialization.initDatabase(req.user.tenant.id, req.user.tenant);
+      const database = await Initialization.initDatabase(req.user.tenant);
       const services = await Initialization.initServices(database);
 
       req.dashboard = { database, services };
@@ -118,7 +118,8 @@ export class Initialization {
     }
   }
 
-  private static async initDatabase(tenantId: TenantSelect['id'], {
+  private static async initDatabase({
+    id,
     db_name,
     db_username,
     db_password
@@ -134,7 +135,7 @@ export class Initialization {
     });
 
     const { client, connection } = createClient(
-      `TENANT:${tenantId}`,
+      `TENANT:${id}`,
       DASHBOARD_PG_URL,
       dashboardSchemas,
       {
