@@ -23,6 +23,9 @@ const EnvSchema = z.object({
 
   ENCRYPTION_KEY: z.string(),
 
+  DASHBOARD_PG_HOST: z.string(),
+  DASHBOARD_PG_PORT: z.coerce.number(),
+
   REDIS_HOST: z.string(),
   REDIS_PORT: z.coerce.number(),
 });

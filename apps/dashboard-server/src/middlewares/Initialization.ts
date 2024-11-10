@@ -22,7 +22,7 @@ import {
 import { CompanyService } from '@trg_package/schemas-tally/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
-import { createClient, createUrl } from '@trg_package/pg-client';
+import { createClient, createUrl } from '@/models';
 import { authAxios } from '@/utils/authAxios';
 import * as dashboardSchemas from '@/models/schemas';
 import config from '@/config';
@@ -73,12 +73,12 @@ export class Initialization {
       }
 
       const cacheKey = `user:${connectSID}`;
-      const cachedUser = await Initialization.getFromCache<
-      AuthDetailedUser & DashDetailedUser>(cacheKey);
+      const cachedUser = await Initialization.getFromCache<CachedUser>(cacheKey);
 
       if (cachedUser) {
-        req.user = cachedUser;
-        const database = await Initialization.initDatabase(cachedUser.tenant.id, cachedUser.tenant);
+        const { user } = cachedUser;
+        req.user = user;
+        const database = await Initialization.initDatabase(user.tenant.id, user.tenant);
         const services = await Initialization.initServices(database);
 
         req.dashboard = { database, services };

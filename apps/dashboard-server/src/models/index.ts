@@ -1,6 +1,9 @@
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { ConnectionManager } from './ConnectionManager';
+import { ConnectionManager } from './connectionManager';
+import config from '@/config';
+
+const { DASHBOARD_PG_HOST, DASHBOARD_PG_PORT } = config;
 
 export const createUrl = ({
   db_username,
@@ -10,7 +13,7 @@ export const createUrl = ({
   db_username: string;
   db_password: string;
   db_name: string;
-}): string => `postgresql://${db_username}:${db_password}@localhost:5432/${db_name}`;
+}): string => `postgresql://${db_username}:${db_password}@${DASHBOARD_PG_HOST}:${DASHBOARD_PG_PORT}/${db_name}`;
 
 export const createClient = <T extends Record<string, unknown>>(
   tenantId: string,
