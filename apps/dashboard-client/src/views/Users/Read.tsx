@@ -145,13 +145,11 @@ const Read: React.FC = () => {
                 <DataTable
                   columns={columns}
                   data={allUsers}
+                  enableSorting
+                  enableSelection
                   selection={{
                     rowSelection,
-                    setRowSelection
-                  }}
-                  grouping={{
-                    rowGrouping: [],
-                    setRowGrouping: () => null
+                    onRowSelectionChange: setRowSelection
                   }}
                 />
               </Skeleton>

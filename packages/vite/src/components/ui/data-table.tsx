@@ -11,7 +11,9 @@ import {
   useReactTable,
   getExpandedRowModel,
   getGroupedRowModel,
-  GroupingState
+  GroupingState,
+  PaginationState,
+  TableOptions
 } from '@tanstack/react-table';
 
 import React from 'react';
@@ -40,47 +42,92 @@ import { cn } from '$/lib/utils';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  selection: {
+  enableSorting?: boolean;
+  enableSelection?: boolean;
+  enableGrouping?: boolean;
+  enablePagination?: boolean;
+  selection?: {
     rowSelection: RowSelectionState;
-    setRowSelection: OnChangeFn<RowSelectionState>;
+    onRowSelectionChange: OnChangeFn<RowSelectionState>;
   };
-  grouping: {
+  grouping?: {
     rowGrouping: GroupingState;
-    setRowGrouping: OnChangeFn<GroupingState>;
+    onGroupingChange: OnChangeFn<GroupingState>;
   };
-  usePagination?: boolean;
+  pagination?: {
+    totalCount: number;
+    paginationState: PaginationState;
+    onPaginationChange: OnChangeFn<PaginationState>;
+  };
 }
 
 export const DataTable = <TData, TValue>({
   columns,
   data,
-  selection: {
-    rowSelection,
-    setRowSelection
-  },
-  grouping: {
-    rowGrouping,
-    setRowGrouping
-  },
-  usePagination = false
+  enableSorting = false,
+  enableSelection = false,
+  enableGrouping = false,
+  enablePagination = false,
+  selection,
+  grouping,
+  pagination,
 }: DataTableProps<TData, TValue>) => {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const table = useReactTable({
+  const [sorting, onSortingChange] = React.useState<SortingState>([]);
+  const [internalRowSelection, setInternalRowSelection] = React.useState<RowSelectionState>({});
+  const [internalGrouping, setInternalGrouping] = React.useState<GroupingState>([]);
+  const [internalPagination, setInternalPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const tableOptions: Partial<TableOptions<TData>> = {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onGroupingChange: setRowGrouping,
-    getGroupedRowModel: getGroupedRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    state: {
+  };
+
+  if (enableSorting) {
+    tableOptions.onSortingChange = onSortingChange;
+    tableOptions.getSortedRowModel = getSortedRowModel();
+    tableOptions.state = {
+      ...tableOptions.state,
       sorting,
-      grouping: rowGrouping ?? [],
-      rowSelection: rowSelection ?? {}
-    }
-  });
+    };
+  }
+
+  if (enableSelection && selection) {
+    const { rowSelection, onRowSelectionChange } = selection;
+    tableOptions.onRowSelectionChange = onRowSelectionChange || setInternalRowSelection;
+    tableOptions.state = {
+      ...tableOptions.state,
+      rowSelection: rowSelection || internalRowSelection,
+    };
+  }
+
+  if (enableGrouping && grouping) {
+    const { rowGrouping, onGroupingChange } = grouping;
+    tableOptions.onGroupingChange = onGroupingChange || setInternalGrouping;
+    tableOptions.getGroupedRowModel = getGroupedRowModel();
+    tableOptions.getExpandedRowModel = getExpandedRowModel();
+    tableOptions.state = {
+      ...tableOptions.state,
+      grouping: rowGrouping || internalGrouping,
+    };
+  }
+
+  if (enablePagination && pagination) {
+    const { paginationState, onPaginationChange, totalCount } = pagination;
+    tableOptions.manualPagination = true,
+    tableOptions.rowCount = totalCount,
+    tableOptions.onPaginationChange = onPaginationChange || setInternalPagination;
+
+    tableOptions.state = {
+      ...tableOptions.state,
+      pagination: paginationState || internalPagination,
+    };
+  }
+
+  const table = useReactTable(tableOptions as TableOptions<TData>);
 
   return (
     <>
@@ -160,14 +207,14 @@ export const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <When condition={JSON.stringify(rowSelection) !== '{}'}>
+      <When condition={!!selection && !!enableSelection}>
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected
         </div>
       </When>
-      <When condition={usePagination}>
-        <Pagination>
+      <When condition={!!pagination && !!enablePagination}>
+        <Pagination className='justify-end'>
           <PaginationContent>
             <PaginationItem
               onClick={() => table.previousPage()}

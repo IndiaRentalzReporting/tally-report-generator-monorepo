@@ -48,7 +48,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-10 border-dashed">
+        <Button variant="outline" size="sm" className="h-10 border-dashed w-full">
           <PlusCircle className="mr-2 h-4 w-4" />
           <span className='mr-1'>{title}</span>
           {values?.length > 0 && (
@@ -71,7 +71,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-[300px] p-0" align="start">
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>

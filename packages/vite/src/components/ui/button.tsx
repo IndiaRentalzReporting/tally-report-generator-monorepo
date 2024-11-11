@@ -63,6 +63,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           isLoading && 'cursor-default pointer-events-none'
         )}
         ref={ref}
+        disabled={isLoading}
         {...props}
       >
         <If condition={isLoading}>
