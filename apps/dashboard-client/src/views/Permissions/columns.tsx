@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { UseFormReturn } from 'react-hook-form';
-import clsx from 'clsx';
+import { cn } from '@trg_package/vite/lib/utils';
 import Action from '@/components/composite/dashboard/Action';
 import { SortingButton } from '@/components/composite/SortingButton';
 import { FormState, InsertState, SelectState } from './interface';
@@ -31,7 +31,7 @@ export const columns = (form?: UseFormReturn<FormState>)
             <div key={action.id} className='relative inline-block'>
               <label
                 htmlFor={action.name}
-                className={clsx(
+                className={cn(
                   'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground',
                   'transition-all duration-200 ease-in-out',
                   'peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:scale-95',

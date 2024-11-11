@@ -16,14 +16,7 @@ const Fields: React.FC<StateAsProps> = ({
           .filter((column) => column.id !== 'Permission Actions')
         }
         data={fields}
-        grouping={{
-          rowGrouping: [],
-          setRowGrouping: () => null
-        }}
-        selection={{
-          rowSelection: {},
-          setRowSelection: () => null
-        }}
+        enableSorting
       />
     </div>
 );

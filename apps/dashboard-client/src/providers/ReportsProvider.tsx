@@ -1,28 +1,38 @@
 import React, {
-  useContext, useMemo, useCallback, useState,
+  useContext,
+  useMemo,
+  useCallback,
+  useState,
   createContext
 } from 'react';
 import {
-  keepPreviousData,
-  QueryObserverResult,
-  RefetchOptions,
-  UseMutateAsyncFunction, useMutation, useQuery, useQueryClient
+  UseMutateAsyncFunction,
+  useMutation,
+  useQuery,
+  useQueryClient
 } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
-  GeneratedReportColumns,
-  GeneratedReportData,
-  GeneratedReportFilters,
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import { PaginationState } from '@tanstack/react-table';
 import {
   services as columnService
 } from '@/services/Columns';
 import {
-  services as reportService, getReportData, getReportColumns, getReportFilters
+  services as reportService
 } from '@/services/Reports';
+
+const dummyColumn: DetailedColumnSelect = {
+  id: '',
+  displayName: '',
+  table: '',
+  type: 'string',
+  heading: '',
+  tablealias: '',
+  name: '',
+  alias: ''
+};
 
 export type Column = ReportSelect['columns'][number];
 export type Condition = ReportSelect['conditions'][number];
@@ -30,6 +40,9 @@ export type Filter = ReportSelect['filters'][number];
 export type GroupBy = ReportSelect['groupBy'][number];
 
 interface ReportsProviderState {
+  report: ReportSelect;
+
+  fetchingColumns: boolean;
   fetchedColumns: Array<Column>;
   columns: Array<Column>;
   availableColumns: Array<Column>;
@@ -51,26 +64,10 @@ interface ReportsProviderState {
   groupBy: Array<GroupBy>;
   setGroupBy: React.Dispatch<React.SetStateAction<Array<GroupBy>>>;
 
-  fetchingColumns: boolean,
+  isUpdatingReport: boolean
   updateReport: UseMutateAsyncFunction<AxiosResponse<{
     report: ReportSelect;
   }>, Error>
-  isUpdatingReport: boolean
-
-  reportData: {
-    data: Array<GeneratedReportData>,
-    totalCount: number
-  },
-  pagination: PaginationState,
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
-
-  reportColumns: Array<GeneratedReportColumns>,
-  fetchReportColumns: (options?: RefetchOptions) =>
-  Promise<QueryObserverResult<Array<GeneratedReportColumns>>>,
-
-  reportFilters: Array<GeneratedReportFilters>,
-  fetchReportFilters: (options?: RefetchOptions) =>
-  Promise<QueryObserverResult<Array<GeneratedReportFilters>>>
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -79,20 +76,6 @@ interface ReportsProviderProps {
   children: React.ReactNode;
   report: ReportSelect
 }
-
-const dummyColumn: DetailedColumnSelect = {
-  id: '',
-  displayName: '',
-  table: '',
-  type: 'string',
-  heading: '',
-  tablealias: '',
-  name: '',
-  alias: ''
-};
-
-const isDummyColumn = (column: DetailedColumnSelect) => JSON.stringify(column)
-=== JSON.stringify(dummyColumn);
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   children, report
@@ -122,10 +105,10 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
       return reportService.updateOne({ id: report.id }, {
         conditions: conditions.filter(
-          (condition) => !isDummyColumn(condition.column)
+          (condition) => !!condition.column.id
         ),
         filters: filters.filter(
-          (filter) => !isDummyColumn(filter.column)
+          (filter) => !!filter.column.id
         ),
         groupBy,
         columns,
@@ -133,37 +116,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] })
-  });
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
-  const {
-    data: reportData = {
-      data: [],
-      totalCount: 0
-    },
-  } = useQuery({
-    queryFn: () => getReportData(report.id, pagination),
-    queryKey: ['Reports', 'data', report.id, pagination],
-    select: (data) => data.data,
-    placeholderData: keepPreviousData
-  });
-
-  const { data: reportColumns = [], refetch: fetchReportColumns } = useQuery({
-    queryFn: () => getReportColumns(report.id),
-    queryKey: ['Reports', 'columns', report.id],
-    select: (data) => data.data.columns,
-    enabled: false
-  });
-
-  const { data: reportFilters = [], refetch: fetchReportFilters } = useQuery({
-    queryFn: () => getReportFilters(report.id),
-    queryKey: ['Reports', 'filters', report.id],
-    select: (data) => data.data.filters,
-    enabled: false
   });
 
   const availableColumns = useMemo(() => {
@@ -189,7 +141,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   }, []);
 
   const addCondition: ReportsProviderState['addCondition'] = useCallback(() => {
-    const hasDummyCondition = conditions.some((condition) => isDummyColumn(condition.column));
+    const hasDummyCondition = conditions.some((condition) => !condition.column.id);
 
     if (hasDummyCondition || conditions.length === fetchedColumns.length) return;
 
@@ -214,7 +166,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   }, []);
 
   const addFilter: ReportsProviderState['addFilter'] = useCallback(() => {
-    const hasDummyFilter = filters.some((filter) => isDummyColumn(filter.column));
+    const hasDummyFilter = filters.some((filter) => !filter.column.id);
 
     if (hasDummyFilter || filters.length === fetchedColumns.length) return;
 
@@ -238,6 +190,8 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
   }, []);
 
   const contextValue = useMemo(() => ({
+    report,
+
     fetchingColumns,
     fetchedColumns,
     columns,
@@ -258,20 +212,11 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
     groupBy,
     setGroupBy,
+
     updateReport,
-
     isUpdatingReport,
-
-    reportColumns,
-    fetchReportColumns,
-
-    reportData,
-    pagination,
-    setPagination,
-
-    reportFilters,
-    fetchReportFilters
   }), [
+    report,
     fetchedColumns,
     fetchingColumns,
     columns,
@@ -279,25 +224,22 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     addColumn,
     removeColumn,
     updateColumn,
+
     conditions,
     addCondition,
     removeCondition,
     updateCondition,
+
     filters,
     addFilter,
     removeFilter,
     updateFilter,
+
     groupBy,
     setGroupBy,
+
     updateReport,
     isUpdatingReport,
-    reportColumns,
-    reportData,
-    pagination,
-    setPagination,
-    reportFilters,
-    fetchReportColumns,
-    fetchReportFilters
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;

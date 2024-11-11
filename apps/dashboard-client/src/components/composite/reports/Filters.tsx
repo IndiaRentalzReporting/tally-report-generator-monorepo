@@ -1,113 +1,132 @@
-import { PlusCircle, TrashIcon } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Button, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue, Select
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Case,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+  Input,
+  Label,
+  SwitchCase,
+  MultiSelect
 } from '@trg_package/vite/components';
-import { FilterOperations } from '@trg_package/schemas-reporting/types';
-import { Filter, useReports } from '@/providers/ReportsProvider';
+import { PlusCircle } from 'lucide-react';
+import { GeneratedReportFilters, RuntimeFilters } from '@trg_package/schemas-reporting/types';
 
-const Filters: React.FC = () => {
-  const { filters, addFilter, removeFilter } = useReports();
+const Filters: React.FC<{
+  isFetchingReport: boolean
+  filtersState: RuntimeFilters,
+  reportFilters: Array<GeneratedReportFilters>,
+  setFiltersState: React.Dispatch<React.SetStateAction<RuntimeFilters>>
+}> = ({
+  reportFilters,
+  isFetchingReport,
+  filtersState,
+  setFiltersState
+}) => {
+  const [localFiltersState, setLocalFiltersState] = useState<RuntimeFilters>(filtersState);
 
-  return (
-    <div className="space-y-4">
-      <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
-        <span>Filters</span>
-        <Button size="sm" onClick={() => addFilter()} variant="ghost">
-          <PlusCircle className="w-4 h-4 mr-1" />
-        </Button>
-      </h3>
-      {filters.map((filter) => (
-        <FilterComponent
-          key={filter.column.id}
-          filter={filter}
-          removeFilter={() => removeFilter(filter.column.id)}
-        />
-      ))}
-    </div>
-  );
-};
-
-const FilterComponent: React.FC<{
-  filter: Filter;
-  removeFilter: () => void;
-}> = ({ filter, removeFilter }) => {
-  const {
-    fetchedColumns, updateFilter: UF, filters
-  } = useReports();
-
-  const usedColumnIds = filters.map((c) => c.column.id);
-
-  const availableColumns = fetchedColumns.filter(({
-    column
-  }) => !usedColumnIds.includes(column.id) || column.id === filter.column.id);
-
-  const updateFilter = (data: Partial<Filter>) => {
-    UF(filter.column.id, data);
+  const handleFilterChange = (label: string, value: any) => {
+    setLocalFiltersState((prev) => ({
+      ...prev,
+      [label]: value,
+    }));
   };
 
-  const operations = Object.keys(FilterOperations).filter((operatorName) => {
-    const operation = FilterOperations[operatorName as keyof typeof FilterOperations];
-    const operationFor = operation.for;
-    return filter.column ? operationFor.includes(filter.column.type) : [];
-  });
-
   return (
-    <div className="mb-2 space-y-2">
-      <div className="grid grid-cols-[2fr_2fr_auto] gap-4">
-        <Select
-          value={filter.column.displayName}
-          onValueChange={(displayName) => {
-            updateFilter({
-              column: fetchedColumns
-                .find((col) => col.column.displayName === displayName)?.column,
-              filterType: undefined
-            });
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Column" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Column</SelectLabel>
-              {availableColumns.map(({ column }) => (
-                <SelectItem key={column.displayName} value={column.displayName}>
-                  {column.displayName}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <Select
-          value={filter.filterType}
-          onValueChange={(filterType: string) => {
-            updateFilter({ filterType: filterType as 'select' | 'search' | 'between' });
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Filter Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Filter Type</SelectLabel>
-              {operations.map((operation) => (
-                <SelectItem key={operation} value={operation}>
-                  {operation}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        <Button
-          onClick={removeFilter}
-          className="bg-red-500 text-white hover:text-black"
-        >
-          <TrashIcon className="w-4 h-4 mr-1" />
-        </Button>
-      </div>
-    </div>
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="secondary" className='flex gap-2 items-center w-min'> <PlusCircle/> Filters</Button>
+      </DrawerTrigger>
+      <DrawerContent className="px-6 pt-6">
+        <DrawerHeader className="px-0 hidden">
+          <DrawerTitle>Filters</DrawerTitle>
+        </DrawerHeader>
+        <Card>
+          <CardHeader>
+            <CardTitle className='flex justify-between items-center'>
+              Filters
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            {reportFilters.map((filter) => (
+              <SwitchCase control={filter.filterType} >
+                <Case value="search">
+                  <div className='flex flex-col gap-1.5'>
+                    <Label htmlFor={filter.label}>{filter.label}</Label>
+                    <Input
+                      type='text'
+                      placeholder='Select a value'
+                      value={(localFiltersState[filter.fieldName] as { value: string })?.value || ''}
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { value }
+                      )}
+                    />
+                  </div>
+                </Case>
+                <Case value="select">
+                  <div className='flex flex-col gap-1.5'>
+                    <MultiSelect
+                      title={filter.label}
+                      values={(localFiltersState[filter.fieldName] as {
+                        value: string[]
+                      })?.value || []}
+                      options={filter.data ?? []}
+                      onChange={(value) => handleFilterChange(filter.fieldName, { value })}
+                    />
+                  </div>
+                </Case>
+                <Case value="between">
+                  <div className='flex flex-col gap-1.5'>
+                    <Label htmlFor={filter.label}>{filter.label}</Label>
+                    <div className='flex gap-4 items-center'>
+                    <Input
+                      type="number"
+                      placeholder="From"
+                      value={(localFiltersState[filter.fieldName] as { from: string })?.from || ''}
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { ...localFiltersState[filter.fieldName], from: value }
+                      )}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="To"
+                      value={(localFiltersState[filter.fieldName] as { to: string })?.to || ''}
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { ...localFiltersState[filter.fieldName], to: value }
+                      )}
+                    />
+                    </div>
+                  </div>
+                </Case>
+              </SwitchCase>
+            ))}
+            <Button
+              isLoading={isFetchingReport}
+              type="submit"
+              className="w-full mt-auto"
+              onClick={() => setFiltersState(localFiltersState)}
+            >
+              Apply Filters
+            </Button>
+          </CardContent>
+        </Card>
+        <DrawerFooter className="px-0">
+          <DrawerClose>Cancel</DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

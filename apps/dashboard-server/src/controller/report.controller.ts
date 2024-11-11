@@ -137,22 +137,37 @@ export const getAllTables = async (
 };
 
 export const getReportData = async (
-  req : Request<Pick<ReportSelect,'id'>,object,object,{ pageSize: number,pageIndex : number,filters? : RuntimeFilters }>,
+  req : Request<
+  Pick<ReportSelect,'id'>,
+    object,
+    object,
+  {
+    pageSize: number,
+    pageIndex : number,
+    filters? : RuntimeFilters
+  }
+  >,
   res : Response<{ data: Array<GeneratedReportData> ,totalCount : number }>,
   next: NextFunction
 ) => {
   try {
-    const report = await req.dashboard.services.report.findOne({ id: req.params.id });
+    const report = await req.dashboard.services.report.findOne({
+      id: req.params.id
+    });
     const { queryConfig } = report;
 
     if (!report.columns) {
       throw new CustomError('Report Config is missing columns',400);
     }
 
-    if (queryConfig === null || queryConfig.dataSource === '') throw new CustomError('This report is not configured yet, please configure the report to view it',400);
+    if (queryConfig === null || queryConfig.dataSource === '') {
+      throw new CustomError('This report is not configured yet, please configure the report to view it',400);
+    }
 
     const {
-      filters,pageIndex,pageSize
+      filters,
+      pageIndex,
+      pageSize
     } = req.query;
 
     const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };

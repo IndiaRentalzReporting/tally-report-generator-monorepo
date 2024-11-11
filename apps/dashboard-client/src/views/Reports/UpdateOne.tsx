@@ -4,40 +4,47 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  Button
+  Button,
+  DataTable
 } from '@trg_package/vite/components';
-import Conditions from '@/components/composite/reports/Conditions';
-import Filters from '@/components/composite/reports/Filters';
-import GroupBy from '@/components/composite/reports/GroupBy';
-import Table from '@/components/composite/reports/Table';
+import { ColumnDef } from '@tanstack/react-table';
+import { useState, useEffect } from 'react';
 import { useReports } from '@/providers/ReportsProvider';
+import { createUpdateReportColumn } from './columns';
+import Settings from '@/components/composite/reports/Settings';
 
 const UpdateReport: React.FC = () => {
-  const { updateReport, isUpdatingReport } = useReports();
+  const {
+    updateReport, isUpdatingReport, columns, removeColumn
+  } = useReports();
+  const [columnDef, setColumnDef] = useState<ColumnDef<any>[]>([]);
+
+  useEffect(() => {
+    if (columns) {
+      const newColumnDefs = columns.map((column) => createUpdateReportColumn(column, removeColumn));
+      setColumnDef(newColumnDefs);
+    }
+  }, [columns, removeColumn]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Update Report</CardTitle>
-        <CardDescription>
-          Update the existing report with the new settings.
-        </CardDescription>
+        <div className='flex items-start justify-between'>
+          <div className='space-y-1.5'>
+            <CardTitle>Update Report</CardTitle>
+            <CardDescription>
+              Update the existing report with the new settings.
+            </CardDescription>
+          </div>
+          <Button className='w-min' variant="secondary" onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
+        </div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 space-y-6">
-        <Table data={[{}]} />
-        <Card>
-          <CardHeader>
-            <CardTitle>Report Settings</CardTitle>
-            <CardDescription />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <GroupBy />
-              <Conditions />
-              <Filters />
-            </div>
-          </CardContent>
-        </Card>
-        <Button className='w-min' onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
+      <CardContent className="flex flex-col gap-6">
+        <DataTable
+          data={[{}]}
+          columns={columnDef}
+        />
+        <Settings/>
       </CardContent>
     </Card>
   );

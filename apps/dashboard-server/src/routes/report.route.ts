@@ -111,8 +111,8 @@ reportRouter.get(
     query: z.object({
       pageSize: z.coerce.number(),
       pageIndex: z.coerce.number(),
-      filters: z.optional(z.string()
-        .refine((val) => {
+      filters: z.optional(
+        z.string().refine((val) => {
           try {
             const parsed = JSON.parse(val);
             return typeof parsed === 'object' && !Array.isArray(parsed);
@@ -122,10 +122,16 @@ reportRouter.get(
         }, {
           message: 'filters must be a valid JSON object',
         })
-        .transform((val) => JSON.parse(val)) // Convert to JSON after validation
-        .refine((filters) => Object.values(filters).every((item) => FilterValueSchema.safeParse(item).success), {
-          message: 'Each filter must be of type { value: string | string[] } or { from: string, to: string }',
-        }))
+          .transform((val) => JSON.parse(val))
+          .refine(
+            (filters) => Object
+              .values(filters)
+              .every((item) => FilterValueSchema.safeParse(item).success),
+            {
+              message: 'Each filter must be of type { value: string | string[] } or { from: string, to: string }',
+            }
+          )
+      )
     }).strict()
   }),
   getReportData

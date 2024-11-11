@@ -50,13 +50,11 @@ const Read: React.FC = () => {
             <DataTable
               columns={columns()}
               data={allPermissions}
+              enableSorting
+              enableGrouping
               grouping={{
                 rowGrouping,
-                setRowGrouping
-              }}
-              selection={{
-                rowSelection: {},
-                setRowSelection: () => null
+                onGroupingChange: setRowGrouping
               }}
             />
           </Skeleton>

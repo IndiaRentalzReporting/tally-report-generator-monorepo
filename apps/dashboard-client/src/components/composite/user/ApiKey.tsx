@@ -93,7 +93,7 @@ const ApiKey = () => {
   };
 
   return (
-    <div className="w-[300px]">
+    <DropdownMenuSubContent className='w-[300px]'>
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>Create New API Key</DropdownMenuSubTrigger>
         <DropdownMenuPortal>
@@ -177,7 +177,7 @@ const ApiKey = () => {
           </Else>
         </If>
       </DropdownMenuItem>
-    </div>
+    </DropdownMenuSubContent>
   );
 };
 

@@ -41,14 +41,7 @@ const Read: React.FC = () => {
             <DataTable
               columns={columns}
               data={allActions}
-              grouping={{
-                rowGrouping: [],
-                setRowGrouping: () => null
-              }}
-              selection={{
-                rowSelection: {},
-                setRowSelection: () => null
-              }}
+              enableSorting
             />
           </Skeleton>
         </CardContent>

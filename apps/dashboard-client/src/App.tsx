@@ -22,34 +22,30 @@ const App = () => {
       <Route element={<PrivateRoutes />}>
         <Route index element={<Navigate to="/dashboard" />} />
         {permissions.map(({ module: { name }, actions }) => (
-          <>
-            <Route path='/dashboard' element={<DashboardLayout />}>
-              <Route path={name} key={name}>
-                {actions.map<React.ReactNode>((action) => (
-                  <Route
-                    path={action}
-                    key={action}
-                    element={<ModuleMapper module={name} action={action} />}
-                  />
-                ))}
-              </Route>
+          <Route path='/dashboard' element={<DashboardLayout />}>
+            <Route path={name} key={name}>
+              {actions.map<React.ReactNode>((action) => (
+                <Route
+                  path={action}
+                  key={action}
+                  element={<ModuleMapper module={name} action={action} />}
+                />
+              ))}
             </Route>
             {
               name === 'Reports'
-              && <Route path='/dashboard' element={<ReportingLayout/>}>
-                  <Route path={name} key={name}>
-                    {actions.map<React.ReactNode>((action) => (
-                      (action === 'Read' || action === 'Update')
-                        && <Route
-                            path={`${action}/:reportId`}
-                            key={action}
-                            element={<ModuleMapper module={name} action={`${action}One`} />}
-                          />
-                    ))}
-                  </Route>
+              && <Route path={name} key={name} element={<ReportingLayout/>}>
+                  {actions.map<React.ReactNode>((action) => (
+                    (action === 'Read' || action === 'Update')
+                      && <Route
+                          path={`${action}/:reportId`}
+                          key={action}
+                          element={<ModuleMapper module={name} action={`${action}One`} />}
+                        />
+                  ))}
                 </Route>
             }
-          </>
+          </Route>
         ))}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Route>

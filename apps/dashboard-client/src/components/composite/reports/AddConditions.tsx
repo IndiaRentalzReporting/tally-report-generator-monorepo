@@ -9,7 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   Calendar,
-  MultiSelect,
   Skeleton,
   SelectContent,
   SelectGroup,
@@ -17,7 +16,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-  Select
+  Select,
+  MultiSelect
 } from '@trg_package/vite/components';
 import { ConditionOperations, ReportSelect } from '@trg_package/schemas-reporting/types';
 import moment from 'moment';
@@ -36,13 +36,15 @@ const Conditions: React.FC = () => {
           <PlusCircle className="w-4 h-4 mr-1" />
         </Button>
       </h3>
-      {conditions.map((condition) => (
-        <ConditionItem
-          key={condition.column.id}
-          condition={condition}
-          onRemove={() => removeCondition(condition.column.id)}
-        />
-      ))}
+      <div className="flex flex-col gap-6">
+        {conditions.map((condition) => (
+          <ConditionItem
+            key={condition.column.id}
+            condition={condition}
+            onRemove={() => removeCondition(condition.column.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -76,9 +78,9 @@ const ConditionItem: React.FC<{
   };
 
   return (
-    <div className="flex items-center space-x-4 space-y-2">
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
-      <Select
+    <div className="flex items-center gap-6">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 flex-grow">
+        <Select
           value={condition.column.displayName}
           onValueChange={(id) => {
             updateCondition({
@@ -203,7 +205,7 @@ const ConditionItem: React.FC<{
 
       <Button
         onClick={onRemove}
-        className="bg-red-500 text-white hover:text-black flex-shrink-0"
+        className="bg-red-500 m-0 text-white hover:text-black flex-shrink-0"
       >
         <TrashIcon className="w-4 h-4 mr-1" />
       </Button>
@@ -224,7 +226,7 @@ const ConditionParamsSelect = ({
   const { data: paramOptions = [], isLoading: loadingParamOptions } = useQuery({
     queryKey: ['columns', 'selectData', condition.column.id],
     queryFn: () => getColumnData(condition.column.id),
-    select: (data) => data.data,
+    select: (data) => data.data.data,
     enabled: !!condition.column.id
   });
   return (
@@ -258,11 +260,11 @@ const ConditionParamsSelect = ({
             />
           </PopoverContent>
         </Popover>
-      : <Skeleton isLoading={loadingParamOptions}>
+      : <Skeleton isLoading={loadingParamOptions} className='h-10'>
           <MultiSelect
-            label='data'
+            title='data'
             options={paramOptions}
-            value={condition.params
+            values={condition.params
               ? condition.params[param]
               : []
             }

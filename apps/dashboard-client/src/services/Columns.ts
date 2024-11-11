@@ -31,7 +31,7 @@ DetailedColumnSelect
   deleteOne: async ({ id }) => columnsAxios.delete(`/delete/${id}`),
 };
 
-export const getColumnData = async (columnId: string): AxiosPromise<Array<{
+export const getColumnData = async (columnId: string): AxiosPromise<{ data: Array<{
   label: string;
   value: string;
-}>> => columnsAxios.get(`/read/selectData/${columnId}`);
+}> }> => columnsAxios.get(`/read/selectData/${columnId}`);

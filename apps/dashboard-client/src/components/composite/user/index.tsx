@@ -12,7 +12,6 @@ import {
   DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuSub,
-  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   Select,
@@ -69,9 +68,7 @@ const UserSettings = () => {
             API Keys
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
-            <DropdownMenuSubContent>
-              <ApiKey/>
-            </DropdownMenuSubContent>
+            <ApiKey/>
           </DropdownMenuPortal>
         </DropdownMenuSub>
         <DropdownMenuSeparator />

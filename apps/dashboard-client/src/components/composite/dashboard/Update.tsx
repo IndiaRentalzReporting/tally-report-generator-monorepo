@@ -40,7 +40,7 @@ const Update: React.FC<IUpdateEntityProps> = ({
       <Then>
         <Drawer>
           <DrawerTrigger asChild>
-            <Edit className="text-green-500" />
+            <Edit size={20} className="text-green-500" />
           </DrawerTrigger>
           <DrawerContent className="px-6">
             <DrawerHeader className="px-0">

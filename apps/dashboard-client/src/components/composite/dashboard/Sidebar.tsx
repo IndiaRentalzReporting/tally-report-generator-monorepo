@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Package2 } from 'lucide-react';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -17,9 +16,10 @@ import {
   SidebarSeparator,
   SidebarGroupLabel
 } from '@trg_package/vite/components';
+import { cn } from '@trg_package/vite/lib/utils';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
-import UserSettings from '../header/UserSettings';
+import User from '../user';
 
 const Sidebar: React.FC = () => {
   const { tenant } = useAuth();
@@ -51,7 +51,7 @@ const Sidebar: React.FC = () => {
                   <SidebarMenuButton>
                     <NavLink
                       to={to}
-                      className={clsx(
+                      className={cn(
                         'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
                         children || 'hover:text-primary'
                       )}
@@ -83,7 +83,7 @@ const Sidebar: React.FC = () => {
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarSeparator/>
-        <UserSettings/>
+        <User/>
       </SidebarFooter>
     </SidebarComponent>
   );

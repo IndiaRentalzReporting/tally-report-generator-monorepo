@@ -1,113 +1,120 @@
-import React from 'react';
+import * as React from 'react';
+import { CheckIcon, PlusCircle } from 'lucide-react';
+import { cn } from '$/lib/utils';
 import {
-  Check, ChevronsUpDown, X
-} from 'lucide-react';
-import {
-  Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList
-} from '$/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '$/components/ui/popover';
-import { Button } from '$/components/ui/button';
-import { Else, If, Then } from '../Conditionals';
+  Button,
+} from './button';
 import { Badge } from './badge';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator
+} from './command';
 
-interface Option {
-  value: string;
-  label: string;
-}
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from './popover';
 
 interface MultiSelectProps {
-  options: Option[];
-  label: string
-  className?: string;
-  value: string[];
+  title?: string
+  values: string[]
+  options: {
+    label: string
+    value: string
+  }[],
   onChange: (value: string[]) => void;
 }
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
+  title,
+  values,
   options,
-  label,
-  className = '',
-  value,
   onChange
 }) => {
-  const [open, setOpen] = React.useState(false);
-
   const toggleSelection = (optionValue: string) => {
-    if (value.includes(optionValue)) {
-      onChange(value.filter((val) => val !== optionValue));
+    if (values.includes(optionValue)) {
+      onChange(values.filter((val) => val !== optionValue));
     } else {
-      onChange([...value, optionValue]);
+      onChange([...values, optionValue]);
     }
   };
 
-  const removeValue = (valueToRemove: string) => {
-    onChange(value.filter((val) => val !== valueToRemove));
-  };
-
   return (
-    <div className={`w-full ${className}`}>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-full justify-between"
-            >
-              <If condition={value.length > 0}>
-                <Then>
-                  <div className='flex gap-2 items-center'>
-                    {value.map((selectedValue) => {
-                      const option = options.find((opt) => opt.value === selectedValue);
-                      if (!option) return null;
-                      return (
-                        <Badge key={selectedValue} variant="secondary">
-                            {option.label}
-                            <button
-                            type='button'
-                            className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                            onClick={() => removeValue(selectedValue)}
-                            >
-                              <X className="h-3 w-3" />
-                              <span className="sr-only">Remove</span>
-                            </button>
-                          </Badge>
-                      );
-                    })}
-                  </div>
-                </Then>
-                <Else>
-                  {`Select ${label}`}
-                </Else>
-              </If>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command>
-            <CommandInput placeholder="Search..." />
-            <CommandList>
-              <CommandEmpty>{`No ${label} selected`}</CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="sm" className="h-10 border-dashed w-full">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          <span className='mr-1'>{title}</span>
+          {values?.length > 0 && (
+            <>
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal lg:hidden"
+              >
+                {values.length}
+              </Badge>
+              <div className="hidden space-x-1 lg:flex">
+                <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-normal"
+                  >
+                    {values.length} selected
+                  </Badge>
+              </div>
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[300px] p-0" align="start">
+        <Command>
+          <CommandInput placeholder={title} />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {options.map((option) => {
+                const isSelected = values.includes(option.value);
+                return (
                   <CommandItem
                     key={option.value}
                     onSelect={() => toggleSelection(option.value)}
-                    className="cursor-pointer"
                   >
-                    <Check
-                      className={`mr-2 h-4 w-4 ${
-                        value.includes(option.value) ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    />
-                    {option.label}
+                    <div
+                      className={cn(
+                        'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                        isSelected
+                          ? 'bg-primary text-primary-foreground'
+                          : 'opacity-50 [&_svg]:invisible'
+                      )}
+                    >
+                      <CheckIcon className={cn('h-4 w-4')} />
+                    </div>
+                    <span>{option.label}</span>
                   </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+                );
+              })}
+            </CommandGroup>
+            {values.length > 0 && (
+              <>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem
+                    onSelect={() => onChange([])}
+                    className="justify-center text-center"
+                  >
+                    Clear filters
+                  </CommandItem>
+                </CommandGroup>
+              </>
+            )}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 };

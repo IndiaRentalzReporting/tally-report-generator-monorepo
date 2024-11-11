@@ -13,6 +13,7 @@ import {
   isRoleAllowed
 } from '@/middlewares';
 import reportRouter from '@/routes/report.route';
+import companyRouter from '@/routes/company.route';
 
 const routesLoader = (app: Express) => {
   Initialization.initialize();
@@ -27,6 +28,7 @@ const routesLoader = (app: Express) => {
   app.use('/api/v1/reports', reportRouter);
   app.use('/api/v1/actions', actionRouter);
   app.use('/api/v1/modules', moduleRouter);
+  app.use('/api/v1/companies', companyRouter);
   app.use('/api/v1/permissions', permissionRouter);
   app.use('/api/v1/permission_action', permissionActionRouter);
   app.use('/api/v1/user_tallyCompany', userTallyCompanyRouter);
