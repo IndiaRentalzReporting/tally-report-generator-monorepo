@@ -1,6 +1,6 @@
 import { Package2 } from 'lucide-react';
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
   When,
   Sidebar as SidebarComponent,
@@ -19,13 +19,9 @@ import {
 import { cn } from '@trg_package/vite/lib/utils';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
-import UserSettings from '../header/UserSettings';
-import AvailableColumns from '../reports/AvailableColumns';
+import User from '../user';
 
 const Sidebar: React.FC = () => {
-  const { pathname } = useLocation();
-  const isUpdate = pathname.includes('Update');
-
   const { tenant } = useAuth();
   const { navigation } = useNav();
 
@@ -77,9 +73,6 @@ const Sidebar: React.FC = () => {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <When condition={isUpdate}>
-          <AvailableColumns/>
-        </When>
       </SidebarContent>
       <SidebarFooter >
         <SidebarMenu>
@@ -90,7 +83,7 @@ const Sidebar: React.FC = () => {
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarSeparator/>
-        <UserSettings/>
+        <User/>
       </SidebarFooter>
     </SidebarComponent>
   );

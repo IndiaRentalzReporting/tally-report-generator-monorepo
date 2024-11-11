@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router';
 import { useSidebar, When } from '@trg_package/vite/components';
 import { useNav } from '@/providers/NavigationProvider';
-import Create from './dashboard/Create';
+import Create from './Create';
 
 export const Main: React.FC = () => {
   const { currentModule } = useNav();

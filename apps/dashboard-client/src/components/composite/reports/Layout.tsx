@@ -1,14 +1,10 @@
 /* eslint-disable no-nested-ternary */
 import { useQuery } from '@tanstack/react-query';
-import { Loading, SidebarProvider } from '@trg_package/vite/components';
-import { useParams } from 'react-router-dom';
+import { Loading } from '@trg_package/vite/components';
+import { Outlet, useParams } from 'react-router-dom';
 import React from 'react';
 import { ReportsProvider } from '@/providers/ReportsProvider';
 import { services } from '@/services/Reports';
-import { NavigationProvider } from '@/providers/NavigationProvider';
-import Sidebar from '../dashboard/Sidebar';
-import DashboardLayout from '../dashboard/Layout';
-import { Main } from '../Main';
 
 const ReportingLayout: React.FC = () => {
   const { reportId } = useParams<{ reportId: string }>();
@@ -25,14 +21,9 @@ const ReportingLayout: React.FC = () => {
       ? <Loading />
       : report
         ? <ReportsProvider report={report}>
-            <SidebarProvider>
-              <NavigationProvider>
-                <Sidebar/>
-                <Main/>
-              </NavigationProvider>
-            </SidebarProvider>
+            <Outlet />
           </ReportsProvider>
-        : <DashboardLayout/>
+        : <Outlet/>
   );
 };
 

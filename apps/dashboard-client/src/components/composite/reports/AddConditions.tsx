@@ -36,13 +36,15 @@ const Conditions: React.FC = () => {
           <PlusCircle className="w-4 h-4 mr-1" />
         </Button>
       </h3>
-      {conditions.map((condition) => (
-        <ConditionItem
-          key={condition.column.id}
-          condition={condition}
-          onRemove={() => removeCondition(condition.column.id)}
-        />
-      ))}
+      <div className="flex flex-col gap-6">
+        {conditions.map((condition) => (
+          <ConditionItem
+            key={condition.column.id}
+            condition={condition}
+            onRemove={() => removeCondition(condition.column.id)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -76,9 +78,9 @@ const ConditionItem: React.FC<{
   };
 
   return (
-    <div className="flex items-center space-x-4 space-y-2">
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
-      <Select
+    <div className="flex items-center gap-6">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 flex-grow">
+        <Select
           value={condition.column.displayName}
           onValueChange={(id) => {
             updateCondition({
@@ -203,7 +205,7 @@ const ConditionItem: React.FC<{
 
       <Button
         onClick={onRemove}
-        className="bg-red-500 text-white hover:text-black flex-shrink-0"
+        className="bg-red-500 m-0 text-white hover:text-black flex-shrink-0"
       >
         <TrashIcon className="w-4 h-4 mr-1" />
       </Button>

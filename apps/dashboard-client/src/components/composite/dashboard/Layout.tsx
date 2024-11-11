@@ -1,7 +1,7 @@
 import { SidebarProvider } from '@trg_package/vite/components';
 import { NavigationProvider } from '@/providers/NavigationProvider';
 import Sidebar from './Sidebar';
-import { Main } from '../Main';
+import { Main } from './Main';
 
 const Layout = () => (
     <SidebarProvider>

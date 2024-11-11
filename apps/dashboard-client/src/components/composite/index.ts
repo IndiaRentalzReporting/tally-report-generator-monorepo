@@ -1,3 +1,3 @@
 export * from './RootLayout';
 export * from './SortingButton';
-export * from './Main';
+export * from './dashboard/Main';
