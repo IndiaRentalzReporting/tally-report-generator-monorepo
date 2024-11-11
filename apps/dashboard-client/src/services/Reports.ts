@@ -3,7 +3,8 @@ import {
   GeneratedReportData,
   GeneratedReportFilters,
   ReportInsert,
-  ReportSelect
+  ReportSelect,
+  RuntimeFilters
 } from '@trg_package/schemas-reporting/types';
 import createAxiosClient from '@trg_package/vite/client';
 import { AxiosPromise } from 'axios';
@@ -41,15 +42,16 @@ export const getReportData = async (
   reportId: string,
   {
     pageSize,
-    pageIndex
+    pageIndex,
   }:{
     pageSize: number,
-    pageIndex: number
-  }
+    pageIndex: number,
+  },
+  filters?: RuntimeFilters
 ): AxiosPromise<{
   data: Array<GeneratedReportData>,
   totalCount: number
-}> => reportsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}`);
+}> => reportsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}${filters ? `&filters=${JSON.stringify(filters)}` : ''}`);
 
 export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : Array<GeneratedReportFilters>

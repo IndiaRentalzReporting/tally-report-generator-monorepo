@@ -32,6 +32,10 @@ import {
   TableRow,
 } from './table';
 import { Button } from './button';
+import {
+  Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious
+} from './pagination';
+import { cn } from '$/lib/utils';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,6 +48,7 @@ interface DataTableProps<TData, TValue> {
     rowGrouping: GroupingState;
     setRowGrouping: OnChangeFn<GroupingState>;
   };
+  usePagination?: boolean;
 }
 
 export const DataTable = <TData, TValue>({
@@ -56,7 +61,8 @@ export const DataTable = <TData, TValue>({
   grouping: {
     rowGrouping,
     setRowGrouping
-  }
+  },
+  usePagination = false
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
@@ -154,11 +160,32 @@ export const DataTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <When condition={rowSelection !== null}>
+      <When condition={JSON.stringify(rowSelection) !== '{}'}>
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected
         </div>
+      </When>
+      <When condition={usePagination}>
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem
+              onClick={() => table.previousPage()}
+              className={cn(!table.getCanPreviousPage() && 'pointer-events-none opacity-50')}
+            >
+              <PaginationPrevious/>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink>{table.getState().pagination.pageIndex + 1}</PaginationLink>
+            </PaginationItem>
+            <PaginationItem
+              onClick={() => table.nextPage()}
+              className={cn(!table.getCanNextPage() && 'pointer-events-none opacity-50')}
+            >
+              <PaginationNext/>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </When>
     </>
   );

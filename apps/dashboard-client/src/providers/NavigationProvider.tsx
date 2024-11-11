@@ -7,6 +7,7 @@ import {
   ModuleSelect,
   Permissions
 } from '@trg_package/schemas-dashboard/types';
+import { toTitleCase } from '@trg_package/vite/lib/utils';
 
 interface NavItem {
   to: string;
@@ -62,7 +63,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
   useEffect(() => {
     setNavState((prev) => ({
       ...prev,
-      currentModule: location.pathname.split('/')[2]
+      currentModule: toTitleCase(location.pathname.split('/')[2] ?? '')
     }));
   }, [location, permissions]);
 

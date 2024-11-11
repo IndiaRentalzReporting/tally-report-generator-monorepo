@@ -49,7 +49,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
                   baseEntity: true
                 }}
               />
-              <Link to={`/dashboard/reports/update/${reportData?.id}`} className='flex items-center gap-2 self-end'>
+              <Link to={`/dashboard/Reports/Update/${reportData?.id}`} className='flex items-center gap-2 self-end'>
                 <span className='text-sm'>Edit</span>
                 <ExternalLink size={20} />
               </Link>

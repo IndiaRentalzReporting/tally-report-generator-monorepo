@@ -45,10 +45,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     }
   };
 
-  const removeValue = (valueToRemove: string) => {
-    onChange(values.filter((val) => val !== valueToRemove));
-  };
-
   return (
     <Popover>
       <PopoverTrigger asChild>

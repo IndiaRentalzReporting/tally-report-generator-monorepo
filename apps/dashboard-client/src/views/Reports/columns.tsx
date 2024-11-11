@@ -1,5 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
+import { GeneratedReportColumns, GeneratedReportData } from '@trg_package/schemas-reporting/types';
 import Action from '@/components/composite/dashboard/Action';
 import { SortingButton } from '@/components/composite/SortingButton';
 import { FormState } from './interface';
@@ -41,3 +42,9 @@ export const columns: ColumnDef<FormState>[] = [
     }
   }
 ];
+
+export const createColumn = (column: GeneratedReportColumns): ColumnDef<GeneratedReportData> => ({
+  id: column.alias,
+  accessorKey: column.alias || 'No Name',
+  header: ({ column: clmn }) => <SortingButton column={clmn} label={column.alias} />
+});

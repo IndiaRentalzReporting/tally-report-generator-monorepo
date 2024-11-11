@@ -19,10 +19,25 @@ import {
   MultiSelect
 } from '@trg_package/vite/components';
 import { PlusCircle } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useReports } from '@/providers/ReportsProvider';
 
 const Filters: React.FC = () => {
-  const { reportFilters } = useReports();
+  const queryClient = useQueryClient();
+  const {
+    report,
+    pagination,
+    reportFilters,
+    filtersState,
+    setFiltersState
+  } = useReports();
+
+  const handleFilterChange = (label: string, value: any) => {
+    setFiltersState((prev) => ({
+      ...prev,
+      [label]: value,
+    }));
+  };
 
   return (
     <Drawer>
@@ -45,16 +60,24 @@ const Filters: React.FC = () => {
                 <Case value="search">
                   <div className='flex flex-col gap-1.5'>
                     <Label htmlFor={filter.label}>{filter.label}</Label>
-                    <Input type='text' placeholder='Select a value' />
+                    <Input
+                      type='text'
+                      placeholder='Select a value'
+                      value={filtersState[filter.fieldName]?.value}
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { value }
+                      )}
+                    />
                   </div>
                 </Case>
                 <Case value="select">
                   <div className='flex flex-col gap-1.5'>
                     <MultiSelect
                       title={filter.label}
-                      values={[]}
+                      values={filtersState[filter.fieldName]?.value ?? []}
                       options={filter.data ?? []}
-                      onChange={() => {}}
+                      onChange={(value) => handleFilterChange(filter.fieldName, { value })}
                     />
                   </div>
                 </Case>
@@ -62,13 +85,38 @@ const Filters: React.FC = () => {
                   <div className='flex flex-col gap-1.5'>
                     <Label htmlFor={filter.label}>{filter.label}</Label>
                     <div className='flex gap-4 items-center'>
-                      <Input type='number' placeholder='From' />
-                      <Input type='number' placeholder='To' />
+                    <Input
+                      type="number"
+                      placeholder="From"
+                      value={filtersState[filter.fieldName]?.from}
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { ...filtersState[filter.fieldName], from: value }
+                      )}
+                    />
+                    <Input
+                      type="number"
+                      placeholder="To"
+                      value={filtersState[filter.fieldName]?.to }
+                      onChange={({ target: { value } }) => handleFilterChange(
+                        filter.fieldName,
+                        { ...filtersState[filter.fieldName], to: value }
+                      )}
+                    />
                     </div>
                   </div>
                 </Case>
               </SwitchCase>
             ))}
+            <Button
+              type="submit"
+              className="w-full mt-auto"
+              onClick={() => queryClient.invalidateQueries({
+                queryKey: ['Reports', 'data', report.id, pagination, filtersState]
+              })}
+            >
+              Apply Filters
+            </Button>
           </CardContent>
         </Card>
         <DrawerFooter className="px-0">

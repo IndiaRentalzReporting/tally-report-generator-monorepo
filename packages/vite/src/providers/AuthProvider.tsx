@@ -18,7 +18,7 @@ import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
-import { toTitleCase } from '$/utils/toTitleCase';
+import { toTitleCase } from '$/lib/utils';
 
 interface AuthProviderState {
   user: DetailedUser | null;
