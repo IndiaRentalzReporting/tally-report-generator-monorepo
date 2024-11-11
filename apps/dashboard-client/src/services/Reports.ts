@@ -51,7 +51,18 @@ export const getReportData = async (
 ): AxiosPromise<{
   data: Array<GeneratedReportData>,
   totalCount: number
-}> => reportsAxios.get(`/read/reportData/${reportId}?pageSize=${pageSize}&pageIndex=${pageIndex}${filters ? `&filters=${JSON.stringify(filters)}` : ''}`);
+}> => {
+  const params = new URLSearchParams({
+    pageSize: pageSize.toString(),
+    pageIndex: pageIndex.toString(),
+  });
+
+  if (filters) {
+    params.append('filters', JSON.stringify(filters));
+  }
+
+  return reportsAxios.get(`/read/reportData/${reportId}`, { params });
+};
 
 export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : Array<GeneratedReportFilters>

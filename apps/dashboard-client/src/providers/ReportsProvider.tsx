@@ -6,7 +6,6 @@ import React, {
   createContext
 } from 'react';
 import {
-  keepPreviousData,
   UseMutateAsyncFunction,
   useMutation,
   useQuery,
@@ -14,22 +13,26 @@ import {
 } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
-  GeneratedReportColumns,
-  GeneratedReportData,
-  GeneratedReportFilters,
   ReportSelect
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import { PaginationState } from '@tanstack/react-table';
 import {
   services as columnService
 } from '@/services/Columns';
 import {
-  services as reportService,
-  getReportData,
-  getReportColumns,
-  getReportFilters
+  services as reportService
 } from '@/services/Reports';
+
+const dummyColumn: DetailedColumnSelect = {
+  id: '',
+  displayName: '',
+  table: '',
+  type: 'string',
+  heading: '',
+  tablealias: '',
+  name: '',
+  alias: ''
+};
 
 export type Column = ReportSelect['columns'][number];
 export type Condition = ReportSelect['conditions'][number];
@@ -65,19 +68,6 @@ interface ReportsProviderState {
   updateReport: UseMutateAsyncFunction<AxiosResponse<{
     report: ReportSelect;
   }>, Error>
-
-  pagination: PaginationState,
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
-
-  reportData: {
-    data: Array<GeneratedReportData>,
-    totalCount: number
-  },
-  reportColumns: Array<GeneratedReportColumns>,
-  reportFilters: Array<GeneratedReportFilters>,
-
-  filtersState: Record<string, any>,
-  setFiltersState: React.Dispatch<React.SetStateAction<Record<string, any>>>
 }
 
 const ReportsContext = createContext<ReportsProviderState | undefined>(undefined);
@@ -126,36 +116,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       });
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] })
-  });
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [filtersState, setFiltersState] = useState({} as Record<string, any>);
-
-  const {
-    data: reportData = {
-      data: [],
-      totalCount: 0
-    },
-  } = useQuery({
-    queryFn: () => getReportData(report.id, pagination, filtersState),
-    queryKey: ['Reports', 'data', report.id, pagination, filtersState],
-    select: (data) => data.data,
-    placeholderData: keepPreviousData,
-  });
-
-  const { data: reportColumns = [] } = useQuery({
-    queryFn: () => getReportColumns(report.id),
-    queryKey: ['Reports', 'columns', report.id],
-    select: (data) => data.data.columns,
-  });
-
-  const { data: reportFilters = [] } = useQuery({
-    queryFn: () => getReportFilters(report.id),
-    queryKey: ['Reports', 'filters', report.id],
-    select: (data) => data.data.filters,
   });
 
   const availableColumns = useMemo(() => {
@@ -252,19 +212,9 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
     groupBy,
     setGroupBy,
+
     updateReport,
-
     isUpdatingReport,
-
-    pagination,
-    setPagination,
-
-    reportColumns,
-    reportData,
-    reportFilters,
-
-    filtersState,
-    setFiltersState
   }), [
     report,
     fetchedColumns,
@@ -290,16 +240,6 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
 
     updateReport,
     isUpdatingReport,
-
-    reportColumns,
-    reportData,
-    reportFilters,
-
-    pagination,
-    setPagination,
-
-    filtersState,
-    setFiltersState
   ]);
 
   return <ReportsContext.Provider value={contextValue}>{children}</ReportsContext.Provider>;
@@ -311,15 +251,4 @@ export const useReports = () => {
     throw new Error('useReports must be used within a ReportsProvider');
   }
   return context;
-};
-
-const dummyColumn: DetailedColumnSelect = {
-  id: '',
-  displayName: '',
-  table: '',
-  type: 'string',
-  heading: '',
-  tablealias: '',
-  name: '',
-  alias: ''
 };
