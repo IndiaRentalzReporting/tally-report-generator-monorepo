@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Card, CardHeader, CardTitle, CardDescription, CardContent
-} from '$/components';
+} from '@trg_package/vite/components';
 import AvailableColumns from './AddColumns';
 import Conditions from './AddConditions';
 import GroupBy from './AddGroupBy';
