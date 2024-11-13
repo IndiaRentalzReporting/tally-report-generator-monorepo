@@ -40,14 +40,14 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
         <Skeleton isLoading={loadingAction}>
           <Fields form={form} />
+          <Button
+            isLoading={updatingAction}
+            type="submit"
+            className="w-full mt-auto"
+          >
+            Update
+          </Button>
         </Skeleton>
-        <Button
-          isLoading={updatingAction}
-          type="submit"
-          className="w-full mt-auto"
-        >
-          Update
-        </Button>
       </form>
     </Form>
   );

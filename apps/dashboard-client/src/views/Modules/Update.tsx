@@ -38,10 +38,10 @@ const Edit: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-6">
         <Skeleton isLoading={loadingModule}>
           <Fields form={form} />
+          <Button type="submit" isLoading={updatingModule}>
+            Update Module
+          </Button>
         </Skeleton>
-        <Button type="submit" isLoading={updatingModule}>
-          Update Module
-        </Button>
       </form>
     </Form>
   );

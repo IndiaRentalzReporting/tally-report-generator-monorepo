@@ -63,37 +63,37 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
         <Skeleton isLoading={loadingUser}>
           <Fields form={form} />
+          <FormField
+            control={form.control}
+            name="role.name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel >Role</FormLabel>
+                <FormControl>
+                  <div className='flex gap-2 items-center'>
+                    <Input
+                      disabled
+                      type='text'
+                      placeholder="--"
+                      {...field}
+                    />
+                    <TrashIcon
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => deleteRole()}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+          >
+            Update
+          </Button>
         </Skeleton>
-        <FormField
-          control={form.control}
-          name="role.name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel >Role</FormLabel>
-              <FormControl>
-                <div className='flex gap-2 items-center'>
-                  <Input
-                    disabled
-                    type='text'
-                    placeholder="--"
-                    {...field}
-                  />
-                  <TrashIcon
-                    className="text-red-500 cursor-pointer"
-                    onClick={() => deleteRole()}
-                  />
-                </div>
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button
-          type="submit"
-        >
-          Update
-        </Button>
       </form>
     </Form>
   );

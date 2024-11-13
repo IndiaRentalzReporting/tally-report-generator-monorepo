@@ -37,10 +37,10 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       <form className="h-full flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
         <Skeleton isLoading={loadingRole}>
           <Fields form={form} />
+          <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
+            Update
+          </Button>
         </Skeleton>
-        <Button isLoading={updatingRole} type="submit" className="w-full mt-auto">
-          Update
-        </Button>
       </form>
     </Form>
   );
