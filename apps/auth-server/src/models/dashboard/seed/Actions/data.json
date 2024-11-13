@@ -14,5 +14,9 @@
   {
     "name": "DELETE",
     "isReadonly": true
+  },
+  {
+    "name": "SYNC",
+    "isReadonly": true
   }
 ]

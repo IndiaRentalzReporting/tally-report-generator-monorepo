@@ -36,10 +36,15 @@ export const expressLoader = async ({
     })
   );
 
-  app.use(removePrivate);
+  if (NODE_ENV !== 'development') {
+    app.use(removePrivate);
+  }
 
   sessionsLoader(app);
-  passportLoader && passportLoader(app);
+
+  if (passportLoader) {
+    passportLoader(app);
+  }
 
   routesLoader(app);
 
