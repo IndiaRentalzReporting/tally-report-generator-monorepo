@@ -16,7 +16,12 @@ import {
   Input,
   Label,
   SwitchCase,
-  MultiSelect
+  MultiSelect,
+  Else,
+  If,
+  Then,
+  CardDescription,
+  When
 } from '@trg_package/vite/components';
 import { PlusCircle } from 'lucide-react';
 import { GeneratedReportFilters, RuntimeFilters } from '@trg_package/schemas-reporting/types';
@@ -55,72 +60,84 @@ const Filters: React.FC<{
             <CardTitle className='flex justify-between items-center'>
               Filters
             </CardTitle>
+            <CardDescription>
+              <If condition={!!reportFilters.length}>
+                <Then>
+                  Narrow down the report based on these filters
+                </Then>
+                <Else>
+                  No filters available for this report
+                </Else>
+              </If>
+            </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            {reportFilters.map((filter) => (
-              <SwitchCase control={filter.filterType} >
-                <Case value="search">
-                  <div className='flex flex-col gap-1.5'>
-                    <Label htmlFor={filter.label}>{filter.label}</Label>
-                    <Input
-                      type='text'
-                      placeholder='Select a value'
-                      value={(localFiltersState[filter.fieldName] as { value: string })?.value || ''}
-                      onChange={({ target: { value } }) => handleFilterChange(
-                        filter.fieldName,
-                        { value }
-                      )}
-                    />
-                  </div>
-                </Case>
-                <Case value="select">
-                  <div className='flex flex-col gap-1.5'>
-                    <MultiSelect
-                      title={filter.label}
-                      values={(localFiltersState[filter.fieldName] as {
-                        value: string[]
-                      })?.value || []}
-                      options={filter.data ?? []}
-                      onChange={(value) => handleFilterChange(filter.fieldName, { value })}
-                    />
-                  </div>
-                </Case>
-                <Case value="between">
-                  <div className='flex flex-col gap-1.5'>
-                    <Label htmlFor={filter.label}>{filter.label}</Label>
-                    <div className='flex gap-4 items-center'>
-                    <Input
-                      type="number"
-                      placeholder="From"
-                      value={(localFiltersState[filter.fieldName] as { from: string })?.from || ''}
-                      onChange={({ target: { value } }) => handleFilterChange(
-                        filter.fieldName,
-                        { ...localFiltersState[filter.fieldName], from: value }
-                      )}
-                    />
-                    <Input
-                      type="number"
-                      placeholder="To"
-                      value={(localFiltersState[filter.fieldName] as { to: string })?.to || ''}
-                      onChange={({ target: { value } }) => handleFilterChange(
-                        filter.fieldName,
-                        { ...localFiltersState[filter.fieldName], to: value }
-                      )}
-                    />
-                    </div>
-                  </div>
-                </Case>
-              </SwitchCase>
-            ))}
-            <Button
-              isLoading={isFetchingReport}
-              type="submit"
-              className="w-full mt-auto"
-              onClick={() => setFiltersState(localFiltersState)}
-            >
-              Apply Filters
-            </Button>
-          </CardContent>
+          <When condition={!!reportFilters.length}>
+            <CardContent className="flex flex-col gap-4">
+                {reportFilters.map((filter) => (
+                  <SwitchCase control={filter.filterType} >
+                    <Case value="search">
+                      <div className='flex flex-col gap-1.5'>
+                        <Label htmlFor={filter.label}>{filter.label}</Label>
+                        <Input
+                          type='text'
+                          placeholder='Select a value'
+                          value={(localFiltersState[filter.fieldName] as { value: string })?.value || ''}
+                          onChange={({ target: { value } }) => handleFilterChange(
+                            filter.fieldName,
+                            { value }
+                          )}
+                        />
+                      </div>
+                    </Case>
+                    <Case value="select">
+                      <div className='flex flex-col gap-1.5'>
+                        <MultiSelect
+                          title={filter.label}
+                          values={(localFiltersState[filter.fieldName] as {
+                            value: string[]
+                          })?.value || []}
+                          options={filter.data ?? []}
+                          onChange={(value) => handleFilterChange(filter.fieldName, { value })}
+                        />
+                      </div>
+                    </Case>
+                    <Case value="between">
+                      <div className='flex flex-col gap-1.5'>
+                        <Label htmlFor={filter.label}>{filter.label}</Label>
+                        <div className='flex gap-4 items-center'>
+                        <Input
+                          type="number"
+                          placeholder="From"
+                          value={(localFiltersState[filter.fieldName] as { from: string })?.from || ''}
+                          onChange={({ target: { value } }) => handleFilterChange(
+                            filter.fieldName,
+                            { ...localFiltersState[filter.fieldName], from: value }
+                          )}
+                        />
+                        <Input
+                          type="number"
+                          placeholder="To"
+                          value={(localFiltersState[filter.fieldName] as { to: string })?.to || ''}
+                          onChange={({ target: { value } }) => handleFilterChange(
+                            filter.fieldName,
+                            { ...localFiltersState[filter.fieldName], to: value }
+                          )}
+                        />
+                        </div>
+                      </div>
+                    </Case>
+                  </SwitchCase>
+                ))}
+                <Button
+                  isLoading={isFetchingReport}
+                  type="submit"
+                  className="w-full mt-auto"
+                  onClick={() => setFiltersState(localFiltersState)}
+                >
+                  Apply Filters
+                </Button>
+            </CardContent>
+          </When>
         </Card>
         <DrawerFooter className="px-0">
           <DrawerClose>Cancel</DrawerClose>
