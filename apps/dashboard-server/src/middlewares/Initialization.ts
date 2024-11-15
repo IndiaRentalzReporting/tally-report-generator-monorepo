@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { Redis } from 'ioredis';
 import { AxiosResponse } from 'axios';
 import { DetailedUser as AuthDetailedUser, TenantSelect } from '@trg_package/schemas-auth/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import { DetailedUser as DashDetailedUser, UserSelect } from '@trg_package/schemas-dashboard/types';
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import {
   UserService,
@@ -70,37 +70,20 @@ export class Initialization {
       const connectSID = req.cookies['connect.sid'];
 
       if (!connectSID) {
-        const apiKey = req.headers['x-api-key'] as string;
-
-        if (!apiKey) {
-          throw new BadRequestError('API or Cookie key is required');
-        }
-
-        try {
-          const decryptedData = decrypt(apiKey);
-          const { tenant } = JSON.parse(decryptedData) as { tenant : TenantSelect };
-
-          req.decryptedApiKey = tenant;
-          next();
-        } catch (error) {
-          throw new BadRequestError('Invalid API key');
-        }
-      }
-
-      const cacheKey = `user:${connectSID}`;
-      const cachedUser = await Initialization.getFromCache<CachedUser>(cacheKey);
-
-      if (cachedUser) {
-        const { user } = cachedUser;
-        req.user = user;
-        const database = await Initialization.initDatabase(user.tenant);
-        const services = await Initialization.initServices(database);
-
-        req.dashboard = { database, services };
+        req.user = undefined;
         return next();
       }
 
-      const authResponse: AxiosResponse<{
+      const cacheKey = `user:${connectSID}`;
+
+      const cachedUser = await Initialization.getFromCache<CachedUser>(cacheKey);
+      if (cachedUser) {
+        const { user } = cachedUser;
+        req.user = user;
+        return next();
+      }
+
+      const { data: { user, isAuthenticated } }: AxiosResponse<{
         user: AuthDetailedUser & DashDetailedUser;
         isAuthenticated: boolean;
       }> = await authAxios.get('/api/v1/auth/status', {
@@ -108,9 +91,7 @@ export class Initialization {
         timeout: 1000 * 60
       });
 
-      const { user, isAuthenticated } = authResponse.data;
-
-      if (!isAuthenticated || !user.tenant_id) {
+      if (!isAuthenticated || !user) {
         throw new UnauthenticatedError('User not found or unauthorized');
       }
 
@@ -122,24 +103,47 @@ export class Initialization {
         req.session?.cookie?.expires?.getTime()
       );
 
-      const database = await Initialization.initDatabase(req.user.tenant);
-      const services = await Initialization.initServices(database);
-
-      req.dashboard = { database, services };
-
       return next();
     } catch (error) {
       return next(error);
     }
   }
 
-  private static async initDatabase({
-    id,
-    db_name,
-    db_username,
-    db_password
-  }: TenantSelect): Promise<DashboardDatabase> {
-    if (!db_name || !db_username || !db_password) {
+  public static async initDatabase(req: Request, res: Response, next: NextFunction) {
+    const { user } = req;
+    let tenant: TenantSelect;
+
+    if (!user) {
+      const apiKey = req.headers['x-api-key'] as string;
+
+      if (apiKey) {
+        req.apiKeyUserId = undefined;
+        req.apiKeyTenant = undefined;
+
+        try {
+          const { tenant: encrytedTenant, user: { id } } = decrypt<{
+            user: Pick<UserSelect, 'id'>;
+            tenant: typeof tenant;
+          }>(apiKey);
+
+          tenant = encrytedTenant;
+          req.apiKeyUserId = id;
+          req.apiKeyTenant = tenant;
+        } catch (error) {
+          throw new BadRequestError('Invalid API key');
+        }
+      } else {
+        throw new UnauthenticatedError('No Cookie or API key found!');
+      }
+    } else {
+      tenant = user.tenant;
+    }
+
+    const {
+      id, db_name, db_username, db_password
+    } = tenant;
+
+    if (!id || !db_name || !db_username || !db_password) {
       throw new BadRequestError('Tenant database error, missing credentials');
     }
 
@@ -159,29 +163,60 @@ export class Initialization {
       }
     );
 
-    return {
+    req.database = {
       client,
       connection
     };
+
+    return next();
   }
 
-  private static async initServices(database: DashboardDatabase): Promise<DashboardServices> {
-    const services: DashboardServices = {
+  public static async initServices(req: Request, res: Response, next: NextFunction) {
+    const { database } = req;
+
+    const services = {
       user: new UserService(database.client),
-      role: new RoleService(database.client),
+      company: new CompanyService(database.client as any),
       module: new ModuleService(database.client),
       action: new ActionService(database.client),
+      role: new RoleService(database.client),
       permission: new PermissionService(database.client),
       permissionAction: new PermissionActionService(database.client),
       userTallyCompany: new UserTallyCompanyService(database.client),
       apiKey: new ApiKeyService(database.client),
-      company: new CompanyService(database.client as any),
       table: new TableService(database.client),
       column: new ColumnService(database.client),
       report: new ReportService(database.client),
     };
 
-    return services;
+    req.services = services as Express.Request['services'];
+
+    return next();
+  }
+
+  public static async attachApiKeyUserId(req: Request, res: Response, next: NextFunction) {
+    const { apiKeyUserId, apiKeyTenant } = req;
+
+    if (!apiKeyUserId || !apiKeyTenant) return next();
+
+    const user = await req.services.user.findOne({
+      id: apiKeyUserId
+    });
+
+    if (user.role?.permission) {
+      user.role.permission = user.role.permission.filter(({ module }) => module.name === 'COMPANIES');
+    }
+
+    req.user = {
+      ...user,
+      tenant_id: apiKeyTenant.id,
+      tenant: apiKeyTenant
+    };
+
+    req.apiKeyTenant = undefined;
+    req.apiKeyUserId = undefined;
+
+    return next();
   }
 
   private static async getFromCache<T>(key: string): Promise<T | null> {
