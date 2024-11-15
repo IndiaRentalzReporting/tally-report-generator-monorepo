@@ -47,9 +47,10 @@ class UserService extends BaseUserService {
       );
 
       const USI = new DashboardUserService(dashboardDb);
-      const { role_id, role } = await USI.findOne({ email });
+      const { id, role_id, role } = await USI.findOne({ email });
 
       dashboardConnection.end();
+      user.id = id;
       user.role_id = role_id;
       user.role = role;
     }
