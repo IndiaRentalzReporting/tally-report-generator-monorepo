@@ -13,7 +13,9 @@ import {
   Skeleton,
   If,
   Then,
-  Else
+  Else,
+  CardHeader,
+  CardTitle
 } from '@trg_package/vite/components';
 import { useIsAllowed } from '@/hooks';
 
@@ -47,6 +49,11 @@ const Update: React.FC<IUpdateEntityProps> = ({
               <DrawerTitle>Update {type}</DrawerTitle>
             </DrawerHeader>
             <Card className="w-full relative">
+              <CardHeader>
+                <CardTitle>
+                  Update {type}
+                </CardTitle>
+              </CardHeader>
               <CardContent className="pt-6">
                 <Suspense fallback={<Skeleton isLoading />}>
                   <Component id={id} />

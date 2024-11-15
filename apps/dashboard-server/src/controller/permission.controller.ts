@@ -10,9 +10,8 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const permissions = await req.dashboard.services.permission.findMany({
-      ...req.query,
-      isPrivate: false
+    const permissions = await req.services.permission.findMany({
+      ...req.query
     });
     res.json({ permissions });
   } catch (e) {
@@ -27,7 +26,7 @@ export const createOne = async (
 ) => {
   try {
     const { role_id, module_id } = req.body;
-    const permission = await req.dashboard.services.permission.createOne({
+    const permission = await req.services.permission.createOne({
       module_id,
       role_id
     });
@@ -45,7 +44,7 @@ export const updateOne = async (
   try {
     const { id } = req.params;
     const { role_id, module_id } = req.body;
-    const permission = await req.dashboard.services.permission.updateOne(
+    const permission = await req.services.permission.updateOne(
       { id },
       {
         module_id,
@@ -67,7 +66,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const permission = await req.dashboard.services.permission.deleteOne({ id });
+    const permission = await req.services.permission.deleteOne({ id });
     return res.json({
       permission
     });

@@ -10,7 +10,7 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const module = await req.dashboard.services.module.createOne({
+    const module = await req.services.module.createOne({
       ...req.body,
       name: req.body.name.toUpperCase()
     });
@@ -26,9 +26,8 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const modules = await req.dashboard.services.module.findMany({
-      ...req.query,
-      isPrivate: false
+    const modules = await req.services.module.findMany({
+      ...req.query
     });
     return res.json({ modules });
   } catch (e) {
@@ -43,7 +42,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const module = await req.dashboard.services.module.updateOne({ id }, req.body);
+    const module = await req.services.module.updateOne({ id }, req.body);
     return res.json({ module });
   } catch (e) {
     return next(e);
@@ -57,7 +56,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const module = await req.dashboard.services.module.deleteOne({ id });
+    const module = await req.services.module.deleteOne({ id });
     return res.json({ module });
   } catch (e) {
     return next(e);

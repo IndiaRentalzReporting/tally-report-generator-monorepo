@@ -11,7 +11,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
 import { useReports } from '@/providers/ReportsProvider';
 import { createUpdateReportColumn } from './columns';
-import Settings from '@/components/composite/reports/Settings';
+import Conditions from '@/components/composite/reports/AddConditions';
+import Filters from '@/components/composite/reports/AddFilters';
+import GroupBy from '@/components/composite/reports/AddGroupBy';
+import AvailableColumns from '@/components/composite/reports/AddColumns';
 
 const UpdateReport: React.FC = () => {
   const {
@@ -39,12 +42,38 @@ const UpdateReport: React.FC = () => {
           <Button className='w-min' variant="secondary" onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
         </div>
       </CardHeader>
-      <CardContent className="flex flex-col gap-6">
-        <DataTable
-          data={[{}]}
-          columns={columnDef}
-        />
-        <Settings/>
+      <CardContent className="grid grid-cols-4 grid-rows-2 gap-6">
+        <Card className='row-span-2'>
+          <CardHeader>
+            <CardTitle>Add Columns</CardTitle>
+            <CardDescription>
+              Columns that will be used to generate the report.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AvailableColumns/>
+          </CardContent>
+        </Card>
+        <div className='col-span-3 row-span-2 flex flex-col gap-6'>
+          <DataTable
+            emptyDataMessage='No Columns'
+            data={columnDef.length ? [{}] : []}
+            columns={columnDef}
+          />
+          <Card className='flex-grow'>
+            <CardHeader>
+              <CardTitle>Report Settings</CardTitle>
+              <CardDescription>
+                These are the settings that will be used to generate the report.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-6'>
+              <GroupBy />
+              <Conditions />
+              <Filters />
+            </CardContent>
+          </Card>
+        </div>
       </CardContent>
     </Card>
   );

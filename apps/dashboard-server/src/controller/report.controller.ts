@@ -27,7 +27,7 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const report = await req.dashboard.services.report.createOne({ ...req.body });
+    const report = await req.services.report.createOne({ ...req.body });
     return res.json({ report } as ReportResponse);
   } catch (e) {
     return next(e);
@@ -40,7 +40,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const reports = await req.dashboard.services.report.findMany({
+    const reports = await req.services.report.findMany({
       ...req.query
     });
     return res.json({ reports });
@@ -55,17 +55,17 @@ export const updateOne = async (
   next: NextFunction
 ) => {
   try {
-    let report = await req.dashboard.services.report.updateOne(
+    let report = await req.services.report.updateOne(
       { id: req.params.id as any },
       req.body
     );
 
     const splitTables = req.body.tables?.flatMap((item) => item.split('_'));
     const tables = [...new Set(splitTables)];
-    const tableQuery = await req.dashboard.services.report.getTableQuery(report.baseEntity as any,tables);
+    const tableQuery = await req.services.report.getTableQuery(report.baseEntity as any,tables);
 
     const reportQueryConfig = getQueryConfig(tableQuery,req.body);
-    report = await req.dashboard.services.report.updateOne(
+    report = await req.services.report.updateOne(
       { id: req.params.id as any },
       { queryConfig: reportQueryConfig }
     );
@@ -83,7 +83,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const report = await req.dashboard.services.report.deleteOne({ id });
+    const report = await req.services.report.deleteOne({ id });
     return res.json({ report });
   } catch (e) {
     return next(e);
@@ -96,8 +96,8 @@ export const getAllColumns = async <ResObject extends { columns : DetailedColumn
   next : NextFunction
 ) => {
   try {
-    const table = await req.dashboard.services.table.findOne({ id: req.params.tableId });
-    const columns = await req.dashboard.services.column.getAllColumns(req.params.tableId);
+    const table = await req.services.table.findOne({ id: req.params.tableId });
+    const columns = await req.services.column.getAllColumns(req.params.tableId);
     return res.json({ columns } as ResObject);
   } catch (e) {
     next(e);
@@ -111,10 +111,10 @@ export const getSelectData = async (
   next : NextFunction
 ) => {
   const { id: columnId } = req.params;
-  const column = await req.dashboard.services.column.findOne({ id: columnId });
-  const table = await req.dashboard.services.table.findOne({ id: column.tableId });
+  const column = await req.services.column.findOne({ id: columnId });
+  const table = await req.services.table.findOne({ id: column.tableId });
 
-  const selectData = await req.dashboard.services.report.runConfigQuery<DataSelectType>(`
+  const selectData = await req.services.report.runConfigQuery<DataSelectType>(`
     SELECT tb."${column.name}" as label,tb."${column.name}" as value from public."${table.name}" tb
   `);
   if (!selectData || selectData.length === 0) { throw new BadRequestError('No Data found in the table'); }
@@ -129,7 +129,7 @@ export const getAllTables = async (
   next : NextFunction
 ) => {
   try {
-    const tables = await req.dashboard.services.table.findMany();
+    const tables = await req.services.table.findMany();
     return res.json({ tables });
   } catch (e) {
     return next(e);
@@ -151,7 +151,7 @@ export const getReportData = async (
   next: NextFunction
 ) => {
   try {
-    const report = await req.dashboard.services.report.findOne({
+    const report = await req.services.report.findOne({
       id: req.params.id
     });
     const { queryConfig } = report;
@@ -179,8 +179,8 @@ export const getReportData = async (
    
     const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex))}` : '';
     const query = queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery);
-    const data = await req.dashboard.services.report.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));
-    const totalCount = await req.dashboard.services.report.runConfigQuery<Array<{ totalCount : number }>>(`SELECT COUNT(*) as "totalCount" FROM (${query.replace('{LIMIT}','')})`);
+    const data = await req.services.report.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));
+    const totalCount = await req.services.report.runConfigQuery<Array<{ totalCount : number }>>(`SELECT COUNT(*) as "totalCount" FROM (${query.replace('{LIMIT}','')})`);
 
     return res.json({
       data,
@@ -197,7 +197,7 @@ export const getReportColumns = async (
   next: NextFunction
 ) => {
   try {
-    const report = await req.dashboard.services.report.findOne({ id: req.params.id });
+    const report = await req.services.report.findOne({ id: req.params.id });
     const { queryConfig } = report;
 
     if (!report.columns || !queryConfig) {
@@ -218,7 +218,7 @@ export const getReportFilters = async (
   next : NextFunction
 ) => {
   try {
-    const report = await req.dashboard.services.report.findOne({ id: req.params.id });
+    const report = await req.services.report.findOne({ id: req.params.id });
     if (!report.queryConfig) {
       throw new BadRequestError('Query Config Does not exist');
     }
@@ -232,7 +232,7 @@ export const getReportFilters = async (
     for (const [alias, config] of Object.entries(filters)) {
       let filterData = null;
       if (config.dataSource) {
-        filterData = await req.dashboard.services.report.runConfigQuery<NonNullable<GeneratedReportFilters['data']>>(config.dataSource);
+        filterData = await req.services.report.runConfigQuery<NonNullable<GeneratedReportFilters['data']>>(config.dataSource);
       }
       filterArr.push({
         data: filterData,

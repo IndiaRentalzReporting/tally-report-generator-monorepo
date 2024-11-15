@@ -47,8 +47,6 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
               baseEntity: true
             }}
           />
-        </Skeleton>
-        <div className='flex items-center gap-2 justify-between'>
           <Button
             isLoading={updatingReport}
             type="submit"
@@ -56,7 +54,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
           >
             Update
           </Button>
-        </div>
+        </Skeleton>
       </form>
     </Form>
   );

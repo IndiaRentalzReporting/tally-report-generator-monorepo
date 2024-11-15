@@ -53,85 +53,85 @@ const Column: React.FC<IUpdateEntityProps> = ({ column }) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-[25vh] hover:bg-muted/50 rounded-md">
-      <Drawer open={open} onOpenChange={handleClose}>
-        <DrawerTrigger>
-          <Edit size={100} className="cursor-pointer opacity-5" />
-        </DrawerTrigger>
-        <DrawerContent className="px-6">
-          <DrawerHeader className="px-0">
-            <DrawerTitle>Column Settings</DrawerTitle>
-          </DrawerHeader>
-          <Card className="w-full relative">
-            <CardContent className="pt-6 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="columnName">Column Name</Label>
-                <Input id="columnName" value={column.column.name} readOnly />
-              </div>
+    <Drawer open={open} onOpenChange={handleClose}>
+      <DrawerTrigger className='w-full'>
+        <div className='flex items-center justify-center h-52 hover:bg-muted/50 rounded-md'>
+          <Edit size={80} className="cursor-pointer opacity-5" />
+        </div>
+      </DrawerTrigger>
+      <DrawerContent className="px-6">
+        <DrawerHeader className="px-0">
+          <DrawerTitle>Column Settings</DrawerTitle>
+        </DrawerHeader>
+        <Card className="w-full relative">
+          <CardContent className="pt-6 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="columnName">Column Name</Label>
+              <Input id="columnName" value={column.column.name} readOnly />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="heading">Heading</Label>
-                <Input
-                  id="heading"
-                  value={localExtra.heading}
-                  onChange={({ target: { value: heading } }) => setLocalExtra((prev) => ({
+            <div className="space-y-2">
+              <Label htmlFor="heading">Heading</Label>
+              <Input
+                id="heading"
+                value={localExtra.heading}
+                onChange={({ target: { value: heading } }) => setLocalExtra((prev) => ({
+                  ...prev,
+                  heading
+                }))
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="operation">Operation</Label>
+              <Select
+                value={localExtra.operation}
+                onValueChange={(operation) => {
+                  setGroupBy((prev) => prev.filter(
+                    (group) => group.column.displayName !== column.column.displayName
+                  ));
+                  setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Operation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Operation</SelectLabel>
+                    {operations.map((operation) => (
+                      <SelectItem key={operation} value={operation}>
+                        {operation}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <When condition={selectedColumn?.column.type === 'number'}>
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={localExtra.column.type === 'number'}
+                  id="showTotal"
+                  onCheckedChange={(showTotal) => setLocalExtra((prev) => ({
                     ...prev,
-                    heading
+                    showTotal: Boolean(showTotal)
                   }))
                   }
                 />
+                <Label htmlFor="showTotal">Show Total</Label>
               </div>
+            </When>
+          </CardContent>
+        </Card>
 
-              <div className="space-y-2">
-                <Label htmlFor="operation">Operation</Label>
-                <Select
-                  value={localExtra.operation}
-                  onValueChange={(operation) => {
-                    setGroupBy((prev) => prev.filter(
-                      (group) => group.column.displayName !== column.column.displayName
-                    ));
-                    setLocalExtra((prev) => ({ ...prev, operation: operation as ReportSelect['columns'][number]['operation'] }));
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Operation" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Operation</SelectLabel>
-                      {operations.map((operation) => (
-                        <SelectItem key={operation} value={operation}>
-                          {operation}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <When condition={selectedColumn?.column.type === 'number'}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    checked={localExtra.column.type === 'number'}
-                    id="showTotal"
-                    onCheckedChange={(showTotal) => setLocalExtra((prev) => ({
-                      ...prev,
-                      showTotal: Boolean(showTotal)
-                    }))
-                    }
-                  />
-                  <Label htmlFor="showTotal">Show Total</Label>
-                </div>
-              </When>
-            </CardContent>
-          </Card>
-
-          <DrawerFooter className="px-0">
-            <DrawerClose>Cancel</DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
+        <DrawerFooter className="px-0">
+          <DrawerClose>Cancel</DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };
 

@@ -3,7 +3,8 @@ import config from '../config';
 
 const { ENCRYPTION_KEY } = config;
 
-export function encrypt(text: string): string {
+export const encrypt = (data: Record<string, any>): string => {
+  const text = JSON.stringify(data);
   const iv = crypto.randomBytes(12);
   const cipher = crypto.createCipheriv(
     'aes-128-gcm',
@@ -15,9 +16,9 @@ export function encrypt(text: string): string {
   encrypted += cipher.final('base64');
   const authTag = cipher.getAuthTag().toString('base64');
   return `${iv.toString('base64')}:${authTag}:${encrypted}`;
-}
+};
 
-export function decrypt(text: string): string {
+export const decrypt = <T extends Record<string, any>>(text: string): T => {
   const textParts = text.split(':');
   const textPart1 = textParts[0];
   const textPart2 = textParts[1];
@@ -41,5 +42,5 @@ export function decrypt(text: string): string {
   let decrypted = decipher.update(encryptedText, 'base64', 'utf8');
   decrypted += decipher.final('utf8');
 
-  return decrypted;
-}
+  return JSON.parse(decrypted);
+};

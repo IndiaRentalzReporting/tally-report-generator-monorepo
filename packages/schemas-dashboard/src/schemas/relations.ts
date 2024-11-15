@@ -8,7 +8,7 @@ import { ActionSchema } from './actions';
 import { PermissionActionSchema } from './permission_action';
 import { UserTallyCompanySchema } from './user_tallyCompany';
 
-export const userSchemaRelation = relations(UserSchema, ({ one, many }) => ({
+export const UserSchemaRelation = relations(UserSchema, ({ one, many }) => ({
   role: one(RoleSchema, {
     fields: [UserSchema.role_id],
     references: [RoleSchema.id]
@@ -34,12 +34,12 @@ export const UserTallyCompanySchemaRelation = relations(
   })
 );
 
-export const roleSchemaRelation = relations(RoleSchema, ({ one, many }) => ({
+export const RoleSchemaRelation = relations(RoleSchema, ({ one, many }) => ({
   user: many(UserSchema),
   permission: many(PermissionSchema)
 }));
 
-export const permissionSchemaRelation = relations(
+export const PermissionSchemaRelation = relations(
   PermissionSchema,
   ({ one, many }) => ({
     role: one(RoleSchema, {
@@ -54,14 +54,14 @@ export const permissionSchemaRelation = relations(
   })
 );
 
-export const moduleSchemaRelation = relations(
+export const ModuleSchemaRelation = relations(
   ModuleSchema,
   ({ one, many }) => ({
     permission: many(PermissionSchema)
   })
 );
 
-export const permissionActionSchemaRelation = relations(
+export const PermissionActionSchemaRelation = relations(
   PermissionActionSchema,
   ({ one }) => ({
     permission: one(PermissionSchema, {
@@ -75,6 +75,6 @@ export const permissionActionSchemaRelation = relations(
   })
 );
 
-export const actionSchemaRelation = relations(ActionSchema, ({ many }) => ({
+export const ActionSchemaRelation = relations(ActionSchema, ({ many }) => ({
   permissionAction: many(PermissionActionSchema)
 }));

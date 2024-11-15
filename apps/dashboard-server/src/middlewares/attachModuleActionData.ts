@@ -1,3 +1,4 @@
+import { BadRequestError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 
 export const attachModuleActionData = async (
@@ -10,15 +11,17 @@ export const attachModuleActionData = async (
   const module = pathParams[3];
   const action = pathParams[4];
 
-  await req.dashboard.services.action.findOne({
-    name: action?.toUpperCase()
+  if (!module || !action) throw new BadRequestError('Invalid path');
+
+  await req.services.action.findOne({
+    name: action.toUpperCase()
   });
-  await req.dashboard.services.module.findOne({
-    name: module?.toUpperCase()
+  await req.services.module.findOne({
+    name: module.toUpperCase()
   });
 
-  req.action = action?.toUpperCase();
-  req.module = module?.toUpperCase();
+  req.action = action.toUpperCase();
+  req.module = module.toUpperCase();
 
   return next();
 };

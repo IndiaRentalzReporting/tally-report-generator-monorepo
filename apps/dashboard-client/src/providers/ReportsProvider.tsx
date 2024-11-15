@@ -115,7 +115,12 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
         tables,
       });
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] });
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'Columns', report.id] });
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'Filters', report.id] });
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'Data', report.id] });
+    }
   });
 
   const availableColumns = useMemo(() => {
@@ -173,7 +178,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
     const newFilter: Filter = {
       columnName: undefined,
       column: dummyColumn,
-      filterType: 'between',
+      filterType: undefined,
       conditionType: undefined,
     };
     setFilters((prev) => [...prev, newFilter]);

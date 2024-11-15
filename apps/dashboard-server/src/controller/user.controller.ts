@@ -11,9 +11,8 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = (await req.dashboard.services.user.createOne({
+    const { password, ...user } = (await req.services.user.createOne({
       ...req.body,
-      isPrivate: false
     })) as DetailedUser;
     return res.json({
       user
@@ -29,7 +28,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await req.dashboard.services.user.findMany({
+    const usersWithPassword = await req.services.user.findMany({
       ...req.query
     });
     const users = usersWithPassword.map(
@@ -50,7 +49,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await req.dashboard.services.user.updateOne(
+    const { password, ...user } = await req.services.user.updateOne(
       { id },
       req.body
     );
@@ -68,7 +67,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await req.dashboard.services.user.deleteOne({ id });
+    const { password, ...user } = await req.services.user.deleteOne({ id });
 
     return res.json({ user });
   } catch (e) {

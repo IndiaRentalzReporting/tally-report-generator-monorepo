@@ -14,8 +14,8 @@ const AvailableColumns: React.FC = () => {
   const { availableColumns, addColumn, fetchingColumns } = useReports();
 
   return (
-    <div>
-        <If condition={fetchingColumns}>
+    <div >
+      <If condition={fetchingColumns}>
         <Then>
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index}>

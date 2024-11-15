@@ -33,7 +33,7 @@ export const ReportFilterInsertSchema = z.object({
 
 export type ReportFilterInsert = {
   column: DetailedColumnSelect,
-  filterType : FilterTypes,
+  filterType : FilterTypes | undefined,
   conditionType : 'having' | undefined,
   columnName : string | undefined
 
@@ -41,7 +41,7 @@ export type ReportFilterInsert = {
 
 export type ReportFilterSelect = {
   column : DetailedColumnSelect,
-  filterType : FilterTypes,
+  filterType : FilterTypes | undefined,
   conditionType : 'having' | undefined,
   columnName : string | undefined
 };

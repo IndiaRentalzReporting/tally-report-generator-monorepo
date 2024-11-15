@@ -1,6 +1,5 @@
 import {
   DropdownMenuSeparator,
-  DropdownMenuItem,
   Button,
   Input,
   DropdownMenuSub,
@@ -17,7 +16,8 @@ import {
   If,
   Else,
   Then,
-  Skeleton
+  Skeleton,
+  DropdownMenuItem
 } from '@trg_package/vite/components';
 import { CopyIcon, Trash2Icon } from 'lucide-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -48,13 +48,13 @@ const ApiKey = () => {
     queryKey: ['apiKeys', 'read'],
   });
 
-  const { mutateAsync: deleteApiKey } = useMutation({
+  const { mutateAsync: deleteApiKey, isPending: deletingApiKey } = useMutation({
     mutationFn: (id: string) => services.deleteOne({ id }),
     mutationKey: ['apiKeys', 'delete'],
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['apiKeys', 'read'] })
   });
 
-  const { mutateAsync: createApiKey } = useMutation({
+  const { mutateAsync: createApiKey, isPending: creatingApiKey } = useMutation({
     mutationFn: (data: State) => services.createOne(data),
     mutationKey: ['apiKeys', 'create'],
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['apiKeys', 'read'] })
@@ -121,7 +121,7 @@ const ApiKey = () => {
                 <Button
                   type="submit"
                   size="sm"
-                  disabled={loadingApiKeys}
+                  isLoading={creatingApiKey}
                 >
                   Create
                 </Button>
@@ -155,10 +155,14 @@ const ApiKey = () => {
                         <span className="sr-only">Copy API Key</span>
                       </Button>
                       <Button
-                        onClick={() => deleteApiKey(key.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteApiKey(key.id);
+                        }}
                         type="button"
                         variant="ghost"
                         size="icon"
+                        isLoading={deletingApiKey}
                         className="text-destructive"
                       >
                         <Trash2Icon className="h-4 w-4" />

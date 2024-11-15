@@ -38,13 +38,13 @@ const Read: React.FC = () => {
 
   const { data: reportColumns = [] } = useQuery({
     queryFn: () => getReportColumns(report.id),
-    queryKey: ['Reports', 'columns', report.id],
+    queryKey: ['Reports', 'Columns', report.id],
     select: (data) => data.data.columns.map((column) => createReadReportColumn(column)),
   });
 
   const { data: reportFilters = [] } = useQuery({
     queryFn: () => getReportFilters(report.id),
-    queryKey: ['Reports', 'filters', report.id],
+    queryKey: ['Reports', 'Filters', report.id],
     select: (data) => data.data.filters,
   });
 
@@ -59,7 +59,7 @@ const Read: React.FC = () => {
     isFetching: fetchingReportData,
   } = useQuery({
     queryFn: () => getReportData(report.id, pagination, filtersState),
-    queryKey: ['Reports', 'data', report.id, pagination, filtersState],
+    queryKey: ['Reports', 'Data', report.id, pagination, filtersState],
     select: (data) => data.data,
     enabled: !!reportColumns
   });

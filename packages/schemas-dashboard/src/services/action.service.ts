@@ -60,7 +60,8 @@ export class ActionService extends BaseServiceNew<
       await this.PermissionActionService.createOne({
         permission_id,
         action_id: action.id,
-        isPrivate: action.isPrivate
+        isPrivate: action.isPrivate,
+        isReadonly: true
       });
     }
   }

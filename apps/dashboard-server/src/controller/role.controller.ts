@@ -11,9 +11,8 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const roles = (await req.dashboard.services.role.findMany({
-      ...req.query,
-      isPrivate: false
+    const roles = (await req.services.role.findMany({
+      ...req.query
     })) as RoleWithPermission[];
     return res.json({ roles });
   } catch (e) {
@@ -27,7 +26,7 @@ export const createOne = async (
   next: NextFunction
 ) => {
   try {
-    const role = await req.dashboard.services.role.createOne({
+    const role = await req.services.role.createOne({
       ...req.body,
       name: req.body.name.toUpperCase()
     });
@@ -46,7 +45,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const role = await req.dashboard.services.role.updateOne({ id }, req.body);
+    const role = await req.services.role.updateOne({ id }, req.body);
     return res.json({
       role
     });
@@ -62,7 +61,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const role = await req.dashboard.services.role.deleteOne({ id });
+    const role = await req.services.role.deleteOne({ id });
     return res.json({
       role
     });

@@ -18,6 +18,9 @@ import companyRouter from '@/routes/company.route';
 const routesLoader = (app: Express) => {
   Initialization.initialize();
   app.use(Initialization.attachUser);
+  app.use(Initialization.initDatabase);
+  app.use(Initialization.initServices);
+  app.use(Initialization.attachApiKeyUserId);
 
   app.use(attachModuleActionData);
   app.use(isRoleAllowed);
