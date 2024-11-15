@@ -11,8 +11,7 @@ export const readAll = async (
 ) => {
   try {
     const permissions = await req.services.permission.findMany({
-      ...req.query,
-      isPrivate: false
+      ...req.query
     });
     res.json({ permissions });
   } catch (e) {

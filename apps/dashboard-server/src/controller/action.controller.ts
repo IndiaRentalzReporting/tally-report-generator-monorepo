@@ -12,7 +12,6 @@ export const readAll = async (
   try {
     const actions = await req.services.action?.findMany({
       ...req.query,
-      isPrivate: false
     });
     return res.json({ actions });
   } catch (e) {

@@ -56,10 +56,11 @@ export class ModuleService extends BaseServiceNew<
     const permission = await this.PermissionService.createOne({
       role_id,
       module_id: module.id,
-      isPrivate: module.isPrivate
+      isPrivate: module.isPrivate,
+      isReadonly: true
     });
 
-    const actions = await this.ActionService.findMany({}).catch((e) => {
+    const actions = await this.ActionService.findMany().catch((e) => {
       if (e instanceof ReadError) return null;
       throw e;
     });
@@ -70,7 +71,8 @@ export class ModuleService extends BaseServiceNew<
       await this.PermissionActionService.createOne({
         permission_id: permission.id,
         isPrivate: permission.isPrivate,
-        action_id
+        action_id,
+        isReadonly: true
       });
     }
   }

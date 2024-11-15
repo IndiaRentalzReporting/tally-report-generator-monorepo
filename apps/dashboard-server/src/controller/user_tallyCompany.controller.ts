@@ -28,8 +28,7 @@ export const readAll = async (
 ) => {
   try {
     const userTallyCompanys = await req.services.userTallyCompany.findMany({
-      ...req.query,
-      isPrivate: false
+      ...req.query
     });
     res.json({ userTallyCompanys });
   } catch (e) {

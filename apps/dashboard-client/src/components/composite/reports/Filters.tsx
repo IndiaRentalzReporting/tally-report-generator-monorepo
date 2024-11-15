@@ -21,7 +21,8 @@ import {
   If,
   Then,
   CardDescription,
-  When
+  When,
+  Separator
 } from '@trg_package/vite/components';
 import { PlusCircle } from 'lucide-react';
 import { GeneratedReportFilters, RuntimeFilters } from '@trg_package/schemas-reporting/types';
@@ -73,7 +74,8 @@ const Filters: React.FC<{
           </CardHeader>
           <When condition={!!reportFilters.length}>
             <CardContent className="flex flex-col gap-4">
-                {reportFilters.map((filter) => (
+              {reportFilters.map((filter, index) => (
+                <>
                   <SwitchCase control={filter.filterType} >
                     <Case value="search">
                       <div className='flex flex-col gap-1.5'>
@@ -127,15 +129,17 @@ const Filters: React.FC<{
                       </div>
                     </Case>
                   </SwitchCase>
-                ))}
-                <Button
-                  isLoading={isFetchingReport}
-                  type="submit"
-                  className="w-full mt-auto"
-                  onClick={() => setFiltersState(localFiltersState)}
-                >
-                  Apply Filters
-                </Button>
+                  {index !== reportFilters.length - 1 && <Separator />}
+                </>
+              ))}
+              <Button
+                isLoading={isFetchingReport}
+                type="submit"
+                className="w-full mt-auto"
+                onClick={() => setFiltersState(localFiltersState)}
+              >
+                Apply Filters
+              </Button>
             </CardContent>
           </When>
         </Card>

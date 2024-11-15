@@ -13,8 +13,7 @@ export const readAll = async (
 ) => {
   try {
     const apiKeys = await req.services.apiKey.findMany({
-      ...req.query,
-      isPrivate: false
+      ...req.query
     });
     return res.json({ apiKeys });
   } catch (e) {

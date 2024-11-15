@@ -13,7 +13,6 @@ export const createOne = async (
   try {
     const { password, ...user } = (await req.services.user.createOne({
       ...req.body,
-      isPrivate: false
     })) as DetailedUser;
     return res.json({
       user

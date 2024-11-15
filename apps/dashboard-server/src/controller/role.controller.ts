@@ -12,8 +12,7 @@ export const readAll = async (
 ) => {
   try {
     const roles = (await req.services.role.findMany({
-      ...req.query,
-      isPrivate: false
+      ...req.query
     })) as RoleWithPermission[];
     return res.json({ roles });
   } catch (e) {
