@@ -125,7 +125,10 @@ const UserSettings = () => {
         <DropdownMenuItem className="w-full">
           <Button
             isLoading={isLoading}
-            onClick={() => signOut()}
+            onClick={(e) => {
+              e.stopPropagation();
+              signOut();
+            }}
             variant="default"
             className="w-full"
           >
