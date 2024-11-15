@@ -18,9 +18,6 @@ export const isRoleAllowed = async (
         'You are not allowed to do anything, please get a role assigned to yourself'
       );
     }
-    if (role.name == 'SUPERUSER') {
-      return next();
-    }
 
     if (module && action) {
       const { permission } = role;
