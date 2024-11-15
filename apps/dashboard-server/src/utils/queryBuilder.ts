@@ -9,7 +9,6 @@ import { FilterOperations, ReportInsert, ReportSelect } from '@trg_package/schem
 function getEscapedValue(param : any) {
   if (Array.isArray(param)) {
     param = param.map((e) => getEscapedValue(e));
-    console.log(param);
     return `(${param.join(',')})`;
   }
   if (typeof param === 'number') {
@@ -69,11 +68,11 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
     if (e.filterType === 'select') {
       dataSource = `SELECT ${getColumnName(e.column)} as label,${getColumnName(e.column)} as value FROM public."${e.column.table}" "${e.column.tablealias}"`;
       queryCondition = `
-        ${columnName} IN (SELECT tb."${e.column.name}" as name from public."${e.column.table}" tb WHERE tb."${e.column.name}" IN {value})`;
+        ${columnName} IN {value}`;
     } else if (e.filterType === 'search' || e.column.type === 'string') {
       queryCondition = `${columnName} LIKE {value}`;
     } else {
-      queryCondition = `${columnName} BETWEEN {from} and {to}`;
+      queryCondition = `${columnName} `;
     }
 
     filterConfig[e.column.alias] = {
@@ -97,6 +96,7 @@ export function getQueryConfig(tableQuery: string, report: Partial<ReportSelect>
   const groupByQuery = (groupBy ?? []).length > 0 ? getGroupByQuery(groupBy ?? []) : ' ';
   const filterConfig = (filters ?? []).length > 0 ? getFilterConfig(filters ?? []) : null;
 
+
   const query = `SELECT ${columnQuery} FROM ${tableQuery} ${condtionsQuery} {WHERE} ${groupByQuery} {HAVING} {LIMIT}`;
 
   const columnArr : NonNullable<ReportSelect['queryConfig']>['columns'] = [];
@@ -119,6 +119,18 @@ export async function getFilterQuery(filters : { [K : string] : typeof FilterOpe
       const config = filterConfig[filterName];
       let query = config?.queryCondition ?? '';
 
+      if('from' in params && 'to' in params)
+      {
+        query = `${query} between {from} and {to}`;
+      }
+      else if('from' in params)
+      {
+        query = `${query} <= {from}`;
+      }
+      else if('to' in params)
+      {
+        query = `${query} <= {to}`;
+      }
       Object.entries(params).forEach(([e,value]) => {
         query = query.replace(`{${e.toLowerCase()}}`,getEscapedValue(value).toString());
       });
@@ -128,6 +140,6 @@ export async function getFilterQuery(filters : { [K : string] : typeof FilterOpe
 
   return {
     havingQuery: conditionArr.having.length > 0 ? `HAVING ${conditionArr.having.join(' AND ')}` : '',
-    whereQuery: conditionArr.where.length > 0 ? `AND ${conditionArr.where.join(' AND ')}` : ''
+    whereQuery: conditionArr.where.length > 0 ? `${conditionArr.where.join(' AND ')}` : ''
   };
 }

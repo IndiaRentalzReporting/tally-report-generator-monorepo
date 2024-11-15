@@ -51,7 +51,7 @@ export const createReadReportColumn = (column: GeneratedReportColumns)
 : ColumnDef<GeneratedReportData> => ({
   id: column.alias,
   accessorKey: column.alias || 'No Name',
-  header: ({ column: clmn }) => <SortingButton column={clmn} label={column.alias} />
+  header: ({ column: clmn }) => <SortingButton column={clmn} label={column.heading} />
 });
 
 export const createUpdateReportColumn = (

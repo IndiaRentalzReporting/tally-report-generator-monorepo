@@ -170,8 +170,13 @@ export const getReportData = async (
       pageSize
     } = req.query;
 
-    const { whereQuery,havingQuery } = filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
+    let { whereQuery,havingQuery } = Object.entries(filters??{}).length>0 && filters? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
+    if(whereQuery!=='')
+    {
+      whereQuery = queryConfig.dataSource.match(/\b WHERE \b/)?` AND ${whereQuery}`:` WHERE ${whereQuery}`;
+    }
+   
     const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex))}` : '';
     const query = queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery);
     const data = await req.dashboard.services.report.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));

@@ -69,5 +69,5 @@ export type RuntimeFilters = {
 
 export const FilterValueSchema = z.union([
   z.object({ value: z.union([z.string(), z.array(z.string())]) }),
-  z.object({ from: z.string(), to: z.string() })
+  z.object({ from: z.string(), to: z.string() }).partial()
 ]);
