@@ -72,5 +72,5 @@ export const createUpdateReportColumn = (
       </Button>
     </div>
   ),
-  cell: () => <Column column={column} />
+  cell: () => <Column column={column} />,
 });

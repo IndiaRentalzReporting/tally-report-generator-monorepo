@@ -40,6 +40,7 @@ import {
 import { cn } from '$/lib/utils';
 
 interface DataTableProps<TData, TValue> {
+  emptyDataMessage?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   enableSorting?: boolean;
@@ -62,6 +63,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export const DataTable = <TData, TValue>({
+  emptyDataMessage = 'No Results',
   columns,
   data,
   enableSorting = false,
@@ -131,7 +133,7 @@ export const DataTable = <TData, TValue>({
 
   return (
     <>
-      <div className="rounded-md border w-full">
+      <div className={cn('rounded-md border w-full')}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -200,7 +202,7 @@ export const DataTable = <TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {emptyDataMessage}.
                 </TableCell>
               </TableRow>
             )}
