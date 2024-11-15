@@ -14,9 +14,9 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarSeparator,
-  SidebarGroupLabel
+  SidebarGroupLabel,
+  useSidebar
 } from '@trg_package/vite/components';
-import { cn } from '@trg_package/vite/lib/utils';
 import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
 import User from '../user';
@@ -24,6 +24,7 @@ import User from '../user';
 const Sidebar: React.FC = () => {
   const { tenant } = useAuth();
   const { navigation } = useNav();
+  const { state } = useSidebar();
 
   return (
     <SidebarComponent collapsible='icon' className="hidden border-r bg-muted/40 md:block">
@@ -45,27 +46,25 @@ const Sidebar: React.FC = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map(({
-                name, to, children, icon
+                name, to, icon
               }) => (
                 <SidebarMenuItem value={`item-${name}`} key={name}>
-                  <SidebarMenuButton>
-                    <NavLink
-                      to={to}
-                      className={cn(
-                        'flex items-center gap-3 rounded-lg text-muted-foreground transition-all hover:text-primary w-full',
-                        children || 'hover:text-primary'
-                      )}
-                    >
-                      <span className="flex gap-3 items-center w-full">
-                        <When condition={!!icon}>
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: icon as string
-                            }}
-                          />
-                        </When>
-                        {name}
-                      </span>
+                  <SidebarMenuButton
+                    asChild
+                    tooltip={{
+                      children: name,
+                      hidden: state !== 'collapsed',
+                    }}
+                  >
+                    <NavLink to={to}>
+                      <When condition={!!icon}>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: icon as string
+                          }}
+                        />
+                      </When>
+                      <span>{name}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
