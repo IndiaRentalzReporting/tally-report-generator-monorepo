@@ -18,7 +18,7 @@ export const createOne = async (
 ) => {
   try {
     const data = req.body;
-    const company = await req.dashboard.services.company.createOne({
+    const company = await req.services.company.createOne({
       ...data
     });
     return res.json({ company });
@@ -33,7 +33,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const companies = await req.dashboard.services.company.findMany({
+    const companies = await req.services.company.findMany({
       ...req.query
     });
     return res.json({ companies });
@@ -49,7 +49,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const company = await req.dashboard.services.company.updateOne({ id }, req.body);
+    const company = await req.services.company.updateOne({ id }, req.body);
     return res.json({ company });
   } catch (e) {
     return next(e);
@@ -63,7 +63,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const company = await req.dashboard.services.company.deleteOne({ id });
+    const company = await req.services.company.deleteOne({ id });
     return res.json({ company });
   } catch (e) {
     return next(e);
@@ -96,13 +96,13 @@ export const syncData = async (
   res: Response,
   next: NextFunction
 ) => {
-  const company = await req.dashboard.services.company.findOne({ guid: req.params.guid });
+  const company = await req.services.company.findOne({ guid: req.params.guid });
 
   for (const [key, data] of Object.entries(req.body)) {
     const typedKey = key as keyof typeof req.body;
 
     const EntityService = TallyServices[typedKey];
-    const entityService = new EntityService(req.dashboard.database.client as any);
+    const entityService = new EntityService(req.database.client as any);
 
     // Type assertion here is safe because we've checked the key
     await entityService.sync(data as any, company.id);

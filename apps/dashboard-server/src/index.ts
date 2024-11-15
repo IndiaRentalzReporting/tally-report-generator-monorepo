@@ -1,3 +1,4 @@
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import { TenantSelect } from '@trg_package/schemas-auth/types';
 import config from './config';
 import expressLoader from './loaders/express';
@@ -21,14 +22,14 @@ const { PORT, NODE_ENV } = config;
 declare global {
   namespace Express {
     interface Request {
-      module?: string;
-      action?: string;
-      decryptedApiKey : TenantSelect;
+      apiKeyUserId?: UserSelect['id'];
+      apiKeyTenant?: TenantSelect;
 
-      dashboard: {
-        database: DashboardDatabase
-        services: DashboardServices;
-      } ;
+      module: string;
+      action: string;
+
+      database: DashboardDatabase
+      services: DashboardServices;
     }
   }
 }

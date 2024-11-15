@@ -10,7 +10,7 @@ export const readAll = async (
   next: NextFunction
 ) => {
   try {
-    const actions = await req.dashboard.services.action.findMany({
+    const actions = await req.services.action?.findMany({
       ...req.query,
       isPrivate: false
     });
@@ -27,7 +27,7 @@ export const updateOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const action = await req.dashboard.services.action.updateOne({ id }, req.body);
+    const action = await req.services.action?.updateOne({ id }, req.body);
     return res.json({ action });
   } catch (e) {
     return next(e);
@@ -41,7 +41,7 @@ export const deleteOne = async (
 ) => {
   try {
     const { id } = req.params;
-    const action = await req.dashboard.services.action.deleteOne({ id });
+    const action = await req.services.action?.deleteOne({ id });
     return res.json({ action });
   } catch (e) {
     return next(e);
@@ -55,7 +55,7 @@ export const createOne = async (
 ) => {
   try {
     const data = req.body;
-    const action = await req.dashboard.services.action.createOne({
+    const action = await req.services.action?.createOne({
       ...data,
       name: data.name.toUpperCase() as ActionSelect['name']
     });
