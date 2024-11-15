@@ -17,6 +17,7 @@
   },
   {
     "name": "SYNC",
-    "isReadonly": true
+    "isReadonly": true,
+    "isPrivate": true
   }
 ]

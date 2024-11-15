@@ -29,16 +29,20 @@ class TenantService extends BaseTenantService {
     );
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    const user = await DSI.migrateAndSeed(userData);
+    try {
+      const user = await DSI.migrateAndSeed(userData);
+      const tenant = await super.createOne({
+        ...tenantData,
+        db_name,
+        db_username,
+        db_password
+      });
 
-    const tenant = await super.createOne({
-      ...tenantData,
-      db_name,
-      db_username,
-      db_password
-    });
-
-    return { tenant, user };
+      return { tenant, user };
+    } catch (e) {
+      // delete the database
+      throw new DatabaseError(`Could not create dashboard database: ${e}`);
+    }
   }
 
   private generateUniqueIdentifier(baseName: string) {

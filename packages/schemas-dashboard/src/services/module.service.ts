@@ -29,6 +29,8 @@ export class ModuleService extends BaseServiceNew<
     this.PermissionService = new PermissionService(db);
     this.ActionService = new ActionService(db);
     this.PermissionActionService = new PermissionActionService(db);
+
+    this.ActionService.setModuleService(this);
   }
 
   public async createOne(data: ModuleInsert): Promise<ModuleSelect> {
@@ -67,11 +69,13 @@ export class ModuleService extends BaseServiceNew<
 
     if (!actions) return;
 
-    for (const { id: action_id } of actions) {
+    for (const action of actions) {
+      const isPrivate = module.isPrivate || action.isPrivate;
+
       await this.PermissionActionService.createOne({
         permission_id: permission.id,
-        isPrivate: permission.isPrivate,
-        action_id,
+        action_id: action.id,
+        isPrivate,
         isReadonly: true
       });
     }

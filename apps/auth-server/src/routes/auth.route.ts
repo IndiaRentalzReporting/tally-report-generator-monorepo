@@ -9,8 +9,9 @@ import {
   onboard,
   handleSignIn,
   handleSignUp,
-  handleStatusCheck,
-  handleSignOut
+  handlePublicStatusCheck,
+  handleSignOut,
+  handlePrivateStatusCheck
 } from '../controller/auth.controller';
 import { authenticate } from '../middlewares';
 
@@ -62,6 +63,8 @@ authRouter.post(
 
 authRouter.post('/sign-out', handleSignOut);
 
-authRouter.get('/status', handleStatusCheck);
+authRouter.get('/status', handlePublicStatusCheck);
+
+authRouter.get('/_status', handlePrivateStatusCheck);
 
 export default authRouter;

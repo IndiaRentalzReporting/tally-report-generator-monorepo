@@ -86,7 +86,7 @@ export class Initialization {
       const { data: { user, isAuthenticated } }: AxiosResponse<{
         user: AuthDetailedUser & DashDetailedUser;
         isAuthenticated: boolean;
-      }> = await authAxios.get('/api/v1/auth/status', {
+      }> = await authAxios.get('/api/v1/auth/_status', {
         headers: { cookie: req.headers.cookie },
         timeout: 1000 * 60
       });

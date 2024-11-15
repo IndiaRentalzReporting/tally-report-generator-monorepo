@@ -7,6 +7,7 @@ import { ActionInsert, ActionSelect } from '../types';
 import { RoleService } from './role.service';
 import { PermissionActionService } from './permission_action.service';
 import { PermissionService } from './permission.service';
+import { ModuleService } from './module.service';
 
 export class ActionService extends BaseServiceNew<
   typeof dashboardSchemas,
@@ -16,13 +17,23 @@ export class ActionService extends BaseServiceNew<
 
   private PermissionService: PermissionService;
 
+  private ModuleService?: ModuleService;
+
   private PermissionActionService: PermissionActionService;
 
-  constructor(db: PostgresJsDatabase<typeof dashboardSchemas>) {
+  constructor(
+    db: PostgresJsDatabase<typeof dashboardSchemas>,
+    moduleService?: ModuleService
+  ) {
     super(db, ActionSchema, db.query.ActionSchema);
     this.RoleService = new RoleService(db);
     this.PermissionService = new PermissionService(db);
+    this.ModuleService = moduleService;
     this.PermissionActionService = new PermissionActionService(db);
+  }
+
+  public setModuleService(moduleService: ModuleService) {
+    this.ModuleService = moduleService;
   }
 
   public async createOne(data: ActionInsert): Promise<ActionSelect> {
@@ -56,11 +67,19 @@ export class ActionService extends BaseServiceNew<
 
     if (!permissions) return;
 
-    for (const { id: permission_id } of permissions) {
+    if (!this.ModuleService) {
+      throw new Error('ModuleService not initialized');
+    }
+
+    for (const permission of permissions) {
+      const module = await this.ModuleService?.findOne({ id: permission.module_id });
+
+      const isPrivate = module.isPrivate || action.isPrivate;
+
       await this.PermissionActionService.createOne({
-        permission_id,
+        permission_id: permission.id,
         action_id: action.id,
-        isPrivate: action.isPrivate,
+        isPrivate,
         isReadonly: true
       });
     }

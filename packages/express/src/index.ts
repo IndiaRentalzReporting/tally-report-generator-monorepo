@@ -36,9 +36,7 @@ export const expressLoader = async ({
     })
   );
 
-  if (NODE_ENV !== 'development') {
-    app.use(removePrivate);
-  }
+  app.use(removePrivate);
 
   sessionsLoader(app);
 
@@ -62,5 +60,8 @@ export const expressLoader = async ({
 declare global {
   namespace Express {
     interface User extends AuthDetailedUser, DashDetailedUser {}
+    interface Response {
+      originalJson(body: any): Response;
+    }
   }
 }

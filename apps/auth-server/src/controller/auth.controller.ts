@@ -87,7 +87,7 @@ export const handleSignOut = (
   });
 };
 
-export const handleStatusCheck = (
+export const handlePublicStatusCheck = (
   req: Request,
   res: Response<{
     user: Request['user'] | null;
@@ -99,6 +99,34 @@ export const handleStatusCheck = (
     if (req.isAuthenticated()) {
       const { user } = req;
       return res.json({
+        user,
+        isAuthenticated: true
+      });
+    }
+    return res
+      .clearCookie('connect.sid', { path: '/' })
+      .clearCookie('permissions', { path: '/' })
+      .json({
+        user: null,
+        isAuthenticated: false
+      });
+  } catch (e) {
+    return next(e);
+  }
+};
+
+export const handlePrivateStatusCheck = (
+  req: Request,
+  res: Response<{
+    user: Request['user'] | null;
+    isAuthenticated: boolean;
+  }>,
+  next: NextFunction
+) => {
+  try {
+    if (req.isAuthenticated()) {
+      const { user } = req;
+      return res.originalJson({
         user,
         isAuthenticated: true
       });

@@ -43,7 +43,7 @@ class AuthService {
 
     const { tenant, user: dashboardUser } = await TenantService.onboard(
       tenantData,
-      userData
+      { ...userData, isReadonly: true }
     );
     const { password, ...user } = await UserService.createOne({
       ...userData,

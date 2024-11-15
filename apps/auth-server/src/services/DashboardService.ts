@@ -88,7 +88,7 @@ class DashboardService {
   ): Promise<UserSelect> {
     const role_id = await this.seedRole(trx);
     const USI = new UserService(trx);
-    const admin = await USI.createOne({ ...data, role_id, isReadonly: true });
+    const admin = await USI.createOne({ ...data, role_id });
     return admin;
   }
 
