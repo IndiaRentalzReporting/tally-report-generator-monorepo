@@ -24,6 +24,20 @@ export class UserService extends BaseServiceNew<
     return user;
   }
 
+  public async updateOne(
+    filterData: Partial<UserSelect>,
+    data: Partial<UserInsert>
+  ): Promise<UserSelect> {
+    const update = data;
+    if (data.password) {
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(data.password, salt);
+      update.password = password;
+    }
+    const user = await super.updateOne(filterData, data);
+    return user;
+  }
+
   public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
     const users = await super.findMany(data, {
       with: {

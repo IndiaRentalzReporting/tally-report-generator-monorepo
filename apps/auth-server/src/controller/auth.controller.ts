@@ -8,7 +8,6 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError, NotFoundError, UnauthenticatedError } from '@trg_package/errors';
 import { SafeUserSelect as DashboardSafeUserSelect } from '@trg_package/schemas-dashboard/types';
-import bcrypt from 'bcrypt';
 import Mail from 'nodemailer/lib/mailer';
 import DashboardService from '@/services/DashboardService';
 import AuthService from '../services/AuthService';
@@ -82,6 +81,7 @@ export const handleSignUp = async (
       password: tempPassword,
       status: 'inactive'
     });
+    await DSI.terminateConnection();
 
     await AuthService.signUp({
       ...req.body,
@@ -207,12 +207,19 @@ export const resetPassword = async (
     }
 
     const { id } = await UserService.verifyJwtToken(token);
+    const { tenant: { db_name, db_username, db_password } } = await UserService.findOne({ id });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    if (!db_name || !db_username || !db_password) {
+      throw new BadRequestError('Invalid Tenant');
+    }
+
+    const DSI = new DashboardService(db_username, db_password, db_name);
+    const { password: pw } = await DSI.updateUser({ id },{ password });
+
+    await DSI.terminateConnection();
 
     await UserService.updateOne({ id }, {
-      password: hashedPassword,
+      password: pw,
       status: 'active'
     });
 

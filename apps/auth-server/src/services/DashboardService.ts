@@ -57,7 +57,7 @@ class DashboardService {
        * Do not change the order of the following
        * statements as it will cause the seeding to fail
        */
-      const user = await this.createAdmin(userData, trx);
+      const user = await this.seedAdmin(userData, trx);
       await this.seedAction(trx);
       await this.seedModules(trx);
       await this.seedTable(trx);
@@ -82,19 +82,13 @@ class DashboardService {
     }
   }
 
-  private async createAdmin(
+  private async seedAdmin(
     data: UserInsert,
     trx: PostgresJsDatabase<typeof dashboardSchemas>
   ): Promise<UserSelect> {
     const role_id = await this.seedRole(trx);
     const USI = new UserService(trx);
     const admin = await USI.createOne({ ...data, role_id });
-    return admin;
-  }
-
-  public async createUser(data: UserInsert): Promise<UserSelect> {
-    const USI = new UserService(this.dashboardClient);
-    const admin = await USI.createOne({ ...data });
     return admin;
   }
 
@@ -127,8 +121,29 @@ class DashboardService {
     await CSI.updateForeignKeys();
   }
 
-  private async terminateConnection() {
+  public async terminateConnection() {
     await this.dashboardConnection.end();
+  }
+
+  public async createUser(data: UserInsert): Promise<UserSelect> {
+    const USI = new UserService(this.dashboardClient);
+    const admin = await USI.createOne({ ...data });
+    return admin;
+  }
+
+  public async updateUser(
+    filterDate: Partial<UserSelect>,
+    data: Partial<UserInsert>
+  ): Promise<UserSelect> {
+    const USI = new UserService(this.dashboardClient);
+    const admin = await USI.updateOne(filterDate, data);
+    return admin;
+  }
+
+  public async deleteUser(filterDate: Partial<UserSelect>): Promise<UserSelect> {
+    const USI = new UserService(this.dashboardClient);
+    const admin = await USI.deleteOne(filterDate);
+    return admin;
   }
 }
 
