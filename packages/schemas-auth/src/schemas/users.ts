@@ -1,12 +1,9 @@
 import { varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 import { TenantSchema } from './tenants';
 
-const { name, ...BaseEntitySchemaWithoutName } = BaseEntitySchema();
-
 export const UserSchema = pgTable('users', {
-  ...BaseEntitySchemaWithoutName,
+  id: uuid('id').primaryKey().notNull().defaultRandom(),
   first_name: varchar('first_name', { length: 50 }).notNull(),
   last_name: varchar('last_name', { length: 50 }).notNull(),
   email: varchar('email', { length: 256 }).notNull().unique(),

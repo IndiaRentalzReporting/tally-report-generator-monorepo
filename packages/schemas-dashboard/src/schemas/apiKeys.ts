@@ -1,6 +1,6 @@
 import { pgTable, text } from 'drizzle-orm/pg-core';
-import { BaseEntitySchema } from '@trg_package/schemas-base/schemas';
 import { createInsertSchema } from 'drizzle-zod';
+import { BaseEntitySchema } from './base';
 
 export const ApiKeySchema = pgTable('apiKeys', {
   ...BaseEntitySchema(),

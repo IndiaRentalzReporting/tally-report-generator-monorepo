@@ -30,7 +30,6 @@
   "dependencies": {
     "@trg_package/base-service": "*",
     "@trg_package/errors": "*",
-    "@trg_package/schemas-base": "*",
     "@trg_package/schemas-tally": "*",
     "bcrypt": "^5.1.1",
     "drizzle-orm": "^0.33.0",

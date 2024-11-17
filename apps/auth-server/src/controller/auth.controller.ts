@@ -87,7 +87,6 @@ export const handleSignUp = async (
       ...req.body,
       id: user.id,
       tenant_id,
-      status: 'inactive',
       password
     });
 
@@ -214,13 +213,12 @@ export const resetPassword = async (
     }
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    const { password: pw } = await DSI.updateUser({ id },{ password });
+    const { password: pw } = await DSI.updateUser({ id },{ password, status: 'active' });
 
     await DSI.terminateConnection();
 
     await UserService.updateOne({ id }, {
-      password: pw,
-      status: 'active'
+      password: pw
     });
 
     return res.status(200).send();
