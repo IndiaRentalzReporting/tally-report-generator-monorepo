@@ -4,8 +4,6 @@ import {
   Drawer,
   DrawerTrigger,
   DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
   DrawerFooter,
   DrawerClose,
   Card,
@@ -44,10 +42,7 @@ const Update: React.FC<IUpdateEntityProps> = ({
           <DrawerTrigger asChild>
             <Edit size={20} className="text-green-500" />
           </DrawerTrigger>
-          <DrawerContent className="px-6">
-            <DrawerHeader className="px-0">
-              <DrawerTitle>Update {type}</DrawerTitle>
-            </DrawerHeader>
+          <DrawerContent className="px-6 pt-6">
             <Card className="w-full relative">
               <CardHeader>
                 <CardTitle>

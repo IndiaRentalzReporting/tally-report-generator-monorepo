@@ -1,16 +1,8 @@
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TrashIcon } from 'lucide-react';
 import {
   Button,
   Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
   Skeleton
 } from '@trg_package/vite/components';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,19 +24,9 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   });
 
   const queryClient = useQueryClient();
-  const { mutateAsync: deleteRole } = useMutation({
-    mutationFn: () => services.updateOne({ id }, {
-      ...userData,
-      role_id: null
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Users', 'getOne', id] });
-      queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
-    }
-  });
 
   const { mutateAsync: updateUser } = useMutation({
-    mutationFn: (userUpdate: Omit<SelectState, 'id'>) => services.updateOne({ id }, userUpdate),
+    mutationFn: (userUpdate: Omit<FormState, 'id'>) => services.updateOne({ id }, userUpdate),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['Users', 'getOne', id] });
       queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
@@ -63,31 +45,6 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
         <Skeleton isLoading={loadingUser}>
           <Fields form={form} />
-          <FormField
-            control={form.control}
-            name="role.name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel >Role</FormLabel>
-                <FormControl>
-                  <div className='flex gap-2 items-center'>
-                    <Input
-                      disabled
-                      type='text'
-                      placeholder="--"
-                      {...field}
-                    />
-                    <TrashIcon
-                      className="text-red-500 cursor-pointer"
-                      onClick={() => deleteRole()}
-                    />
-                  </div>
-                </FormControl>
-                <FormDescription />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <Button
             type="submit"
           >

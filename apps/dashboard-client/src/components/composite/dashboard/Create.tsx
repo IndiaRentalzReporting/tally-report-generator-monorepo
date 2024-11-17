@@ -4,8 +4,6 @@ import {
   DrawerTrigger,
   Button,
   DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
   DrawerFooter,
   DrawerClose,
   Card,
@@ -36,9 +34,6 @@ const Create: React.FC<ICreateDrawerProps> = ({ module }) => {
           <Button>Create {module}</Button>
         </DrawerTrigger>
         <DrawerContent className="px-6 pt-6">
-          <DrawerHeader className="px-0 hidden">
-            <DrawerTitle>Create {module}</DrawerTitle>
-          </DrawerHeader>
           <Card className="w-full relative">
             <CardHeader>
               <CardTitle>Create {module}</CardTitle>
