@@ -11,10 +11,11 @@ import {
   LoginUser,
   RegisterUser,
   TenantInsert,
+  TenantSelect,
   UserSelect
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
-import { UserRole, Permissions } from '@trg_package/schemas-dashboard/types';
+import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
@@ -32,7 +33,7 @@ interface AuthProviderMutation {
   onboard: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-    AxiosResponse<{ user: DetailedUser }>,
+    AxiosResponse<{ tenant: TenantSelect; user: SafeUserSelect }>,
     Error,
     { user: RegisterUser; tenant: TenantInsert }
     >;
