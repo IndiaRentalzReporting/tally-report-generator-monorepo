@@ -84,7 +84,10 @@ export const handleSignOut = (
     if (err) return next(err);
     return req.session.destroy((err) => {
       if (err) return next(err);
-      return res.clearCookie('connect.sid', { path: '/' });
+      return res
+        .clearCookie('connect.sid', { path: '/' })
+        .status(200)
+        .send();
     });
   });
 };
