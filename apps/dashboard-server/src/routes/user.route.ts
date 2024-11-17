@@ -21,6 +21,7 @@ userRouter.post(
       last_name: true,
       email: true,
       password: true,
+      role_id: true,
       tenant_id: true
     })
   }),
