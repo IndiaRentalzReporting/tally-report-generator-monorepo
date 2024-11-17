@@ -66,9 +66,8 @@ export function getFilterConfig(filters : NonNullable<ReportInsert['filters']>) 
 
     const columnName = e.columnName ?? getColumnName(e.column);
     if (e.filterType === 'select') {
-      dataSource = `SELECT ${getColumnName(e.column)} as label,${getColumnName(e.column)} as value FROM public."${e.column.table}" "${e.column.tablealias}"`;
-      queryCondition = `
-        ${columnName} IN {value}`;
+      dataSource = `SELECT DISTINCT ${getColumnName(e.column)} as label, ${getColumnName(e.column)} as value FROM public."${e.column.table}" "${e.column.tablealias}"`;
+      queryCondition = `${columnName} IN {value}`;
     } else if (e.filterType === 'search' || e.column.type === 'string') {
       queryCondition = `${columnName} LIKE {value}`;
     } else {
@@ -131,7 +130,12 @@ export async function getFilterQuery(filters : { [K : string] : typeof FilterOpe
       {
         query = `${query} <= {to}`;
       }
+
       Object.entries(params).forEach(([e,value]) => {
+        if(config?.queryCondition.includes("LIKE"))
+        {
+          value=`%${value}%`;   
+        }
         query = query.replace(`{${e.toLowerCase()}}`,getEscapedValue(value).toString());
       });
       conditionArr[config?.conditionType ?? 'where'].push(query);
