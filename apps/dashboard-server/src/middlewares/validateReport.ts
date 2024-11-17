@@ -49,6 +49,10 @@ export const validateReport = (
     if (!tables?.find((e) => e === filter.column.tablealias)) {
       tables?.push(filter.column.tablealias);
     }
+    if(!filter.filterType)
+    {
+      filter.filterType = filter.column.type === 'string'?'search':'between';
+    }
   });
   conditions?.forEach((condition) => {
     if (!tables?.find((e) => e === condition.column.tablealias)) {
