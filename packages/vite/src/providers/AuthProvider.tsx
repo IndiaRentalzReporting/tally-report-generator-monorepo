@@ -143,7 +143,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     onSuccess: () => {
       toast({
         title: 'Signed Up',
-        description: 'You have successfully signed up!',
+        description: 'User successfully signed up!',
         variant: 'default'
       });
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });

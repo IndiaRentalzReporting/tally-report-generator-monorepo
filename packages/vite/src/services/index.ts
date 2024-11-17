@@ -3,9 +3,10 @@ import {
   LoginUser,
   RegisterUser,
   TenantInsert,
-  UserInsert,
+  TenantSelect,
   UserSelect
 } from '@trg_package/schemas-auth/types';
+import { SafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '../client';
 import { DetailedUser } from '../models';
 
@@ -22,11 +23,11 @@ const services = {
     user: DetailedUser | null;
     isAuthenticated: boolean;
   }> => authAxios.get('/status'),
-  signOut: (): AxiosPromise<{ message: string }> => authAxios.post('/sign-out'),
+  signOut: (): AxiosPromise => authAxios.post('/sign-out'),
   onboard: (data: {
     tenant: TenantInsert;
-    user: UserInsert;
-  }): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/onboard', data),
+    user: RegisterUser;
+  }): AxiosPromise<{ tenant: TenantSelect; user: SafeUserSelect }> => authAxios.post('/onboard', data),
   signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
   signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/sign-in', data),
   forgotPassword: (data: {

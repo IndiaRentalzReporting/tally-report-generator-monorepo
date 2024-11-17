@@ -14,7 +14,7 @@ export const UserSchema = pgTable('users', {
   tenant_id: uuid('tenant_id').references(() => TenantSchema.id, {
     onDelete: 'set null',
     onUpdate: 'cascade'
-  })
+  }).notNull()
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;

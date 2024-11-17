@@ -27,7 +27,10 @@ type DetailedUser = UserSelect & {
   role: (RoleSelect & UserRole) | null;
 };
 
+type SafeUserSelect = Omit<UserSelect, 'password'>;
+
 export {
+  type SafeUserSelect,
   type DetailedUser,
   type UserRole,
   UserInsert,
