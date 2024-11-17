@@ -96,24 +96,6 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
       />
       <FormField
         control={form.control}
-        name="password"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel >Password</FormLabel>
-            <FormControl>
-              <Input
-                type='password'
-                placeholder="********"
-                {...field}
-              />
-            </FormControl>
-            <FormDescription />
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
         name="role_id"
         render={({ field }) => (
           <FormItem className='flex-grow'>

@@ -56,7 +56,6 @@ authRouter.post(
       first_name: true,
       last_name: true,
       email: true,
-      password: true,
       role_id: true
     })
   }),

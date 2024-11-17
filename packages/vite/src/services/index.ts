@@ -28,7 +28,7 @@ const services = {
     tenant: TenantInsert;
     user: RegisterUser;
   }): AxiosPromise<{ tenant: TenantSelect; user: SafeUserSelect }> => authAxios.post('/onboard', data),
-  signUp: (data: RegisterUser): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
+  signUp: (data: Omit<RegisterUser, 'password'>): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
   signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/sign-in', data),
   forgotPassword: (data: {
     email: UserSelect['email'];

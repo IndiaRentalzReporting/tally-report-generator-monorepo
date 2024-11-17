@@ -45,7 +45,14 @@ const EnvSchema = z.object({
   DASHBOARD_PG_DATABASE: z.string().optional(),
 
   DB_MIGRATING: stringBoolean,
-  DB_SEEDING: stringBoolean
+  DB_SEEDING: stringBoolean,
+
+  MAIL_FROM: z.string(),
+  SMTP_SECRET: z.string(),
+  SMTP_USER: z.string(),
+  SMTP_HOST: z.string(),
+  SMTP_PASS: z.string(),
+  SMTP_PORT: z.coerce.number(),
 });
 
 expand(config());

@@ -9,6 +9,8 @@ import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import { SafeUserSelect as DashboardSafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import DashboardService from '@/services/DashboardService';
 import AuthService from '../services/AuthService';
+import config from '@/config';
+import { sendMail } from '@/email';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
@@ -42,7 +44,7 @@ export const handleSignIn = async (
 };
 
 export const handleSignUp = async (
-  req: Request<object, object, RegisterUser>,
+  req: Request<object, object, Omit<RegisterUser, 'password'>>,
   res: Response<{
     user: DashboardSafeUserSelect;
   }>,
@@ -61,7 +63,13 @@ export const handleSignUp = async (
     }
 
     const DSI = new DashboardService(db_username, db_password, db_name);
-    const { password, ...user } = await DSI.createUser(req.body);
+    const tempPassword = await AuthService.generateTempPassword(24);
+
+    const { password, ...user } = await DSI.createUser({
+      ...req.body,
+      password: tempPassword,
+      status: 'inactive'
+    });
 
     await AuthService.signUp({
       ...req.body,
@@ -69,7 +77,21 @@ export const handleSignUp = async (
       password
     });
 
-    return res.json({ user });
+    const { MAIL_FROM } = config;
+
+    const mailOptions = {
+      from: `info${MAIL_FROM}`,
+      to: user.email,
+      subject: 'Node Contact Request',
+      html: `<div><p>${tempPassword}</p></div>`
+    };
+
+    return sendMail(mailOptions, (error) => {
+      if (error) {
+        return next(error);
+      }
+      return res.json({ user });
+    });
   } catch (err) {
     return next(err);
   }

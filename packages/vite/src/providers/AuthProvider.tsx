@@ -51,7 +51,7 @@ interface AuthProviderMutation {
     mutation: UseMutateAsyncFunction<
     AxiosResponse<{ user: UserSelect }>,
     Error,
-    RegisterUser
+    Omit<RegisterUser, 'password'>
     >;
   };
   signOut: {
@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   });
 
   const { mutateAsync: signUpMutation, isPending: isSigningUp } = useMutation({
-    mutationFn: (data: RegisterUser) => services.signUp(data),
+    mutationFn: (data: Omit<RegisterUser, 'password'>) => services.signUp(data),
     mutationKey: ['auth', 'signUp'],
     onSuccess: () => {
       toast({
