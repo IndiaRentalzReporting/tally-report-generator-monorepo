@@ -41,6 +41,7 @@ userRouter.patch(
       last_name: true,
       email: true,
       password: true,
+      role_id: true
     }).partial(),
     params: UserSelectSchema.pick({
       id: true

@@ -3,10 +3,13 @@ import { Button, Form } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { InsertState, InsertFormSchema, FormState } from './interface';
 import Fields from './Fields';
 
 const Create: React.FC = () => {
+  const queryClient = useQueryClient();
+
   const form = useForm<FormState>({
     resolver: zodResolver(InsertFormSchema.omit({ id: true, role: true })),
   });
@@ -16,7 +19,8 @@ const Create: React.FC = () => {
   } = useAuth();
 
   const handleSubmit = async (values: InsertState) => {
-    signUp(values);
+    await signUp(values);
+    queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
     form.reset();
   };
 
