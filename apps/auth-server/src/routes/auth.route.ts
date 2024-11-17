@@ -11,7 +11,10 @@ import {
   handleSignUp,
   handlePublicStatusCheck,
   handleSignOut,
-  handlePrivateStatusCheck
+  handlePrivateStatusCheck,
+  checkPasswordResetToken,
+  forgotPassword,
+  resetPassword
 } from '../controller/auth.controller';
 import { authenticate, isAuthenticated } from '../middlewares';
 
@@ -67,5 +70,42 @@ authRouter.post('/sign-out', handleSignOut);
 authRouter.get('/status', handlePublicStatusCheck);
 
 authRouter.get('/_status', isAuthenticated, handlePrivateStatusCheck);
+
+authRouter.post(
+  '/forgot-password',
+  validateSchema({
+    body: UserInsertSchema.pick({
+      email: true
+    })
+  }),
+  forgotPassword
+);
+
+authRouter.post(
+  '/check-reset-password/:token',
+  validateSchema({
+    params: z
+      .object({
+        token: z.string()
+      })
+  }),
+  checkPasswordResetToken
+);
+
+authRouter.post(
+  '/reset-password/:token',
+  validateSchema({
+    body: UserInsertSchema.pick({
+      password: true
+    }).extend({
+      confirmPassword: z.string()
+    }),
+    params: z
+      .object({
+        token: z.string()
+      })
+  }),
+  resetPassword
+);
 
 export default authRouter;

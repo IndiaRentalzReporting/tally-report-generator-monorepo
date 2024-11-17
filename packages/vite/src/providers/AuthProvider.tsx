@@ -16,6 +16,7 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
+import { useNavigate } from 'react-router';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
@@ -125,16 +126,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   );
 
+  const navigate = useNavigate();
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       toast({
         title: 'Signed In',
         description: 'You have successfully signed in!',
         variant: 'default'
       });
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      if (data.redirect) {
+        navigate(data.redirect);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      }
     }
   });
 

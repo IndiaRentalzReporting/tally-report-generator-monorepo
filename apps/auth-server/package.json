@@ -23,6 +23,7 @@
     "db-myTenant:studio": "drizzle-kit --config=drizzle.myTenant.config.ts studio --port 4893"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@trg_package/config-typescript": "*",
     "@trg_package/eslint-config": "*",
     "@types/dotenv": "^8.2.0",
@@ -45,6 +46,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "jsonwebtoken": "^9.0.2",
     "@trg_package/config-env": "*",
     "@trg_package/errors": "*",
     "@trg_package/express": "*",

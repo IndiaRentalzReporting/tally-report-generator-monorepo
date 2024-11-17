@@ -1,12 +1,14 @@
 import { UserService as BaseUserService } from '@trg_package/schemas-auth/services';
 import { UserService as DashboardUserService } from '@trg_package/schemas-dashboard/services';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import { BadRequestError } from '@trg_package/errors';
+import { DetailedUser as AuthDetailedUser, UserSelect } from '@trg_package/schemas-auth/types';
+import { BadRequestError, CustomError } from '@trg_package/errors';
 import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
+import jwt from 'jsonwebtoken';
 import { createUrl, createClient } from '@/models';
 import TenantService from './TenantService';
 import { authDb } from '../models/auth/index';
 import * as dashboardSchemas from '../models/dashboard/schema';
+import config from '@/config';
 
 class UserService extends BaseUserService {
   constructor() {
@@ -47,14 +49,41 @@ class UserService extends BaseUserService {
       );
 
       const USI = new DashboardUserService(dashboardDb);
-      const { id, role_id, role } = await USI.findOne({ email });
+      const {
+        role_id, role
+      } = await USI.findOne({ email });
 
       dashboardConnection.end();
-      user.id = id;
+
       user.role_id = role_id;
       user.role = role;
     }
     return user;
+  }
+
+  public async createJwtToken(id: UserSelect['id']): Promise<string> {
+    try {
+      const { SMTP_SECRET } = config;
+
+      return jwt.sign(
+        { id },
+        SMTP_SECRET,
+        { expiresIn: '15m' }
+      );
+    } catch (error) {
+      throw new CustomError('Could not create jwt token', 500);
+    }
+  }
+
+  public async verifyJwtToken(token: string): Promise<UserSelect> {
+    try {
+      const { SMTP_SECRET } = config;
+      const { id } = jwt.verify(token, SMTP_SECRET) as jwt.JwtPayload;
+
+      return this.findOne({ id });
+    } catch (error) {
+      throw new BadRequestError('Invalid reset password token');
+    }
   }
 }
 

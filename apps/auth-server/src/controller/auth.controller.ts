@@ -4,13 +4,17 @@ import {
   TenantInsert,
   TenantSelect,
   RegisterUser,
+  UserSelect,
 } from '@trg_package/schemas-auth/types';
-import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
+import { BadRequestError, NotFoundError, UnauthenticatedError } from '@trg_package/errors';
 import { SafeUserSelect as DashboardSafeUserSelect } from '@trg_package/schemas-dashboard/types';
+import bcrypt from 'bcrypt';
+import Mail from 'nodemailer/lib/mailer';
 import DashboardService from '@/services/DashboardService';
 import AuthService from '../services/AuthService';
 import config from '@/config';
 import { sendMail } from '@/email';
+import UserService from '@/services/UserService';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
@@ -28,14 +32,22 @@ export const onboard = async (
 export const handleSignIn = async (
   req: Request<object, object, LoginUser>,
   res: Response<{
-    user: Request['user'];
+    user: Request['user'],
+    redirect?: string
   }>,
   next: NextFunction
 ) => {
   try {
     if (req.isAuthenticated()) {
       const { user } = req;
-      return res.json({ user });
+      let token;
+      if (user.status === 'inactive') {
+        token = await UserService.createJwtToken(user.id);
+      }
+      return res.json({
+        user,
+        redirect: token ? `/reset-password/${token}` : undefined
+      });
     }
     throw new UnauthenticatedError('Not logged in');
   } catch (err) {
@@ -73,17 +85,19 @@ export const handleSignUp = async (
 
     await AuthService.signUp({
       ...req.body,
+      id: user.id,
       tenant_id,
+      status: 'inactive',
       password
     });
 
     const { MAIL_FROM } = config;
 
-    const mailOptions = {
+    const mailOptions: Mail.Options = {
       from: `info${MAIL_FROM}`,
       to: user.email,
       subject: 'Node Contact Request',
-      html: `<div><p>${tempPassword}</p></div>`
+      html: `<div><p>${tempPassword}</p></div>`,
     };
 
     return sendMail(mailOptions, (error) => {
@@ -114,7 +128,101 @@ export const handleSignOut = (
   });
 };
 
-export const handlePublicStatusCheck = (
+export const forgotPassword = async (
+  req: Request<{ token: string }, object, { email: UserSelect['email'] }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body;
+    const user = await UserService.findOne({ email });
+
+    if (!user) {
+      throw new NotFoundError('User does not exist');
+    }
+
+    const {
+      PROTOCOL,
+      AUTH_SUBDOMAIN,
+      DOMAIN,
+      TLD,
+      MAIL_FROM
+    } = config;
+
+    const FRONTEND_URL = `${PROTOCOL}://${AUTH_SUBDOMAIN}.${DOMAIN}.${TLD}`;
+    const token = await UserService.createJwtToken(user.id);
+    const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
+
+    const mailOptions = {
+      from: `info${MAIL_FROM}`,
+      to: user.email,
+      subject: 'Password Reset Request',
+      text: `Click the following link to reset your password: ${resetLink}`
+    };
+
+    return sendMail(mailOptions, async (error) => {
+      if (error) {
+        return next(error);
+      }
+      return res.status(200).send();
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const checkPasswordResetToken = async (
+  req: Request<{ token: string }>,
+  res: Response<{ token: string | null }>,
+  next: NextFunction
+) => {
+  const { token } = req.params;
+
+  try {
+    await UserService.verifyJwtToken(token);
+    res.status(200).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetPassword = async (
+  req: Request<
+  { token: string },
+    object,
+  {
+    password: UserSelect['password'];
+    confirmPassword: UserSelect['password'];
+  }
+  >,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      throw new BadRequestError('Password does not match');
+    }
+
+    const { id } = await UserService.verifyJwtToken(token);
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await UserService.updateOne({ id }, {
+      password: hashedPassword,
+      status: 'active'
+    });
+
+    return res.status(200).send();
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const handlePublicStatusCheck = async (
   req: Request,
   res: Response<{
     user: Request['user'] | null;
@@ -125,18 +233,24 @@ export const handlePublicStatusCheck = (
   try {
     if (req.isAuthenticated()) {
       const { user } = req;
+
       return res.json({
         user,
-        isAuthenticated: true
+        isAuthenticated: true,
       });
     }
-    return res
-      .clearCookie('connect.sid', { path: '/' })
-      .clearCookie('permissions', { path: '/' })
-      .json({
-        user: null,
-        isAuthenticated: false
+    return req.logOut((err) => {
+      if (err) return next(err);
+      return req.session.destroy((err) => {
+        if (err) return next(err);
+        return res
+          .clearCookie('connect.sid', { path: '/' })
+          .json({
+            user: null,
+            isAuthenticated: false
+          });
       });
+    });
   } catch (e) {
     return next(e);
   }
