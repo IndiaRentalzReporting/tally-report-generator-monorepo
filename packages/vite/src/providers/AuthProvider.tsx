@@ -16,6 +16,7 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
+import { useNavigate } from 'react-router';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
@@ -41,7 +42,7 @@ interface AuthProviderMutation {
   signIn: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
-    AxiosResponse<{ user: DetailedUser }>,
+    AxiosResponse<{ user: DetailedUser, redirect?: string }>,
     Error,
     LoginUser
     >;
@@ -64,7 +65,7 @@ const initialState: AuthProviderState = {
   user: null,
   isAuthenticated: false,
   loading: true,
-  permissions: [],
+  permissions: JSON.parse(localStorage.getItem('permissions') ?? '[]'),
   tenant: null
 };
 
@@ -125,15 +126,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   );
 
+  const navigate = useNavigate();
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       toast({
         title: 'Signed In',
         description: 'You have successfully signed in!',
         variant: 'default'
       });
+      if (data.user.status === 'inactive' && !!data.redirect) {
+        return navigate(data.redirect);
+      }
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
     }
   });
@@ -186,6 +191,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated = authStatus.isAuthenticated;
     }
     const permissions = user ? createPermissions(user.role?.permission) : [];
+    localStorage.setItem('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
 
     setState({

@@ -29,19 +29,7 @@ const services = {
     user: RegisterUser;
   }): AxiosPromise<{ tenant: TenantSelect; user: SafeUserSelect }> => authAxios.post('/onboard', data),
   signUp: (data: Omit<RegisterUser, 'password'>): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
-  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser }> => authAxios.post('/sign-in', data),
-  forgotPassword: (data: {
-    email: UserSelect['email'];
-  }): AxiosPromise<{ message: string }> => authAxios.post('/forgot-password', data),
-  checkResetPassword: (token: string): AxiosPromise<{ token: string }> => authAxios.post(`/check-reset-password/${token}`),
-  resetPassword: (data: {
-    token: string;
-    password: string;
-    confirmPassword: string;
-  }): AxiosPromise<{ message: string }> => {
-    const { token, ...rest } = data;
-    return authAxios.post(`/reset-password/${token}`, rest);
-  }
+  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser, redirect?: string }> => authAxios.post('/sign-in', data),
 };
 
 export default services;

@@ -6,7 +6,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import { useAuth } from '@trg_package/vite/providers';
-import { Loading, PrivateRoutes, Skeleton } from '@trg_package/vite/components';
+import { PrivateRoutes, Skeleton } from '@trg_package/vite/components';
 import React, { Suspense, lazy } from 'react';
 import {
   ActionSelect,
@@ -14,45 +14,47 @@ import {
 } from '@trg_package/schemas-dashboard/types';
 import DashboardLayout from './components/composite/dashboard/Layout';
 import ReportingLayout from './components/composite/reports/Layout';
+import { RootLayout } from './components/composite';
 
 const App = () => {
-  const { permissions, loading } = useAuth();
+  const { permissions } = useAuth();
   const router = createBrowserRouter(
     createRoutesFromElements([
-      <Route element={<PrivateRoutes />}>
-        <Route index element={<Navigate to="/dashboard" />} />
-        {permissions.map(({ module: { name }, actions }) => (
-          <Route path='/dashboard' element={<DashboardLayout />}>
-            <Route path={name} key={name}>
-              {actions.map<React.ReactNode>((action) => (
-                <Route
-                  path={action}
-                  key={action}
-                  element={<ModuleMapper module={name} action={action} />}
-                />
-              ))}
+      <Route path="/" element={<RootLayout />}>
+        <Route element={<PrivateRoutes/>}>
+          <Route index element={<Navigate to="dashboard" />} />
+          {permissions.map(({ module: { name }, actions }) => (
+            <Route path='/dashboard' element={<DashboardLayout />}>
+              <Route path={name} key={name}>
+                {actions.map<React.ReactNode>((action) => (
+                  <Route
+                    path={action}
+                    key={action}
+                    element={<ModuleMapper module={name} action={action} />}
+                  />
+                ))}
+              </Route>
+              {
+                name === 'Reports'
+                && <Route path={name} key={name} element={<ReportingLayout/>}>
+                    {actions.map<React.ReactNode>((action) => (
+                      (action === 'Read' || action === 'Update')
+                        && <Route
+                            path={`${action}/:reportId`}
+                            key={action}
+                            element={<ModuleMapper module={name} action={`${action}One`} />}
+                          />
+                    ))}
+                  </Route>
+              }
             </Route>
-            {
-              name === 'Reports'
-              && <Route path={name} key={name} element={<ReportingLayout/>}>
-                  {actions.map<React.ReactNode>((action) => (
-                    (action === 'Read' || action === 'Update')
-                      && <Route
-                          path={`${action}/:reportId`}
-                          key={action}
-                          element={<ModuleMapper module={name} action={`${action}One`} />}
-                        />
-                  ))}
-                </Route>
-            }
-          </Route>
-        ))}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+          ))}
+        </Route>
       </Route>
     ])
   );
 
-  return loading ? <Loading /> : <RouterProvider router={router} />;
+  return <RouterProvider router={router} />;
 };
 
 export default App;
