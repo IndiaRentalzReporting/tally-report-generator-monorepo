@@ -18,37 +18,40 @@ import { RootLayout } from './components/composite';
 
 const App = () => {
   const { permissions } = useAuth();
+
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path="/" element={<RootLayout />}>
         <Route element={<PrivateRoutes/>}>
           <Route index element={<Navigate to="dashboard" />} />
-          {permissions.map(({ module: { name }, actions }) => (
-            <Route path='/dashboard' element={<DashboardLayout />}>
-              <Route path={name} key={name}>
-                {actions.map<React.ReactNode>((action) => (
-                  <Route
-                    path={action}
-                    key={action}
-                    element={<ModuleMapper module={name} action={action} />}
-                  />
-                ))}
-              </Route>
-              {
-                name === 'Reports'
-                && <Route path={name} key={name} element={<ReportingLayout/>}>
-                    {actions.map<React.ReactNode>((action) => (
-                      (action === 'Read' || action === 'Update')
-                        && <Route
-                            path={`${action}/:reportId`}
-                            key={action}
-                            element={<ModuleMapper module={name} action={`${action}One`} />}
-                          />
-                    ))}
-                  </Route>
-              }
-            </Route>
-          ))}
+          <Route path='/dashboard' element={<DashboardLayout />}>
+            {permissions.map(({ module: { name }, actions }) => (
+              <>
+                <Route path={name} key={name}>
+                  {actions.map<React.ReactNode>((action) => (
+                    <Route
+                      path={action}
+                      key={action}
+                      element={<ModuleMapper module={name} action={action} />}
+                    />
+                  ))}
+                </Route>
+                {
+                  name === 'Reports'
+                  && <Route path={name} key={name} element={<ReportingLayout/>}>
+                      {actions.map<React.ReactNode>((action) => (
+                        (action === 'Read' || action === 'Update')
+                          && <Route
+                              path={`${action}/:reportId`}
+                              key={action}
+                              element={<ModuleMapper module={name} action={`${action}One`} />}
+                            />
+                      ))}
+                    </Route>
+                }
+              </>
+            ))}
+          </Route>
         </Route>
       </Route>
     ])

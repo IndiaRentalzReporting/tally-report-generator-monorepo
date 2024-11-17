@@ -29,7 +29,7 @@ export const PublicRoutes: React.FC = () => {
       <Then>
         <Outlet />
       </Then>
-      <ElseIf condition={!loading && isAuthenticated}>
+      <ElseIf condition={loading}>
         <Loading />
       </ElseIf>
     </If>

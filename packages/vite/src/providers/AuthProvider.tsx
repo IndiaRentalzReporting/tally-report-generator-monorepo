@@ -16,7 +16,6 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
-import { useNavigate } from 'react-router';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
 import { DetailedUser } from '../models';
@@ -126,19 +125,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   );
 
-  const navigate = useNavigate();
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       toast({
         title: 'Signed In',
         description: 'You have successfully signed in!',
         variant: 'default'
       });
-      if (data.user.status === 'inactive' && !!data.redirect) {
-        return navigate(data.redirect);
-      }
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
     }
   });
@@ -194,14 +189,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.setItem('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
 
-    setState({
+    setState((prev) => ({
+      ...prev,
       user,
       isAuthenticated,
       permissions,
       tenant,
+    }));
+  }, [authStatus]);
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
       loading: isAuthStatusPending
-    });
-  }, [authStatus, isAuthStatusPending]);
+    }));
+  }, [isAuthStatusPending]);
 
   const contextValue = useMemo(
     () => ({
