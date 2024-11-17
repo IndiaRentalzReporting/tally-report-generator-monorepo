@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import {
   TenantInsertSchema,
-  UserInsertSchema
 } from '@trg_package/schemas-auth/types';
 import { validateSchema } from '@trg_package/middlewares';
 import z from 'zod';
+import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
 import {
   onboard,
   handleSignIn,
@@ -13,7 +13,7 @@ import {
   handleSignOut,
   handlePrivateStatusCheck
 } from '../controller/auth.controller';
-import { authenticate } from '../middlewares';
+import { authenticate, isAuthenticated } from '../middlewares';
 
 const authRouter = Router();
 
@@ -48,6 +48,7 @@ authRouter.post(
 
 authRouter.post(
   '/sign-up',
+  isAuthenticated,
   validateSchema({
     body: UserInsertSchema.extend({
       password: UserInsertSchema.shape.password.min(8)
@@ -55,7 +56,8 @@ authRouter.post(
       first_name: true,
       last_name: true,
       email: true,
-      password: true
+      password: true,
+      role_id: true
     })
   }),
   handleSignUp
@@ -65,6 +67,6 @@ authRouter.post('/sign-out', handleSignOut);
 
 authRouter.get('/status', handlePublicStatusCheck);
 
-authRouter.get('/_status', handlePrivateStatusCheck);
+authRouter.get('/_status', isAuthenticated, handlePrivateStatusCheck);
 
 export default authRouter;

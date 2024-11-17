@@ -1,19 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   LoginUser,
-  SafeUserSelect,
   TenantInsert,
   TenantSelect,
-  UserInsert,
-  UserSelect
+  RegisterUser,
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
+import { SafeUserSelect as DashboardSafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import DashboardService from '@/services/DashboardService';
 import AuthService from '../services/AuthService';
 
 export const onboard = async (
-  req: Request<object, object, { tenant: TenantInsert; user: UserInsert }>,
-  res: Response<{ tenant: TenantSelect; user: SafeUserSelect }>,
+  req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
+  res: Response<{ tenant: TenantSelect; user: DashboardSafeUserSelect }>,
   next: NextFunction
 ) => {
   try {
@@ -43,27 +42,34 @@ export const handleSignIn = async (
 };
 
 export const handleSignUp = async (
-  req: Request<object, object, UserInsert>,
+  req: Request<object, object, RegisterUser>,
   res: Response<{
-    user: UserSelect;
+    user: DashboardSafeUserSelect;
   }>,
   next: NextFunction
 ) => {
   try {
-    if (req.isAuthenticated()) {
-      const {
-        tenant_id,
-        tenant: { db_username, db_password, db_name }
-      } = req.user;
-      if (!db_username || !db_password || !db_name) {
-        throw new BadRequestError('Invalid Tenant');
-      }
-      const DSI = new DashboardService(db_username, db_password, db_name);
-      await DSI.createUser(req.body);
-      const { user } = await AuthService.signUp({ ...req.body, tenant_id });
-      return res.json({ user });
+    if (!req.user) throw new UnauthenticatedError('Not logged in');
+
+    const {
+      tenant_id,
+      tenant: { db_username, db_password, db_name }
+    } = req.user;
+
+    if (!db_username || !db_password || !db_name) {
+      throw new BadRequestError('Invalid Tenant');
     }
-    throw new UnauthenticatedError('Not logged in');
+
+    const DSI = new DashboardService(db_username, db_password, db_name);
+    const { password, ...user } = await DSI.createUser(req.body);
+
+    await AuthService.signUp({
+      ...req.body,
+      tenant_id,
+      password
+    });
+
+    return res.json({ user });
   } catch (err) {
     return next(err);
   }
@@ -71,18 +77,14 @@ export const handleSignUp = async (
 
 export const handleSignOut = (
   req: Request,
-  res: Response<{ message: string }>,
+  res: Response,
   next: NextFunction
 ) => {
   req.logOut((err) => {
     if (err) return next(err);
-    req.session.destroy((err) => {
+    return req.session.destroy((err) => {
       if (err) return next(err);
-
-      return res
-        .clearCookie('connect.sid', { path: '/' })
-        .clearCookie('permissions', { path: '/' })
-        .json({ message: 'Logged Out' });
+      return res.clearCookie('connect.sid', { path: '/' });
     });
   });
 };

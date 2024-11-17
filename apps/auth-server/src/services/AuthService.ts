@@ -2,19 +2,20 @@ import { randomBytes } from 'crypto';
 import { BadRequestError, ReadError } from '@trg_package/errors';
 import bcrypt from 'bcrypt';
 import {
-  SafeUserSelect,
+  RegisterUser,
   TenantInsert,
   TenantSelect,
   UserInsert,
   UserSelect
 } from '@trg_package/schemas-auth/types';
 import { Request } from 'express';
+import { SafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import UserService from './UserService';
 import TenantService from './TenantService';
 
 class AuthService {
   public static async onboard(data: {
-    user: UserInsert;
+    user: RegisterUser;
     tenant: TenantInsert;
   }): Promise<{ user: SafeUserSelect; tenant: TenantSelect }> {
     const { user: userData, tenant: tenantData } = data;
@@ -41,23 +42,24 @@ class AuthService {
       throw new BadRequestError('Tenant Already Exists');
     }
 
-    const { tenant, user: dashboardUser } = await TenantService.onboard(
+    const { tenant, user } = await TenantService.onboard(
       tenantData,
       { ...userData, isReadonly: true }
     );
-    const { password, ...user } = await UserService.createOne({
+
+    await UserService.createOne({
       ...userData,
-      password: dashboardUser.password,
+      password: user.password,
       tenant_id: tenant.id
     });
 
     return { user, tenant };
   }
 
-  public static async signUp(data: UserInsert): Promise<{ user: UserSelect }> {
+  public static async signUp(data: UserInsert): Promise<UserSelect> {
     const user = await UserService.createOne(data);
 
-    return { user };
+    return user;
   }
 
   public static async signIn(
@@ -76,7 +78,7 @@ class AuthService {
     return user;
   }
 
-  public static async changePassword(
+  /* public static async changePassword(
     data: Pick<UserInsert, 'email'> & {
       password: string;
     }
@@ -90,7 +92,7 @@ class AuthService {
     );
 
     return user;
-  }
+  } */
 
   static async generateTempPassword(length: number): Promise<string> {
     return randomBytes(length).toString('hex').slice(0, length);
