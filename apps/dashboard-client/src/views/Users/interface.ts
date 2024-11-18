@@ -11,7 +11,6 @@ export const InsertFormSchema = UserInsertSchema.pick({
   last_name: true,
   role_id: true
 }).extend({
-  role: RoleSelectSchema.pick({ name: true }).nullable(),
   email: AuthUserInsertSchema.shape.email
 });
 export type InsertState = z.infer<typeof InsertFormSchema>;
