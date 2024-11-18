@@ -13,11 +13,7 @@ const userRouter = Router();
 userRouter.post(
   '/create',
   validateSchema({
-    body: UserInsertSchema.extend({
-      tenant_id: UserInsertSchema.shape.tenant_id
-    }).pick({
-      first_name: true,
-      last_name: true,
+    body: UserInsertSchema.pick({
       email: true,
       password: true,
       tenant_id: true
@@ -36,8 +32,6 @@ userRouter.patch(
   '/update/:id',
   validateSchema({
     body: UserInsertSchema.pick({
-      first_name: true,
-      last_name: true,
       email: true,
       password: true
     }).partial(),

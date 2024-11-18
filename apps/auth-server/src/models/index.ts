@@ -17,16 +17,10 @@ export const createUrl = ({
 
 export const createClient = <T extends Record<string, unknown>>(
   URL: string,
-  schema: T,
-  options: {
-    DB_MIGRATING: boolean;
-    DB_SEEDING: boolean;
-  }
+  schema: T
 ): { client: PostgresJsDatabase<T>; connection: postgres.Sql } => {
   try {
-    const connection = postgres(URL, {
-      max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : 10,
-    });
+    const connection = postgres(URL);
     const client = drizzle(connection, {
       schema,
       logger: true

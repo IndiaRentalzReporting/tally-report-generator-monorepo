@@ -9,7 +9,8 @@ import {
 import {
   UserInsert,
   RoleSelect,
-  UserSelect
+  UserSelect,
+  DetailedUser
 } from '@trg_package/schemas-dashboard/types';
 import { ColumnInsert } from '@trg_package/schemas-reporting/types';
 import {
@@ -31,7 +32,15 @@ class DashboardService {
 
   public URL: string;
 
-  constructor(db_username: string, db_password: string, db_name: string) {
+  constructor({
+    db_username,
+    db_password,
+    db_name
+  }:{
+    db_username: string
+    db_password: string
+    db_name: string
+  }) {
     const DASHBOARD_PG_URL = createUrl({
       db_username,
       db_password,
@@ -39,11 +48,7 @@ class DashboardService {
     });
     const { client, connection } = createClient(
       DASHBOARD_PG_URL,
-      dashboardSchemas,
-      {
-        DB_MIGRATING: true,
-        DB_SEEDING: true
-      }
+      dashboardSchemas
     );
     this.dashboardClient = client;
     this.dashboardConnection = connection;
@@ -125,9 +130,15 @@ class DashboardService {
     await this.dashboardConnection.end();
   }
 
+  public async findUser(data: Partial<UserSelect>): Promise<DetailedUser> {
+    const USI = new UserService(this.dashboardClient);
+    const user = await USI.findOne(data);
+    return user;
+  }
+
   public async createUser(data: UserInsert): Promise<UserSelect> {
     const USI = new UserService(this.dashboardClient);
-    const admin = await USI.createOne({ ...data });
+    const admin = await USI.createOne(data);
     return admin;
   }
 

@@ -1,23 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  LoginUser,
   TenantInsert,
   TenantSelect,
-  RegisterUser,
   UserSelect,
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError, NotFoundError, UnauthenticatedError } from '@trg_package/errors';
-import { SafeUserSelect as DashboardSafeUserSelect } from '@trg_package/schemas-dashboard/types';
+import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
 import Mail from 'nodemailer/lib/mailer';
-import DashboardService from '@/services/DashboardService';
 import AuthService from '../services/AuthService';
 import config from '@/config';
 import { sendMail } from '@/email';
 import UserService from '@/services/UserService';
+import { RegisterUser } from '@/types/user';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
-  res: Response<{ tenant: TenantSelect; user: DashboardSafeUserSelect }>,
+  res: Response<{ tenant: TenantSelect; user: DashboardUserSelect }>,
   next: NextFunction
 ) => {
   try {
@@ -29,7 +27,7 @@ export const onboard = async (
 };
 
 export const handleSignIn = async (
-  req: Request<object, object, LoginUser>,
+  req: Request<object, object, Pick<RegisterUser, 'email' | 'password'>>,
   res: Response<{
     user: Request['user'],
     redirect?: string
@@ -57,7 +55,7 @@ export const handleSignIn = async (
 export const handleSignUp = async (
   req: Request<object, object, Omit<RegisterUser, 'password'>>,
   res: Response<{
-    user: DashboardSafeUserSelect;
+    user: DashboardUserSelect;
   }>,
   next: NextFunction
 ) => {
@@ -65,36 +63,17 @@ export const handleSignUp = async (
     if (!req.user) throw new UnauthenticatedError('Not logged in');
 
     const {
-      tenant_id,
-      tenant: { db_username, db_password, db_name }
+      tenant
     } = req.user;
 
-    if (!db_username || !db_password || !db_name) {
-      throw new BadRequestError('Invalid Tenant');
-    }
-
-    const DSI = new DashboardService(db_username, db_password, db_name);
     const tempPassword = await AuthService.generateTempPassword(24);
-
-    const { password, ...user } = await DSI.createUser({
-      ...req.body,
-      password: tempPassword,
-      status: 'inactive'
-    });
-    await DSI.terminateConnection();
-
-    await AuthService.signUp({
-      ...req.body,
-      id: user.id,
-      tenant_id,
-      password
-    });
+    const dashboardUser = await AuthService.signUp(tenant, req.body);
 
     const { MAIL_FROM } = config;
 
     const mailOptions: Mail.Options = {
       from: `info${MAIL_FROM}`,
-      to: user.email,
+      to: req.body.email,
       subject: 'Node Contact Request',
       html: `<div><p>${tempPassword}</p></div>`,
     };
@@ -103,7 +82,7 @@ export const handleSignUp = async (
       if (error) {
         return next(error);
       }
-      return res.json({ user });
+      return res.json({ user: dashboardUser });
     });
   } catch (err) {
     return next(err);
@@ -198,27 +177,16 @@ export const resetPassword = async (
   next: NextFunction
 ) => {
   try {
-    const { token } = req.params;
     const { password, confirmPassword } = req.body;
-
     if (password !== confirmPassword) {
       throw new BadRequestError('Password does not match');
     }
 
+    const { token } = req.params;
     const { id } = await UserService.verifyJwtToken(token);
-    const { tenant: { db_name, db_username, db_password } } = await UserService.findOne({ id });
-
-    if (!db_name || !db_username || !db_password) {
-      throw new BadRequestError('Invalid Tenant');
-    }
-
-    const DSI = new DashboardService(db_username, db_password, db_name);
-    const { password: pw } = await DSI.updateUser({ id },{ password, status: 'active' });
-
-    await DSI.terminateConnection();
 
     await UserService.updateOne({ id }, {
-      password: pw
+      password
     });
 
     return res.status(200).send();

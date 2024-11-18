@@ -19,8 +19,6 @@ userRouter.post(
     }).pick({
       first_name: true,
       last_name: true,
-      email: true,
-      password: true,
       role_id: true,
       tenant_id: true
     })
@@ -40,8 +38,6 @@ userRouter.patch(
     body: UserSelectSchema.pick({
       first_name: true,
       last_name: true,
-      email: true,
-      password: true,
       role_id: true
     }).partial(),
     params: UserSelectSchema.pick({

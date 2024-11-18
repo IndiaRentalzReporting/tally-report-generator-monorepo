@@ -1,16 +1,12 @@
 import postgres from 'postgres';
 import { TenantInsert, TenantSelect } from '@trg_package/schemas-auth/types';
-import {
-  UserInsert as DashboardUserInsert,
-  UserSelect
-} from '@trg_package/schemas-dashboard/types';
+
 import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
 import crypto from 'crypto';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { sql } from 'drizzle-orm';
 import { DatabaseError } from '@trg_package/errors';
 import config from '../config';
-import DashboardService from './DashboardService';
 import db from '../models/auth';
 
 class TenantService extends BaseTenantService {
@@ -18,31 +14,19 @@ class TenantService extends BaseTenantService {
     super(db);
   }
 
-  async onboard(
-    tenantData: TenantInsert,
-    userData: DashboardUserInsert
-  ): Promise<{ tenant: TenantSelect; user: UserSelect }> {
+  async createOne(data: TenantInsert): Promise<TenantSelect> {
     const {
       db_name, db_username, db_password
     } = await this.createDatabase(
-      tenantData.name
+      data.name
     );
 
-    const DSI = new DashboardService(db_username, db_password, db_name);
-    try {
-      const user = await DSI.migrateAndSeed(userData);
-      const tenant = await super.createOne({
-        ...tenantData,
-        db_name,
-        db_username,
-        db_password
-      });
-
-      return { tenant, user };
-    } catch (e) {
-      // delete the database
-      throw new DatabaseError(`Could not create dashboard database: ${e}`);
-    }
+    return super.createOne({
+      ...data,
+      db_name,
+      db_username,
+      db_password
+    });
   }
 
   private generateUniqueIdentifier(baseName: string) {

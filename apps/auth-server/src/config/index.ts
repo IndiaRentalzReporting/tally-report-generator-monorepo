@@ -3,11 +3,6 @@ import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
 import { z } from 'zod';
 
-const stringBoolean = z.coerce
-  .string()
-  .transform((val) => val === 'true')
-  .default('false');
-
 export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
 
 const EnvSchema = z.object({
@@ -43,9 +38,6 @@ const EnvSchema = z.object({
   DASHBOARD_PG_PASSWORD: z.string().optional(),
   DASHBOARD_PG_USER: z.string().optional(),
   DASHBOARD_PG_DATABASE: z.string().optional(),
-
-  DB_MIGRATING: stringBoolean,
-  DB_SEEDING: stringBoolean,
 
   MAIL_FROM: z.string(),
   SMTP_SECRET: z.string(),

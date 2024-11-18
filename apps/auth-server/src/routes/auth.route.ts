@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import {
   TenantInsertSchema,
+  UserInsertSchema as AuthUserInsertSchema
 } from '@trg_package/schemas-auth/types';
 import { validateSchema } from '@trg_package/middlewares';
 import z from 'zod';
-import { UserInsertSchema } from '@trg_package/schemas-dashboard/types';
+import { UserInsertSchema as DashboardUserInsertSchema } from '@trg_package/schemas-dashboard/types';
 import {
   onboard,
   handleSignIn,
@@ -27,13 +28,12 @@ authRouter.post(
       tenant: TenantInsertSchema.pick({
         name: true
       }),
-      user: UserInsertSchema.extend({
-        password: UserInsertSchema.shape.password.min(8)
-      }).pick({
+      user: DashboardUserInsertSchema.pick({
         first_name: true,
         last_name: true,
-        email: true,
-        password: true
+      }).extend({
+        email: AuthUserInsertSchema.shape.email,
+        password: AuthUserInsertSchema.shape.password
       })
     })
   }),
@@ -43,7 +43,10 @@ authRouter.post(
 authRouter.post(
   '/sign-in',
   validateSchema({
-    body: UserInsertSchema.pick({ email: true, password: true })
+    body: AuthUserInsertSchema.pick({
+      email: true,
+      password: true
+    })
   }),
   authenticate,
   handleSignIn
@@ -53,13 +56,12 @@ authRouter.post(
   '/sign-up',
   isAuthenticated,
   validateSchema({
-    body: UserInsertSchema.extend({
-      password: UserInsertSchema.shape.password.min(8)
-    }).pick({
+    body: DashboardUserInsertSchema.pick({
       first_name: true,
       last_name: true,
-      email: true,
       role_id: true
+    }).extend({
+      email: AuthUserInsertSchema.shape.email
     })
   }),
   handleSignUp
@@ -74,7 +76,7 @@ authRouter.get('/_status', isAuthenticated, handlePrivateStatusCheck);
 authRouter.post(
   '/forgot-password',
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: AuthUserInsertSchema.pick({
       email: true
     })
   }),
@@ -95,10 +97,10 @@ authRouter.post(
 authRouter.post(
   '/reset-password/:token',
   validateSchema({
-    body: UserInsertSchema.pick({
+    body: AuthUserInsertSchema.pick({
       password: true
     }).extend({
-      confirmPassword: z.string()
+      confirmPassword: AuthUserInsertSchema.shape.password
     }),
     params: z
       .object({

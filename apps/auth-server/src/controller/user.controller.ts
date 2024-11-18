@@ -2,13 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import {
   UserSelect,
   UserInsert,
-  SafeUserSelect
 } from '@trg_package/schemas-auth/types';
 import UserService from '../services/UserService';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
-  res: Response<{ user: SafeUserSelect }>,
+  res: Response<{ user: Omit<UserSelect, 'password'> }>,
   next: NextFunction
 ) => {
   try {
@@ -22,7 +21,7 @@ export const createOne = async (
 
 export const readAll = async (
   req: Request<object,object,object, Partial<UserSelect>>,
-  res: Response<{ users: SafeUserSelect[] }>,
+  res: Response<{ users: Array<Omit<UserSelect, 'password'>> }>,
   next: NextFunction
 ) => {
   try {

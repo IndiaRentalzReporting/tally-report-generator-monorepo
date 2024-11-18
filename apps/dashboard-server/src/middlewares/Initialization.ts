@@ -189,7 +189,7 @@ export class Initialization {
       report: new ReportService(database.client),
     };
 
-    req.services = services as Express.Request['services'];
+    req.services = services;
 
     return next();
   }
@@ -209,6 +209,8 @@ export class Initialization {
 
     req.user = {
       ...user,
+      email: '',
+      password: '',
       tenant_id: apiKeyTenant.id,
       tenant: apiKeyTenant
     };

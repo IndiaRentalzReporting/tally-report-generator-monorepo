@@ -7,11 +7,11 @@ import {
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
-  res: Response<{ user: Omit<DetailedUser, 'password'> }>,
+  res: Response<{ user: DetailedUser }>,
   next: NextFunction
 ) => {
   try {
-    const { password, ...user } = (await req.services.user.createOne({
+    const user = (await req.services.user.createOne({
       ...req.body,
     })) as DetailedUser;
     return res.json({
@@ -24,16 +24,13 @@ export const createOne = async (
 
 export const readAll = async (
   req: Request<object,object,object, Partial<UserSelect>>,
-  res: Response<{ users: Omit<DetailedUser, 'password'>[] }>,
+  res: Response<{ users: Array<DetailedUser> }>,
   next: NextFunction
 ) => {
   try {
-    const usersWithPassword = await req.services.user.findMany({
+    const users = await req.services.user.findMany({
       ...req.query
-    });
-    const users = usersWithPassword.map(
-      ({ password, ...user }) => user
-    ) as Omit<DetailedUser, 'password'>[];
+    }) as Array<DetailedUser>;
     return res.json({
       users
     });
@@ -44,12 +41,12 @@ export const readAll = async (
 
 export const updateOne = async (
   req: Request<Pick<UserSelect, 'id'>, object, Partial<UserSelect>>,
-  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  res: Response<{ user: UserSelect }>,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await req.services.user.updateOne(
+    const user = await req.services.user.updateOne(
       { id },
       req.body
     );
@@ -62,12 +59,12 @@ export const updateOne = async (
 
 export const deleteOne = async (
   req: Request<Pick<UserSelect, 'id'>>,
-  res: Response<{ user: Omit<UserSelect, 'password'> }>,
+  res: Response<{ user: UserSelect }>,
   next: NextFunction
 ) => {
   try {
     const { id } = req.params;
-    const { password, ...user } = await req.services.user.deleteOne({ id });
+    const user = await req.services.user.deleteOne({ id });
 
     return res.json({ user });
   } catch (e) {
