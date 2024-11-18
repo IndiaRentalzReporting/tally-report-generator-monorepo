@@ -1,5 +1,5 @@
 {
-  "id": "a55d26ce-5448-4f88-bf25-2b4930394bc9",
+  "id": "9ad37406-4aa5-4221-8aea-5c72b66227db",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -173,7 +173,18 @@
       }
     }
   },
-  "enums": {},
+  "enums": {
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "deleted",
+        "approved",
+        "active",
+        "inactive"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "_meta": {

@@ -1,3 +1,3 @@
 export { UserSchema } from './users';
-export { TenantSchema } from './tenants';
+export { TenantSchema, EntityStatus } from './tenants';
 export * from './relations';
