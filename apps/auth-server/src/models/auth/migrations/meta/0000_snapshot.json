@@ -1,5 +1,5 @@
 {
-  "id": "07b2d856-2f95-4467-9f73-e8d307cc088d",
+  "id": "a55d26ce-5448-4f88-bf25-2b4930394bc9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -21,27 +21,23 @@
           "primaryKey": false,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
+        "db_name": {
+          "name": "db_name",
+          "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'active'"
+          "notNull": false
         },
-        "isReadonly": {
-          "name": "isReadonly",
-          "type": "boolean",
+        "db_username": {
+          "name": "db_username",
+          "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": false
         },
-        "isPrivate": {
-          "name": "isPrivate",
-          "type": "boolean",
+        "db_password": {
+          "name": "db_password",
+          "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -76,23 +72,27 @@
           "notNull": false,
           "default": "now()"
         },
-        "db_name": {
-          "name": "db_name",
-          "type": "varchar(128)",
+        "status": {
+          "name": "status",
+          "type": "status",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'active'"
         },
-        "db_username": {
-          "name": "db_username",
-          "type": "varchar(128)",
+        "isReadonly": {
+          "name": "isReadonly",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": false
         },
-        "db_password": {
-          "name": "db_password",
-          "type": "varchar(128)",
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
@@ -126,66 +126,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'active'"
-        },
-        "isReadonly": {
-          "name": "isReadonly",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "isPrivate": {
-          "name": "isPrivate",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "deletedAt": {
-          "name": "deletedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "approvedAt": {
-          "name": "approvedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "last_name": {
-          "name": "last_name",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "email": {
           "name": "email",
           "type": "varchar(256)",
@@ -202,7 +142,7 @@
           "name": "tenant_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -233,18 +173,7 @@
       }
     }
   },
-  "enums": {
-    "public.status": {
-      "name": "status",
-      "schema": "public",
-      "values": [
-        "deleted",
-        "approved",
-        "active",
-        "inactive"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "_meta": {

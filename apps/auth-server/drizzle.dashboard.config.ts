@@ -1,17 +1,7 @@
-import { BadRequestError } from '@trg_package/errors';
 import { defineConfig } from 'drizzle-kit';
 import config, { DashboardPgUrlKey } from './src/config';
 
-let DASHBOARD_PG_URL = config[DashboardPgUrlKey];
-const { DB_MIGRATING } = config;
-
-if (!DASHBOARD_PG_URL) {
-  if (DB_MIGRATING) {
-    throw new BadRequestError('Dashboard database URL not provided');
-  } else {
-    DASHBOARD_PG_URL = '';
-  }
-}
+const DASHBOARD_PG_URL = config[DashboardPgUrlKey] ?? '';
 
 export default defineConfig({
   dialect: 'postgresql',

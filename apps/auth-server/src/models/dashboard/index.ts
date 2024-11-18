@@ -4,7 +4,6 @@ import * as dashboardSchemas from './schema';
 import config, { DashboardPgUrlKey } from '../../config';
 
 const DASHBOARD_PG_URL = config[DashboardPgUrlKey];
-const { DB_MIGRATING, DB_SEEDING, DASHBOARD_PG_DATABASE } = config;
 
 if (!DASHBOARD_PG_URL) {
   throw new BadRequestError('Dashboard database URL not provided');
@@ -12,11 +11,7 @@ if (!DASHBOARD_PG_URL) {
 
 export const { client: dashboardDb, connection: dashboardConnection } = createClient(
   DASHBOARD_PG_URL,
-  dashboardSchemas,
-  {
-    DB_MIGRATING,
-    DB_SEEDING
-  }
+  dashboardSchemas
 );
 
 export default dashboardDb;

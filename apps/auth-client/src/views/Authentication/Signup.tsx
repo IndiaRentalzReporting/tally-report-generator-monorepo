@@ -16,6 +16,7 @@ import {
   Input
 } from '@trg_package/vite/components';
 import { TenantInsertSchema, UserSelectSchema } from '@trg_package/schemas-auth/types';
+import { UserSelectSchema as DashboardUserSelectSchema } from '@trg_package/schemas-dashboard/types';
 import { useAuth } from '@trg_package/vite/providers';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,10 +25,10 @@ import { z } from 'zod';
 const formSchema = UserSelectSchema.pick({
   email: true,
   password: true,
-  first_name: true,
-  last_name: true
 }).extend({
-  tenant: TenantInsertSchema.shape.name
+  tenant: TenantInsertSchema.shape.name,
+  first_name: DashboardUserSelectSchema.shape.first_name,
+  last_name: DashboardUserSelectSchema.shape.last_name
 });
 
 type State = z.infer<typeof formSchema>;

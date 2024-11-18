@@ -1,5 +1,5 @@
 {
-  "id": "aeb7df0c-6da3-4b09-b523-ed9ed07ed54f",
+  "id": "c57d644d-ce3f-45ac-98c0-49811d2314f3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -593,18 +593,6 @@
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
@@ -624,15 +612,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.user_tallyCompany": {
       "name": "user_tallyCompany",

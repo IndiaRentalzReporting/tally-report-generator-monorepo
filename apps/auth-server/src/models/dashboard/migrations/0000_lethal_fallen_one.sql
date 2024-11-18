@@ -98,10 +98,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"approvedAt" timestamp,
 	"role_id" uuid,
 	"first_name" varchar(50) NOT NULL,
-	"last_name" varchar(50) NOT NULL,
-	"email" varchar(256) NOT NULL,
-	"password" varchar(128) NOT NULL,
-	CONSTRAINT "users_email_unique" UNIQUE("email")
+	"last_name" varchar(50) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_tallyCompany" (
