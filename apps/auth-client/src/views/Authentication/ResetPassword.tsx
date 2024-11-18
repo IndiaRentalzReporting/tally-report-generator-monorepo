@@ -136,14 +136,14 @@ export const ResetPassword: FC = () => {
                 >
                   Reset Password
                 </Button>
-                <Button
+                {/* <Button
                   variant="secondary"
                   className="w-full"
                   onClick={handleSkipResetPassword}
                   type="button"
                 >
                   Skip
-                </Button>
+                </Button> */}
               </form>
             </Form>
           </CardContent>
