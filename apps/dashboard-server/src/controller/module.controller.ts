@@ -3,6 +3,7 @@ import {
   ModuleInsert,
   ModuleSelect
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, ModuleInsert>,
@@ -28,6 +29,9 @@ export const readAll = async (
   try {
     const modules = await req.services.module.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     return res.json({ modules });
   } catch (e) {

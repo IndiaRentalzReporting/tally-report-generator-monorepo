@@ -3,6 +3,7 @@ import {
   UserTallyCompanySelect,
   UserTallyCompanyInsert
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, UserTallyCompanyInsert>,
@@ -29,6 +30,9 @@ export const readAll = async (
   try {
     const userTallyCompanys = await req.services.userTallyCompany.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     res.json({ userTallyCompanys });
   } catch (e) {

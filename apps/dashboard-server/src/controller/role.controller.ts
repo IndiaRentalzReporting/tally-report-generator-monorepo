@@ -4,6 +4,7 @@ import {
   RoleSelect,
   RoleWithPermission
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const readAll = async (
   req: Request<object, object, object, Partial<RoleSelect>>,
@@ -13,6 +14,9 @@ export const readAll = async (
   try {
     const roles = (await req.services.role.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     })) as RoleWithPermission[];
     return res.json({ roles });
   } catch (e) {

@@ -4,6 +4,7 @@ import {
   DetailedUser,
   UserInsert
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
@@ -30,6 +31,9 @@ export const readAll = async (
   try {
     const users = await req.services.user.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     }) as Array<DetailedUser>;
     return res.json({
       users

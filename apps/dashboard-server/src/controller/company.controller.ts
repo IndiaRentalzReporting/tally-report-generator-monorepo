@@ -10,6 +10,7 @@ import {
   VoucherService
 } from '@trg_package/schemas-tally/services';
 import { CompanyInsert, CompanySelect } from '@trg_package/schemas-tally/types';
+import { ReadError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, CompanyInsert>,
@@ -35,6 +36,9 @@ export const readAll = async (
   try {
     const companies = await req.services.company.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     return res.json({ companies });
   } catch (e) {

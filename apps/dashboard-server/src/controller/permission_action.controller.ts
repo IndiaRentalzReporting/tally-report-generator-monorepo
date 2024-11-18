@@ -3,6 +3,7 @@ import {
   PermissionActionSelect,
   PermissionActionInsert
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const createOne = async (
   req: Request<object, object, PermissionActionInsert>,
@@ -29,6 +30,9 @@ export const readAll = async (
   try {
     const permissionActions = await req.services.permissionAction.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     res.json({ permissionActions });
   } catch (e) {

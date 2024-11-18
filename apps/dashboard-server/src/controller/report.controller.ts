@@ -10,7 +10,7 @@ import {
   GeneratedReportData,
   GeneratedReportColumns
 } from '@trg_package/schemas-reporting/types';
-import { BadRequestError, CustomError } from '@trg_package/errors';
+import { BadRequestError, CustomError, ReadError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true
@@ -42,6 +42,9 @@ export const readAll = async (
   try {
     const reports = await req.services.report.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     return res.json({ reports });
   } catch (e) {
@@ -170,13 +173,12 @@ export const getReportData = async (
       pageSize
     } = req.query;
 
-    let { whereQuery,havingQuery } = Object.entries(filters??{}).length>0 && filters? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
+    let { whereQuery,havingQuery } = Object.entries(filters ?? {}).length > 0 && filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    if(whereQuery!=='')
-    {
-      whereQuery = queryConfig.dataSource.match(/\b WHERE \b/)?` AND ${whereQuery}`:` WHERE ${whereQuery}`;
+    if (whereQuery !== '') {
+      whereQuery = queryConfig.dataSource.match(/\b WHERE \b/) ? ` AND ${whereQuery}` : ` WHERE ${whereQuery}`;
     }
-   
+
     const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex))}` : '';
     const query = queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery);
     const data = await req.services.report.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));

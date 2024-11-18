@@ -3,6 +3,7 @@ import {
   PermissionSelect,
   PermissionInsert
 } from '@trg_package/schemas-dashboard/types';
+import { ReadError } from '@trg_package/errors';
 
 export const readAll = async (
   req: Request<object,object,object, Partial<PermissionSelect>>,
@@ -12,6 +13,9 @@ export const readAll = async (
   try {
     const permissions = await req.services.permission.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     res.json({ permissions });
   } catch (e) {

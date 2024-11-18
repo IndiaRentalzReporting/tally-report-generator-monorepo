@@ -3,7 +3,7 @@ import {
   ApiKeyInsert,
   ApiKeySelect
 } from '@trg_package/schemas-dashboard/types';
-import { UnauthenticatedError } from '@trg_package/errors';
+import { ReadError, UnauthenticatedError } from '@trg_package/errors';
 import { encrypt } from '../utils/crypto';
 
 export const readAll = async (
@@ -14,6 +14,9 @@ export const readAll = async (
   try {
     const apiKeys = await req.services.apiKey.findMany({
       ...req.query
+    }).catch((e) => {
+      if (e instanceof ReadError) return [];
+      throw e;
     });
     return res.json({ apiKeys });
   } catch (e) {
