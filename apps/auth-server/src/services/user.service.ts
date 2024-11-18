@@ -67,7 +67,10 @@ class UserService extends BaseUserService {
       db_name
     });
 
-    await DSI.createUser(dashboardUserData);
+    await DSI.createUser({
+      id: authUser.id,
+      ...dashboardUserData
+    });
     await DSI.terminateConnection();
 
     return authUser;

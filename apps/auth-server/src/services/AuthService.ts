@@ -13,6 +13,7 @@ import UserService from './user.service';
 import TenantService from './tenant.service';
 import { RegisterUser } from '@/types/user';
 import DashboardService from './DashboardService';
+import { migrateDashboardSchema } from '@/models/dashboard/seed/migrate';
 
 class AuthService {
   public static async onboard(data: {
@@ -58,13 +59,14 @@ class AuthService {
       db_username, db_password, db_name
     });
 
+    migrateDashboardSchema(DSI.URL);
     const { id: role_id } = await DSI.seedRole();
     const user = await UserService.createOne({
       ...userData,
       tenant_id,
       role_id
     }).then(async (user) => {
-      await DSI.migrateAndSeed();
+      await DSI.seed();
       return user;
     }).finally(async () => DSI.terminateConnection());
 
