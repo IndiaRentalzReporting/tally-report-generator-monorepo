@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { Sql } from 'postgres';
 import {
@@ -55,22 +57,15 @@ class DashboardService {
     this.URL = DASHBOARD_PG_URL;
   }
 
-  public async migrateAndSeed(userData: UserInsert): Promise<UserSelect> {
+  public async migrateAndSeed(): Promise<void> {
     migrateDashboardSchema(this.URL);
-    const admin = await this.dashboardClient.transaction(async (trx) => {
-      /**
-       * Do not change the order of the following
-       * statements as it will cause the seeding to fail
-       */
-      const user = await this.seedAdmin(userData, trx);
+    await this.dashboardClient.transaction(async (trx) => {
       await this.seedAction(trx);
       await this.seedModules(trx);
       await this.seedTable(trx);
       await this.seedColumn(trx);
-      return user;
     });
     await this.terminateConnection();
-    return admin;
   }
 
   private async seedAction(trx: PostgresJsDatabase<typeof dashboardSchemas>) {
@@ -87,22 +82,10 @@ class DashboardService {
     }
   }
 
-  private async seedAdmin(
-    data: UserInsert,
-    trx: PostgresJsDatabase<typeof dashboardSchemas>
-  ): Promise<UserSelect> {
-    const role_id = await this.seedRole(trx);
-    const USI = new UserService(trx);
-    const admin = await USI.createOne({ ...data, role_id });
-    return admin;
-  }
-
-  private async seedRole(
-    trx: PostgresJsDatabase<typeof dashboardSchemas>
-  ): Promise<RoleSelect['id']> {
-    const RSI = new RoleService(trx);
+  public async seedRole(): Promise<RoleSelect> {
+    const RSI = new RoleService(this.dashboardClient);
     const role = await RSI.createOne(superUserRole);
-    return role.id;
+    return role;
   }
 
   private async seedTable(trx: PostgresJsDatabase<typeof dashboardSchemas>) {

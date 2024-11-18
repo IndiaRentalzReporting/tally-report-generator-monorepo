@@ -4,23 +4,10 @@ import { UserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   readAll,
   deleteOne,
-  updateOne,
-  createOne
+  updateOne
 } from '../controller/user.controller';
 
 const userRouter = Router();
-
-userRouter.post(
-  '/create',
-  validateSchema({
-    body: UserInsertSchema.pick({
-      email: true,
-      password: true,
-      tenant_id: true
-    })
-  }),
-  createOne
-);
 
 userRouter.get(
   '/read',

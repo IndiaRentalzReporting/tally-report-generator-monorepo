@@ -10,12 +10,12 @@ import Mail from 'nodemailer/lib/mailer';
 import AuthService from '../services/AuthService';
 import config from '@/config';
 import { sendMail } from '@/email';
-import UserService from '@/services/UserService';
+import UserService from '@/services/user.service';
 import { RegisterUser } from '@/types/user';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
-  res: Response<{ tenant: TenantSelect; user: DashboardUserSelect }>,
+  res: Response<{ tenant: TenantSelect; user: UserSelect }>,
   next: NextFunction
 ) => {
   try {
@@ -53,9 +53,9 @@ export const handleSignIn = async (
 };
 
 export const handleSignUp = async (
-  req: Request<object, object, Omit<RegisterUser, 'password'>>,
+  req: Request<object, object, Omit<RegisterUser, 'password'> & { role_id?: DashboardUserSelect['role_id'] }>,
   res: Response<{
-    user: DashboardUserSelect;
+    user: UserSelect;
   }>,
   next: NextFunction
 ) => {
@@ -67,7 +67,10 @@ export const handleSignUp = async (
     } = req.user;
 
     const tempPassword = await AuthService.generateTempPassword(24);
-    const dashboardUser = await AuthService.signUp(tenant, req.body);
+    const dashboardUser = await AuthService.signUp(tenant, {
+      ...req.body,
+      password: tempPassword
+    });
 
     const { MAIL_FROM } = config;
 
@@ -186,7 +189,8 @@ export const resetPassword = async (
     const { id } = await UserService.verifyJwtToken(token);
 
     await UserService.updateOne({ id }, {
-      password
+      password,
+      status: 'active'
     });
 
     return res.status(200).send();

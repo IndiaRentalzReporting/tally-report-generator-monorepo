@@ -5,7 +5,7 @@ import LocalStrategy, {
   IStrategyOptions
 } from 'passport-local';
 import AuthService from '../services/AuthService';
-import UserService from '../services/UserService';
+import UserService from '../services/user.service';
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {

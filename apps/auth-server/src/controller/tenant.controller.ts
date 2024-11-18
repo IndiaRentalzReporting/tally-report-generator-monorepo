@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { TenantSelect, TenantInsert } from '@trg_package/schemas-auth/types';
-import TenantService from '../services/TenantService';
+import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
+import authDb from '@/models/auth';
+
+const TenantService = new BaseTenantService(authDb);
 
 export const createOne = async (
   req: Request<object, object, TenantInsert>,

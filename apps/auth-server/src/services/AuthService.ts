@@ -4,12 +4,13 @@ import bcrypt from 'bcrypt';
 import {
   TenantInsert,
   TenantSelect,
-  UserInsert
+  UserInsert,
+  UserSelect
 } from '@trg_package/schemas-auth/types';
 import { Request } from 'express';
 import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
-import UserService from './UserService';
-import TenantService from './TenantService';
+import UserService from './user.service';
+import TenantService from './tenant.service';
 import { RegisterUser } from '@/types/user';
 import DashboardService from './DashboardService';
 
@@ -17,15 +18,13 @@ class AuthService {
   public static async onboard(data: {
     user: RegisterUser;
     tenant: TenantInsert;
-  }): Promise<{ user: DashboardUserSelect; tenant: TenantSelect }> {
+  }): Promise<{ user: UserSelect; tenant: TenantSelect }> {
     const {
-      user: {
-        email, password, first_name, last_name
-      }, tenant: tenantData
+      user: userData, tenant: tenantData
     } = data;
 
     const existingUser = await UserService.findOne({
-      email
+      email: userData.email
     }).catch((e) => {
       if (e instanceof ReadError) return null;
       throw e;
@@ -59,19 +58,15 @@ class AuthService {
       db_username, db_password, db_name
     });
 
-    const user = await DSI.migrateAndSeed({
-      first_name,
-      last_name
-    });
-
-    await DSI.terminateConnection();
-
-    await UserService.createOne({
-      id: user.id,
-      password,
-      email,
-      tenant_id
-    });
+    const { id: role_id } = await DSI.seedRole();
+    const user = await UserService.createOne({
+      ...userData,
+      tenant_id,
+      role_id
+    }).then(async (user) => {
+      await DSI.migrateAndSeed();
+      return user;
+    }).finally(async () => DSI.terminateConnection());
 
     return {
       user,
@@ -81,33 +76,13 @@ class AuthService {
 
   public static async signUp(
     tenant: TenantSelect,
-    data: Omit<RegisterUser, 'password'>
-  ): Promise<DashboardUserSelect> {
-    const { email, first_name, last_name } = data;
-
-    const { db_name, db_username, db_password } = tenant;
-    if (!db_username || !db_password || !db_name) {
-      throw new BadRequestError('Invalid Tenant');
-    }
-
-    const DSI = new DashboardService({ db_username, db_password, db_name });
-    const dashboardUser = await DSI.createUser({
-      first_name,
-      last_name,
+    data: RegisterUser & { role_id?: DashboardUserSelect['role_id'] }
+  ): Promise<UserSelect> {
+    return UserService.createOne({
+      ...data,
+      tenant_id: tenant.id,
       status: 'inactive'
     });
-    await DSI.terminateConnection();
-
-    const tempPassword = await this.generateTempPassword(24);
-
-    await UserService.createOne({
-      id: dashboardUser.id,
-      email,
-      password: tempPassword,
-      tenant_id: tenant.id
-    });
-
-    return dashboardUser;
   }
 
   public static async signIn(
@@ -125,22 +100,6 @@ class AuthService {
 
     return user;
   }
-
-  /* public static async changePassword(
-    data: Pick<UserInsert, 'email'> & {
-      password: string;
-    }
-  ): Promise<SafeUserSelect> {
-    const { email, password: pw } = data;
-    const { password, ...user } = await UserService.updateOne(
-      { email },
-      {
-        password: pw
-      }
-    );
-
-    return user;
-  } */
 
   static async generateTempPassword(length: number): Promise<string> {
     return randomBytes(length).toString('hex').slice(0, length);

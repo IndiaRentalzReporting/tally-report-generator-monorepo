@@ -3,7 +3,10 @@ import {
   UserSelect,
   UserInsert,
 } from '@trg_package/schemas-auth/types';
-import UserService from '../services/UserService';
+import { UserService as BaseUserService } from '@trg_package/schemas-auth/services';
+import authDb from '@/models/auth';
+
+const UserService = new BaseUserService(authDb);
 
 export const createOne = async (
   req: Request<object, object, UserInsert>,
