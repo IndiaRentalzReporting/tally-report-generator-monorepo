@@ -1,9 +1,7 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import bcrypt from 'bcrypt';
 import { UserSchema } from '../schemas';
 import * as dashboardSchemas from '../schemas';
-import { UserInsert, UserSelect } from '../schemas/users';
 import { DetailedUser } from '../types';
 
 export class UserService extends BaseServiceNew<
@@ -12,30 +10,6 @@ export class UserService extends BaseServiceNew<
 > {
   constructor(db: PostgresJsDatabase<typeof dashboardSchemas>) {
     super(db, UserSchema, db.query.UserSchema);
-  }
-
-  public async createOne(data: UserInsert): Promise<UserSelect> {
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(data.password, salt);
-    const user = await super.createOne({
-      ...data,
-      password
-    });
-    return user;
-  }
-
-  public async updateOne(
-    filterData: Partial<UserSelect>,
-    data: Partial<UserInsert>
-  ): Promise<UserSelect> {
-    const update = data;
-    if (data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const password = await bcrypt.hash(data.password, salt);
-      update.password = password;
-    }
-    const user = await super.updateOne(filterData, data);
-    return user;
   }
 
   public async findMany(data: Partial<typeof this.schema.$inferSelect> = {}) {
