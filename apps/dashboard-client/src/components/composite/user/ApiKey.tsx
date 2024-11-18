@@ -36,10 +36,6 @@ const ApiKey = () => {
   const queryClient = useQueryClient();
   const form = useForm<State>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      key: 'null'
-    }
   });
 
   const { data: apiKeys = [], isFetching: loadingApiKeys } = useQuery({
