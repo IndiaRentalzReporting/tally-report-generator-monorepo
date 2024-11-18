@@ -10,28 +10,12 @@ import {
   When,
   DataTable
 } from '@trg_package/vite/components';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { services as userServices } from '@/services/Users';
 import { useIsAllowed } from '@/hooks';
 import { columns } from './columns';
 import { SelectFormSchema as UserSelectFormSchema } from './interface';
-import { InsertFormSchema } from '../Roles/interface';
-
-const formSchema = InsertFormSchema.pick({ id: true });
-type FormState = z.infer<typeof formSchema>;
 
 const Read: React.FC = () => {
-  const form = useForm<FormState>({
-    resolver: zodResolver(formSchema),
-  });
-
-  const isUpdateAllowed = useIsAllowed({
-    module: 'Users',
-    action: 'Update'
-  });
-
   const isReadAllowed = useIsAllowed({
     module: 'Users',
     action: 'Read'
@@ -39,7 +23,7 @@ const Read: React.FC = () => {
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
     queryFn: () => userServices.read(),
-    select: (data) => data.data.users.map((user) => UserSelectFormSchema.parse({ ...user, password: '********' })),
+    select: (data) => data.data.users.map((user) => UserSelectFormSchema.parse(user)),
     queryKey: ['Users', 'getAll']
   });
 

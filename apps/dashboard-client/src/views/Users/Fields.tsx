@@ -10,26 +10,16 @@ import {
   SelectValue,
   Skeleton
 } from '@trg_package/vite/components';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
-import { FormState, StateAsProps } from './interface';
+import { useQuery } from '@tanstack/react-query';
+import { StateAsProps } from './interface';
 import { services as roleServices } from '@/services/Roles';
 import { SelectFormSchema as RoleSelectFormSchema } from '../Roles/interface';
 
-const Fields: React.FC<StateAsProps> = ({ form }) => {
+const Fields: React.FC<StateAsProps> = ({ form, type }) => {
   const { data: allRoles = [], isFetching: fetchingRoles } = useQuery({
     queryFn: async () => roleServices.read(),
     select: (data) => data.data.roles.map((role) => RoleSelectFormSchema.parse(role)),
     queryKey: ['Roles', 'getAll']
-  });
-
-  const queryClient = useQueryClient();
-  const { mutateAsync: assignRoleMutation, isPending: assignRoleLoading } = useMutation({
-    mutationFn: (values: FormState) => {
-      throw new Error('Not implemented');
-    },
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: ['Users', 'getAll'] });
-    }
   });
 
   return (
@@ -79,6 +69,7 @@ const Fields: React.FC<StateAsProps> = ({ form }) => {
       <FormField
         control={form.control}
         name="email"
+        disabled={type === 'Update'}
         render={({ field }) => (
           <FormItem>
             <FormLabel >Email</FormLabel>

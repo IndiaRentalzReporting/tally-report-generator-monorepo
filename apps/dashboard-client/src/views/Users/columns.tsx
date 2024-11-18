@@ -16,10 +16,6 @@ export const columns: ColumnDef<FormState>[] = [
     header: ({ column }) => <SortingButton column={column} label="Last Name" />
   },
   {
-    accessorKey: 'email',
-    header: ({ column }) => <SortingButton column={column} label="Email" />
-  },
-  {
     accessorKey: 'role.name',
     header: ({ column }) => <SortingButton column={column} label="Role" />,
     cell: ({ row }) => {

@@ -14,7 +14,7 @@ import { SelectState, SelectFormSchema, FormState } from './interface';
 const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: userData, isFetching: loadingUser } = useQuery({
     queryFn: () => services.read({ id }),
-    select: (data) => SelectFormSchema.parse({ ...data.data.users[0], password: '********' }),
+    select: (data) => SelectFormSchema.parse(data.data.users[0]),
     queryKey: ['Users', 'getOne', id]
   });
 
@@ -43,7 +43,10 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
         <Skeleton isLoading={loadingUser}>
-          <Fields form={form} />
+          <Fields
+            form={form}
+            type='Update'
+          />
           <Button
             type="submit"
           >

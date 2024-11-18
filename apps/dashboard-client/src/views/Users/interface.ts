@@ -23,7 +23,6 @@ export const SelectFormSchema = UserSelectSchema.pick({
   role_id: true
 }).extend({
   role: RoleSelectSchema.pick({ name: true }).nullable(),
-  email: AuthUserInsertSchema.shape.email
 });
 export type SelectState = z.infer<typeof SelectFormSchema>;
 
@@ -31,4 +30,5 @@ export type FormState = SelectState | InsertState;
 
 export type StateAsProps = {
   form: UseFormReturn<FormState>;
+  type: 'Create' | 'Update'
 };
