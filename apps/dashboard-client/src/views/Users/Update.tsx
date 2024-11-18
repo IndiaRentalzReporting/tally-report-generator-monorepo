@@ -37,7 +37,6 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
     const { data: { user } } = await updateUser(values);
     form.resetField('first_name', { defaultValue: user.first_name });
     form.resetField('last_name', { defaultValue: user.last_name });
-    form.resetField('email', { defaultValue: user.email });
   };
 
   return (

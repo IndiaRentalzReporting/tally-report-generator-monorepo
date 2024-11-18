@@ -42,12 +42,19 @@ export interface ButtonProps
   isLoading?: boolean;
 }
 
+const spinnerSizeMap = {
+  default: 'w-5 h-5',
+  sm: 'w-4 h-4',
+  lg: 'w-6 h-6',
+  icon: 'w-5 h-5'
+};
+
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
       variant,
-      size,
+      size = 'default',
       asChild = false,
       isLoading = false,
       children,
@@ -56,6 +63,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
+    const spinnerSize = spinnerSizeMap[size || 'default'];
+
     return (
       <Comp
         className={cn(
@@ -68,7 +77,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         <If condition={isLoading}>
           <Then>
-            <LoadingSpinner />
+            <div className="flex items-center justify-center">
+              <LoadingSpinner
+                className={cn(
+                  spinnerSize,
+                  'flex-shrink-0' // Prevent spinner from changing size
+                )}
+              />
+            </div>
           </Then>
           <Else>{children}</Else>
         </If>

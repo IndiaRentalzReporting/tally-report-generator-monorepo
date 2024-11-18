@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Minus, Trash } from 'lucide-react';
+import { Loader2, Minus, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import {
   If, Then, Else,
-  Button
+  ToastAction
 } from '@trg_package/vite/components';
 import { useToast } from '@trg_package/vite/hooks';
 import { useIsAllowed } from '@/hooks';
@@ -63,29 +63,32 @@ const Delete: React.FC<IDeleteEntityProps> = ({
   return (
     <If condition={!!isDeleteAllowed}>
       <Then>
-        <Trash
-          className="text-red-500 cursor-pointer"
-          size={20}
-          onClick={() => {
-            const { dismiss } = toast({
-              variant: 'destructive',
-              title: `Delete ${main}`,
-              description: `Are you sure you want to delete ${name} from ${main}`,
-              action: (
-                <Button
-                  isLoading={isPending}
-                  type='button'
-                  onClick={async () => {
-                    await mutateAsync();
-                    dismiss();
-                  }}
-                >
-                  Delete
-                </Button>
-              )
-            });
-          }}
-        />
+        <If condition={!isPending}>
+          <Then>
+            <Trash
+              className="text-red-500 cursor-pointer"
+              size={20}
+              onClick={() => {
+                toast({
+                  variant: 'destructive',
+                  title: `Delete ${main}`,
+                  description: `Are you sure you want to delete ${name} from ${main}`,
+                  action: (
+                    <ToastAction
+                      altText={`Delete ${main}`}
+                      onClick={() => mutateAsync()}
+                    >
+                      Delete
+                    </ToastAction>
+                  )
+                });
+              }}
+            />
+          </Then>
+          <Else>
+            <Loader2 size={20} className='animate-spin'/>
+          </Else>
+        </If>
       </Then>
       <Else>
         <Minus />
