@@ -1,14 +1,12 @@
 import { type AxiosPromise } from 'axios';
 import {
-  LoginUser,
-  RegisterUser,
   TenantInsert,
   TenantSelect,
   UserSelect
 } from '@trg_package/schemas-auth/types';
 import { SafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '../client';
-import { DetailedUser } from '../models';
+import { DetailedUser, LoginUser, RegisterUser } from '../models';
 
 const authAxios = createAxiosClient(
   { auth: true },

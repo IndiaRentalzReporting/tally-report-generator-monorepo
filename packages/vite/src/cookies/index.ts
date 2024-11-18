@@ -23,13 +23,16 @@ const setCookie = (
     ? `${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`
     : `.${VITE_DOMAIN}.${VITE_TLD}`;
 
-  Cookies.set(name, value, {
+  Cookies.set(name, encodeURIComponent(value), {
     domain,
     ...defaultCookieOptions
   });
 };
 
-const getCookie = (name: string) => Cookies.get(name);
+const getCookie = (name: string) => {
+  const value = Cookies.get(name);
+  return value ? decodeURIComponent(value) : undefined;
+};
 
 const removeCookie = (
   name: string,

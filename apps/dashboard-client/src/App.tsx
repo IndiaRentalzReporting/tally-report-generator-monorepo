@@ -52,6 +52,7 @@ const App = () => {
               </>
             ))}
           </Route>
+          <Route path="*" element={<Navigate to="dashboard" />} />
         </Route>
       </Route>
     ])

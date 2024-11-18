@@ -8,8 +8,6 @@ import {
   useQueryClient
 } from '@tanstack/react-query';
 import {
-  LoginUser,
-  RegisterUser,
   TenantInsert,
   TenantSelect,
   UserSelect
@@ -19,8 +17,9 @@ import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dash
 import { useNavigate } from 'react-router';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
-import { DetailedUser } from '../models';
+import { DetailedUser, LoginUser, RegisterUser } from '../models';
 import { toTitleCase } from '$/lib/utils';
+import { getCookie, setCookie } from '$/cookies';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -65,7 +64,7 @@ const initialState: AuthProviderState = {
   user: null,
   isAuthenticated: false,
   loading: true,
-  permissions: JSON.parse(localStorage.getItem('permissions') ?? '[]'),
+  permissions: JSON.parse(getCookie('permissions') ?? '[]'),
   tenant: null
 };
 
@@ -192,7 +191,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated = authStatus.isAuthenticated;
     }
     const permissions = user ? createPermissions(user.role?.permission) : [];
-    localStorage.setItem('permissions', JSON.stringify(permissions));
+    setCookie('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
 
     setState((prev) => ({
