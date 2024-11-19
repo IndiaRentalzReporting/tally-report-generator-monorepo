@@ -14,12 +14,13 @@ import {
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
-import { useNavigate } from 'react-router';
 import { useToast } from '$/lib/hooks';
 import services from '../services';
-import { DetailedUser, LoginUser, RegisterUser } from '../models';
+import {
+  DetailedUser, LoginUser, RegisterUser, ResetPassword
+} from '../models';
 import { toTitleCase } from '$/lib/utils';
-import { getCookie, setCookie } from '$/cookies';
+import { getCookie, removeCookie, setCookie } from '$/cookies';
 
 interface AuthProviderState {
   user: DetailedUser | null;
@@ -27,6 +28,7 @@ interface AuthProviderState {
   loading: boolean;
   permissions: Permissions[];
   tenant: TenantInsert['name'] | null;
+  firstLogin?: boolean
 }
 
 interface AuthProviderMutation {
@@ -58,6 +60,10 @@ interface AuthProviderMutation {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<AxiosResponse<{ message: string }>, Error>;
   };
+  resetPassword: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<AxiosResponse, Error, ResetPassword>;
+  }
 }
 
 const initialState: AuthProviderState = {
@@ -65,7 +71,8 @@ const initialState: AuthProviderState = {
   isAuthenticated: false,
   loading: true,
   permissions: JSON.parse(getCookie('permissions') ?? '[]'),
-  tenant: null
+  tenant: null,
+  firstLogin: undefined
 };
 
 const initialMutation: AuthProviderMutation = {
@@ -83,6 +90,10 @@ const initialMutation: AuthProviderMutation = {
   },
   signOut: {
     mutation: () => Promise.reject('SignOut Mutation does not exist'),
+    isLoading: false
+  },
+  resetPassword: {
+    mutation: () => Promise.reject('ResetPassword Mutation does not exist'),
     isLoading: false
   }
 };
@@ -125,7 +136,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   );
 
-  const navigate = useNavigate();
   const { mutateAsync: signInMutation, isPending: isSigningIn } = useMutation({
     mutationFn: (data: LoginUser) => services.signIn(data),
     mutationKey: ['auth', 'signIn'],
@@ -135,11 +145,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         description: 'You have successfully signed in!',
         variant: 'default'
       });
-      if (data.redirect) {
-        navigate(data.redirect);
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      if (data.firstLoginResetToken) {
+        setCookie('firstLoginResetToken', data.firstLoginResetToken);
       }
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
     }
   });
 
@@ -171,6 +180,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   );
 
+  const { mutateAsync: resetPasswordMutation, isPending: isResettingPassword } = useMutation({
+    mutationFn: (values: ResetPassword) => {
+      const token = getCookie('firstLoginResetToken');
+      if (!token) {
+        throw new Error('Reset password token does not exist');
+      }
+      return services.resetPassword(token, values);
+    },
+    onSuccess: (data) => {
+      removeCookie('firstLoginResetToken');
+      toast({
+        variant: 'default',
+        title: 'Password Reset!',
+        description: data.data.message,
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
+  });
+
   const createPermissions = (
     permissions: UserRole['permission'] | undefined
   ): Permissions[] => permissions
@@ -190,6 +218,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       user = authStatus.user;
       isAuthenticated = authStatus.isAuthenticated;
     }
+
     const permissions = user ? createPermissions(user.role?.permission) : [];
     setCookie('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
@@ -200,6 +229,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated,
       permissions,
       tenant,
+      firstLogin: user?.status === 'inactive'
     }));
   }, [authStatus]);
 
@@ -216,7 +246,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       onboard: { mutation: onboardMutation, isLoading: isOnboarding },
       signIn: { mutation: signInMutation, isLoading: isSigningIn },
       signUp: { mutation: signUpMutation, isLoading: isSigningUp },
-      signOut: { mutation: signOutMutation, isLoading: isSigningOut }
+      signOut: { mutation: signOutMutation, isLoading: isSigningOut },
+      resetPassword: { mutation: resetPasswordMutation, isLoading: isResettingPassword }
     }),
     [
       state,
@@ -224,10 +255,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isSigningIn,
       isSigningUp,
       isSigningOut,
+      isResettingPassword,
       onboardMutation,
       signInMutation,
       signOutMutation,
-      signUpMutation
+      signUpMutation,
+      resetPasswordMutation
     ]
   );
 

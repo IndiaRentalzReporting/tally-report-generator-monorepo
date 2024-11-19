@@ -30,7 +30,7 @@ export const handleSignIn = async (
   req: Request<object, object, Pick<RegisterUser, 'email' | 'password'>>,
   res: Response<{
     user: Request['user'],
-    redirect?: string
+    firstLoginResetToken?: string
   }>,
   next: NextFunction
 ) => {
@@ -43,7 +43,7 @@ export const handleSignIn = async (
       }
       return res.json({
         user,
-        redirect: token ? `/reset-password/${token}` : undefined
+        firstLoginResetToken: token,
       });
     }
     throw new UnauthenticatedError('Not logged in');
@@ -169,12 +169,13 @@ export const checkPasswordResetToken = async (
 
 export const resetPassword = async (
   req: Request<
-  { token: string },
-    object,
+  object,
+  object,
   {
     password: UserSelect['password'];
     confirmPassword: UserSelect['password'];
-  }
+  },
+  { token: string }
   >,
   res: Response,
   next: NextFunction
@@ -185,7 +186,7 @@ export const resetPassword = async (
       throw new BadRequestError('Password does not match');
     }
 
-    const { token } = req.params;
+    const { token } = req.query;
     const { id } = await UserService.verifyJwtToken(token);
 
     await UserService.updateOne({ id }, {

@@ -6,3 +6,8 @@ export interface DetailedUser extends AuthDetailedUser, DashDetailedUser {}
 export interface LoginUser extends Pick<AuthUserSelect, 'email' | 'password'> {}
 
 export interface RegisterUser extends LoginUser, Pick<DashboardUserSelect, 'first_name' | 'last_name'> {}
+
+export type ResetPassword = {
+  password: AuthUserSelect['password'];
+  confirmPassword: AuthUserSelect['password'];
+};

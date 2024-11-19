@@ -25,3 +25,4 @@ export * from './command';
 export * from './calendar';
 export * from './pagination';
 export * from './separator';
+export * from './dialog';

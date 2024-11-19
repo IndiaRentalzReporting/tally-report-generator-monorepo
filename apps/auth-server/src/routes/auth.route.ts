@@ -95,14 +95,14 @@ authRouter.post(
 );
 
 authRouter.post(
-  '/reset-password/:token',
+  '/reset-password',
   validateSchema({
     body: AuthUserInsertSchema.pick({
       password: true
     }).extend({
       confirmPassword: AuthUserInsertSchema.shape.password
     }),
-    params: z
+    query: z
       .object({
         token: z.string()
       })
