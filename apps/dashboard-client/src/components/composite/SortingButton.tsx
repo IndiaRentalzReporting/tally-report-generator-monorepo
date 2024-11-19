@@ -20,7 +20,7 @@ export const SortingButton = <TData,>({ column, label }: HeaderButtonProps<TData
       onClick={handleSort}
     >
       {label}
-      <ArrowUpDown className="ml-2 h-4 w-4" />
+      <ArrowUpDown className="ml-2"/>
     </Button>
   );
 };

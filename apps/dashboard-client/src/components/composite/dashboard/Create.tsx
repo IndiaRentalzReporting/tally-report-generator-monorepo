@@ -14,6 +14,7 @@ import {
   When
 } from '@trg_package/vite/components';
 import { ModuleSelect } from '@trg_package/schemas-dashboard/types';
+import { PlusIcon } from 'lucide-react';
 import { useIsAllowed } from '@/hooks';
 
 interface ICreateDrawerProps {
@@ -31,12 +32,17 @@ const Create: React.FC<ICreateDrawerProps> = ({ module }) => {
     <When condition={!!isCreateAllowed}>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button>Create {module}</Button>
+          <Button className='flex items-center gap-2'>
+            <PlusIcon/>
+            Create {module}
+          </Button>
         </DrawerTrigger>
         <DrawerContent className="px-6 pt-6">
           <Card className="w-full relative">
             <CardHeader>
-              <CardTitle>Create {module}</CardTitle>
+              <CardTitle>
+                Create {module}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Suspense fallback={<Skeleton isLoading />}>

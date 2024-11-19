@@ -169,7 +169,7 @@ const ApiKey: React.FC<{
             size="icon"
             onClick={() => handleCopy(key)}
           >
-            <CopyIcon className="h-4 w-4" />
+            <CopyIcon />
             <span className="sr-only">Copy API Key</span>
           </Button>
           <Button
@@ -183,7 +183,7 @@ const ApiKey: React.FC<{
             isLoading={deletingApiKey}
             className="text-destructive"
           >
-            <Trash2Icon className="h-4 w-4" />
+            <Trash2Icon />
             <span className="sr-only">Delete API Key</span>
           </Button>
         </div>

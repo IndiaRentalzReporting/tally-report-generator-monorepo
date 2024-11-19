@@ -78,8 +78,8 @@ const Read: React.FC = () => {
           </div>
           <Link to={`/dashboard/Reports/Update/${report.id}`}>
             <Button variant="destructive" className='flex gap-2 items-center w-min ml-auto'>
-                <ExternalLink size={20} />
-                <span className='text-sm'>Edit</span>
+              <ExternalLink />
+              <span className='text-sm'>Edit</span>
             </Button>
           </Link>
           <Filters
