@@ -3,9 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
   },
   "include": ["src", "**/*.ts", "**/*.js", ".eslintrc.cjs"]
 }
