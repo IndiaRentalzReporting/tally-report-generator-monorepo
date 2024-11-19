@@ -12,7 +12,7 @@ import jwt from 'jsonwebtoken';
 import TenantService from './tenant.service';
 import { authDb } from '../models/auth/index';
 import config from '@/config';
-import DashboardService from './DashboardService';
+import DashboardService from './dashboard.service';
 import { UserInsert, UserSelect } from '@/types/user';
 
 class UserService extends BaseUserService {
@@ -22,30 +22,14 @@ class UserService extends BaseUserService {
 
   public async findOne(
     data: Partial<AuthUserSelect>
-  ): Promise<NonNullable<Express.User>> {
+  ): Promise<AuthUserSelect> {
     const authUser = await super.findOne(data, {
       with: {
         tenant: true
       }
     }) as AuthDetailedUser;
 
-    const { db_name, db_username, db_password } = await TenantService.findOne(
-      { id: authUser.tenant_id }
-    );
-
-    if (!db_name || !db_username || !db_password) {
-      throw new BadRequestError('Tenant database error, missing credentials');
-    }
-
-    const DSI = new DashboardService({
-      db_username,
-      db_password,
-      db_name
-    });
-    const dashboardUser = await DSI.findUser({ id: authUser.id });
-    await DSI.terminateConnection();
-
-    return Object.assign(authUser, dashboardUser);
+    return authUser;
   }
 
   public async createOne(data: UserInsert): Promise<AuthUserSelect> {
@@ -147,7 +131,7 @@ class UserService extends BaseUserService {
     }
   }
 
-  public async verifyJwtToken(token: string): Promise<UserSelect> {
+  public async verifyJwtToken(token: string): Promise<AuthUserSelect> {
     try {
       const { SMTP_SECRET } = config;
       const { id } = jwt.verify(token, SMTP_SECRET) as jwt.JwtPayload;

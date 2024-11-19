@@ -1,18 +1,15 @@
 import { randomBytes } from 'crypto';
 import { BadRequestError, CustomError, ReadError } from '@trg_package/errors';
-import bcrypt from 'bcrypt';
 import {
   TenantInsert,
   TenantSelect,
-  UserInsert,
   UserSelect
 } from '@trg_package/schemas-auth/types';
-import { Request } from 'express';
 import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
 import UserService from './user.service';
 import TenantService from './tenant.service';
 import { RegisterUser } from '@/types/user';
-import DashboardService from './DashboardService';
+import DashboardService from './dashboard.service';
 import { migrateDashboardSchema } from '@/models/dashboard/seed/migrate';
 
 class AuthService {
@@ -85,22 +82,6 @@ class AuthService {
       tenant_id: tenant.id,
       status: 'inactive'
     });
-  }
-
-  public static async signIn(
-    data: Pick<UserInsert, 'email' | 'password'>
-  ): Promise<Request['user']> {
-    const { email, password } = data;
-    const user = await UserService.findOne({
-      email
-    });
-
-    const doesPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!doesPasswordMatch) {
-      throw new BadRequestError('Wrong Password');
-    }
-
-    return user;
   }
 
   static async generateTempPassword(length: number): Promise<string> {
