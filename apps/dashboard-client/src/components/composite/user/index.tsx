@@ -1,6 +1,5 @@
 import {
-  ChevronsUpDown,
-  Computer, CreditCard, KeyIcon, LogOut, Moon, Sun, UserIcon, Users
+  ChevronsUpDown, CreditCard, KeyIcon, LogOut, UserIcon, Users
 } from 'lucide-react';
 import {
   Button,
@@ -25,6 +24,7 @@ import {
 } from '@trg_package/vite/components';
 import { useAuth, useTheme } from '@trg_package/vite/providers';
 import ApiKey from './ApiKey';
+import ToggleTheme from './ToggleTheme';
 
 const UserSettings = () => {
   const { setTheme } = useTheme();
@@ -37,7 +37,9 @@ const UserSettings = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <UserIcon className='!h-5 !w-5'/>
+              <div>
+                <UserIcon />
+              </div>
               <span className='flex items-center justify-between gap-2 w-full'>
                 {user?.first_name}
                 <ChevronsUpDown/>
@@ -55,16 +57,16 @@ const UserSettings = () => {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Users className="mr-2 h-4 w-4" />
+          <Users className="mr-2 !h-4 !w-4" />
           <span>Switch Team</span>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <CreditCard className="mr-2 h-4 w-4" />
+          <CreditCard className="mr-2 !h-4 !w-4" />
           <span>Billing</span>
         </DropdownMenuItem>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <KeyIcon className="mr-2 h-4 w-4"/>
+            <KeyIcon className="mr-2 !h-4 !w-4"/>
             API Keys
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
@@ -75,35 +77,7 @@ const UserSettings = () => {
         <DropdownMenuGroup>
           <DropdownMenuLabel>Preferences</DropdownMenuLabel>
           <DropdownMenuItem>
-            <div className="flex items-center justify-between w-full">
-              <span>Theme</span>
-              <div className="flex space-x-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setTheme('light')}
-                >
-                  <Sun className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setTheme('dark')}
-                >
-                  <Moon className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => setTheme('system')}
-                >
-                  <Computer className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+            <ToggleTheme/>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <div className="flex items-center justify-between w-full">
@@ -132,7 +106,7 @@ const UserSettings = () => {
             variant="default"
             className="w-full"
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="mr-2" />
             <span>Sign Out</span>
           </Button>
         </DropdownMenuItem>
