@@ -1,6 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
 import { Redis } from 'ioredis';
-import { AxiosResponse } from 'axios';
 import { DetailedUser as AuthDetailedUser, TenantSelect } from '@trg_package/schemas-auth/types';
 import { DetailedUser as DashDetailedUser, UserSelect } from '@trg_package/schemas-dashboard/types';
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
@@ -23,7 +22,6 @@ import { CompanyService } from '@trg_package/schemas-tally/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
 import { createClient, createUrl } from '@/models';
-import { authAxios } from '@/utils/authAxios';
 import * as dashboardSchemas from '@/models/schemas';
 import config from '@/config';
 import { decrypt } from '@/utils/crypto';
@@ -64,50 +62,6 @@ export class Initialization {
       retryStrategy: (times) => Math.min(times * 50, 2000),
     });
   };
-
-  public static async attachUser(req: Request, res: Response, next: NextFunction) {
-    try {
-      const connectSID = req.cookies['connect.sid'];
-
-      if (!connectSID) {
-        req.user = undefined;
-        return next();
-      }
-
-      const cacheKey = `user:${connectSID}`;
-
-      const cachedUser = await Initialization.getFromCache<CachedUser>(cacheKey);
-      if (cachedUser) {
-        const { user } = cachedUser;
-        req.user = user;
-        return next();
-      }
-
-      const { data: { user, isAuthenticated } }: AxiosResponse<{
-        user: AuthDetailedUser & DashDetailedUser;
-        isAuthenticated: boolean;
-      }> = await authAxios.get('/api/v1/auth/_status', {
-        headers: { cookie: req.headers.cookie },
-        timeout: 1000 * 60
-      });
-
-      if (!isAuthenticated || !user) {
-        throw new UnauthenticatedError('User not found or unauthorized');
-      }
-
-      req.user = user;
-
-      await Initialization.setCache(
-        cacheKey,
-        { user },
-        req.session?.cookie?.expires?.getTime()
-      );
-
-      return next();
-    } catch (error) {
-      return next(error);
-    }
-  }
 
   public static async initDatabase(req: Request, res: Response, next: NextFunction) {
     const { user } = req;
@@ -156,11 +110,7 @@ export class Initialization {
     const { client, connection } = createClient(
       `TENANT:${id}`,
       DASHBOARD_PG_URL,
-      dashboardSchemas,
-      {
-        DB_MIGRATING: false,
-        DB_SEEDING: false
-      }
+      dashboardSchemas
     );
 
     req.database = {

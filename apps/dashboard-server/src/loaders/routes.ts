@@ -18,7 +18,7 @@ import userMeRouter from '@/routes/userMe.route';
 
 const routesLoader = (app: Express) => {
   Initialization.initialize();
-  app.use(Initialization.attachUser);
+  // app.use(Initialization.attachUser);
   app.use(Initialization.initDatabase);
   app.use(Initialization.initServices);
   app.use(Initialization.attachApiKeyUserId);
