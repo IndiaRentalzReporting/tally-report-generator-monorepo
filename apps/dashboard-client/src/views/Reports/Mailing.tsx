@@ -26,9 +26,10 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
+  Calendar
 } from '@trg_package/vite/components';
-import { Calendar, CalendarIcon, MailIcon } from 'lucide-react';
+import { CalendarIcon, Settings } from 'lucide-react';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import moment from 'moment';
@@ -92,104 +93,114 @@ const EmailScheduling = () => {
   const [customInterval, setCustomInterval] = useState('1');
 
   return (
-    <div className="space-y-4 w-full max-w-sm mx-auto">
-      <div className="space-y-2">
-        <Label htmlFor="frequency">Frequency</Label>
-        <Select
-          value={frequency}
-          onValueChange={(value) => setFrequency(value as Frequency)}
-        >
-          <SelectTrigger id="frequency">
-            <SelectValue placeholder="Select frequency" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="daily">Daily</SelectItem>
-            <SelectItem value="weekly">Weekly</SelectItem>
-            <SelectItem value="monthly">Monthly</SelectItem>
-            <SelectItem value="custom">Custom</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="timeOfDay">Time of Day</Label>
-        <Input
-          id="timeOfDay"
-          type="time"
-          value={timeOfDay}
-          onChange={(e) => setTimeOfDay(e.target.value)}
-        />
-      </div>
-
-      {frequency === 'weekly' && (
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-lg'>Email Scheduling</CardTitle>
+        <CardDescription>
+          Set the email frequency and time of day for your report.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className='flex flex-col gap-4'>
         <div className="space-y-2">
-          <Label>Day of Week</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !selectedDate && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? moment(selectedDate).format('EEEE') : <span>Pick a day</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-              />
-            </PopoverContent>
-          </Popover>
+          <Label htmlFor="frequency">Frequency</Label>
+          <Select
+            value={frequency}
+            onValueChange={(value) => setFrequency(value as Frequency)}
+          >
+            <SelectTrigger id="frequency">
+              <SelectValue placeholder="Select frequency" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="custom">Custom</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
-
-      {frequency === 'monthly' && (
         <div className="space-y-2">
-          <Label>Day of Month</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !selectedDate && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? moment(selectedDate).format('do') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      )}
-
-      {frequency === 'custom' && (
-        <div className="space-y-2">
-          <Label htmlFor="customInterval">Interval (days)</Label>
+          <Label htmlFor="timeOfDay">Time of Day</Label>
           <Input
-            id="customInterval"
-            type="number"
-            min="1"
-            value={customInterval}
-            onChange={(e) => setCustomInterval(e.target.value)}
+            id="timeOfDay"
+            type="time"
+            value={timeOfDay}
+            onChange={(e) => setTimeOfDay(e.target.value)}
           />
         </div>
-      )}
-
-      <Button className="w-full" onClick={() => console.log({
-        frequency, timeOfDay, selectedDate, customInterval
-      })}>
-        Save Schedule
-      </Button>
-    </div>
+        {
+          frequency === 'weekly'
+          && <div className="space-y-2">
+              <Label>Day of Week</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !selectedDate && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? moment(selectedDate).format('do') : <span>Pick a day</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+        }
+        {
+          frequency === 'monthly'
+          && <div className="space-y-2">
+              <Label>Day of Month</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !selectedDate && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? moment(selectedDate).format('do') : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+        }
+        {
+          frequency === 'custom'
+          && <div className="space-y-2">
+              <Label htmlFor="customInterval">Interval (days)</Label>
+              <Input
+                id="customInterval"
+                type="number"
+                min="1"
+                value={customInterval}
+                onChange={(e) => setCustomInterval(e.target.value)}
+              />
+            </div>
+        }
+        <Button className="w-full" onClick={() => console.log({
+          frequency, timeOfDay, selectedDate, customInterval
+        })}>
+          Save Schedule
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -197,8 +208,8 @@ const Mailing: React.FC = () => (
     <Dialog>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
-          <MailIcon/>
-          <span>Mailing</span>
+          <Settings/>
+          <span>Settings</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[475px]">
