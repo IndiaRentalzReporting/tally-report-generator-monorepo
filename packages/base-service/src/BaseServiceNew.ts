@@ -50,6 +50,22 @@ export class BaseServiceNew<
     }
   }
 
+  public async createMany(data: T['$inferInsert'][]): Promise<T['$inferSelect'][]> {
+    try {
+      const entity = await this.dbClient
+        .insert(this.schema)
+        .values(data)
+        .returning();
+
+      if (!entity) throw new CreateError(this.entity, data);
+
+      return entity;
+    } catch (e) {
+      console.error(e);
+      throw new CreateError(this.entity, data);
+    }
+  }
+
   public async findMany(
     data: Partial<T['$inferSelect']> = {},
     extra?: Omit<

@@ -14,6 +14,24 @@ export class ReportService extends BaseServiceNew<
     super(db, ReportSchema, db.query.ReportSchema);
   }
 
+  public async findMany(data?:Partial<typeof this.schema.$inferSelect>) {
+    const reports = await super.findMany(data,{
+      with: {
+        access: true,
+        schedule: {
+          with: {
+            users: {
+              with: {
+                user: true
+              }
+            }
+          }
+        }
+      }
+    });
+    return reports;
+  }
+
   public async getTableQuery(
     tableId: Pick<(typeof ReportSchema)['$inferSelect'], 'baseEntity'>,
     tableNames: string[] | null = null
