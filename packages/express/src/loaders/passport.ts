@@ -4,7 +4,7 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
-import AuthService from '../services/AuthService';
+import AuthService from '../services/auth.service';
 import UserService from '../services/user.service';
 
 export const passportLoader = (app: Express) => {

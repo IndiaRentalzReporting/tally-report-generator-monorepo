@@ -68,7 +68,7 @@ export const createUpdateReportColumn = (
         variant="ghost"
         onClick={() => removeColumn(column.column.id)}
       >
-        <Trash color="red" className="h-4 w-4" />
+        <Trash color="red" />
       </Button>
     </div>
   ),

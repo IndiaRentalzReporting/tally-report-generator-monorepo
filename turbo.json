@@ -10,7 +10,23 @@
     "MONGO_DATABASE",
     "MONGO_PASSWORD",
     "MONGO_URL",
-    "SESSION_SECRET"
+    "SESSION_SECRET",
+    "AUTH_PG_URL",
+    "DASHBOARD_PG_HOST",
+    "DASHBOARD_PG_PORT",
+    "DASHBOARD_PG_PASSWORD",
+    "AUTH_PG_HOST",
+    "AUTH_PG_PORT",
+    "AUTH_PG_PASSWORD",
+    "AUTH_PG_USER",
+    "AUTH_PG_DATABASE",
+    "AUTH_PG_URL",
+    "DASHBOARD_PG_HOST",
+    "DASHBOARD_PG_PORT",
+    "DASHBOARD_PG_PASSWORD",
+    "DASHBOARD_PG_USER",
+    "DASHBOARD_PG_DATABASE",
+    "DASHBOARD_PG_URL"
   ],
   "tasks": {
     "@trg_app/auth-client#build": {
@@ -28,6 +44,7 @@
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": [
         "PORT",
+
         "SUPERUSER_PG_HOST",
         "SUPERUSER_PG_PORT",
         "SUPERUSER_PG_PASSWORD",
@@ -35,12 +52,11 @@
         "SUPERUSER_PG_DATABASE",
         "SUPERUSER_PG_URL",
 
-        "AUTH_PG_HOST",
-        "AUTH_PG_PORT",
-        "AUTH_PG_PASSWORD",
-        "AUTH_PG_USER",
-        "AUTH_PG_DATABASE",
-        "AUTH_PG_URL"
+        "SMTP_SECRET",
+        "SMTP_USER",
+        "SMTP_HOST",
+        "SMTP_PASS",
+        "SMTP_PORT"
       ]
     },
     "@trg_app/dashboard-server#build": {
@@ -48,12 +64,11 @@
       "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": [
         "PORT",
-        "SMTP_SECRET",
-        "SMTP_HOST",
-        "SMTP_PORT",
-        "SMTP_USER",
-        "SMTP_PASS",
-        "MAIL_FROM"
+
+        "ENCRYPTION_KEY",
+
+        "REDIS_HOST",
+        "REDIS_PORT"
       ]
     },
     "build": {

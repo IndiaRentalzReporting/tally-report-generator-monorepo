@@ -28,7 +28,9 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@trg_package/vite/components';
-import { CalendarIcon, FilterX, PlusCircle } from 'lucide-react';
+import {
+  CalendarIcon, FilterIcon, FilterX
+} from 'lucide-react';
 import { GeneratedReportFilters, RuntimeFilters } from '@trg_package/schemas-reporting/types';
 import moment from 'moment';
 
@@ -78,7 +80,10 @@ const Filters: React.FC<{
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button variant="secondary" className='flex gap-2 items-center w-min'> <PlusCircle/> Filters</Button>
+        <Button variant="secondary" className='flex gap-2 items-center w-min'>
+          <FilterIcon />
+          Filters
+        </Button>
       </DrawerTrigger>
       <DrawerContent className="px-6 pt-6">
         <DrawerHeader className="px-0 hidden">
@@ -108,7 +113,7 @@ const Filters: React.FC<{
                 onClick={handleRemoveFilters}
                 disabled={!Object.entries(localFiltersState).length}
               >
-                <FilterX size={20} />
+                <FilterX />
                 <span className='text-sm'>Clear Filters</span>
               </Button>
             </div>
@@ -155,7 +160,7 @@ const Filters: React.FC<{
                                   variant="outline"
                                   className="justify-start text-left font-normal overflow-x-auto"
                                 >
-                                  <CalendarIcon className="mr-2 h-4 min-w-4" />
+                                  <CalendarIcon className="mr-2" />
                                   {(localFiltersState[filter.fieldName] as {
                                     from: string;
                                     to: string

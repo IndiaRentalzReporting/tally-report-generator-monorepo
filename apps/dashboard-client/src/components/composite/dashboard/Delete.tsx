@@ -67,7 +67,6 @@ const Delete: React.FC<IDeleteEntityProps> = ({
           <Then>
             <Trash
               className="text-red-500 cursor-pointer"
-              size={20}
               onClick={() => {
                 toast({
                   variant: 'destructive',
@@ -86,12 +85,12 @@ const Delete: React.FC<IDeleteEntityProps> = ({
             />
           </Then>
           <Else>
-            <Loader2 size={20} className='animate-spin'/>
+            <Loader2 className='animate-spin'/>
           </Else>
         </If>
       </Then>
       <Else>
-        <Minus />
+        <Minus/>
       </Else>
     </If>
   );

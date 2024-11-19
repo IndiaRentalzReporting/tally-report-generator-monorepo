@@ -12,19 +12,14 @@ const EnvSchema = z.object({
   DOMAIN: z.string(),
   TLD: z.string(),
 
-  PORT: z.coerce.number(),
-
-  MAIL_FROM: z.string(),
-  SMTP_SECRET: z.string(),
-  SMTP_PASS: z.string(),
-  SMTP_HOST: z.string(),
-  SMTP_PORT: z.coerce.number(),
-  SMTP_USER: z.string(),
-
-  ENCRYPTION_KEY: z.string(),
+  AUTH_PG_URL: z.string(),
 
   DASHBOARD_PG_HOST: z.string(),
   DASHBOARD_PG_PORT: z.coerce.number(),
+
+  PORT: z.coerce.number(),
+
+  ENCRYPTION_KEY: z.string(),
 
   REDIS_HOST: z.string(),
   REDIS_PORT: z.coerce.number(),

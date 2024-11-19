@@ -31,9 +31,9 @@ const Sidebar: React.FC = () => {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton>
+            <SidebarMenuButton asChild>
               <NavLink to="/" className="flex items-center gap-2 font-semibold">
-                <Package2 />
+                <div><Package2/></div>
                 <span>{tenant}</span>
               </NavLink>
             </SidebarMenuButton>

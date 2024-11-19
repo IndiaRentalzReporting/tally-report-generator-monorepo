@@ -1,10 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
-import {
-  ArrowUpDown, Check, Minus, X
-} from 'lucide-react';
-import {
-  Button, Else, If, Then
-} from '@trg_package/vite/components';
+import { Check, Minus, X } from 'lucide-react';
+import { Else, If, Then } from '@trg_package/vite/components';
 import Action from '@/components/composite/dashboard/Action';
 import { SortingButton } from '@/components/composite/SortingButton';
 import { FormState } from './interface';
@@ -18,16 +14,7 @@ export const columns: ColumnDef<FormState>[] = [
   {
     id: 'Module Privacy',
     accessorKey: 'isPrivate',
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        className="translate-x-[-10px]"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Private
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: ({ column }) => <SortingButton column={column} label="Private" />,
     cell: ({ cell }) => (
       <If condition={!!cell.getValue() as boolean}>
         <Then>

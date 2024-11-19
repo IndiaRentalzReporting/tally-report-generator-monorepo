@@ -33,7 +33,7 @@ const Conditions: React.FC = () => {
       <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
         Conditions
         <Button size="sm" onClick={() => addCondition()} variant="ghost">
-          <PlusCircle className="w-4 h-4 mr-1" />
+          <PlusCircle className="mr-1 !h-4 !w-4"/>
         </Button>
       </h3>
       <div className="flex flex-col gap-6">
@@ -79,7 +79,7 @@ const ConditionItem: React.FC<{
 
   return (
     <div className="flex items-center gap-6">
-      <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 flex-grow">
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 flex-grow">
         <Select
           value={condition.column.displayName}
           onValueChange={(id) => {
@@ -147,7 +147,7 @@ const ConditionItem: React.FC<{
                           variant="outline"
                           className={`justify-start text-left font-normal ${!condition.params && 'text-muted-foreground'} overflow-x-auto`}
                         >
-                          <CalendarIcon className="mr-2 h-4 min-w-4" />
+                          <CalendarIcon className="mr-2" />
                           {
                             condition.params
                               ? moment(condition.params[param as keyof typeof values]).format('ll')
@@ -207,7 +207,7 @@ const ConditionItem: React.FC<{
         onClick={onRemove}
         className="bg-red-500 m-0 text-white hover:text-black flex-shrink-0"
       >
-        <TrashIcon className="w-4 h-4 mr-1" />
+        <TrashIcon className="mr-1" />
       </Button>
     </div>
   );

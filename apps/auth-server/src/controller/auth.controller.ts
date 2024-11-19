@@ -7,7 +7,7 @@ import {
 import { BadRequestError, NotFoundError, UnauthenticatedError } from '@trg_package/errors';
 import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
 import Mail from 'nodemailer/lib/mailer';
-import AuthService from '../services/AuthService';
+import AuthService from '../services/auth.service';
 import config from '@/config';
 import { sendMail } from '@/email';
 import UserService from '@/services/user.service';

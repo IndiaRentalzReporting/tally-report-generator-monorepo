@@ -14,9 +14,15 @@ userMeRouter.patch(
     body: UserSelectSchema.pick({
       first_name: true,
       last_name: true,
-      role_id: true,
-      status: true,
-    }).partial(),
+    }).extend({
+      status: UserSelectSchema.shape.status.refine(
+        (status) => status === undefined || status === 'active',
+        {
+          message: 'Status can only be set to active.',
+          path: ['status'],
+        }
+      )
+    }).strict().partial()
   }),
   updateOne
 );

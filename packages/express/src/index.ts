@@ -12,15 +12,14 @@ import cookieParser from 'cookie-parser';
 import config from './config';
 import { sessionsLoader } from './loaders/sessions';
 import { removePrivate } from './middleware/removePrivate';
+import { passportLoader } from './loaders/passport';
 
 const { NODE_ENV, DOMAIN, TLD } = config;
 
 export const expressLoader = async ({
-  routesLoader,
-  passportLoader
+  routesLoader
 }: {
   routesLoader: (app: Express) => void;
-  passportLoader?: (app: Express) => void;
 }): Promise<Express> => {
   const app = express();
 
@@ -40,9 +39,7 @@ export const expressLoader = async ({
 
   sessionsLoader(app);
 
-  if (passportLoader) {
-    passportLoader(app);
-  }
+  passportLoader(app);
 
   routesLoader(app);
 

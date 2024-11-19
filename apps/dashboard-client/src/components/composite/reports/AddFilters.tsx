@@ -14,7 +14,7 @@ const Filters: React.FC = () => {
       <h3 className="flex gap-2 items-center text-lg font-semibold mb-2">
         <span>Filters</span>
         <Button size="sm" onClick={() => addFilter()} variant="ghost">
-          <PlusCircle className="w-4 h-4 mr-1" />
+          <PlusCircle className="mr-1 !h-4 !w-4" />
         </Button>
       </h3>
       <div className='flex flex-col gap-6'>
@@ -55,7 +55,7 @@ const FilterComponent: React.FC<{
   });
 
   return (
-    <div className="grid grid-cols-[2fr_2fr_auto] gap-6">
+    <div className="grid grid-cols-[2fr_2fr_auto] gap-4">
       <Select
         value={filter.column.displayName}
         onValueChange={(displayName) => {
@@ -105,7 +105,7 @@ const FilterComponent: React.FC<{
         onClick={removeFilter}
         className="bg-red-500 text-white hover:text-black"
       >
-        <TrashIcon className="w-4 h-4 mr-1" />
+        <TrashIcon className="mr-1" />
       </Button>
     </div>
   );

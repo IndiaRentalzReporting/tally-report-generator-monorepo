@@ -40,7 +40,7 @@ const Update: React.FC<IUpdateEntityProps> = ({
       <Then>
         <Drawer>
           <DrawerTrigger asChild>
-            <Edit size={20} className="text-green-500" />
+            <Edit className="text-green-500" />
           </DrawerTrigger>
           <DrawerContent className="px-6 pt-6">
             <Card className="w-full relative">
@@ -63,7 +63,7 @@ const Update: React.FC<IUpdateEntityProps> = ({
         </Drawer>
       </Then>
       <Else>
-        <Minus />
+        <Minus/>
       </Else>
     </If>
   );
