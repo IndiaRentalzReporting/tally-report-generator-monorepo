@@ -32,10 +32,10 @@ import { Calendar, CalendarIcon, MailIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import moment from 'moment';
+import { cn } from '@trg_package/vite/lib/utils';
 import { services as userServices } from '@/services/Users';
 import { updateAccess } from '@/services/Reports';
 import { useReports } from '@/providers/ReportsProvider';
-import { cn } from '@trg_package/vite/lib/utils';
 
 const ReportAccess: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);

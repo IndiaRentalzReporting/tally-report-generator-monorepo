@@ -6,7 +6,12 @@
     "dev": "dotenv -- turbo dev --concurrency=13",
     "lint": "dotenv -- turbo lint --concurrency=13",
     "lint:fix": "dotenv -- turbo lint --concurrency=13 -- --fix",
-    "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json"
+    "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json",
+    "db-auth:generate": "dotenv -- npm run db-auth:generate -w apps/auth-server",
+    "db-auth:migrate": "dotenv -- npm run db-auth:migrate -w apps/auth-server",
+    "db-auth:studio": "dotenv -- npm run db-auth:studio -w apps/auth-server",
+    "db-dashboard:generate": "dotenv -- npm run db-dashboard:generate -w apps/dashboard-server",
+    "db-dashboard:studio": "dotenv -- npm run db-dashboard:studio -w apps/dashboard-server"
   },
   "dependencies": {
     "dotenv-cli": "^7.4.2"
