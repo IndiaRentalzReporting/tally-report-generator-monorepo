@@ -8,7 +8,6 @@ import {
   FilterValueSchema
 } from '@trg_package/schemas-reporting/types';
 import z from 'zod';
-import { validateReport } from '@/middlewares/validateReport';
 import {
   createOne,
   deleteOne,
@@ -18,9 +17,9 @@ import {
   getReportData,
   getReportFilters,
   getSelectData,
-  readAll,
-  updateOne
+  readAll
 } from '../controller/report.controller';
+import reportUpdateRouter from './reportUpdate.route';
 
 const reportRouter = Router();
 
@@ -44,17 +43,7 @@ reportRouter.get(
   readAll
 );
 
-reportRouter.patch(
-  '/update/:id',
-  validateSchema({
-    body: ReportSelectSchema.partial(),
-    params: ReportSelectSchema.pick({
-      id: true
-    })
-  }),
-  validateReport,
-  updateOne
-);
+reportRouter.use('/update',reportUpdateRouter);
 
 reportRouter.delete(
   '/delete/:id',

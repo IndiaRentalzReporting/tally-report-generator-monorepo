@@ -8,7 +8,11 @@ import {
   RuntimeFilters,
   ColumnSelect,
   GeneratedReportData,
-  GeneratedReportColumns
+  GeneratedReportColumns,
+  ReportAccessInsert,
+  ReportExportScheduleInsert,
+  ReportExportScheduleSelect,
+  ReportAccessSelect
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
@@ -170,13 +174,12 @@ export const getReportData = async (
       pageSize
     } = req.query;
 
-    let { whereQuery,havingQuery } = Object.entries(filters??{}).length>0 && filters? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
+    let { whereQuery,havingQuery } = Object.entries(filters ?? {}).length > 0 && filters ? await getFilterQuery(filters,queryConfig.filters ?? {}) : { whereQuery: '',havingQuery: '' };
 
-    if(whereQuery!=='')
-    {
-      whereQuery = queryConfig.dataSource.match(/\b WHERE \b/)?` AND ${whereQuery}`:` WHERE ${whereQuery}`;
+    if (whereQuery !== '') {
+      whereQuery = queryConfig.dataSource.match(/\b WHERE \b/) ? ` AND ${whereQuery}` : ` WHERE ${whereQuery}`;
     }
-   
+
     const limitQuery = pageIndex || pageSize ? `LIMIT ${pageSize} OFFSET ${(pageSize * (pageIndex))}` : '';
     const query = queryConfig.dataSource.replace('{WHERE}',whereQuery).replace('{HAVING}',havingQuery);
     const data = await req.services.report.runConfigQuery<Array<GeneratedReportData>>(query.replace('{LIMIT}',limitQuery));
@@ -246,4 +249,49 @@ export const getReportFilters = async (
   } catch (e) {
     return next(e);
   }
+};
+
+export const updateAccess = async (
+  req : Request<Pick<ReportSelect,'id'>,object,{ users:Array<ReportAccessInsert['userId']> }>,
+  res : Response<{ reportAccess : ReportAccessSelect[] }>,
+  next : NextFunction
+) => {
+  const { id: reportId } = req.params;
+
+  const { users } = req.body;
+  const data : ReportAccessInsert[] = [];
+
+  users.forEach((element) => {
+    data.push({
+      reportId,
+      userId: element
+    });
+  });
+  try {
+    await req.services.reportAccess.deleteOne({ reportId });
+  } catch (e) {
+    const reportAccess = await req.services.reportAccess.createMany(data);
+    return res.json({ reportAccess });
+  }
+};
+
+export const updateSchedule = async (
+  req : Request<Pick<ReportSelect,'id'>,object,{ schedule : ReportExportScheduleInsert }>,
+  res : Response<{ schedule : ReportExportScheduleSelect }>,
+  next : NextFunction
+) => {
+  const { id: reportId } = req.params;
+
+  const { schedule } = req.body;
+
+  let reportSchedule : ReportExportScheduleSelect;
+  schedule.reportId = reportId;
+  try {
+    await req.services.reportExportSchedule.findOne({ reportId });
+    reportSchedule = await req.services.reportExportSchedule.updateOne({ reportId },schedule);
+  } catch (e) {
+    reportSchedule = await req.services.reportExportSchedule.createOne(schedule);
+  }
+
+  return res.json({ schedule: reportSchedule });
 };
