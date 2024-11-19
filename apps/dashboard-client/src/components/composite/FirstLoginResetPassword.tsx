@@ -21,7 +21,8 @@ import {
   DialogFooter,
   Button
 } from '@trg_package/vite/components';
-import { services as userServices } from '@/services/Users';
+import { useState } from 'react';
+import { services as userMeServices } from '@/services/UserMe';
 
 const formSchema = UserSelectSchema.pick({ password: true }).extend({
   confirmPassword: UserSelectSchema.shape.password
@@ -29,24 +30,21 @@ const formSchema = UserSelectSchema.pick({ password: true }).extend({
 
 type State = z.infer<typeof formSchema>;
 const FirstLoginResetPassword = () => {
+  const [open, setOpen] = useState(true);
+
   const {
     resetPassword: {
       mutation: resetPasswordMutation,
       isLoading: isResettingPassword
     },
-    user
   } = useAuth();
 
   const queryClient = useQueryClient();
   const { mutateAsync: skipResetPassword, isPending: isSkippingResetPassword } = useMutation({
-    mutationFn: () => {
-      if (user) {
-        userServices.updateOne({ id: user.id }, { status: 'active' });
-      }
-      throw new Error('User does not exist');
-    },
+    mutationFn: () => userMeServices.updateOne({ status: 'active' }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      setOpen(false);
     }
   });
 
@@ -55,12 +53,13 @@ const FirstLoginResetPassword = () => {
   });
 
   const handleSubmit = async (values: State) => {
-    resetPasswordMutation(values);
+    await resetPasswordMutation(values);
     form.reset();
+    setOpen(false);
   };
 
   return (
-    <Dialog defaultOpen>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         onInteractOutside={(e) => e.preventDefault()}
         className="sm:max-w-[425px]"
@@ -116,7 +115,7 @@ const FirstLoginResetPassword = () => {
               <Button
                 className="w-full"
                 isLoading={isResettingPassword}
-                type="submit"
+                type="button"
               >
                 Reset Password
               </Button>

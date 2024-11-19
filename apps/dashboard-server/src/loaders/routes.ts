@@ -14,6 +14,7 @@ import {
 } from '@/middlewares';
 import reportRouter from '@/routes/report.route';
 import companyRouter from '@/routes/company.route';
+import userMeRouter from '@/routes/userMe.route';
 
 const routesLoader = (app: Express) => {
   Initialization.initialize();
@@ -21,6 +22,8 @@ const routesLoader = (app: Express) => {
   app.use(Initialization.initDatabase);
   app.use(Initialization.initServices);
   app.use(Initialization.attachApiKeyUserId);
+
+  app.use('/api/v1/users/me', userMeRouter);
 
   app.use(attachModuleActionData);
   app.use(isRoleAllowed);
