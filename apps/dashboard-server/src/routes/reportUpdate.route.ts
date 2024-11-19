@@ -2,14 +2,13 @@ import { validateSchema } from '@trg_package/middlewares';
 import { ReportAccessInsertSchema, ReportExportScheduleInsertSchema, ReportSelectSchema } from '@trg_package/schemas-reporting/types';
 import { Router } from 'express';
 import z from 'zod';
-import { updateAccess, updateSchedule } from '@/controller/report.controller';
+import { updateAccess, updateOne, updateSchedule } from '@/controller/report.controller';
 import { validateReport } from '@/middlewares/validateReport';
-import { updateOne } from '@/controller/role.controller';
 
 const reportUpdateRouter = Router();
 
 reportUpdateRouter.patch(
-  '/update/:id',
+  '/:id',
   validateSchema({
     body: ReportSelectSchema.partial(),
     params: ReportSelectSchema.pick({
