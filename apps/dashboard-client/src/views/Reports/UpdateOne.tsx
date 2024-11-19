@@ -15,6 +15,7 @@ import Conditions from '@/components/composite/reports/AddConditions';
 import Filters from '@/components/composite/reports/AddFilters';
 import GroupBy from '@/components/composite/reports/AddGroupBy';
 import AvailableColumns from '@/components/composite/reports/AddColumns';
+import Mailing from './Mailing';
 
 const UpdateReport: React.FC = () => {
   const {
@@ -32,14 +33,22 @@ const UpdateReport: React.FC = () => {
   return (
     <Card>
       <CardHeader>
-        <div className='flex items-start justify-between'>
-          <div className='space-y-1.5'>
+        <div className='flex items-start gap-4 w-full'>
+          <div className='space-y-1.5 mr-auto'>
             <CardTitle>Update Report</CardTitle>
             <CardDescription>
               Update the existing report with the new settings.
             </CardDescription>
           </div>
-          <Button className='w-min' variant="secondary" onClick={() => updateReport()} isLoading={isUpdatingReport}>Update Report</Button>
+          <Mailing/>
+          <Button
+            className='flex items-center gap-2'
+            variant="secondary"
+            onClick={() => updateReport()}
+            isLoading={isUpdatingReport}
+          >
+            Save changes
+          </Button>
         </div>
       </CardHeader>
       <CardContent className="grid grid-cols-4 grid-rows-2 gap-6">

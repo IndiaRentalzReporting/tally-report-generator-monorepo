@@ -8,6 +8,7 @@ import {
 } from '@trg_package/schemas-reporting/types';
 import createAxiosClient from '@trg_package/vite/client';
 import { AxiosPromise } from 'axios';
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import { CrudServices } from '.';
 
 const reportsAxios = createAxiosClient(
@@ -67,3 +68,13 @@ export const getReportData = async (
 export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : Array<GeneratedReportFilters>
 }> => reportsAxios.get(`/read/reportFilters/${reportId}`);
+
+export const updateAccess = async (
+  reportId: ReportSelect['id'],
+  data: Array<UserSelect['id']>
+): AxiosPromise => {
+  const params = new URLSearchParams({
+    id: reportId
+  });
+  return reportsAxios.post('/update/access', data, { params });
+};
