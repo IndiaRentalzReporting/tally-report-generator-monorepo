@@ -25,11 +25,7 @@ export class ConnectionManager {
   public getOrCreateConnection<T extends Record<string, unknown>>(
     id: string,
     URL: string,
-    schema: T,
-    options: {
-      DB_MIGRATING: boolean;
-      DB_SEEDING: boolean;
-    }
+    schema: T
   ): { client: PostgresJsDatabase<T>; connection: postgres.Sql } {
     const existingPool = this.connectionPools.get(id);
 
@@ -43,7 +39,6 @@ export class ConnectionManager {
 
     try {
       const connection = postgres(URL, {
-        max: options.DB_MIGRATING || options.DB_SEEDING ? 1 : 10,
         idle_timeout: 1000 * 60 * 15, // Close idle connections after 5 minutes
         connect_timeout: 1000 * 60, // 30-second timeout for new connections
       });
