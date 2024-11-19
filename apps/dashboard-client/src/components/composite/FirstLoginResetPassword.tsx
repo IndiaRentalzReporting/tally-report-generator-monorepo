@@ -115,7 +115,7 @@ const FirstLoginResetPassword = () => {
               <Button
                 className="w-full"
                 isLoading={isResettingPassword}
-                type="button"
+                type="submit"
               >
                 Reset Password
               </Button>
