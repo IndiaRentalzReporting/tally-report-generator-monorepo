@@ -1,5 +1,5 @@
 {
-  "id": "9a607167-c8b3-496a-90a6-a1eac056af8b",
+  "id": "3ec6a69a-7560-4d7f-9276-4b09e64ed81e",
   "prevId": "aeb7df0c-6da3-4b09-b523-ed9ed07ed54f",
   "version": "7",
   "dialect": "postgresql",
@@ -2814,8 +2814,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.ReportExportSchedule": {
-      "name": "ReportExportSchedule",
+    "public.reportExportSchedule": {
+      "name": "reportExportSchedule",
       "schema": "",
       "columns": {
         "id": {
@@ -2828,12 +2828,6 @@
         "reportId": {
           "name": "reportId",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(512)",
           "primaryKey": false,
           "notNull": true
         },
@@ -2880,12 +2874,68 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ReportExportSchedule_reportId_reports_id_fk": {
-          "name": "ReportExportSchedule_reportId_reports_id_fk",
-          "tableFrom": "ReportExportSchedule",
+        "reportExportSchedule_reportId_reports_id_fk": {
+          "name": "reportExportSchedule_reportId_reports_id_fk",
+          "tableFrom": "reportExportSchedule",
           "tableTo": "reports",
           "columnsFrom": [
             "reportId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.reportScheduleUsers": {
+      "name": "reportScheduleUsers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "scheduleId": {
+          "name": "scheduleId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reportScheduleUsers_scheduleId_reportExportSchedule_id_fk": {
+          "name": "reportScheduleUsers_scheduleId_reportExportSchedule_id_fk",
+          "tableFrom": "reportScheduleUsers",
+          "tableTo": "reportExportSchedule",
+          "columnsFrom": [
+            "scheduleId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "reportScheduleUsers_userId_users_id_fk": {
+          "name": "reportScheduleUsers_userId_users_id_fk",
+          "tableFrom": "reportScheduleUsers",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
           ],
           "columnsTo": [
             "id"

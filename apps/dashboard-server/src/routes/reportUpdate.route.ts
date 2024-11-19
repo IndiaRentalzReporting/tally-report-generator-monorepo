@@ -1,5 +1,7 @@
 import { validateSchema } from '@trg_package/middlewares';
-import { ReportAccessInsertSchema, ReportExportScheduleInsertSchema, ReportSelectSchema } from '@trg_package/schemas-reporting/types';
+import {
+  ReportAccessInsertSchema, ReportExportScheduleInsertSchema, ReportScheduleUsersInsertSchema, ReportSelectSchema
+} from '@trg_package/schemas-reporting/types';
 import { Router } from 'express';
 import z from 'zod';
 import { updateAccess, updateOne, updateSchedule } from '@/controller/report.controller';
@@ -42,7 +44,8 @@ reportUpdateRouter.patch(
           }
           return true;
         },{ message: 'Custom Interval is required for custom frequency' }),
-    }).partial(),
+      users: z.array(ReportScheduleUsersInsertSchema.shape.userId).optional()
+    }),
     params: ReportSelectSchema.pick({
       id: true
     })

@@ -19,7 +19,8 @@ import {
   ColumnService,
   ReportService,
   ReportAccessService,
-  ReportExportScheduleService
+  ReportExportScheduleService,
+  ReportScheduleUsersService
 } from '@trg_package/schemas-reporting/services';
 import { CompanyService } from '@trg_package/schemas-tally/services';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
@@ -56,6 +57,7 @@ export interface DashboardServices {
   report: ReportService;
   reportAccess : ReportAccessService,
   reportExportSchedule : ReportExportScheduleService
+  reportScheduleUsers : ReportScheduleUsersService
 }
 
 export class Initialization {
@@ -193,6 +195,7 @@ export class Initialization {
       report: new ReportService(database.client),
       reportAccess: new ReportAccessService(database.client),
       reportExportSchedule: new ReportExportScheduleService(database.client),
+      reportScheduleUsers: new ReportScheduleUsersService(database.client)
     };
 
     req.services = services as Express.Request['services'];

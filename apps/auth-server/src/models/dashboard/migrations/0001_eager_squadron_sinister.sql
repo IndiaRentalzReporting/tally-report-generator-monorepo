@@ -10,16 +10,21 @@ CREATE TABLE IF NOT EXISTS "reportAccess" (
 	"userId" uuid NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "ReportExportSchedule" (
+CREATE TABLE IF NOT EXISTS "reportExportSchedule" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"reportId" uuid NOT NULL,
-	"email" varchar(512) NOT NULL,
 	"frequency" "exportFrequency" NOT NULL,
 	"time_of_day" time DEFAULT '00:00:00' NOT NULL,
 	"daysOfWeek" json DEFAULT '[1,2,3,4,5,6,7]'::json,
 	"daysOfMonth" json DEFAULT '[1]'::json NOT NULL,
 	"customInterval" integer,
 	"next_run" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "reportScheduleUsers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"scheduleId" uuid NOT NULL,
+	"userId" uuid NOT NULL
 );
 --> statement-breakpoint
 DO $$ BEGIN
@@ -35,7 +40,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "ReportExportSchedule" ADD CONSTRAINT "ReportExportSchedule_reportId_reports_id_fk" FOREIGN KEY ("reportId") REFERENCES "public"."reports"("id") ON DELETE cascade ON UPDATE cascade;
+ ALTER TABLE "reportExportSchedule" ADD CONSTRAINT "reportExportSchedule_reportId_reports_id_fk" FOREIGN KEY ("reportId") REFERENCES "public"."reports"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "reportScheduleUsers" ADD CONSTRAINT "reportScheduleUsers_scheduleId_reportExportSchedule_id_fk" FOREIGN KEY ("scheduleId") REFERENCES "public"."reportExportSchedule"("id") ON DELETE cascade ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "reportScheduleUsers" ADD CONSTRAINT "reportScheduleUsers_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -12,7 +12,9 @@ import {
   ReportAccessInsert,
   ReportExportScheduleInsert,
   ReportExportScheduleSelect,
-  ReportAccessSelect
+  ReportAccessSelect,
+  ReportScheduleUsersSelect,
+  ReportScheduleUsersInsert
 } from '@trg_package/schemas-reporting/types';
 import { BadRequestError, CustomError } from '@trg_package/errors';
 import { getFilterQuery, getQueryConfig } from '@/utils/queryBuilder';
@@ -270,22 +272,25 @@ export const updateAccess = async (
   try {
     await req.services.reportAccess.deleteOne({ reportId });
   } catch (e) {
+  } finally {
     const reportAccess = await req.services.reportAccess.createMany(data);
     return res.json({ reportAccess });
   }
 };
 
 export const updateSchedule = async (
-  req : Request<Pick<ReportSelect,'id'>,object,{ schedule : ReportExportScheduleInsert }>,
-  res : Response<{ schedule : ReportExportScheduleSelect }>,
+  req : Request<Pick<ReportSelect,'id'>,object,{ schedule : ReportExportScheduleInsert,users : Array<ReportScheduleUsersInsert['userId']> }>,
+  res : Response<{ schedule : ReportExportScheduleSelect,users:ReportScheduleUsersSelect[] }>,
   next : NextFunction
 ) => {
   const { id: reportId } = req.params;
 
-  const { schedule } = req.body;
+  const { schedule,users } = req.body;
 
   let reportSchedule : ReportExportScheduleSelect;
+  let scheduleUsers : ReportScheduleUsersSelect[] = [];
   schedule.reportId = reportId;
+  schedule.nextRun = new Date();
   try {
     await req.services.reportExportSchedule.findOne({ reportId });
     reportSchedule = await req.services.reportExportSchedule.updateOne({ reportId },schedule);
@@ -293,5 +298,18 @@ export const updateSchedule = async (
     reportSchedule = await req.services.reportExportSchedule.createOne(schedule);
   }
 
-  return res.json({ schedule: reportSchedule });
+  try {
+    await req.services.reportScheduleUsers.deleteOne({ scheduleId: reportSchedule.id });
+  } catch (e) {} finally {
+    const data : ReportScheduleUsersInsert[] = [];
+    users?.forEach((element) => {
+      data.push({
+        userId: element,
+        scheduleId: reportSchedule.id
+      });
+    });
+    if (data.length > 0) scheduleUsers = await req.services.reportScheduleUsers.createMany(data);
+  }
+
+  return res.json({ schedule: reportSchedule,users: scheduleUsers });
 };

@@ -17,12 +17,16 @@ export class ReportService extends BaseServiceNew<
   public async findMany(data?:Partial<typeof this.schema.$inferSelect>) {
     const reports = await super.findMany(data,{
       with: {
-        access: {
+        access: true,
+        schedule: {
           with: {
-            user: true
+            users: {
+              with: {
+                user: true
+              }
+            }
           }
-        },
-        schedule: true
+        }
       }
     });
     return reports;

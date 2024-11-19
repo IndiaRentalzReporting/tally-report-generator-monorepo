@@ -1,5 +1,5 @@
 import {
-  varchar, uuid, pgTable, pgEnum, json,
+  uuid, pgTable, pgEnum, json,
   timestamp , time , integer
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
@@ -12,7 +12,7 @@ export const ExportFrequency = pgEnum('exportFrequency', [
   'custom'
 ]);
 
-export const ReportExportScheduleSchema = pgTable('ReportExportSchedule', {
+export const ReportExportScheduleSchema = pgTable('reportExportSchedule', {
   id: uuid('id').primaryKey().defaultRandom(),
   reportId: uuid('reportId')
     .references(() => ReportSchema.id, {
@@ -20,13 +20,12 @@ export const ReportExportScheduleSchema = pgTable('ReportExportSchedule', {
       onUpdate: 'cascade'
     })
     .notNull(),
-  email: varchar('email',{ length: 512 }).notNull(),
   frequency: ExportFrequency('frequency').notNull(),
   timeOfDay: time('time_of_day').default('00:00:00').notNull(),
-  daysOfWeek: json('daysOfWeek').$type<number[]>().default([1, 2, 3, 4, 5, 6, 7]),
-  daysOfMonth: json('daysOfMonth').$type<number[]>().default([1]).notNull(),
+  daysOfWeek: json('daysOfWeek').$type<number[]>(),
+  daysOfMonth: json('daysOfMonth').$type<number[]>(),
   customInterval: integer('customInterval'),
-  nextRun: timestamp('next_run').notNull(), // Calculate dynamically
+  nextRun: timestamp('next_run').notNull(),
 });
 
 export type ReportExportScheduleInsert = typeof ReportExportScheduleSchema.$inferInsert;
