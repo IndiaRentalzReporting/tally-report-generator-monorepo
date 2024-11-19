@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS "reportExportSchedule" (
 	"reportId" uuid NOT NULL,
 	"frequency" "exportFrequency" NOT NULL,
 	"time_of_day" time DEFAULT '00:00:00' NOT NULL,
-	"daysOfWeek" json DEFAULT '[1,2,3,4,5,6,7]'::json,
-	"daysOfMonth" json DEFAULT '[1]'::json NOT NULL,
+	"daysOfWeek" json,
+	"daysOfMonth" json,
 	"customInterval" integer,
 	"next_run" timestamp NOT NULL
 );
