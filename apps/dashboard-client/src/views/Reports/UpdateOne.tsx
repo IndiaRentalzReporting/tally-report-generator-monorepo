@@ -15,7 +15,7 @@ import Conditions from '@/components/composite/reports/AddConditions';
 import Filters from '@/components/composite/reports/AddFilters';
 import GroupBy from '@/components/composite/reports/AddGroupBy';
 import AvailableColumns from '@/components/composite/reports/AddColumns';
-import Mailing from './Mailing';
+import Settings from './Settings';
 
 const UpdateReport: React.FC = () => {
   const {
@@ -40,7 +40,7 @@ const UpdateReport: React.FC = () => {
               Update the existing report with the new settings.
             </CardDescription>
           </div>
-          <Mailing/>
+          <Settings/>
           <Button
             className='flex items-center gap-2'
             variant="secondary"

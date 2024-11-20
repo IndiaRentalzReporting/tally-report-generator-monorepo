@@ -12,6 +12,7 @@ import {
   GeneratedReportFilters,
   ReportUserSelect
 } from '@trg_package/schemas-reporting/types';
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import { getFilterQuery } from '@/utils/queryBuilder';
 
 export const readAll = async (
@@ -191,22 +192,16 @@ export const getReportFilters = async (
 
 export const getUsersWithAccess = async (
   req : Request<Pick<ReportSelect,'id'>>,
-  res : Response<{ users : ReportUserSelect[] }>,
+  res : Response<{ users : Array<ReportUserSelect & { user: UserSelect }> }>,
   next : NextFunction
 ) => {
-  const { id: reportId } = req.params;
-  let users : ReportUserSelect[] = [];
   try {
-    users = await req.services.reportUser.findMany(
+    const { id: reportId } = req.params;
+    const users = await req.services.reportUser.findMany(
       { reportId },
-      {
-        with: {
-          user: true
-        }
-      }
-    );
-  } catch (e) {
-  } finally {
+    ) as Array<ReportUserSelect & { user: UserSelect }>;
     return res.json({ users });
+  } catch (error) {
+    return next(error);
   }
 };

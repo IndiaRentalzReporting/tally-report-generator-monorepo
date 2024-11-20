@@ -36,7 +36,7 @@ import moment from 'moment';
 import { cn } from '@trg_package/vite/lib/utils';
 import { ScheduleSelect } from '@trg_package/schemas-reporting/types';
 import { services as userServices } from '@/services/Users';
-import { updateAccess, updateSchedule } from '@/services/Reports';
+import { getUsersWithAccess, updateAccess, updateSchedule } from '@/services/Reports';
 import { useReports } from '@/providers/ReportsProvider';
 
 const ReportAccess: React.FC = () => {
@@ -87,6 +87,7 @@ const ReportAccess: React.FC = () => {
 };
 
 const EmailScheduling = () => {
+  const { report } = useReports();
   const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
   const [frequency, setFrequency] = useState<ScheduleSelect['frequency']>('daily');
   const [timeOfDay, setTimeOfDay] = useState('12:00');
@@ -94,15 +95,14 @@ const EmailScheduling = () => {
   const [customInterval, setCustomInterval] = useState('1');
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => userServices.read(),
-    select: (data) => data.data.users.map((user) => ({
+    queryFn: () => getUsersWithAccess(report.id),
+    select: (data) => data.data.users.map(({ user }) => ({
       label: `${user.first_name} ${user.last_name}`,
       value: user.id
     })),
     queryKey: ['Users', 'getAll']
   });
 
-  const { report } = useReports();
   const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
     mutationFn: () => updateSchedule(report.id, {
       users: selectedUsers,
