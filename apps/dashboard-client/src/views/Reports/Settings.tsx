@@ -31,7 +31,7 @@ import {
 } from '@trg_package/vite/components';
 import { CalendarIcon, Settings } from 'lucide-react';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import { cn } from '@trg_package/vite/lib/utils';
 import { ScheduleSelect } from '@trg_package/schemas-reporting/types';
@@ -41,6 +41,7 @@ import { useReports } from '@/providers/ReportsProvider';
 
 const ReportAccess: React.FC = () => {
   const { report } = useReports();
+  const queryClient = useQueryClient();
   const [selectedUsers, setSelectedUsers] = useState<Array<string>>(
     report.access.map((user) => user.userId)
   );
@@ -51,11 +52,14 @@ const ReportAccess: React.FC = () => {
       label: `${user.first_name} ${user.last_name}`,
       value: user.id
     })),
-    queryKey: ['Users', 'getAll']
+    queryKey: ['Users', 'getAll'],
   });
 
   const { mutateAsync: updateAccessMutation, isPending: isUpdatingAccess } = useMutation({
     mutationFn: () => updateAccess(report.id, { users: selectedUsers }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] });
+    }
   });
 
   return (
@@ -90,7 +94,8 @@ const ReportAccess: React.FC = () => {
 
 const EmailScheduling = () => {
   const { report } = useReports();
-  const [selectedUsers, setSelectedUsers] = useState(report.schedule.users.map((user) => user.id));
+  const queryClient = useQueryClient();
+  const [selectedUsers, setSelectedUsers] = useState(report.schedule.users.map((user) => user.userId));
   const [frequency, setFrequency] = useState(report.schedule.frequency);
   const [timeOfDay, setTimeOfDay] = useState(report.schedule.timeOfDay);
   const [selectedDate, setSelectedDate] = useState<Array<Date> | undefined>([new Date()]);
@@ -105,6 +110,11 @@ const EmailScheduling = () => {
     queryKey: ['Report', 'Users', 'getAll']
   });
 
+  console.log({
+    allUsers,
+    selectedUsers
+  });
+
   const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
     mutationFn: () => updateSchedule(report.id, {
       users: selectedUsers,
@@ -116,6 +126,9 @@ const EmailScheduling = () => {
         customInterval: Number(customInterval),
       }
     }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['Reports', 'getOne', report.id] });
+    }
   });
 
   return (
