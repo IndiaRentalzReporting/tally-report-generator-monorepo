@@ -1,20 +1,22 @@
 import { Express } from 'express';
-import roleRouter from '@/routes/role.route';
-import userRouter from '@/routes/user.route';
-import moduleRouter from '@/routes/module.route';
-import actionRouter from '@/routes/action.route';
-import permissionRouter from '@/routes/permission.route';
-import permissionActionRouter from '@/routes/permission_action.route';
-import apiKeyRouter from '@/routes/apiKey.route';
-import userTallyCompanyRouter from '@/routes/user_tallyCompany.route';
 import {
   attachModuleActionData,
   Initialization,
   isRoleAllowed
 } from '@/middlewares';
-import reportRouter from '@/routes/report.route';
-import companyRouter from '@/routes/company.route';
-import userMeRouter from '@/routes/userMe.route';
+import {
+  userMeRouter,
+  roleRouter,
+  userRouter,
+  apiKeyRouter,
+  reportRouter,
+  actionRouter,
+  moduleRouter,
+  companyRouter,
+  permissionRouter,
+  permissionActionRouter,
+  userTallyCompanyRouter
+} from '@/routes';
 
 const routesLoader = (app: Express) => {
   Initialization.initialize();

@@ -12,7 +12,7 @@ import Column from '@/components/composite/reports/UpdateColumn';
 export const columns: ColumnDef<FormState>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />,
+    header: ({ column }) => <SortingButton column={column} label="Name" />,
     cell: ({ row }) => {
       const report = row.original;
       return (
@@ -26,7 +26,7 @@ export const columns: ColumnDef<FormState>[] = [
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => <SortingButton column={column} label="Module Name" />
+    header: ({ column }) => <SortingButton column={column} label="Description" />
   },
   {
     id: 'Actions',

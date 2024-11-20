@@ -4,7 +4,8 @@ import {
   GeneratedReportFilters,
   ReportInsert,
   ReportSelect,
-  RuntimeFilters
+  RuntimeFilters,
+  ScheduleInsert
 } from '@trg_package/schemas-reporting/types';
 import createAxiosClient from '@trg_package/vite/client';
 import { AxiosPromise } from 'axios';
@@ -71,10 +72,15 @@ export const getReportFilters = async (reportId: string): AxiosPromise<{
 
 export const updateAccess = async (
   reportId: ReportSelect['id'],
-  data: Array<UserSelect['id']>
-): AxiosPromise => {
-  const params = new URLSearchParams({
-    id: reportId
-  });
-  return reportsAxios.post('/update/access', data, { params });
-};
+  data: {
+    users: Array<UserSelect['id']>
+  }
+): AxiosPromise => reportsAxios.patch(`/update/access/${reportId}`, data);
+
+export const updateSchedule = async (
+  reportId: ReportSelect['id'],
+  data: {
+    schedule: Omit<ScheduleInsert, 'reportId' | 'nextRun'>
+    users: Array<UserSelect['id']>
+  }
+): AxiosPromise => reportsAxios.patch(`/update/schedule/${reportId}`, data);

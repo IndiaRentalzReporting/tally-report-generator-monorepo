@@ -1,14 +1,13 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { ReportExportScheduleSchema } from '../schemas';
+import { ScheduleUserSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
 
-export class ReportExportScheduleService extends BaseServiceNew<
+export class ScheduleUserService extends BaseServiceNew<
   typeof reportingSchemas,
-  typeof ReportExportScheduleSchema
+  typeof ScheduleUserSchema
 > {
   constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
-    super(db, ReportExportScheduleSchema, db.query.ReportExportScheduleSchema);
+    super(db, ScheduleUserSchema, db.query.ScheduleUserSchema);
   }
-
 }

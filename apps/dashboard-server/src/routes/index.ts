@@ -1,0 +1,11 @@
+export { default as reportRouter } from './report.route';
+export { default as actionRouter } from './action.route';
+export { default as moduleRouter } from './module.route';
+export { default as companyRouter } from './company.route';
+export { default as userRouter } from './user.route';
+export { default as userMeRouter } from './userMe.route';
+export { default as roleRouter } from './role.route';
+export { default as permissionRouter } from './permission.route';
+export { default as permissionActionRouter } from './permission_action.route';
+export { default as userTallyCompanyRouter } from './user_tallyCompany.route';
+export { default as apiKeyRouter } from './apiKey.route';

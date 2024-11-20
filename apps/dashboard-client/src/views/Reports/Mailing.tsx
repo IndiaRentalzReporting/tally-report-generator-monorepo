@@ -26,15 +26,17 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
+  Calendar
 } from '@trg_package/vite/components';
-import { Calendar, CalendarIcon, MailIcon } from 'lucide-react';
+import { CalendarIcon, Settings } from 'lucide-react';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { cn } from '@trg_package/vite/lib/utils';
+import { ScheduleSelect } from '@trg_package/schemas-reporting/types';
 import { services as userServices } from '@/services/Users';
-import { updateAccess } from '@/services/Reports';
+import { updateAccess, updateSchedule } from '@/services/Reports';
 import { useReports } from '@/providers/ReportsProvider';
 
 const ReportAccess: React.FC = () => {
@@ -51,7 +53,7 @@ const ReportAccess: React.FC = () => {
 
   const { report } = useReports();
   const { mutateAsync: updateAccessMutation, isPending: isUpdatingAccess } = useMutation({
-    mutationFn: () => updateAccess(report.id, selectedUsers),
+    mutationFn: () => updateAccess(report.id, { users: selectedUsers }),
   });
 
   return (
@@ -84,112 +86,158 @@ const ReportAccess: React.FC = () => {
   );
 };
 
-type Frequency = 'daily' | 'weekly' | 'monthly' | 'custom';
 const EmailScheduling = () => {
-  const [frequency, setFrequency] = useState<Frequency>('daily');
+  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
+  const [frequency, setFrequency] = useState<ScheduleSelect['frequency']>('daily');
   const [timeOfDay, setTimeOfDay] = useState('12:00');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [customInterval, setCustomInterval] = useState('1');
 
+  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
+    queryFn: () => userServices.read(),
+    select: (data) => data.data.users.map((user) => ({
+      label: `${user.first_name} ${user.last_name}`,
+      value: user.id
+    })),
+    queryKey: ['Users', 'getAll']
+  });
+
+  const { report } = useReports();
+  const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
+    mutationFn: () => updateSchedule(report.id, {
+      users: selectedUsers,
+      schedule: {
+        frequency,
+        timeOfDay,
+        daysOfMonth: selectedDate ? [selectedDate.getDate()] : [],
+        daysOfWeek: selectedDate ? [selectedDate.getDay()] : [],
+        customInterval: Number(customInterval),
+      }
+    }),
+  });
+
   return (
-    <div className="space-y-4 w-full max-w-sm mx-auto">
-      <div className="space-y-2">
-        <Label htmlFor="frequency">Frequency</Label>
-        <Select
-          value={frequency}
-          onValueChange={(value) => setFrequency(value as Frequency)}
-        >
-          <SelectTrigger id="frequency">
-            <SelectValue placeholder="Select frequency" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="daily">Daily</SelectItem>
-            <SelectItem value="weekly">Weekly</SelectItem>
-            <SelectItem value="monthly">Monthly</SelectItem>
-            <SelectItem value="custom">Custom</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="timeOfDay">Time of Day</Label>
-        <Input
-          id="timeOfDay"
-          type="time"
-          value={timeOfDay}
-          onChange={(e) => setTimeOfDay(e.target.value)}
-        />
-      </div>
-
-      {frequency === 'weekly' && (
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-lg'>Mailing</CardTitle>
+        <CardDescription>
+          Set the users and the email frequency for your report.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className='flex flex-col gap-4'>
+        <Skeleton isLoading={fetchingUsers}>
+          <MultiSelect
+            options={allUsers}
+            values={selectedUsers}
+            onChange={setSelectedUsers}
+            title="Users"
+          />
+        </Skeleton>
         <div className="space-y-2">
-          <Label>Day of Week</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !selectedDate && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? moment(selectedDate).format('EEEE') : <span>Pick a day</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-              />
-            </PopoverContent>
-          </Popover>
+          <Label htmlFor="frequency">Frequency</Label>
+          <Select
+            value={frequency}
+            onValueChange={(value) => setFrequency(value as ScheduleSelect['frequency'])}
+          >
+            <SelectTrigger id="frequency">
+              <SelectValue placeholder="Select frequency" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="weekly">Weekly</SelectItem>
+              <SelectItem value="monthly">Monthly</SelectItem>
+              <SelectItem value="custom">Custom</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
-
-      {frequency === 'monthly' && (
         <div className="space-y-2">
-          <Label>Day of Month</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal',
-                  !selectedDate && 'text-muted-foreground'
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {selectedDate ? moment(selectedDate).format('do') : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      )}
-
-      {frequency === 'custom' && (
-        <div className="space-y-2">
-          <Label htmlFor="customInterval">Interval (days)</Label>
+          <Label htmlFor="timeOfDay">Time of Day</Label>
           <Input
-            id="customInterval"
-            type="number"
-            min="1"
-            value={customInterval}
-            onChange={(e) => setCustomInterval(e.target.value)}
+            id="timeOfDay"
+            type="time"
+            value={timeOfDay}
+            onChange={(e) => setTimeOfDay(e.target.value)}
           />
         </div>
-      )}
+        {
+          frequency === 'weekly'
+          && <div className="space-y-2">
+              <Label>Day of Week</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !selectedDate && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? moment(selectedDate).format('E') : <span>Pick a day</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                    captionLayout='dropdown-buttons'
 
-      <Button className="w-full" onClick={() => console.log({
-        frequency, timeOfDay, selectedDate, customInterval
-      })}>
-        Save Schedule
-      </Button>
-    </div>
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+        }
+        {
+          frequency === 'monthly'
+          && <div className="space-y-2">
+              <Label>Day of Month</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'w-full justify-start text-left font-normal',
+                      !selectedDate && 'text-muted-foreground'
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? moment(selectedDate).format('Do') : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={setSelectedDate}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+        }
+        {
+          frequency === 'custom'
+          && <div className="space-y-2">
+              <Label htmlFor="customInterval">Interval (days)</Label>
+              <Input
+                id="customInterval"
+                type="number"
+                min="1"
+                value={customInterval}
+                onChange={(e) => setCustomInterval(e.target.value)}
+              />
+            </div>
+        }
+        <Button
+          className='self-start mt-2'
+          onClick={() => updateScheduleMutation()}
+          isLoading={isUpdatingSchedule}
+          disabled={isUpdatingSchedule || fetchingUsers}
+        >
+          Save Schedule
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -197,11 +245,14 @@ const Mailing: React.FC = () => (
     <Dialog>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
-          <MailIcon/>
-          <span>Mailing</span>
+          <Settings/>
+          <span>Settings</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[475px]">
+        <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
+           className="sm:max-w-[475px]"
+        >
         <DialogHeader>
           <DialogTitle className='text-left'>Edit profile</DialogTitle>
           <DialogDescription className='text-left'>

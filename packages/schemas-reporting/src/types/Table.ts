@@ -3,4 +3,4 @@ export {
   TableInsertSchema,
   type TableSelect,
   TableSelectSchema
-} from '../schemas/tables';
+} from '@/schemas/tables';

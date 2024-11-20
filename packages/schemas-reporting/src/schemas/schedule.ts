@@ -12,7 +12,7 @@ export const ExportFrequency = pgEnum('exportFrequency', [
   'custom'
 ]);
 
-export const ReportExportScheduleSchema = pgTable('reportExportSchedule', {
+export const ScheduleSchema = pgTable('schedules', {
   id: uuid('id').primaryKey().defaultRandom(),
   reportId: uuid('reportId')
     .references(() => ReportSchema.id, {
@@ -28,7 +28,7 @@ export const ReportExportScheduleSchema = pgTable('reportExportSchedule', {
   nextRun: timestamp('next_run').notNull(),
 });
 
-export type ReportExportScheduleInsert = typeof ReportExportScheduleSchema.$inferInsert;
-export const ReportExportScheduleInsertSchema = createInsertSchema(ReportExportScheduleSchema);
-export type ReportExportScheduleSelect = typeof ReportExportScheduleSchema.$inferSelect;
-export const ReportExportScheduleSelectSchema = createSelectSchema(ReportExportScheduleSchema);
+export type ScheduleInsert = typeof ScheduleSchema.$inferInsert;
+export const ScheduleInsertSchema = createInsertSchema(ScheduleSchema);
+export type ScheduleSelect = typeof ScheduleSchema.$inferSelect;
+export const ScheduleSelectSchema = createSelectSchema(ScheduleSchema);

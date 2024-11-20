@@ -1,12 +1,23 @@
 import { validateSchema } from '@trg_package/middlewares';
 import {
-  ColumnInsertSchema, FilterValueSchema, ReportInsertSchema, ReportSelectSchema, TableSelectSchema
+  ColumnInsertSchema,
+  FilterValueSchema,
+  ReportInsertSchema,
+  ReportSelectSchema,
+  TableSelectSchema
 } from '@trg_package/schemas-reporting/types';
 import { Router } from 'express';
 import z from 'zod';
 import {
-  getAllColumns, getAllTables, getReportColumns, getReportData, getReportFilters, getSelectData, getUsersWithAccess, readAll
-} from '@/controller/report.controller';
+  getAllColumns,
+  getAllTables,
+  getReportColumns,
+  getReportData,
+  getReportFilters,
+  getSelectData,
+  getUsersWithAccess,
+  readAll
+} from '@/controller/report.controller/read';
 
 const reportReadRouter = Router();
 
@@ -17,6 +28,7 @@ reportReadRouter.get(
   }),
   readAll
 );
+
 reportReadRouter.get(
   '/columns/:tableId',
   validateSchema({

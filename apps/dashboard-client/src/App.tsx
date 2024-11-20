@@ -19,8 +19,6 @@ import { RootLayout } from './components/composite';
 const App = () => {
   const { permissions } = useAuth();
 
-  console.log(permissions);
-
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path="/" element={<RootLayout />}>

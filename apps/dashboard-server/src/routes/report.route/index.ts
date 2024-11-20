@@ -7,9 +7,9 @@ import {
 import {
   createOne,
   deleteOne
-} from '../controller/report.controller';
-import reportUpdateRouter from './reportUpdate.route';
-import reportReadRouter from './reportRead.route';
+} from '../../controller/report.controller';
+import reportUpdateRouter from './update';
+import reportReadRouter from './read';
 
 const reportRouter = Router();
 
@@ -26,6 +26,7 @@ reportRouter.post(
 );
 
 reportRouter.use('/read',reportReadRouter);
+
 reportRouter.use('/update',reportUpdateRouter);
 
 reportRouter.delete(
