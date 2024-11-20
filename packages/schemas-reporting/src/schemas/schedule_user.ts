@@ -3,7 +3,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { UserSchema } from '@trg_package/schemas-dashboard/schemas';
-import { ReportExportScheduleSchema } from './reportExportSchedule';
+import { ScheduleSchema } from './schedule';
 
 export const ExportFrequency = pgEnum('exportFrequency', [
   'daily',
@@ -12,10 +12,10 @@ export const ExportFrequency = pgEnum('exportFrequency', [
   'custom'
 ]);
 
-export const ReportScheduleUsersSchema = pgTable('reportScheduleUsers', {
+export const ScheduleUserSchema = pgTable('schedule_user', {
   id: uuid('id').primaryKey().defaultRandom(),
   scheduleId: uuid('scheduleId')
-    .references(() => ReportExportScheduleSchema.id, {
+    .references(() => ScheduleSchema.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade'
     })
@@ -28,7 +28,7 @@ export const ReportScheduleUsersSchema = pgTable('reportScheduleUsers', {
     .notNull(),
 });
 
-export type ReportScheduleUsersInsert = typeof ReportScheduleUsersSchema.$inferInsert;
-export const ReportScheduleUsersInsertSchema = createInsertSchema(ReportScheduleUsersSchema);
-export type ReportScheduleUsersSelect = typeof ReportScheduleUsersSchema.$inferSelect;
-export const ReportScheduleUsersSelectSchema = createSelectSchema(ReportScheduleUsersSchema);
+export type ScheduleUserInsert = typeof ScheduleUserSchema.$inferInsert;
+export const ScheduleUserInsertSchema = createInsertSchema(ScheduleUserSchema);
+export type ScheduleUserSelect = typeof ScheduleUserSchema.$inferSelect;
+export const ScheduleUserSelectSchema = createSelectSchema(ScheduleUserSchema);

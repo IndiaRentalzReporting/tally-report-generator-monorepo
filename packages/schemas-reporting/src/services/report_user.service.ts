@@ -1,14 +1,13 @@
 import { BaseServiceNew } from '@trg_package/base-service';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { ReportAccessSchema } from '../schemas';
+import { ReportUserSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
 
-export class ReportAccessService extends BaseServiceNew<
+export class ReportUserService extends BaseServiceNew<
   typeof reportingSchemas,
-  typeof ReportAccessSchema
+  typeof ReportUserSchema
 > {
   constructor(db: PostgresJsDatabase<typeof reportingSchemas>) {
-    super(db, ReportAccessSchema, db.query.ReportAccessSchema);
+    super(db, ReportUserSchema, db.query.ReportUserSchema);
   }
-
 }

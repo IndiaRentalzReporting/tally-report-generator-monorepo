@@ -6,11 +6,18 @@ import {
   ReportInsertSchema as InsertSchema,
 } from '@/schemas/reports';
 import {
-  ReportColumnInsertSchema, ColumnOperations, ReportColumnConfig, GeneratedReportColumns
+  ReportColumnInsertSchema,
+  ColumnOperations,
+  ReportColumnConfig,
+  GeneratedReportColumns
 } from '@/schemas/reports/columns';
 import { ReportConditionInsertSchema, ConditionOperations } from '@/schemas/reports/conditions';
 import {
-  ReportFilterInsertSchema, FilterOperations, GeneratedReportFilters, RuntimeFilters, FilterValueSchema
+  ReportFilterInsertSchema,
+  FilterOperations,
+  GeneratedReportFilters,
+  RuntimeFilters,
+  FilterValueSchema
 } from '@/schemas/reports/filters';
 import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
 
