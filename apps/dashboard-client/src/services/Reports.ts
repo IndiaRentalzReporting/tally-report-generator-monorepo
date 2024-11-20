@@ -4,6 +4,7 @@ import {
   GeneratedReportFilters,
   ReportInsert,
   ReportSelect,
+  ReportUserSelect,
   RuntimeFilters,
   ScheduleInsert
 } from '@trg_package/schemas-reporting/types';
@@ -69,6 +70,10 @@ export const getReportData = async (
 export const getReportFilters = async (reportId: string): AxiosPromise<{
   filters : Array<GeneratedReportFilters>
 }> => reportsAxios.get(`/read/reportFilters/${reportId}`);
+
+export const getUsersWithAccess = async (reportId: string): AxiosPromise<{
+  users : Array<ReportUserSelect & { user: UserSelect }>
+}> => reportsAxios.get(`/read/usersWithAccess/${reportId}`);
 
 export const updateAccess = async (
   reportId: ReportSelect['id'],
