@@ -10,14 +10,15 @@ import {
   GeneratedReportData,
   GeneratedReportColumns,
   GeneratedReportFilters,
-  ReportUserSelect
+  ReportUserSelect,
+  DetailedReport
 } from '@trg_package/schemas-reporting/types';
 import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import { getFilterQuery } from '@/utils/queryBuilder';
 
 export const readAll = async (
   req: Request<object, object, object, Partial<ReportSelect>>,
-  res: Response<{ reports: ReportSelect[] }>,
+  res: Response<{ reports: DetailedReport[] }>,
   next: NextFunction
 ) => {
   try {

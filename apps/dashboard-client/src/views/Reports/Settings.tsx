@@ -40,7 +40,10 @@ import { getUsersWithAccess, updateAccess, updateSchedule } from '@/services/Rep
 import { useReports } from '@/providers/ReportsProvider';
 
 const ReportAccess: React.FC = () => {
-  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
+  const { report } = useReports();
+  const [selectedUsers, setSelectedUsers] = useState<Array<string>>(
+    report.access.map((user) => user.userId)
+  );
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
     queryFn: () => userServices.read(),
@@ -51,7 +54,6 @@ const ReportAccess: React.FC = () => {
     queryKey: ['Users', 'getAll']
   });
 
-  const { report } = useReports();
   const { mutateAsync: updateAccessMutation, isPending: isUpdatingAccess } = useMutation({
     mutationFn: () => updateAccess(report.id, { users: selectedUsers }),
   });
@@ -88,10 +90,10 @@ const ReportAccess: React.FC = () => {
 
 const EmailScheduling = () => {
   const { report } = useReports();
-  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
-  const [frequency, setFrequency] = useState<ScheduleSelect['frequency']>('daily');
-  const [timeOfDay, setTimeOfDay] = useState('12:00');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedUsers, setSelectedUsers] = useState(report.schedule.users.map((user) => user.id));
+  const [frequency, setFrequency] = useState(report.schedule.frequency);
+  const [timeOfDay, setTimeOfDay] = useState(report.schedule.timeOfDay);
+  const [selectedDate, setSelectedDate] = useState<Array<Date> | undefined>([new Date()]);
   const [customInterval, setCustomInterval] = useState('1');
 
   const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
@@ -100,7 +102,7 @@ const EmailScheduling = () => {
       label: `${user.first_name} ${user.last_name}`,
       value: user.id
     })),
-    queryKey: ['Users', 'getAll']
+    queryKey: ['Report', 'Users', 'getAll']
   });
 
   const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
@@ -109,8 +111,8 @@ const EmailScheduling = () => {
       schedule: {
         frequency,
         timeOfDay,
-        daysOfMonth: selectedDate ? [selectedDate.getDate()] : [],
-        daysOfWeek: selectedDate ? [selectedDate.getDay()] : [],
+        daysOfMonth: (selectedDate?.map((date) => Number(moment(date).format('Do')))) ?? [],
+        daysOfWeek: (selectedDate?.map((date) => Number(moment(date).format('E')))) ?? [],
         customInterval: Number(customInterval),
       }
     }),
@@ -173,12 +175,12 @@ const EmailScheduling = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('E') : <span>Pick a day</span>}
+                    {selectedDate ? selectedDate.map((date) => moment(date).format('E')) : <span>Pick a day</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
-                    mode="single"
+                    mode="multiple"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
                     captionLayout='dropdown-buttons'
@@ -202,12 +204,12 @@ const EmailScheduling = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('Do') : <span>Pick a date</span>}
+                    {selectedDate ? selectedDate.map((date) => moment(date).format('Do')) : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
                   <Calendar
-                    mode="single"
+                    mode="multiple"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
                   />

@@ -1,4 +1,5 @@
 import {
+  DetailedReport,
   GeneratedReportColumns,
   GeneratedReportData,
   GeneratedReportFilters,
@@ -24,7 +25,8 @@ const reportsAxios = createAxiosClient(
 export const services: CrudServices<
 'report',
 ReportSelect,
-ReportInsert
+ReportInsert,
+DetailedReport
 > = {
   read: async (query) => {
     const queryString = new URLSearchParams(

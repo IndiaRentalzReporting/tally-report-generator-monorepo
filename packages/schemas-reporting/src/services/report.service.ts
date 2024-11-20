@@ -2,7 +2,7 @@ import { BaseServiceNew } from '@trg_package/base-service';
 import { CustomError } from '@trg_package/errors';
 import { sql } from 'drizzle-orm';
 import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { ReportSelect } from '@/types';
+import { DetailedReport, ReportSelect } from '@/types';
 import { ReportSchema } from '../schemas';
 import * as reportingSchemas from '../schemas';
 
@@ -14,21 +14,19 @@ export class ReportService extends BaseServiceNew<
     super(db, ReportSchema, db.query.ReportSchema);
   }
 
-  public async findMany(data:Partial<typeof this.schema.$inferSelect> = {}) {
+  public async findMany(
+    data: Partial<typeof this.schema.$inferSelect> = {}
+  ): Promise<Array<DetailedReport>> {
     const reports = await super.findMany(data,{
       with: {
         access: true,
         schedule: {
           with: {
-            users: {
-              with: {
-                user: true
-              }
-            }
+            users: true
           }
         }
       }
-    });
+    }) as Array<DetailedReport>;
     return reports;
   }
 

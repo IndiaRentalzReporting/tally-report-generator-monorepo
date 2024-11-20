@@ -1,4 +1,5 @@
 import z from 'zod';
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import {
   type ReportInsert,
   type ReportSelect,
@@ -20,6 +21,8 @@ import {
   FilterValueSchema
 } from '@/schemas/reports/filters';
 import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
+import { ScheduleSelect } from './schedule';
+import { ReportUserSelect } from './report_user';
 
 const ReportInsertSchema = InsertSchema.extend({
   columns: z.array(ReportColumnInsertSchema),
@@ -27,6 +30,11 @@ const ReportInsertSchema = InsertSchema.extend({
   filters: z.array(ReportFilterInsertSchema),
   groupBy: z.array(ReportGroupByInsertSchema)
 });
+
+type DetailedReport = ReportSelect & {
+  access: Array<ReportUserSelect & { user: UserSelect }>
+  schedule: ScheduleSelect & { users: Array<UserSelect> }
+};
 
 type GeneratedReportData = { [T in ReportColumnConfig['alias'] ] : string };
 
@@ -38,6 +46,7 @@ export {
   type GeneratedReportData,
   type GeneratedReportFilters,
   type RuntimeFilters,
+  type DetailedReport,
   FilterValueSchema,
 
   type ReportInsert,
