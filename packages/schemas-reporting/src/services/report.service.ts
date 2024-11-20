@@ -14,7 +14,7 @@ export class ReportService extends BaseServiceNew<
     super(db, ReportSchema, db.query.ReportSchema);
   }
 
-  public async findMany(data?:Partial<typeof this.schema.$inferSelect>) {
+  public async findMany(data:Partial<typeof this.schema.$inferSelect> = {}) {
     const reports = await super.findMany(data,{
       with: {
         access: true,
