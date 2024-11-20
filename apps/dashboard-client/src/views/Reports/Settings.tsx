@@ -92,12 +92,45 @@ const ReportAccess: React.FC = () => {
   );
 };
 
+const weeks = [
+  {
+    label: 'Monday',
+    value: '1'
+  },
+  {
+    label: 'Tuesday',
+    value: '2'
+  },
+  {
+    label: 'Wednesday',
+    value: '3'
+  },
+  {
+    label: 'Thursday',
+    value: '4'
+  },
+  {
+    label: 'Friday',
+    value: '5'
+  },
+  {
+    label: 'Saturday',
+    value: '6'
+  },
+  {
+    label: 'Sunday',
+    value: '7'
+  }
+];
 const EmailScheduling = () => {
   const { report } = useReports();
   const queryClient = useQueryClient();
-  const [selectedUsers, setSelectedUsers] = useState(report.schedule.users.map((user) => user.userId));
+  const [selectedUsers, setSelectedUsers] = useState(
+    report.schedule.users.map((user) => user.userId)
+  );
   const [frequency, setFrequency] = useState(report.schedule.frequency);
   const [timeOfDay, setTimeOfDay] = useState(report.schedule.timeOfDay);
+  const [daysOfWeek, setDaysOfWeek] = useState(report.schedule.daysOfWeek ?? []);
   const [selectedDate, setSelectedDate] = useState<Array<Date> | undefined>([new Date()]);
   const [customInterval, setCustomInterval] = useState('1');
 
@@ -110,11 +143,6 @@ const EmailScheduling = () => {
     queryKey: ['Report', 'Users', 'getAll']
   });
 
-  console.log({
-    allUsers,
-    selectedUsers
-  });
-
   const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
     mutationFn: () => updateSchedule(report.id, {
       users: selectedUsers,
@@ -122,7 +150,7 @@ const EmailScheduling = () => {
         frequency,
         timeOfDay,
         daysOfMonth: (selectedDate?.map((date) => Number(moment(date).format('Do')))) ?? [],
-        daysOfWeek: (selectedDate?.map((date) => Number(moment(date).format('E')))) ?? [],
+        daysOfWeek,
         customInterval: Number(customInterval),
       }
     }),
@@ -178,29 +206,12 @@ const EmailScheduling = () => {
           frequency === 'weekly'
           && <div className="space-y-2">
               <Label>Day of Week</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !selectedDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? selectedDate.map((date) => moment(date).format('E')) : <span>Pick a day</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="multiple"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    captionLayout='dropdown-buttons'
-
-                  />
-                </PopoverContent>
-              </Popover>
+              <MultiSelect
+                options={weeks}
+                values={daysOfWeek.map(String)}
+                onChange={(values) => setDaysOfWeek(values.map(Number))}
+                title="Days"
+              />
             </div>
         }
         {
@@ -212,12 +223,16 @@ const EmailScheduling = () => {
                   <Button
                     variant="outline"
                     className={cn(
-                      'w-full justify-start text-left font-normal',
+                      'w-full flex gap-1 justify-start text-left font-normal',
                       !selectedDate && 'text-muted-foreground'
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? selectedDate.map((date) => moment(date).format('Do')) : <span>Pick a date</span>}
+                    {
+                      selectedDate
+                        ? selectedDate.map((date) => <span>{moment(date).format('Do')}</span>)
+                        : <span>Pick a date</span>
+                    }
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -225,6 +240,10 @@ const EmailScheduling = () => {
                     mode="multiple"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
+                    disableNavigation
+                    classNames={{
+                      day_outside: '!opacity-50'
+                    }}
                   />
                 </PopoverContent>
               </Popover>
