@@ -45,13 +45,15 @@ reportUpdateRouter.patch(
   '/schedule/:id',
   validateSchema({
     body: z.object({
-      schedule: ScheduleInsertSchema.omit({ reportId: true,nextRun: true })
-        .refine((schedule) => {
-          if (schedule.frequency === 'custom' && !schedule.customInterval) {
-            return false;
-          }
-          return true;
-        },{ message: 'Custom Interval is required for custom frequency' }),
+      schedule: ScheduleInsertSchema.omit({
+        reportId: true,
+        nextRun: true
+      }).refine((schedule) => {
+        if (schedule.frequency === 'custom' && !schedule.customInterval) {
+          return false;
+        }
+        return true;
+      },{ message: 'Custom Interval is required for custom frequency' }),
       users: z.array(ScheduleUserInsertSchema.shape.userId).optional()
     }),
     params: ReportSelectSchema.pick({

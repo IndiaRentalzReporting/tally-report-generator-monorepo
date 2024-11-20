@@ -34,8 +34,9 @@ import React, { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { cn } from '@trg_package/vite/lib/utils';
+import { ScheduleSelect } from '@trg_package/schemas-reporting/types';
 import { services as userServices } from '@/services/Users';
-import { updateAccess } from '@/services/Reports';
+import { updateAccess, updateSchedule } from '@/services/Reports';
 import { useReports } from '@/providers/ReportsProvider';
 
 const ReportAccess: React.FC = () => {
@@ -52,7 +53,7 @@ const ReportAccess: React.FC = () => {
 
   const { report } = useReports();
   const { mutateAsync: updateAccessMutation, isPending: isUpdatingAccess } = useMutation({
-    mutationFn: () => updateAccess(report.id, selectedUsers),
+    mutationFn: () => updateAccess(report.id, { users: selectedUsers }),
   });
 
   return (
@@ -85,27 +86,58 @@ const ReportAccess: React.FC = () => {
   );
 };
 
-type Frequency = 'daily' | 'weekly' | 'monthly' | 'custom';
 const EmailScheduling = () => {
-  const [frequency, setFrequency] = useState<Frequency>('daily');
+  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
+  const [frequency, setFrequency] = useState<ScheduleSelect['frequency']>('daily');
   const [timeOfDay, setTimeOfDay] = useState('12:00');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [customInterval, setCustomInterval] = useState('1');
 
+  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
+    queryFn: () => userServices.read(),
+    select: (data) => data.data.users.map((user) => ({
+      label: `${user.first_name} ${user.last_name}`,
+      value: user.id
+    })),
+    queryKey: ['Users', 'getAll']
+  });
+
+  const { report } = useReports();
+  const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
+    mutationFn: () => updateSchedule(report.id, {
+      users: selectedUsers,
+      schedule: {
+        frequency,
+        timeOfDay,
+        daysOfMonth: selectedDate ? [selectedDate.getDate()] : [],
+        daysOfWeek: selectedDate ? [selectedDate.getDay()] : [],
+        customInterval: Number(customInterval),
+      }
+    }),
+  });
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className='text-lg'>Email Scheduling</CardTitle>
+        <CardTitle className='text-lg'>Mailing</CardTitle>
         <CardDescription>
-          Set the email frequency and time of day for your report.
+          Set the users and the email frequency for your report.
         </CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
+        <Skeleton isLoading={fetchingUsers}>
+          <MultiSelect
+            options={allUsers}
+            values={selectedUsers}
+            onChange={setSelectedUsers}
+            title="Users"
+          />
+        </Skeleton>
         <div className="space-y-2">
           <Label htmlFor="frequency">Frequency</Label>
           <Select
             value={frequency}
-            onValueChange={(value) => setFrequency(value as Frequency)}
+            onValueChange={(value) => setFrequency(value as ScheduleSelect['frequency'])}
           >
             <SelectTrigger id="frequency">
               <SelectValue placeholder="Select frequency" />
@@ -141,7 +173,7 @@ const EmailScheduling = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('do') : <span>Pick a day</span>}
+                    {selectedDate ? moment(selectedDate).format('E') : <span>Pick a day</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -149,6 +181,8 @@ const EmailScheduling = () => {
                     mode="single"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
+                    captionLayout='dropdown-buttons'
+
                   />
                 </PopoverContent>
               </Popover>
@@ -168,7 +202,7 @@ const EmailScheduling = () => {
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('do') : <span>Pick a date</span>}
+                    {selectedDate ? moment(selectedDate).format('Do') : <span>Pick a date</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -194,9 +228,12 @@ const EmailScheduling = () => {
               />
             </div>
         }
-        <Button className="w-full" onClick={() => console.log({
-          frequency, timeOfDay, selectedDate, customInterval
-        })}>
+        <Button
+          className='self-start mt-2'
+          onClick={() => updateScheduleMutation()}
+          isLoading={isUpdatingSchedule}
+          disabled={isUpdatingSchedule || fetchingUsers}
+        >
           Save Schedule
         </Button>
       </CardContent>
@@ -212,7 +249,10 @@ const Mailing: React.FC = () => (
           <span>Settings</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[475px]">
+        <DialogContent
+          onInteractOutside={(e) => e.preventDefault()}
+           className="sm:max-w-[475px]"
+        >
         <DialogHeader>
           <DialogTitle className='text-left'>Edit profile</DialogTitle>
           <DialogDescription className='text-left'>

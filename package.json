@@ -10,8 +10,8 @@
     "db-auth:generate": "dotenv -- npm run db-auth:generate -w apps/auth-server",
     "db-auth:migrate": "dotenv -- npm run db-auth:migrate -w apps/auth-server",
     "db-auth:studio": "dotenv -- npm run db-auth:studio -w apps/auth-server",
-    "db-dashboard:generate": "dotenv -- npm run db-dashboard:generate -w apps/dashboard-server",
-    "db-dashboard:studio": "dotenv -- npm run db-dashboard:studio -w apps/dashboard-server"
+    "db-dashboard:generate": "dotenv -- npm run db-dashboard:generate -w apps/auth-server",
+    "db-dashboard:studio": "dotenv -- npm run db-dashboard:studio -w apps/auth-server"
   },
   "dependencies": {
     "dotenv-cli": "^7.4.2"

@@ -1,16 +1,9 @@
 import {
-  uuid, pgTable, pgEnum
+  uuid, pgTable
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
 import { UserSchema } from '@trg_package/schemas-dashboard/schemas';
 import { ScheduleSchema } from './schedule';
-
-export const ExportFrequency = pgEnum('exportFrequency', [
-  'daily',
-  'weekly',
-  'monthly',
-  'custom'
-]);
 
 export const ScheduleUserSchema = pgTable('schedule_user', {
   id: uuid('id').primaryKey().defaultRandom(),
