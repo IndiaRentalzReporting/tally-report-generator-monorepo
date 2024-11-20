@@ -5,7 +5,7 @@ import {
 import { Router } from 'express';
 import z from 'zod';
 import {
-  getAllColumns, getAllTables, getReportColumns, getReportData, getReportFilters, getSelectData, readAll
+  getAllColumns, getAllTables, getReportColumns, getReportData, getReportFilters, getSelectData, getUsersWithAccess, readAll
 } from '@/controller/report.controller';
 
 const reportReadRouter = Router();
@@ -96,6 +96,16 @@ reportReadRouter.get(
     })
   }),
   getReportFilters
+);
+
+reportReadRouter.get(
+  '/usersWithAccess/:id',
+  validateSchema({
+    params: ReportInsertSchema.pick({
+      id: true
+    })
+  }),
+  getUsersWithAccess
 );
 
 export default reportReadRouter;

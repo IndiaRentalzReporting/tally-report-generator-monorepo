@@ -316,3 +316,25 @@ export const updateSchedule = async (
 
   return res.json({ schedule: reportSchedule,users: scheduleUsers });
 };
+
+export const getUsersWithAccess = async (
+  req : Request<Pick<ReportSelect,'id'>>,
+  res : Response<{ users : ReportAccessSelect[] }>,
+  next : NextFunction
+) => {
+  const { id: reportId } = req.params;
+  let users : ReportAccessSelect[] = [];
+  try {
+    users = await req.services.reportAccess.findMany(
+      { reportId },
+      {
+        with: {
+          user: true
+        }
+      }
+    );
+  } catch (e) {
+  } finally {
+    return res.json({ users });
+  }
+};
