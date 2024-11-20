@@ -1,10 +1,17 @@
 import { validateSchema } from '@trg_package/middlewares';
 import {
-  ReportAccessInsertSchema, ReportExportScheduleInsertSchema, ReportScheduleUsersInsertSchema, ReportSelectSchema
+  ReportUserInsertSchema,
+  ScheduleInsertSchema,
+  ScheduleUserInsertSchema,
+  ReportSelectSchema
 } from '@trg_package/schemas-reporting/types';
 import { Router } from 'express';
 import z from 'zod';
-import { updateAccess, updateOne, updateSchedule } from '@/controller/report.controller';
+import {
+  updateAccess,
+  updateOne,
+  updateSchedule
+} from '@/controller/report.controller/update';
 import { validateReport } from '@/middlewares/validateReport';
 
 const reportUpdateRouter = Router();
@@ -20,11 +27,12 @@ reportUpdateRouter.patch(
   validateReport,
   updateOne
 );
+
 reportUpdateRouter.patch(
   '/access/:id',
   validateSchema({
     body: z.object({
-      users: z.array(ReportAccessInsertSchema.shape.userId)
+      users: z.array(ReportUserInsertSchema.shape.userId)
     }).strict(),
     params: ReportSelectSchema.pick({
       id: true
@@ -37,14 +45,14 @@ reportUpdateRouter.patch(
   '/schedule/:id',
   validateSchema({
     body: z.object({
-      schedule: ReportExportScheduleInsertSchema.omit({ reportId: true,nextRun: true })
+      schedule: ScheduleInsertSchema.omit({ reportId: true,nextRun: true })
         .refine((schedule) => {
           if (schedule.frequency === 'custom' && !schedule.customInterval) {
             return false;
           }
           return true;
         },{ message: 'Custom Interval is required for custom frequency' }),
-      users: z.array(ReportScheduleUsersInsertSchema.shape.userId).optional()
+      users: z.array(ScheduleUserInsertSchema.shape.userId).optional()
     }),
     params: ReportSelectSchema.pick({
       id: true
