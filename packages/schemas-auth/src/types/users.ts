@@ -7,7 +7,7 @@ import {
 import { TenantSelect } from './tenants';
 
 type DetailedUser = UserSelect & {
-  tenant: TenantSelect;
+  tenant: Array<TenantSelect>;
 };
 
 export {
