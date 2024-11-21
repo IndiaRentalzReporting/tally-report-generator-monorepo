@@ -223,8 +223,9 @@ interface ConditionParamsSelectProps {
 const ConditionParamsSelect = ({
   condition, values, param, updateCondition
 }: ConditionParamsSelectProps) => {
+  const { report } = useReports();
   const { data: paramOptions = [], isLoading: loadingParamOptions } = useQuery({
-    queryKey: ['columns', 'selectData', condition.column.id],
+    queryKey: ['Reports', report.id, 'Column', 'selectData', condition.column.id],
     queryFn: () => getColumnData(condition.column.id),
     select: (data) => data.data.data,
     enabled: !!condition.column.id

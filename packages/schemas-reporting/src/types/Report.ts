@@ -33,7 +33,7 @@ const ReportInsertSchema = InsertSchema.extend({
 
 type DetailedReport = ReportSelect & {
   access: Array<ReportUserSelect>
-  schedule: ScheduleSelect & { users: Array<ScheduleUserSelect> }
+  schedule: (ScheduleSelect & { users: Array<ScheduleUserSelect> }) | null
 };
 
 type GeneratedReportData = { [T in ReportColumnConfig['alias'] ] : string };

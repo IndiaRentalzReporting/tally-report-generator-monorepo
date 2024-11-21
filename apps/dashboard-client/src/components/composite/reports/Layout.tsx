@@ -13,7 +13,7 @@ const ReportingLayout: React.FC = () => {
   const { data: report, isFetching } = useQuery({
     queryFn: () => services.read({ id: reportId! }),
     select: (data) => data.data.reports[0],
-    queryKey: ['Reports', 'getOne', reportId],
+    queryKey: ['Reports', reportId, 'getOne'],
     enabled: !!reportId,
   });
 

@@ -90,7 +90,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       operation: undefined
     })),
     enabled: !!report.baseEntity,
-    queryKey: ['columns', 'getAll', report.baseEntity]
+    queryKey: ['Reports', report.id, 'Columns', 'getAll']
   });
 
   const queryClient = useQueryClient();

@@ -27,3 +27,4 @@ export * from './pagination';
 export * from './separator';
 export * from './dialog';
 export * from './tabs';
+export * from './time';
