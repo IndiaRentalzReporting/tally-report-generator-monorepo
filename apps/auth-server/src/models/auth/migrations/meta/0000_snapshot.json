@@ -1,5 +1,5 @@
 {
-  "id": "f2bcfbc7-c411-4f4b-a720-bd7c3325844a",
+  "id": "7283545c-4507-455e-bf3e-ee5db4710fc5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -137,30 +137,10 @@
           "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true
-        },
-        "tenant_id": {
-          "name": "tenant_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "users_tenant_id_tenants_id_fk": {
-          "name": "users_tenant_id_tenants_id_fk",
-          "tableFrom": "users",
-          "tableTo": "tenants",
-          "columnsFrom": [
-            "tenant_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "cascade"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_unique": {
@@ -171,6 +151,63 @@
           ]
         }
       }
+    },
+    "public.user_tenant": {
+      "name": "user_tenant",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_tenant_user_id_users_id_fk": {
+          "name": "user_tenant_user_id_users_id_fk",
+          "tableFrom": "user_tenant",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "user_tenant_tenant_id_tenants_id_fk": {
+          "name": "user_tenant_tenant_id_tenants_id_fk",
+          "tableFrom": "user_tenant",
+          "tableTo": "tenants",
+          "columnsFrom": [
+            "tenant_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "user_tenant_tenant_id_user_id_pk": {
+          "name": "user_tenant_tenant_id_user_id_pk",
+          "columns": [
+            "tenant_id",
+            "user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
     }
   },
   "enums": {

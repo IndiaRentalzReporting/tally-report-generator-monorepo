@@ -39,7 +39,7 @@ export const handleSignIn = async (
       const { user } = req;
       let token;
       if (user.status === 'inactive') {
-        token = await UserService.createJwtToken(user.id);
+        token = await UserService.createJwtToken({ user_id: user.id });
       }
       return res.json({
         user,
@@ -131,7 +131,7 @@ export const forgotPassword = async (
     } = config;
 
     const FRONTEND_URL = `${PROTOCOL}://${AUTH_SUBDOMAIN}.${DOMAIN}.${TLD}`;
-    const token = await UserService.createJwtToken(user.id);
+    const token = await UserService.createJwtToken({ user_id: user.id });
     const resetLink = `${FRONTEND_URL}/reset-password/${token}`;
 
     const mailOptions = {
@@ -187,12 +187,16 @@ export const resetPassword = async (
     }
 
     const { token } = req.query;
-    const { id } = await UserService.verifyJwtToken(token);
+    const { user_id, tenant_id } = await UserService.verifyJwtToken(token);
 
-    await UserService.updateOne({ id }, {
+    if (!tenant_id) {
+      throw new BadRequestError('Invalid reset password token');
+    }
+
+    await UserService.updateOneWithTenant({ id: user_id }, {
       password,
       status: 'active'
-    });
+    }, tenant_id);
 
     return res.status(200).send();
   } catch (error) {

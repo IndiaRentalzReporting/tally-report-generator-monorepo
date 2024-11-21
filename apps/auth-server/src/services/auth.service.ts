@@ -58,11 +58,10 @@ class AuthService {
 
     migrateDashboardSchema(DSI.URL);
     const { id: role_id } = await DSI.seedRole();
-    const user = await UserService.createOne({
+    const user = await UserService.createOneWithTenant({
       ...userData,
-      tenant_id,
       role_id
-    }).then(async (user) => {
+    }, tenant_id).then(async (user) => {
       await DSI.seed();
       return user;
     }).finally(async () => DSI.terminateConnection());
@@ -77,11 +76,11 @@ class AuthService {
     tenant: TenantSelect,
     data: RegisterUser & { role_id?: DashboardUserSelect['role_id'] }
   ): Promise<UserSelect> {
-    return UserService.createOne({
+    const user = await UserService.createOneWithTenant({
       ...data,
-      tenant_id: tenant.id,
       status: 'inactive'
-    });
+    }, tenant.id);
+    return user;
   }
 
   static async generateTempPassword(length: number): Promise<string> {
