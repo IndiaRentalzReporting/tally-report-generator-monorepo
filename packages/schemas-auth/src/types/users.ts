@@ -5,9 +5,11 @@ import {
   UserSelectSchema
 } from '../schemas/users';
 import { TenantSelect } from './tenants';
+import { UserTenantSelect } from './user_tenant';
 
 type DetailedUser = UserSelect & {
-  tenant: Array<TenantSelect>;
+  tenant: TenantSelect;
+  userTenants: Array<UserTenantSelect & { tenant: TenantSelect }>;
 };
 
 export {

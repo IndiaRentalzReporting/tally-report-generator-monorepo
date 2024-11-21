@@ -4,21 +4,21 @@ import { TenantSchema } from './tenants';
 import { UserTenantSchema } from './user_tenant';
 
 export const userRelation = relations(UserSchema, ({ many }) => ({
-  tenant: many(TenantSchema)
+  userTenants: many(UserTenantSchema)
 }));
 
 export const tenantRelation = relations(TenantSchema, ({ many }) => ({
-  user: many(UserSchema)
+  userTenants: many(UserTenantSchema)
 }));
 
-export const UserTenantSchemaRelation = relations(
+export const userTenantSchemaRelation = relations(
   UserTenantSchema,
   ({ one }) => ({
-    permission: one(UserSchema, {
+    user: one(UserSchema, {
       fields: [UserTenantSchema.user_id],
       references: [UserSchema.id]
     }),
-    action: one(TenantSchema, {
+    tenant: one(TenantSchema, {
       fields: [UserTenantSchema.tenant_id],
       references: [TenantSchema.id]
     })

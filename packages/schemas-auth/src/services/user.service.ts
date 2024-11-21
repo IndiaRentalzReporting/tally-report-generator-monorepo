@@ -3,7 +3,9 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import bcrypt from 'bcrypt';
 import { UserSchema } from '@/schemas';
 import * as authSchemas from '@/schemas';
-import { UserInsert, UserSelect } from '@/types';
+import {
+  DetailedUser, TenantSelect, UserInsert, UserSelect
+} from '@/types';
 
 export class UserService extends BaseServiceNew<
   typeof authSchemas,
@@ -11,6 +13,29 @@ export class UserService extends BaseServiceNew<
 > {
   constructor(db: PostgresJsDatabase<typeof authSchemas>) {
     super(db, UserSchema, db.query.UserSchema);
+  }
+
+  public async findOneWithTenant(
+    data: Partial<UserSelect>,
+    tenant_id?: TenantSelect['id']
+  ): Promise<DetailedUser> {
+    const user = await super.findOne(data,{
+      with: {
+        userTenants: {
+          with: {
+            tenant: true
+          }
+        }
+      }
+    }) as Omit<DetailedUser, 'tenant'>;
+    const currentTenant = user.userTenants.find(({
+      tenant
+    }) => tenant.id === tenant_id)?.tenant || user.userTenants[0]?.tenant;
+    if (!currentTenant) throw new Error('Tenant not found!');
+    return {
+      ...user,
+      tenant: currentTenant
+    };
   }
 
   public async createOne(data: UserInsert): Promise<UserSelect> {

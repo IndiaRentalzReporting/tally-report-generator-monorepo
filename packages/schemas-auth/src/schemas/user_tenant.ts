@@ -6,7 +6,6 @@ import { UserSchema } from './users';
 export const UserTenantSchema = pgTable(
   'user_tenant',
   {
-    id: uuid('id').primaryKey().notNull().defaultRandom(),
     user_id: uuid('user_id')
       .notNull()
       .references(() => UserSchema.id, {
