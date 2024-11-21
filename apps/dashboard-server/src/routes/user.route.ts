@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { validateSchema } from '@trg_package/middlewares';
 import { UserInsertSchema, UserSelectSchema } from '@trg_package/schemas-dashboard/types';
-import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   createOne,
   readAll,
@@ -15,12 +14,10 @@ userRouter.post(
   '/create',
   validateSchema({
     body: UserInsertSchema.extend({
-      tenant_id: AuthUserInsertSchema.shape.tenant_id
     }).pick({
       first_name: true,
       last_name: true,
       role_id: true,
-      tenant_id: true
     })
   }),
   createOne
