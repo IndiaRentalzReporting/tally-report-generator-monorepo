@@ -6,6 +6,7 @@ import LocalStrategy, {
 } from 'passport-local';
 import AuthService from '../services/auth.service';
 import UserService from '../services/user.service';
+import UserTenantService from '../services/user_tenant.service';
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {
@@ -35,7 +36,7 @@ export const passportLoader = (app: Express) => {
   ) => {
     done(null, {
       email: user.email,
-      tenant: user.tenant_id
+      tenant: user.tenant.id
     });
   };
 
@@ -52,7 +53,10 @@ export const passportLoader = (app: Express) => {
     const { email, tenant: tenant_id } = userObject;
     try {
       const user = await UserService.findOne({
-        email,
+        email
+      });
+      await UserTenantService.findOne({
+        user_id: user.id,
         tenant_id
       });
 
