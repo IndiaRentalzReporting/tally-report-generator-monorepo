@@ -28,10 +28,16 @@ export class UserService extends BaseServiceNew<
         }
       }
     }) as Omit<DetailedUser, 'tenant'>;
+
     const currentTenant = user.userTenants.find(({
       tenant
-    }) => tenant.id === tenant_id)?.tenant || user.userTenants[0]?.tenant;
+    }) => tenant.id === tenant_id)?.tenant
+    || user.userTenants[0]?.tenant;
+
     if (!currentTenant) throw new Error('Tenant not found!');
+
+    user.userTenants.filter(({ tenant }) => tenant.id !== currentTenant.id);
+
     return {
       ...user,
       tenant: currentTenant
@@ -39,8 +45,7 @@ export class UserService extends BaseServiceNew<
   }
 
   public async createOne(data: UserInsert): Promise<UserSelect> {
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(data.password, salt);
+    const password = await this.hashPassword(data.password);
     const user = await super.createOne({
       ...data,
       password
@@ -54,11 +59,15 @@ export class UserService extends BaseServiceNew<
   ): Promise<UserSelect> {
     const update = data;
     if (data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const password = await bcrypt.hash(data.password, salt);
+      const password = await this.hashPassword(data.password);
       update.password = password;
     }
     const user = await super.updateOne(filterData, data);
     return user;
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
   }
 }
