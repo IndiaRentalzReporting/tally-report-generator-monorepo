@@ -13,15 +13,12 @@ import {
 } from '@tanstack/react-query';
 import {
   DetailedColumnSelect,
-  ReportSelect
+  DetailedReport,
+  ReportSelect,
 } from '@trg_package/schemas-reporting/types';
 import { AxiosResponse } from 'axios';
-import {
-  services as columnService
-} from '@/services/Columns';
-import {
-  services as reportService
-} from '@/services/Reports';
+import { services as columnService } from '@/services/Columns';
+import { services as reportService } from '@/services/Reports';
 
 const dummyColumn: DetailedColumnSelect = {
   id: '',
@@ -40,7 +37,7 @@ export type Filter = ReportSelect['filters'][number];
 export type GroupBy = ReportSelect['groupBy'][number];
 
 interface ReportsProviderState {
-  report: ReportSelect;
+  report: DetailedReport;
 
   fetchingColumns: boolean;
   fetchedColumns: Array<Column>;
@@ -74,7 +71,7 @@ const ReportsContext = createContext<ReportsProviderState | undefined>(undefined
 
 interface ReportsProviderProps {
   children: React.ReactNode;
-  report: ReportSelect
+  report: DetailedReport
 }
 
 export const ReportsProvider: React.FC<ReportsProviderProps> = ({
@@ -93,7 +90,7 @@ export const ReportsProvider: React.FC<ReportsProviderProps> = ({
       operation: undefined
     })),
     enabled: !!report.baseEntity,
-    queryKey: ['columns', 'getAll', report.baseEntity]
+    queryKey: ['Reports', report.id, 'Columns', 'getAll']
   });
 
   const queryClient = useQueryClient();

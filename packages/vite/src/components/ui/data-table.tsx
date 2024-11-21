@@ -40,7 +40,9 @@ import {
 import { cn } from '$/lib/utils';
 
 interface DataTableProps<TData, TValue> {
-  emptyDataMessage?: string;
+  classNames?:{
+    emptyData: string
+  }
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   enableSorting?: boolean;
@@ -63,7 +65,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export const DataTable = <TData, TValue>({
-  emptyDataMessage = 'No Results',
+  classNames,
   columns,
   data,
   enableSorting = false,
@@ -200,9 +202,9 @@ export const DataTable = <TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className={cn('h-32 text-center', classNames?.emptyData)}
                 >
-                  {emptyDataMessage}.
+                  No Results.
                 </TableCell>
               </TableRow>
             )}

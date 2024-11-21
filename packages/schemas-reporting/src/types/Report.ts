@@ -20,6 +20,9 @@ import {
   FilterValueSchema
 } from '@/schemas/reports/filters';
 import { ReportGroupByInsertSchema } from '@/schemas/reports/groupBy';
+import { ReportUserSelect } from './report_user';
+import { ScheduleUserSelect } from './schedule_user';
+import { ScheduleSelect } from './schedule';
 
 const ReportInsertSchema = InsertSchema.extend({
   columns: z.array(ReportColumnInsertSchema),
@@ -27,6 +30,11 @@ const ReportInsertSchema = InsertSchema.extend({
   filters: z.array(ReportFilterInsertSchema),
   groupBy: z.array(ReportGroupByInsertSchema)
 });
+
+type DetailedReport = ReportSelect & {
+  access: Array<ReportUserSelect>
+  schedule: (ScheduleSelect & { users: Array<ScheduleUserSelect> }) | null
+};
 
 type GeneratedReportData = { [T in ReportColumnConfig['alias'] ] : string };
 
@@ -38,6 +46,7 @@ export {
   type GeneratedReportData,
   type GeneratedReportFilters,
   type RuntimeFilters,
+  type DetailedReport,
   FilterValueSchema,
 
   type ReportInsert,

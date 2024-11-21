@@ -15,7 +15,7 @@ const Update: React.FC<Pick<SelectState, 'id'>> = ({ id }) => {
   const { data: reportData, isFetching: loadingReport } = useQuery({
     queryFn: () => services.read({ id }),
     select: (data) => SelectFormSchema.parse(data.data.reports[0]),
-    queryKey: ['Reports', 'getOne', id]
+    queryKey: ['Reports', id, 'getOne']
   });
 
   const form = useForm<FormState>({

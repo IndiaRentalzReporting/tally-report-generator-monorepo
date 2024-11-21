@@ -11,9 +11,9 @@ const ReportingLayout: React.FC = () => {
   const { setOpen } = useSidebar();
 
   const { data: report, isFetching } = useQuery({
-    queryKey: ['Reports', 'getOne', reportId],
     queryFn: () => services.read({ id: reportId! }),
     select: (data) => data.data.reports[0],
+    queryKey: ['Reports', reportId, 'getOne'],
     enabled: !!reportId,
   });
 

@@ -65,9 +65,11 @@ const UpdateReport: React.FC = () => {
         </Card>
         <div className='col-span-3 row-span-2 flex flex-col gap-6'>
           <DataTable
-            emptyDataMessage='No Columns'
             data={columnDef.length ? [{}] : []}
             columns={columnDef}
+            classNames={{
+              emptyData: 'h-72'
+            }}
           />
           <Card className='flex-grow'>
             <CardHeader>

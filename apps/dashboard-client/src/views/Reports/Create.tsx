@@ -26,8 +26,7 @@ const Create: React.FC = () => {
   const { mutateAsync: createReport, isPending: loadingCreateReport } = useMutation({
     mutationFn: (reportDetails: InsertState) => services.createOne(reportDetails),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['Reports', 'getAll'] });
-      form.reset();
+      queryClient.removeQueries({ queryKey: ['Reports'], exact: false });
       navigate(`/dashboard/Reports/Update/${data.data.report.id}`);
     }
   });

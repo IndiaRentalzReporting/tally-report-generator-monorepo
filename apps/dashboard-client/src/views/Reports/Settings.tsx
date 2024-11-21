@@ -9,243 +9,41 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger,
-  MultiSelect,
-  Skeleton,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  Input,
-  Label,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Calendar
+  TabsTrigger
 } from '@trg_package/vite/components';
-import { CalendarIcon, Settings } from 'lucide-react';
+import { Settings as SettingsIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import moment from 'moment';
-import { cn } from '@trg_package/vite/lib/utils';
-import { ScheduleSelect } from '@trg_package/schemas-reporting/types';
-import { services as userServices } from '@/services/Users';
-import { getUsersWithAccess, updateAccess, updateSchedule } from '@/services/Reports';
+import { useQueryClient } from '@tanstack/react-query';
+import Access from './Access';
+import Scheduling from './Scheduling';
 import { useReports } from '@/providers/ReportsProvider';
 
-const ReportAccess: React.FC = () => {
-  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
-
-  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => userServices.read(),
-    select: (data) => data.data.users.map((user) => ({
-      label: `${user.first_name} ${user.last_name}`,
-      value: user.id
-    })),
-    queryKey: ['Users', 'getAll']
-  });
-
+const Settings: React.FC = () => {
   const { report } = useReports();
-  const { mutateAsync: updateAccessMutation, isPending: isUpdatingAccess } = useMutation({
-    mutationFn: () => updateAccess(report.id, { users: selectedUsers }),
-  });
+  const queryClient = useQueryClient();
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpenChange = (open: boolean): void => {
+    if (!open) {
+      queryClient.invalidateQueries({ queryKey: ['Reports', report.id, 'getOne'] });
+    }
+    setOpen(open);
+  };
+
+  const [selectedAccessUsers, setSelectedAccessUsers] = useState(
+    report.access.map((user) => user.userId)
+  );
+
+  const [selectedSchedulingUsers, setSelectedSchedulingUsers] = useState(
+    report.schedule?.users.map((user) => user.userId) ?? []
+  );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='text-lg'>Report Acesss</CardTitle>
-        <CardDescription>
-          Add all the users to whom you want to send this mail to.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className='flex flex-col gap-6'>
-        <Skeleton isLoading={fetchingUsers}>
-          <MultiSelect
-            options={allUsers}
-            values={selectedUsers}
-            onChange={setSelectedUsers}
-            title="Users"
-          />
-          <Button
-            type="submit"
-            onClick={() => updateAccessMutation()}
-            isLoading={isUpdatingAccess}
-            className='self-start'
-          >
-            Save changes
-          </Button>
-        </Skeleton>
-      </CardContent>
-    </Card>
-  );
-};
-
-const EmailScheduling = () => {
-  const { report } = useReports();
-  const [selectedUsers, setSelectedUsers] = useState<Array<string>>([]);
-  const [frequency, setFrequency] = useState<ScheduleSelect['frequency']>('daily');
-  const [timeOfDay, setTimeOfDay] = useState('12:00');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [customInterval, setCustomInterval] = useState('1');
-
-  const { data: allUsers = [], isFetching: fetchingUsers } = useQuery({
-    queryFn: () => getUsersWithAccess(report.id),
-    select: (data) => data.data.users.map(({ user }) => ({
-      label: `${user.first_name} ${user.last_name}`,
-      value: user.id
-    })),
-    queryKey: ['Users', 'getAll']
-  });
-
-  const { mutateAsync: updateScheduleMutation, isPending: isUpdatingSchedule } = useMutation({
-    mutationFn: () => updateSchedule(report.id, {
-      users: selectedUsers,
-      schedule: {
-        frequency,
-        timeOfDay,
-        daysOfMonth: selectedDate ? [selectedDate.getDate()] : [],
-        daysOfWeek: selectedDate ? [selectedDate.getDay()] : [],
-        customInterval: Number(customInterval),
-      }
-    }),
-  });
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className='text-lg'>Mailing</CardTitle>
-        <CardDescription>
-          Set the users and the email frequency for your report.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className='flex flex-col gap-4'>
-        <Skeleton isLoading={fetchingUsers}>
-          <MultiSelect
-            options={allUsers}
-            values={selectedUsers}
-            onChange={setSelectedUsers}
-            title="Users"
-          />
-        </Skeleton>
-        <div className="space-y-2">
-          <Label htmlFor="frequency">Frequency</Label>
-          <Select
-            value={frequency}
-            onValueChange={(value) => setFrequency(value as ScheduleSelect['frequency'])}
-          >
-            <SelectTrigger id="frequency">
-              <SelectValue placeholder="Select frequency" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="daily">Daily</SelectItem>
-              <SelectItem value="weekly">Weekly</SelectItem>
-              <SelectItem value="monthly">Monthly</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="timeOfDay">Time of Day</Label>
-          <Input
-            id="timeOfDay"
-            type="time"
-            value={timeOfDay}
-            onChange={(e) => setTimeOfDay(e.target.value)}
-          />
-        </div>
-        {
-          frequency === 'weekly'
-          && <div className="space-y-2">
-              <Label>Day of Week</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !selectedDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('E') : <span>Pick a day</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                    captionLayout='dropdown-buttons'
-
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-        }
-        {
-          frequency === 'monthly'
-          && <div className="space-y-2">
-              <Label>Day of Month</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !selectedDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedDate ? moment(selectedDate).format('Do') : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={setSelectedDate}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-        }
-        {
-          frequency === 'custom'
-          && <div className="space-y-2">
-              <Label htmlFor="customInterval">Interval (days)</Label>
-              <Input
-                id="customInterval"
-                type="number"
-                min="1"
-                value={customInterval}
-                onChange={(e) => setCustomInterval(e.target.value)}
-              />
-            </div>
-        }
-        <Button
-          className='self-start mt-2'
-          onClick={() => updateScheduleMutation()}
-          isLoading={isUpdatingSchedule}
-          disabled={isUpdatingSchedule || fetchingUsers}
-        >
-          Save Schedule
-        </Button>
-      </CardContent>
-    </Card>
-  );
-};
-
-const Mailing: React.FC = () => (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='flex items-center gap-2'>
-          <Settings/>
+          <SettingsIcon/>
           <span>Settings</span>
         </Button>
       </DialogTrigger>
@@ -265,14 +63,23 @@ const Mailing: React.FC = () => (
             <TabsTrigger value="Access">Access</TabsTrigger>
           </TabsList>
           <TabsContent value="Scheduling">
-            <EmailScheduling/>
+            <Scheduling
+              report={report}
+              selectedUsers={selectedSchedulingUsers}
+              setSelectedUsers={setSelectedSchedulingUsers}
+            />
           </TabsContent>
           <TabsContent value="Access">
-            <ReportAccess/>
+            <Access
+              report={report}
+              selectedUsers={selectedAccessUsers}
+              setSelectedUsers={setSelectedAccessUsers}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>
     </Dialog>
-);
+  );
+};
 
-export default Mailing;
+export default Settings;

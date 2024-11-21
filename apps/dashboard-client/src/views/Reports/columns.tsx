@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { GeneratedReportColumns, GeneratedReportData, DetailedColumnSelect } from '@trg_package/schemas-reporting/types';
 import { Button } from '@trg_package/vite/components';
 import { Trash } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import Action from '@/components/composite/dashboard/Action';
 import { SortingButton } from '@/components/composite/SortingButton';
 import { FormState } from './interface';
@@ -14,9 +15,13 @@ export const columns: ColumnDef<FormState>[] = [
     accessorKey: 'name',
     header: ({ column }) => <SortingButton column={column} label="Name" />,
     cell: ({ row }) => {
+      const queryClient = useQueryClient();
       const report = row.original;
       return (
-        <Link to={`/dashboard/Reports/Read/${report.id}`}>
+        <Link
+          to={`/dashboard/Reports/Read/${report.id}`}
+          onClick={() => queryClient.removeQueries({ queryKey: ['Reports'], exact: false })}
+        >
           <span className="flex gap-4 items-center">
             {report.name}
           </span>
