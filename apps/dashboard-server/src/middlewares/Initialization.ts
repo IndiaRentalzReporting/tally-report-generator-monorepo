@@ -170,7 +170,7 @@ export class Initialization {
       ...user,
       email: '',
       password: '',
-      userTenants: [],
+      teams: [],
       tenant: apiKeyTenant
     };
 
