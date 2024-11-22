@@ -4,9 +4,32 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import AuthService from '../services/auth.service';
 import UserService from '../services/user.service';
+import TenantService from '../services/tenant.service';
 import UserTenantService from '../services/user_tenant.service';
+
+declare global {
+  namespace Express {
+    interface User extends AuthDetailedUser, DashDetailedUser {}
+    interface Response {
+      originalJson(body: any): Response;
+    }
+  }
+}
+
+declare module 'express-session' {
+  interface SessionData {
+    passport?: {
+      user?: {
+        email: string;
+        tenant_id: string;
+      };
+    };
+  }
+}
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {
@@ -36,31 +59,39 @@ export const passportLoader = (app: Express) => {
   ) => {
     done(null, {
       email: user.email,
-      tenant: user.tenant.id
+      tenant_id: user.tenant.id
     });
   };
 
   const deserializeUserCallback = async (
     userObject: {
       email: string;
-      tenant: string;
+      tenant_id: string;
     },
     done: (
       err: any,
       user?: false | NonNullable<Request['user']> | null | undefined
     ) => void
   ) => {
-    const { email, tenant: tenant_id } = userObject;
+    const { email, tenant_id } = userObject;
     try {
       const user = await UserService.findOne({
         email
       });
+
       await UserTenantService.findOne({
         user_id: user.id,
         tenant_id
       });
 
-      if (user) done(null, user);
+      const tenant = await TenantService.findOne({
+        id: tenant_id
+      });
+
+      if (user) {
+        user.tenant = tenant;
+        done(null, user);
+      }
     } catch (e) {
       done(e);
     }

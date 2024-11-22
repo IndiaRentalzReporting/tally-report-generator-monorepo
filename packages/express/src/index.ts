@@ -4,8 +4,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import cookieParser from 'cookie-parser';
 import config from './config';
 import { sessionsLoader } from './loaders/sessions';
@@ -46,12 +44,3 @@ export const expressLoader = async ({
 
   return app;
 };
-
-declare global {
-  namespace Express {
-    interface User extends AuthDetailedUser, DashDetailedUser {}
-    interface Response {
-      originalJson(body: any): Response;
-    }
-  }
-}

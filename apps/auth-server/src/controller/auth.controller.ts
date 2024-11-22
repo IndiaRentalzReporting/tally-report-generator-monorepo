@@ -3,6 +3,7 @@ import {
   TenantInsert,
   TenantSelect,
   UserSelect,
+  UserTenantSelect,
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError, NotFoundError, UnauthenticatedError } from '@trg_package/errors';
 import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
@@ -11,6 +12,8 @@ import AuthService from '../services/auth.service';
 import config from '@/config';
 import { sendMail } from '@/email';
 import UserService from '@/services/user.service';
+import TenantService from '@/services/tenant.service';
+import UserTenantService from '@/services/user_tenant.service';
 import { RegisterUser } from '@/types/user';
 
 export const onboard = async (
@@ -47,6 +50,54 @@ export const handleSignIn = async (
       });
     }
     throw new UnauthenticatedError('Not logged in');
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const handleSwitchTeam = async (
+  req: Request<object, object, { tenant_id: UserTenantSelect['tenant_id'] }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { tenant_id } = req.body;
+
+    if (!req.user || req.isUnauthenticated()) {
+      return res.status(401).json({ message: 'User is not authenticated' });
+    }
+
+    const { user } = req;
+
+    const userTenant = await UserTenantService.findOne({
+      user_id: user.id,
+      tenant_id
+    });
+
+    if (!userTenant) {
+      throw new UnauthenticatedError('Unauthorized to access this team!');
+    }
+
+    const tenant = await TenantService.findOne({
+      id: tenant_id
+    });
+
+    req.user.tenant = tenant;
+    req.session.passport = {
+      user: {
+        email: req.user.email,
+        tenant_id: tenant.id
+      }
+    };
+
+    await new Promise<void>((resolve, reject) => {
+      req.session.save((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+
+    res.status(200).send();
   } catch (err) {
     return next(err);
   }
@@ -99,13 +150,10 @@ export const handleSignOut = (
 ) => {
   req.logOut((err) => {
     if (err) return next(err);
-    return req.session.destroy((err) => {
-      if (err) return next(err);
-      return res
-        .clearCookie('connect.sid', { path: '/' })
-        .status(200)
-        .send();
-    });
+    return res
+      .clearCookie('connect.sid', { path: '/' })
+      .status(200)
+      .send();
   });
 };
 

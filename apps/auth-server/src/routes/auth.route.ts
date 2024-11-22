@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import {
   TenantInsertSchema,
-  UserInsertSchema as AuthUserInsertSchema
+  UserInsertSchema as AuthUserInsertSchema,
+  UserTenantSelectSchema
 } from '@trg_package/schemas-auth/types';
 import { validateSchema } from '@trg_package/middlewares';
 import z from 'zod';
@@ -15,7 +16,8 @@ import {
   handlePrivateStatusCheck,
   checkPasswordResetToken,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  handleSwitchTeam
 } from '../controller/auth.controller';
 import { authenticate, isAuthenticated } from '../middlewares';
 
@@ -50,6 +52,17 @@ authRouter.post(
   }),
   authenticate,
   handleSignIn
+);
+
+authRouter.post(
+  '/switch-team',
+  isAuthenticated,
+  validateSchema({
+    body: UserTenantSelectSchema.pick({
+      tenant_id: true
+    })
+  }),
+  handleSwitchTeam
 );
 
 authRouter.post(
