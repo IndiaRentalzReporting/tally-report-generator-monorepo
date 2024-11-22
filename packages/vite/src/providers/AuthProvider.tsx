@@ -28,6 +28,7 @@ interface AuthProviderState {
   loading: boolean;
   permissions: Permissions[];
   tenant: TenantInsert['name'] | null;
+  teams: Array<TenantSelect>;
   firstLogin?: boolean
 }
 
@@ -72,6 +73,7 @@ const initialState: AuthProviderState = {
   loading: true,
   permissions: JSON.parse(getCookie('permissions') ?? '[]'),
   tenant: null,
+  teams: [],
   firstLogin: undefined
 };
 
@@ -222,6 +224,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const permissions = user ? createPermissions(user.role?.permission) : [];
     setCookie('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
+    const teams = user ? user.teams.map(({ tenant }) => tenant) : [];
 
     setState((prev) => ({
       ...prev,
@@ -229,6 +232,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated,
       permissions,
       tenant,
+      teams,
       firstLogin: user?.status === 'inactive'
     }));
   }, [authStatus]);
