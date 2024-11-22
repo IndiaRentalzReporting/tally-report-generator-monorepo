@@ -1,7 +1,5 @@
 import 'express-async-errors';
-import express, {
-  Request, Response, NextFunction, Express
-} from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
@@ -42,11 +40,6 @@ export const expressLoader = async ({
   passportLoader(app);
 
   routesLoader(app);
-
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    console.log(res.json);
-    next();
-  });
 
   app.use(notFound());
   app.use(errorHandler(NODE_ENV));

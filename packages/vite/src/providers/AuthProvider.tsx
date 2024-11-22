@@ -10,7 +10,8 @@ import {
 import {
   TenantInsert,
   TenantSelect,
-  UserSelect
+  UserSelect,
+  UserTenantSelect
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
@@ -48,6 +49,13 @@ interface AuthProviderMutation {
     Error,
     LoginUser
     >;
+  };
+  switchTeam: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<AxiosResponse, Error, Pick<{
+      user_id: string;
+      tenant_id: string;
+    }, 'tenant_id'>>;
   };
   signUp: {
     isLoading: boolean;
@@ -88,6 +96,10 @@ const initialMutation: AuthProviderMutation = {
   },
   signUp: {
     mutation: () => Promise.reject('SignUp Mutation does not exist'),
+    isLoading: false
+  },
+  switchTeam: {
+    mutation: () => Promise.reject('SwitchTeam Mutation does not exist'),
     isLoading: false
   },
   signOut: {
@@ -161,6 +173,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       toast({
         title: 'Signed Up',
         description: 'User successfully signed up!',
+        variant: 'default'
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
+  });
+
+  const { mutateAsync: switchTeamMutation, isPending: isSwitchingTeam } = useMutation({
+    mutationFn: (data: Pick<UserTenantSelect, 'tenant_id'>) => services.switchTeam(data),
+    mutationKey: ['auth', 'switchTeam'],
+    onSuccess: () => {
+      toast({
+        title: 'Switched Team',
+        description: 'You have successfully switched teams!',
         variant: 'default'
       });
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
@@ -250,6 +275,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       onboard: { mutation: onboardMutation, isLoading: isOnboarding },
       signIn: { mutation: signInMutation, isLoading: isSigningIn },
       signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+      switchTeam: { mutation: switchTeamMutation, isLoading: isSwitchingTeam },
       signOut: { mutation: signOutMutation, isLoading: isSigningOut },
       resetPassword: { mutation: resetPasswordMutation, isLoading: isResettingPassword }
     }),
@@ -259,11 +285,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isSigningIn,
       isSigningUp,
       isSigningOut,
+      isSwitchingTeam,
       isResettingPassword,
       onboardMutation,
       signInMutation,
       signOutMutation,
       signUpMutation,
+      switchTeamMutation,
       resetPasswordMutation
     ]
   );

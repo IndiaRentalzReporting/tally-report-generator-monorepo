@@ -29,7 +29,7 @@ import moment from 'moment';
 
 const TeamSwitcher: React.FC = () => {
   const [teamName, setTeamName] = useState('');
-  const { user, teams } = useAuth();
+  const { user, teams, switchTeam: { mutation, isLoading } } = useAuth();
   const { isMobile } = useSidebar();
   if (!user) return null;
   const { tenant } = user;
@@ -64,8 +64,10 @@ const TeamSwitcher: React.FC = () => {
           </DropdownMenuLabel>
           {teams.map((team) => (
             <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
               key={team.name}
               disabled={team.id === tenant.id}
+              onClick={() => mutation({ tenant_id: team.id })}
               className="gap-2 p-2"
             >
               {team.name}
