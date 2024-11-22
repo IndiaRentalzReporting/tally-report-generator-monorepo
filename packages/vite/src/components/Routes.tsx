@@ -12,17 +12,11 @@ export const PublicRoutes: React.FC = () => {
   } = config;
 
   useEffect(() => {
-    if (!!isAuthenticated && !loading) {
+    if (loading) return;
+    if (isAuthenticated) {
       window.location.href = `${PROTOCOL}://${VITE_DASH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
-  }, [
-    isAuthenticated,
-    loading,
-    PROTOCOL,
-    VITE_DASH_SUBDOMAIN,
-    VITE_DOMAIN,
-    VITE_TLD
-  ]);
+  }, [isAuthenticated, loading]);
 
   return (
     <If condition={!isAuthenticated}>
@@ -43,17 +37,11 @@ export const PrivateRoutes: React.FC = () => {
   } = config;
 
   useEffect(() => {
-    if (!isAuthenticated && !loading) {
+    if (loading) return;
+    if (!isAuthenticated) {
       window.location.href = `${PROTOCOL}://${VITE_AUTH_SUBDOMAIN}.${VITE_DOMAIN}.${VITE_TLD}`;
     }
-  }, [
-    isAuthenticated,
-    loading,
-    PROTOCOL,
-    VITE_AUTH_SUBDOMAIN,
-    VITE_DOMAIN,
-    VITE_TLD
-  ]);
+  }, [isAuthenticated, loading]);
 
   return (
     <If condition={isAuthenticated}>

@@ -85,39 +85,9 @@ const initialState: AuthProviderState = {
   firstLogin: undefined
 };
 
-const initialMutation: AuthProviderMutation = {
-  onboard: {
-    mutation: () => Promise.reject('Onboard Mutation does not exist'),
-    isLoading: false
-  },
-  signIn: {
-    mutation: () => Promise.reject('SignIn Mutation does not exist'),
-    isLoading: false
-  },
-  signUp: {
-    mutation: () => Promise.reject('SignUp Mutation does not exist'),
-    isLoading: false
-  },
-  switchTeam: {
-    mutation: () => Promise.reject('SwitchTeam Mutation does not exist'),
-    isLoading: false
-  },
-  signOut: {
-    mutation: () => Promise.reject('SignOut Mutation does not exist'),
-    isLoading: false
-  },
-  resetPassword: {
-    mutation: () => Promise.reject('ResetPassword Mutation does not exist'),
-    isLoading: false
-  }
-};
-
 interface AuthProviderContext extends AuthProviderState, AuthProviderMutation {}
 
-const AuthContext = createContext<AuthProviderContext>({
-  ...initialState,
-  ...initialMutation
-});
+const AuthContext = createContext<AuthProviderContext | null>(null);
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -188,7 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         description: 'You have successfully switched teams!',
         variant: 'default'
       });
-      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+      queryClient.clear();
     }
   });
 
@@ -303,6 +273,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = (): AuthProviderContext => {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
