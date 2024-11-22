@@ -15,12 +15,12 @@ const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path='/' element={<PublicRoutes/>}>
-        <Route index element={<Navigate to="sign-up" />} />
-        <Route path="sign-up" element={<SignUpForm />} />
-        <Route path="sign-in" element={<SignInForm />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password/:token" element={<ResetPassword />} />
-        <Route path="*" element={<Navigate to="sign-up" />} />
+        <Route index element={<Navigate to="sign/up" />} />
+        <Route path="sign/up" element={<SignUpForm />} />
+        <Route path="sign/in" element={<SignInForm />} />
+        <Route path="password/forgot" element={<ForgotPassword />} />
+        <Route path="password/reset/:token" element={<ResetPassword />} />
+        <Route path="*" element={<Navigate to="sign/up" />} />
       </Route>
     ])
   );

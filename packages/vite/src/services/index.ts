@@ -26,14 +26,14 @@ const services = {
     tenant: TenantInsert;
     user: RegisterUser;
   }): AxiosPromise<{ tenant: TenantSelect; user: SafeUserSelect }> => authAxios.post('/onboard', data),
-  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser, firstLoginResetToken?: string }> => authAxios.post('/sign-in', data),
-  signUp: (data: Omit<RegisterUser, 'password'>): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign-up', data),
-  switchTeam: (data: Pick<UserTenantSelect, 'tenant_id'>): AxiosPromise => authAxios.post('/switch-team', data),
-  signOut: (): AxiosPromise => authAxios.post('/sign-out'),
+  signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser, firstLoginResetToken?: string }> => authAxios.post('/sign/in', data),
+  signUp: (data: Omit<RegisterUser, 'password'>): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign/up', data),
+  switchTeam: (data: Pick<UserTenantSelect, 'tenant_id'>): AxiosPromise => authAxios.post('/teams/switch', data),
+  signOut: (): AxiosPromise => authAxios.post('/sign/out'),
   resetPassword: (token: string, data: {
     password: string;
     confirmPassword: string;
-  }): AxiosPromise => authAxios.post('/reset-password', data, { params: { token } })
+  }): AxiosPromise => authAxios.post('/password/reset', data, { params: { token } })
 };
 
 export default services;
