@@ -21,7 +21,7 @@ export class UserService extends BaseServiceNew<
   ): Promise<DetailedUser> {
     const user = await super.findOne(data,{
       with: {
-        userTenants: {
+        teams: {
           with: {
             tenant: true
           }
@@ -29,14 +29,12 @@ export class UserService extends BaseServiceNew<
       }
     }) as Omit<DetailedUser, 'tenant'>;
 
-    const currentTenant = user.userTenants.find(({
+    const currentTenant = user.teams.find(({
       tenant
     }) => tenant.id === tenant_id)?.tenant
-    || user.userTenants[0]?.tenant;
+    || user.teams[0]?.tenant;
 
     if (!currentTenant) throw new Error('Tenant not found!');
-
-    user.userTenants.filter(({ tenant }) => tenant.id !== currentTenant.id);
 
     return {
       ...user,

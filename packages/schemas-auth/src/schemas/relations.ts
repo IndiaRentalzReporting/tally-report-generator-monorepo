@@ -4,11 +4,11 @@ import { TenantSchema } from './tenants';
 import { UserTenantSchema } from './user_tenant';
 
 export const userRelation = relations(UserSchema, ({ many }) => ({
-  userTenants: many(UserTenantSchema)
+  teams: many(UserTenantSchema)
 }));
 
 export const tenantRelation = relations(TenantSchema, ({ many }) => ({
-  userTenants: many(UserTenantSchema)
+  teams: many(UserTenantSchema)
 }));
 
 export const userTenantSchemaRelation = relations(

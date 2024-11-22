@@ -9,7 +9,7 @@ import { UserTenantSelect } from './user_tenant';
 
 type DetailedUser = UserSelect & {
   tenant: TenantSelect;
-  userTenants: Array<UserTenantSelect & { tenant: TenantSelect }>;
+  teams: Array<UserTenantSelect & { tenant: TenantSelect }>;
 };
 
 export {
