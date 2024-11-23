@@ -2,7 +2,7 @@ import { validateSchema } from '@trg_package/middlewares';
 import { TenantSelectSchema, UserTenantSelectSchema } from '@trg_package/schemas-auth/types';
 import { Router } from 'express';
 import { isAuthenticated } from '@/middlewares';
-import { handleSwitchTeam } from '@/controller/auth.controller/teams';
+import { handleCreateTeam, handleSwitchTeam } from '@/controller/auth.controller/teams';
 
 const teamsAuthRouter = Router();
 
@@ -25,7 +25,7 @@ teamsAuthRouter.post(
       name: true
     })
   }),
-  handleSwitchTeam
+  handleCreateTeam
 );
 
 export default teamsAuthRouter;

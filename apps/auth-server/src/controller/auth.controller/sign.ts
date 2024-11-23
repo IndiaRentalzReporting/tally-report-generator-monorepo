@@ -45,31 +45,43 @@ export const handleSignUp = async (
   try {
     if (!req.user) throw new UnauthenticatedError('Not logged in');
 
-    const {
-      tenant
-    } = req.user;
+    const { email } = req.body;
+    const { tenant } = req.user;
 
+    const doesUserExist = await AuthService.checkIfExists('user', {
+      email
+    });
+
+    let authUser: AuthUserSelect;
     const tempPassword = await AuthService.generateTempPassword(24);
-    const dashboardUser = await AuthService.signUp(tenant, {
-      ...req.body,
-      password: tempPassword
-    });
+    if (doesUserExist) {
+      authUser = await UserService.createOneWithTenant({
+        ...req.body,
+        password: tempPassword,
+      }, tenant.id);
+    } else {
+      authUser = await UserService.createOneWithTenant({
+        ...req.body,
+        password: tempPassword,
+        status: 'inactive'
+      }, tenant.id);
 
-    const { MAIL_FROM } = config;
+      const { MAIL_FROM } = config;
 
-    const mailOptions: Mail.Options = {
-      from: `info${MAIL_FROM}`,
-      to: req.body.email,
-      subject: 'Node Contact Request',
-      html: `<div><p>${tempPassword}</p></div>`,
-    };
+      const mailOptions: Mail.Options = {
+        from: `info${MAIL_FROM}`,
+        to: req.body.email,
+        subject: 'Node Contact Request',
+        html: `<div><p>${tempPassword}</p></div>`,
+      };
 
-    return sendMail(mailOptions, (error) => {
-      if (error) {
-        return next(error);
-      }
-      return res.json({ user: dashboardUser });
-    });
+      sendMail(mailOptions, (error) => {
+        if (error) {
+          return next(error);
+        }
+      });
+    }
+    return res.json({ user: authUser });
   } catch (err) {
     return next(err);
   }

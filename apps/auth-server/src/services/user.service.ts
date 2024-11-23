@@ -8,7 +8,7 @@ import {
 import {
   UserInsertSchema as DashboardUserInsertSchema
 } from '@trg_package/schemas-dashboard/types';
-import { BadRequestError, CustomError } from '@trg_package/errors';
+import { BadRequestError, CreateError, CustomError } from '@trg_package/errors';
 import jwt from 'jsonwebtoken';
 import TenantService from './tenant.service';
 import { authDb } from '../models/auth/index';
@@ -24,12 +24,8 @@ class UserService extends BaseUserService {
 
   public async findOne(
     data: Partial<AuthUserSelect>
-  ): Promise<AuthUserSelect> {
-    const authUser = await super.findOne(data, {
-      with: {
-        userTenants: true
-      }
-    }) as AuthDetailedUser;
+  ): Promise<AuthDetailedUser> {
+    const authUser = await super.findOne(data);
 
     return authUser;
   }
@@ -41,7 +37,16 @@ class UserService extends BaseUserService {
     const authUserData = AuthUserInsertSchema.parse(data);
     const dashboardUserData = DashboardUserInsertSchema.parse(data);
 
-    const authUser = await super.createOne(authUserData);
+    const authUser = await super
+      .createOne(authUserData)
+      .catch((e) => {
+        if (e instanceof CreateError) {
+          const user = super.findOne({ email: authUserData.email });
+          return user;
+        }
+        throw e;
+      });
+
     const { db_name, db_username, db_password } = await TenantService.findOne({
       id: tenant_id
     });

@@ -1,8 +1,9 @@
-import { UserTenantSelect } from '@trg_package/schemas-auth/types';
+import { TenantSelect, UserTenantSelect } from '@trg_package/schemas-auth/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
 import TenantService from '@/services/tenant.service';
 import UserTenantService from '@/services/user_tenant.service';
+import AuthService from '@/services/auth.service';
 
 export const handleSwitchTeam = async (
   req: Request<object, object, { tenant_id: UserTenantSelect['tenant_id'] }>,
@@ -44,6 +45,30 @@ export const handleSwitchTeam = async (
         if (err) reject(err);
         else resolve();
       });
+    });
+
+    res.status(200).send();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export const handleCreateTeam = async (
+  req: Request<object, object, { name: TenantSelect['name'] }>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (req.isUnauthenticated() || !req.user) {
+      throw new UnauthenticatedError('User unauthenticated!');
+    }
+
+    const tenant = req.body;
+    const { user } = req;
+
+    await AuthService.createTeam({
+      user,
+      tenant
     });
 
     res.status(200).send();
