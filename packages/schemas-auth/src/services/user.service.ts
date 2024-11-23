@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { UserSchema } from '@/schemas';
 import * as authSchemas from '@/schemas';
 import {
-  DetailedUser, TenantSelect, UserInsert, UserSelect
+  DetailedUser, UserInsert, UserSelect
 } from '@/types';
 
 export class UserService extends BaseServiceNew<
@@ -15,9 +15,8 @@ export class UserService extends BaseServiceNew<
     super(db, UserSchema, db.query.UserSchema);
   }
 
-  public async findOneWithTenant(
+  public async findOne(
     data: Partial<UserSelect>,
-    tenant_id?: TenantSelect['id']
   ): Promise<DetailedUser> {
     const user = await super.findOne(data,{
       with: {
@@ -29,10 +28,7 @@ export class UserService extends BaseServiceNew<
       }
     }) as Omit<DetailedUser, 'tenant'>;
 
-    const currentTenant = user.teams.find(({
-      tenant
-    }) => tenant.id === tenant_id)?.tenant
-    || user.teams[0]?.tenant;
+    const currentTenant = user.teams[0]?.tenant;
 
     if (!currentTenant) throw new Error('Tenant not found!');
 
