@@ -5,7 +5,6 @@ import {
   UserSelect,
   UserTenantSelect
 } from '@trg_package/schemas-auth/types';
-import { SafeUserSelect } from '@trg_package/schemas-dashboard/types';
 import createAxiosClient from '../client';
 import { DetailedUser, LoginUser, RegisterUser } from '../models';
 
@@ -25,10 +24,11 @@ const services = {
   onboard: (data: {
     tenant: TenantInsert;
     user: RegisterUser;
-  }): AxiosPromise<{ tenant: TenantSelect; user: SafeUserSelect }> => authAxios.post('/onboard', data),
+  }): AxiosPromise => authAxios.post('/onboard', data),
   signIn: (data: LoginUser): AxiosPromise<{ user: DetailedUser, firstLoginResetToken?: string }> => authAxios.post('/sign/in', data),
   signUp: (data: Omit<RegisterUser, 'password'>): AxiosPromise<{ user: UserSelect }> => authAxios.post('/sign/up', data),
   switchTeam: (data: Pick<UserTenantSelect, 'tenant_id'>): AxiosPromise => authAxios.post('/teams/switch', data),
+  createTeam: (data: Pick<TenantSelect, 'name'>): AxiosPromise => authAxios.post('/teams/create', data),
   signOut: (): AxiosPromise => authAxios.post('/sign/out'),
   resetPassword: (token: string, data: {
     password: string;

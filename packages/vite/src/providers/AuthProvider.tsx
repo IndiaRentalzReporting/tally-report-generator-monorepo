@@ -57,6 +57,10 @@ interface AuthProviderMutation {
       tenant_id: string;
     }, 'tenant_id'>>;
   };
+  createTeam: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<AxiosResponse, Error, Pick<TenantSelect, 'name'>>;
+  };
   signUp: {
     isLoading: boolean;
     mutation: UseMutateAsyncFunction<
@@ -162,6 +166,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   });
 
+  const { mutateAsync: createTeamMutation, isPending: isCreatingTeam } = useMutation({
+    mutationFn: (data: Pick<TenantSelect, 'name'>) => services.createTeam(data),
+    mutationKey: ['auth', 'createTeam'],
+    onSuccess: () => {
+      toast({
+        title: 'Created Team',
+        description: 'You have successfully created a team!',
+        variant: 'default'
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
+  });
+
   const { mutateAsync: signOutMutation, isPending: isSigningOut } = useMutation(
     {
       mutationFn: services.signOut,
@@ -246,6 +263,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       signIn: { mutation: signInMutation, isLoading: isSigningIn },
       signUp: { mutation: signUpMutation, isLoading: isSigningUp },
       switchTeam: { mutation: switchTeamMutation, isLoading: isSwitchingTeam },
+      createTeam: { mutation: createTeamMutation, isLoading: isCreatingTeam },
       signOut: { mutation: signOutMutation, isLoading: isSigningOut },
       resetPassword: { mutation: resetPasswordMutation, isLoading: isResettingPassword }
     }),
@@ -256,13 +274,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isSigningUp,
       isSigningOut,
       isSwitchingTeam,
+      isCreatingTeam,
       isResettingPassword,
       onboardMutation,
       signInMutation,
       signOutMutation,
       signUpMutation,
       switchTeamMutation,
-      resetPasswordMutation
+      resetPasswordMutation,
+      createTeamMutation
     ]
   );
 
