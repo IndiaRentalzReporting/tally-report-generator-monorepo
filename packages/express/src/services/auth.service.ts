@@ -12,7 +12,7 @@ class AuthService {
     data: Pick<UserInsert, 'email' | 'password'>
   ): Promise<Request['user']> {
     const { email, password } = data;
-    const user = await UserService.findOne({
+    const user = await UserService.findOneWithTenant({
       email
     });
 

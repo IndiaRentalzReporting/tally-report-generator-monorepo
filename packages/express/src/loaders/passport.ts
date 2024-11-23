@@ -75,8 +75,12 @@ export const passportLoader = (app: Express) => {
   ) => {
     const { email, tenant_id } = userObject;
     try {
-      const user = await UserService.findOne({
+      const user = await UserService.findOneWithTenant({
         email
+      }, tenant_id);
+
+      const tenant = await TenantService.findOne({
+        id: tenant_id
       });
 
       await UserTenantService.findOne({
@@ -84,14 +88,11 @@ export const passportLoader = (app: Express) => {
         tenant_id
       });
 
-      const tenant = await TenantService.findOne({
-        id: tenant_id
-      });
-
       if (user) {
         user.tenant = tenant;
-        done(null, user);
+        return done(null, user);
       }
+      return done(null, false);
     } catch (e) {
       done(e);
     }
