@@ -1,16 +1,11 @@
 import { varchar, uuid, pgTable } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
-import { TenantSchema } from './tenants';
 
 export const UserSchema = pgTable('users', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   email: varchar('email', { length: 256 }).notNull().unique(),
   password: varchar('password', { length: 128 }).notNull(),
-  tenant_id: uuid('tenant_id').references(() => TenantSchema.id, {
-    onDelete: 'set null',
-    onUpdate: 'cascade'
-  }).notNull()
 });
 
 export type UserInsert = typeof UserSchema.$inferInsert;

@@ -16,6 +16,7 @@ const ToggleTheme: React.FC = () => {
           variant="ghost"
           size="icon"
           onClick={() => setTheme('light')}
+          className='h-auto w-8'
         >
           <Sun className='!h-4 !w-4'/>
         </Button>
@@ -23,6 +24,7 @@ const ToggleTheme: React.FC = () => {
           variant="ghost"
           size="icon"
           onClick={() => setTheme('dark')}
+          className='h-auto w-8'
         >
           <Moon className='!h-4 !w-4'/>
         </Button>
@@ -30,6 +32,7 @@ const ToggleTheme: React.FC = () => {
           variant="ghost"
           size="icon"
           onClick={() => setTheme('system')}
+          className='h-auto w-8'
         >
           <Computer className='!h-4 !w-4'/>
         </Button>

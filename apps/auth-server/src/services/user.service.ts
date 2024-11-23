@@ -2,17 +2,19 @@ import { UserService as BaseUserService } from '@trg_package/schemas-auth/servic
 import {
   DetailedUser as AuthDetailedUser,
   UserInsertSchema as AuthUserInsertSchema,
-  UserSelect as AuthUserSelect
+  UserSelect as AuthUserSelect,
+  TenantSelect
 } from '@trg_package/schemas-auth/types';
 import {
   UserInsertSchema as DashboardUserInsertSchema
 } from '@trg_package/schemas-dashboard/types';
-import { BadRequestError, CustomError } from '@trg_package/errors';
+import { BadRequestError, CreateError, CustomError } from '@trg_package/errors';
 import jwt from 'jsonwebtoken';
 import TenantService from './tenant.service';
 import { authDb } from '../models/auth/index';
 import config from '@/config';
 import DashboardService from './dashboard.service';
+import UserTenantService from './user_tenant.service';
 import { UserInsert, UserSelect } from '@/types/user';
 
 class UserService extends BaseUserService {
@@ -22,23 +24,31 @@ class UserService extends BaseUserService {
 
   public async findOne(
     data: Partial<AuthUserSelect>
-  ): Promise<AuthUserSelect> {
-    const authUser = await super.findOne(data, {
-      with: {
-        tenant: true
-      }
-    }) as AuthDetailedUser;
+  ): Promise<AuthDetailedUser> {
+    const authUser = await super.findOne(data);
 
     return authUser;
   }
 
-  public async createOne(data: UserInsert): Promise<AuthUserSelect> {
+  public async createOneWithTenant(
+    data: UserInsert,
+    tenant_id: TenantSelect['id']
+  ): Promise<AuthUserSelect> {
     const authUserData = AuthUserInsertSchema.parse(data);
     const dashboardUserData = DashboardUserInsertSchema.parse(data);
 
-    const authUser = await super.createOne(authUserData);
+    const authUser = await super
+      .createOne(authUserData)
+      .catch((e) => {
+        if (e instanceof CreateError) {
+          const user = super.findOne({ email: authUserData.email });
+          return user;
+        }
+        throw e;
+      });
+
     const { db_name, db_username, db_password } = await TenantService.findOne({
-      id: authUser.tenant_id
+      id: tenant_id
     });
 
     if (!db_name || !db_username || !db_password) {
@@ -57,12 +67,18 @@ class UserService extends BaseUserService {
     });
     await DSI.terminateConnection();
 
+    await UserTenantService.createOne({
+      user_id: authUser.id,
+      tenant_id
+    });
+
     return authUser;
   }
 
-  public async updateOne(
+  public async updateOneWithTenant(
     filterDate: Partial<AuthUserSelect>,
-    data: Partial<UserSelect>
+    data: Partial<UserSelect>,
+    tenant_id: TenantSelect['id']
   ): Promise<AuthUserSelect> {
     const authUserData = AuthUserInsertSchema.partial().safeParse(data);
     const dashboardUserData = DashboardUserInsertSchema.partial().safeParse(data);
@@ -74,7 +90,7 @@ class UserService extends BaseUserService {
 
     if (dashboardUserData.success) {
       const { db_name, db_username, db_password } = await TenantService.findOne({
-        id: authUser.tenant_id
+        id: tenant_id
       });
 
       if (!db_name || !db_username || !db_password) {
@@ -94,11 +110,14 @@ class UserService extends BaseUserService {
     return authUser;
   }
 
-  public async deleteOne(filterData: Partial<AuthUserSelect>): Promise<AuthUserSelect> {
+  public async deleteOneWithTenant(
+    filterData: Partial<AuthUserSelect>,
+    tenant_id: TenantSelect['id']
+  ): Promise<AuthUserSelect> {
     const authUser = await super.deleteOne(filterData);
 
     const { db_name, db_username, db_password } = await TenantService.findOne({
-      id: authUser.tenant_id
+      id: tenant_id
     });
 
     if (!db_name || !db_username || !db_password) {
@@ -114,15 +133,29 @@ class UserService extends BaseUserService {
     await DSI.deleteUser({ id: authUser.id });
     await DSI.terminateConnection();
 
+    await UserTenantService.deleteOne({
+      user_id: authUser.id,
+      tenant_id
+    });
+
     return authUser;
   }
 
-  public async createJwtToken(id: UserSelect['id']): Promise<string> {
+  public async createJwtToken({
+    user_id,
+    tenant_id
+  }: {
+    user_id: AuthUserSelect['id'],
+    tenant_id?: TenantSelect['id']
+  }): Promise<string> {
     try {
       const { SMTP_SECRET } = config;
 
       return jwt.sign(
-        { id },
+        {
+          user_id,
+          tenant_id
+        },
         SMTP_SECRET,
         { expiresIn: '15m' }
       );
@@ -131,12 +164,18 @@ class UserService extends BaseUserService {
     }
   }
 
-  public async verifyJwtToken(token: string): Promise<AuthUserSelect> {
+  public async verifyJwtToken(token: string): Promise<{
+    user_id: AuthUserSelect['id'],
+    tenant_id?: TenantSelect['id']
+  }> {
     try {
       const { SMTP_SECRET } = config;
-      const { id } = jwt.verify(token, SMTP_SECRET) as jwt.JwtPayload;
+      const { user_id, tenant_id } = jwt.verify(token, SMTP_SECRET) as jwt.JwtPayload;
 
-      return this.findOne({ id });
+      return {
+        user_id,
+        tenant_id
+      };
     } catch (error) {
       throw new BadRequestError('Invalid reset password token');
     }

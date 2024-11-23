@@ -1,7 +1,7 @@
 import { UserService as BaseUserService } from '@trg_package/schemas-auth/services';
 import {
-  DetailedUser as AuthDetailedUser,
-  UserSelect as AuthUserSelect
+  UserSelect as AuthUserSelect,
+  TenantSelect
 } from '@trg_package/schemas-auth/types';
 import { BadRequestError } from '@trg_package/errors';
 import TenantService from './tenant.service';
@@ -13,17 +13,14 @@ class UserService extends BaseUserService {
     super(authDb);
   }
 
-  public async findOne(
-    data: Partial<AuthUserSelect>
+  public async findOneWithTenant(
+    data: Partial<AuthUserSelect>,
+    tenant_id?: TenantSelect['id']
   ): Promise<NonNullable<Express.User>> {
-    const authUser = await super.findOne(data, {
-      with: {
-        tenant: true
-      }
-    }) as AuthDetailedUser;
+    const authUser = await super.findOne(data);
 
     const { db_name, db_username, db_password } = await TenantService.findOne(
-      { id: authUser.tenant_id }
+      { id: tenant_id || authUser.tenant.id }
     );
 
     if (!db_name || !db_username || !db_password) {

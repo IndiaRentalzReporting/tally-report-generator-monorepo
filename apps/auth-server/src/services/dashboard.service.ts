@@ -57,8 +57,13 @@ class DashboardService {
     this.URL = DASHBOARD_PG_URL;
   }
 
-  public async seed(): Promise<void> {
+  public async migrateAndSeedRole(): Promise<RoleSelect['id']> {
     migrateDashboardSchema(this.URL);
+    const { id } = await this.seedRole();
+    return id;
+  }
+
+  public async seed(): Promise<void> {
     await this.dashboardClient.transaction(async (trx) => {
       await this.seedAction(trx);
       await this.seedModules(trx);

@@ -1,4 +1,3 @@
-import { Package2 } from 'lucide-react';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
@@ -17,12 +16,11 @@ import {
   SidebarGroupLabel,
   useSidebar
 } from '@trg_package/vite/components';
-import { useAuth } from '@trg_package/vite/providers';
 import { useNav } from '@/providers/NavigationProvider';
 import User from '../user';
+import TeamSwitcher from './TeamSwitcher';
 
 const Sidebar: React.FC = () => {
-  const { tenant } = useAuth();
   const { navigation } = useNav();
   const { state } = useSidebar();
 
@@ -31,12 +29,7 @@ const Sidebar: React.FC = () => {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <NavLink to="/" className="flex items-center gap-2 font-semibold">
-                <div><Package2/></div>
-                <span>{tenant}</span>
-              </NavLink>
-            </SidebarMenuButton>
+            <TeamSwitcher/>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

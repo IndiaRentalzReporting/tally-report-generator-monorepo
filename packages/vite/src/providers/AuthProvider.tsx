@@ -10,7 +10,8 @@ import {
 import {
   TenantInsert,
   TenantSelect,
-  UserSelect
+  UserSelect,
+  UserTenantSelect
 } from '@trg_package/schemas-auth/types';
 import { AxiosResponse } from 'axios';
 import { UserRole, Permissions, SafeUserSelect } from '@trg_package/schemas-dashboard/types';
@@ -28,6 +29,7 @@ interface AuthProviderState {
   loading: boolean;
   permissions: Permissions[];
   tenant: TenantInsert['name'] | null;
+  teams: Array<TenantSelect>;
   firstLogin?: boolean
 }
 
@@ -47,6 +49,17 @@ interface AuthProviderMutation {
     Error,
     LoginUser
     >;
+  };
+  switchTeam: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<AxiosResponse, Error, Pick<{
+      user_id: string;
+      tenant_id: string;
+    }, 'tenant_id'>>;
+  };
+  createTeam: {
+    isLoading: boolean;
+    mutation: UseMutateAsyncFunction<AxiosResponse, Error, Pick<TenantSelect, 'name'>>;
   };
   signUp: {
     isLoading: boolean;
@@ -72,38 +85,13 @@ const initialState: AuthProviderState = {
   loading: true,
   permissions: JSON.parse(getCookie('permissions') ?? '[]'),
   tenant: null,
+  teams: [],
   firstLogin: undefined
-};
-
-const initialMutation: AuthProviderMutation = {
-  onboard: {
-    mutation: () => Promise.reject('Onboard Mutation does not exist'),
-    isLoading: false
-  },
-  signIn: {
-    mutation: () => Promise.reject('SignIn Mutation does not exist'),
-    isLoading: false
-  },
-  signUp: {
-    mutation: () => Promise.reject('SignUp Mutation does not exist'),
-    isLoading: false
-  },
-  signOut: {
-    mutation: () => Promise.reject('SignOut Mutation does not exist'),
-    isLoading: false
-  },
-  resetPassword: {
-    mutation: () => Promise.reject('ResetPassword Mutation does not exist'),
-    isLoading: false
-  }
 };
 
 interface AuthProviderContext extends AuthProviderState, AuthProviderMutation {}
 
-const AuthContext = createContext<AuthProviderContext>({
-  ...initialState,
-  ...initialMutation
-});
+const AuthContext = createContext<AuthProviderContext | null>(null);
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -159,6 +147,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       toast({
         title: 'Signed Up',
         description: 'User successfully signed up!',
+        variant: 'default'
+      });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
+    }
+  });
+
+  const { mutateAsync: switchTeamMutation, isPending: isSwitchingTeam } = useMutation({
+    mutationFn: (data: Pick<UserTenantSelect, 'tenant_id'>) => services.switchTeam(data),
+    mutationKey: ['auth', 'switchTeam'],
+    onSuccess: () => {
+      toast({
+        title: 'Switched Team',
+        description: 'You have successfully switched teams!',
+        variant: 'default'
+      });
+      queryClient.clear();
+    }
+  });
+
+  const { mutateAsync: createTeamMutation, isPending: isCreatingTeam } = useMutation({
+    mutationFn: (data: Pick<TenantSelect, 'name'>) => services.createTeam(data),
+    mutationKey: ['auth', 'createTeam'],
+    onSuccess: () => {
+      toast({
+        title: 'Created Team',
+        description: 'You have successfully created a team!',
         variant: 'default'
       });
       queryClient.invalidateQueries({ queryKey: ['auth', 'status'] });
@@ -222,6 +236,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const permissions = user ? createPermissions(user.role?.permission) : [];
     setCookie('permissions', JSON.stringify(permissions));
     const tenant = user ? user.tenant?.name : null;
+    const teams = user ? user.teams.map(({ tenant }) => tenant) : [];
 
     setState((prev) => ({
       ...prev,
@@ -229,6 +244,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isAuthenticated,
       permissions,
       tenant,
+      teams,
       firstLogin: user?.status === 'inactive'
     }));
   }, [authStatus]);
@@ -246,6 +262,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       onboard: { mutation: onboardMutation, isLoading: isOnboarding },
       signIn: { mutation: signInMutation, isLoading: isSigningIn },
       signUp: { mutation: signUpMutation, isLoading: isSigningUp },
+      switchTeam: { mutation: switchTeamMutation, isLoading: isSwitchingTeam },
+      createTeam: { mutation: createTeamMutation, isLoading: isCreatingTeam },
       signOut: { mutation: signOutMutation, isLoading: isSigningOut },
       resetPassword: { mutation: resetPasswordMutation, isLoading: isResettingPassword }
     }),
@@ -255,12 +273,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       isSigningIn,
       isSigningUp,
       isSigningOut,
+      isSwitchingTeam,
+      isCreatingTeam,
       isResettingPassword,
       onboardMutation,
       signInMutation,
       signOutMutation,
       signUpMutation,
-      resetPasswordMutation
+      switchTeamMutation,
+      resetPasswordMutation,
+      createTeamMutation
     ]
   );
 
@@ -271,6 +293,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 export const useAuth = (): AuthProviderContext => {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }

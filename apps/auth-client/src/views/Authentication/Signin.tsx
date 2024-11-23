@@ -111,7 +111,7 @@ export const SignInForm = () => {
             </form>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{' '}
-              <Link className="underline" to="/sign-up">
+              <Link className="underline" to="/sign/up">
                 Sign up
               </Link>
             </div>

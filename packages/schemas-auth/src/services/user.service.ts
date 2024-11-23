@@ -3,7 +3,9 @@ import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import bcrypt from 'bcrypt';
 import { UserSchema } from '@/schemas';
 import * as authSchemas from '@/schemas';
-import { UserInsert, UserSelect } from '@/types';
+import {
+  DetailedUser, UserInsert, UserSelect
+} from '@/types';
 
 export class UserService extends BaseServiceNew<
   typeof authSchemas,
@@ -13,9 +15,31 @@ export class UserService extends BaseServiceNew<
     super(db, UserSchema, db.query.UserSchema);
   }
 
+  public async findOne(
+    data: Partial<UserSelect>,
+  ): Promise<DetailedUser> {
+    const user = await super.findOne(data,{
+      with: {
+        teams: {
+          with: {
+            tenant: true
+          }
+        }
+      }
+    }) as Omit<DetailedUser, 'tenant'>;
+
+    const currentTenant = user.teams[0]?.tenant;
+
+    if (!currentTenant) throw new Error('Tenant not found!');
+
+    return {
+      ...user,
+      tenant: currentTenant
+    };
+  }
+
   public async createOne(data: UserInsert): Promise<UserSelect> {
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(data.password, salt);
+    const password = await this.hashPassword(data.password);
     const user = await super.createOne({
       ...data,
       password
@@ -29,11 +53,15 @@ export class UserService extends BaseServiceNew<
   ): Promise<UserSelect> {
     const update = data;
     if (data.password) {
-      const salt = await bcrypt.genSalt(10);
-      const password = await bcrypt.hash(data.password, salt);
+      const password = await this.hashPassword(data.password);
       update.password = password;
     }
     const user = await super.updateOne(filterData, data);
     return user;
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return bcrypt.hash(password, salt);
   }
 }

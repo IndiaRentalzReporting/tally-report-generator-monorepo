@@ -1,13 +1,9 @@
 import 'express-async-errors';
-import express, {
-  Request, Response, NextFunction, Express
-} from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import cookieParser from 'cookie-parser';
 import config from './config';
 import { sessionsLoader } from './loaders/sessions';
@@ -43,22 +39,8 @@ export const expressLoader = async ({
 
   routesLoader(app);
 
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    console.log(res.json);
-    next();
-  });
-
   app.use(notFound());
   app.use(errorHandler(NODE_ENV));
 
   return app;
 };
-
-declare global {
-  namespace Express {
-    interface User extends AuthDetailedUser, DashDetailedUser {}
-    interface Response {
-      originalJson(body: any): Response;
-    }
-  }
-}
