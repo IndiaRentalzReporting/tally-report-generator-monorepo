@@ -13,19 +13,16 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   useSidebar,
-  Button,
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  Input,
-  Label
+  DialogTitle
 } from '@trg_package/vite/components';
 import { useAuth } from '@trg_package/vite/providers';
 import moment from 'moment';
+import CreateTeam from '../CreateTeam';
 
 const TeamSwitcher: React.FC = () => {
   const { isMobile } = useSidebar();
@@ -85,25 +82,7 @@ const TeamSwitcher: React.FC = () => {
               Enter a name for your new team.
             </DialogDescription>
           </DialogHeader>
-          <form className='flex flex-col gap-4'>
-            <div className="space-y-2">
-              <Label htmlFor="teamName" className="text-right">
-                Team Name
-              </Label>
-              <Input
-                id="teamName"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                className="col-span-3"
-                required
-              />
-            </div>
-            <DialogFooter className='self-start'>
-              <Button type="submit">
-                Create Team
-              </Button>
-            </DialogFooter>
-          </form>
+          <CreateTeam/>
         </DialogContent>
       </Dialog>
   );

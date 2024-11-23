@@ -2,9 +2,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Copy, Trash2 } from 'lucide-react';
 import { Button } from '@trg_package/vite/components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useToast } from '@trg_package/vite/hooks';
 import { SortingButton } from '@/components/composite/SortingButton';
 import { SelectState } from './interface';
-import { useToast } from '$/lib/hooks';
 import { services } from '@/services/ApiKey';
 
 export const columns: ColumnDef<SelectState>[] = [
