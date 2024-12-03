@@ -19,8 +19,6 @@ import {
 } from '../routes';
 
 const routesLoader = (app: Express) => {
-  Initialization.initialize();
-  // app.use(Initialization.attachUser);
   app.use(Initialization.initDatabase);
   app.use(Initialization.initServices);
   app.use(Initialization.attachApiKeyUserId);

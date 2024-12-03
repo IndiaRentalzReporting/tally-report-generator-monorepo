@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { Redis } from 'ioredis';
-import { DetailedUser as AuthDetailedUser, TenantSelect } from '@trg_package/schemas-auth/types';
-import { DetailedUser as DashDetailedUser, UserSelect } from '@trg_package/schemas-dashboard/types';
+import { TenantSelect } from '@trg_package/schemas-auth/types';
+import { UserSelect } from '@trg_package/schemas-dashboard/types';
 import { BadRequestError, UnauthenticatedError } from '@trg_package/errors';
 import {
   UserService,
@@ -30,10 +30,6 @@ import config from '../config';
 import { decrypt } from '../utils/crypto';
 
 const { REDIS_PORT, REDIS_HOST } = config;
-
-interface CachedUser {
-  user: AuthDetailedUser & DashDetailedUser;
-}
 
 export interface DashboardDatabase {
   client: PostgresJsDatabase<typeof dashboardSchemas>
