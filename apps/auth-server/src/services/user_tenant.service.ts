@@ -1,5 +1,5 @@
 import { UserTenantService as BaseUserTenantService } from '@trg_package/schemas-auth/services';
-import authDb from '@/models/auth';
+import authDb from '../models/auth';
 
 class UserTenantService extends BaseUserTenantService {
   constructor() {

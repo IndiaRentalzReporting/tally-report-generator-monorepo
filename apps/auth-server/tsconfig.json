@@ -3,14 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["src", "*.js", "*.ts", ".eslintrc.cjs"],
-  "exclude": ["node_modules", "dist", ".turbo"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "exclude": ["node_modules", "dist", ".turbo"]
 }

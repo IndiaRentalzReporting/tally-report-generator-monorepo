@@ -5,7 +5,7 @@ import {
   TenantSelect,
   UserSelect
 } from '@trg_package/schemas-auth/types';
-import { RegisterUser, UserSelect as DetailedUser } from '@/types/user';
+import { RegisterUser, UserSelect as DetailedUser } from '../types/user';
 import UserService from './user.service';
 import TenantService from './tenant.service';
 import DashboardService from './dashboard.service';

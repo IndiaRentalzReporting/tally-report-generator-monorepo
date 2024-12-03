@@ -1,7 +1,7 @@
 import { BadRequestError } from '@trg_package/errors';
 import { drizzle , PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import config from '@/config';
+import config from '../config';
 
 const { DASHBOARD_PG_HOST, DASHBOARD_PG_PORT } = config;
 

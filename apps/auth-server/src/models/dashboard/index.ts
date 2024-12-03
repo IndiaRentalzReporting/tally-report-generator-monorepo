@@ -1,5 +1,5 @@
 import { BadRequestError } from '@trg_package/errors';
-import { createClient } from '@/models';
+import { createClient } from '../index';
 import * as dashboardSchemas from './schema';
 import config, { DashboardPgUrlKey } from '../../config';
 

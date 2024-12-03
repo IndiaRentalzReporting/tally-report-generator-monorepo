@@ -12,10 +12,10 @@ import { BadRequestError, CreateError, CustomError } from '@trg_package/errors';
 import jwt from 'jsonwebtoken';
 import TenantService from './tenant.service';
 import { authDb } from '../models/auth/index';
-import config from '@/config';
+import config from '../config';
 import DashboardService from './dashboard.service';
 import UserTenantService from './user_tenant.service';
-import { UserInsert, UserSelect } from '@/types/user';
+import { UserInsert, UserSelect } from '../types/user';
 
 class UserService extends BaseUserService {
   constructor() {

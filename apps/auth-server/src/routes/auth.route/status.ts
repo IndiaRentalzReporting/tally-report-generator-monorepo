@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handleStatusCheck } from '@/controller/auth.controller/status';
+import { handleStatusCheck } from '../../controller/auth.controller/status';
 
 const statusAuthRouter = Router();
 

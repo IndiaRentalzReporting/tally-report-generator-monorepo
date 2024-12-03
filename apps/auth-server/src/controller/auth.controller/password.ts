@@ -1,9 +1,9 @@
 import { NotFoundError, BadRequestError } from '@trg_package/errors';
 import { UserSelect } from '@trg_package/schemas-auth/types';
 import { NextFunction, Request, Response } from 'express';
-import UserService from '@/services/user.service';
-import { sendMail } from '@/email';
-import config from '@/config';
+import UserService from '../../services/user.service';
+import { sendMail } from '../../email';
+import config from '../../config';
 
 export const forgotPassword = async (
   req: Request<{ token: string }, object, { email: UserSelect['email'] }>,

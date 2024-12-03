@@ -7,7 +7,7 @@ import signAuthRouter from './sign';
 import teamsAuthRouter from './teams';
 import statusAuthRouter from './status';
 import passwordAuthRouter from './password';
-import { onboard } from '@/controller/auth.controller';
+import { onboard } from '../../controller/auth.controller';
 
 const authRouter = Router();
 

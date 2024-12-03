@@ -3,11 +3,11 @@ import { UserSelect as AuthUserSelect } from '@trg_package/schemas-auth/types';
 import { UserSelect as DashboardUserSelect } from '@trg_package/schemas-dashboard/types';
 import { NextFunction, Request, Response } from 'express';
 import Mail from 'nodemailer/lib/mailer';
-import config from '@/config';
-import { RegisterUser } from '@/types/user';
-import AuthService from '@/services/auth.service';
-import UserService from '@/services/user.service';
-import { sendMail } from '@/email';
+import config from '../../config';
+import { RegisterUser } from '../../types/user';
+import AuthService from '../../services/auth.service';
+import UserService from '../../services/user.service';
+import { sendMail } from '../../email';
 
 export const handleSignIn = async (
   req: Request<object, object, Pick<RegisterUser, 'email' | 'password'>>,

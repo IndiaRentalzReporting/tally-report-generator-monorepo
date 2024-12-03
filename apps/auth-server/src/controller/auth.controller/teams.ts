@@ -1,9 +1,9 @@
 import { TenantSelect, UserTenantSelect } from '@trg_package/schemas-auth/types';
 import { UnauthenticatedError } from '@trg_package/errors';
 import { NextFunction, Request, Response } from 'express';
-import TenantService from '@/services/tenant.service';
-import UserTenantService from '@/services/user_tenant.service';
-import AuthService from '@/services/auth.service';
+import TenantService from '../../services/tenant.service';
+import UserTenantService from '../../services/user_tenant.service';
+import AuthService from '../../services/auth.service';
 
 export const handleSwitchTeam = async (
   req: Request<object, object, { tenant_id: UserTenantSelect['tenant_id'] }>,

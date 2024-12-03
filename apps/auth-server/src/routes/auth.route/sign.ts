@@ -2,8 +2,8 @@ import { validateSchema } from '@trg_package/express/middlewares';
 import { Router } from 'express';
 import { UserInsertSchema as DashboardUserInsertSchema } from '@trg_package/schemas-dashboard/types';
 import { UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
-import { authenticate, isAuthenticated } from '@/middlewares';
-import { handleSignIn, handleSignUp, handleSignOut } from '@/controller/auth.controller/sign';
+import { authenticate, isAuthenticated } from '../../middlewares';
+import { handleSignIn, handleSignUp, handleSignOut } from '../../controller/auth.controller/sign';
 
 const signAuthRouter = Router();
 

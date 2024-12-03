@@ -5,7 +5,7 @@ import { UserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   forgotPassword,
   resetPassword
-} from '@/controller/auth.controller/password';
+} from '../../controller/auth.controller/password';
 
 const passwordAuthRouter = Router();
 

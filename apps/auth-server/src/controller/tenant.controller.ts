@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { TenantSelect, TenantInsert } from '@trg_package/schemas-auth/types';
 import { TenantService as BaseTenantService } from '@trg_package/schemas-auth/services';
-import authDb from '@/models/auth';
+import authDb from '../models/auth';
 
 const TenantService = new BaseTenantService(authDb);
 

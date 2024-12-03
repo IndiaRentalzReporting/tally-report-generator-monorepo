@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import {
   TenantInsert,
 } from '@trg_package/schemas-auth/types';
-import AuthService from '@/services/auth.service';
-import { RegisterUser } from '@/types/user';
+import AuthService from '../../services/auth.service';
+import { RegisterUser } from '../../types/user';
 
 export const onboard = async (
   req: Request<object, object, { tenant: TenantInsert; user: RegisterUser }>,
