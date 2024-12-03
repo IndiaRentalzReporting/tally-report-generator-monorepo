@@ -9,6 +9,9 @@ services:
       dockerfile: ./apps/auth-client/Dockerfile
     ports:
       - 3000:3000
+    env_file:
+      - ./apps/auth-client/.env
+      - ./.env
     networks:
       - trg_network
 
@@ -19,6 +22,9 @@ services:
       dockerfile: ./apps/auth-server/Dockerfile
     ports:
       - 4000:4000
+    env_file:
+      - ./apps/auth-server/.env
+      - ./.env
     networks:
       - trg_network
 
@@ -29,6 +35,9 @@ services:
       dockerfile: ./apps/dashboard-client/Dockerfile
     ports:
       - 3001:3001
+    env_file:
+      - ./apps/dashboard-client/.env
+      - ./.env
     networks:
       - trg_network
       
@@ -39,6 +48,9 @@ services:
       dockerfile: ./apps/dashboard-server/Dockerfile
     ports:
       - 4001:4001
+    env_file:
+      - ./apps/dashboard-server/.env
+      - ./.env
     networks:
       - trg_network
 
