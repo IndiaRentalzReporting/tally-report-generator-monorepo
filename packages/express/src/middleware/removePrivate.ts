@@ -42,8 +42,5 @@ export const removePrivate = (
     body = removePrivateData(body) as JsonValue;
     return originalJson.call(this, body);
   };
-  res.originalJson = function (body: any): Response {
-    return originalJson.call(this, body);
-  };
   next();
 };

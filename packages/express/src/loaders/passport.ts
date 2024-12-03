@@ -4,32 +4,10 @@ import LocalStrategy, {
   VerifyFunction,
   IStrategyOptions
 } from 'passport-local';
-import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
-import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import AuthService from '../services/auth.service';
 import UserService from '../services/user.service';
 import TenantService from '../services/tenant.service';
 import UserTenantService from '../services/user_tenant.service';
-
-declare global {
-  namespace Express {
-    interface User extends AuthDetailedUser, DashDetailedUser {}
-    interface Response {
-      originalJson(body: any): Response;
-    }
-  }
-}
-
-declare module 'express-session' {
-  interface SessionData {
-    passport?: {
-      user?: {
-        email: string;
-        tenant_id: string;
-      };
-    };
-  }
-}
 
 export const passportLoader = (app: Express) => {
   const customFields: IStrategyOptions = {

@@ -2,12 +2,13 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { errorHandler, notFound } from '@trg_package/middlewares';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { DetailedUser as AuthDetailedUser } from '@trg_package/schemas-auth/types';
+import { DetailedUser as DashDetailedUser } from '@trg_package/schemas-dashboard/types';
 import config from './config';
 import { sessionsLoader } from './loaders/sessions';
-import { removePrivate } from './middleware/removePrivate';
+import { removePrivate, errorHandler, notFound } from './middleware';
 import { passportLoader } from './loaders/passport';
 
 const { NODE_ENV, DOMAIN, TLD } = config;
@@ -44,3 +45,20 @@ export const expressLoader = async ({
 
   return app;
 };
+
+declare global {
+  namespace Express {
+    interface User extends AuthDetailedUser, DashDetailedUser {}
+  }
+}
+
+declare module 'express-session' {
+  interface SessionData {
+    passport?: {
+      user?: {
+        email: string;
+        tenant_id: string;
+      };
+    };
+  }
+}

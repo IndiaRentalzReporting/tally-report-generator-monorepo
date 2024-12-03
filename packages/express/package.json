@@ -1,9 +1,22 @@
 {
   "name": "@trg_package/express",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./middlewares": {
+      "types": "./dist/middleware/index.d.ts",
+      "require": "./dist/middleware/index.js",
+      "import": "./dist/middleware/index.mjs"
+    }
+  },
   "scripts": {
-    "lint": "eslint . --ext ts"
+    "build": "tsup",
+    "lint": "eslint . --ext ts --fix --max-warnings 0",
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@trg_package/config-typescript": "*",
@@ -22,7 +35,7 @@
   },
   "dependencies": {
     "@trg_package/config-env": "*",
-    "@trg_package/middlewares": "*",
+    "@trg_package/express/middlewares": "*",
     "@trg_package/errors": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",

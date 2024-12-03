@@ -30,7 +30,7 @@
     "@trg_package/errors": "*",
     "@trg_package/eslint-config": "*",
     "@trg_package/express": "*",
-    "@trg_package/middlewares": "*",
+    "@trg_package/express/middlewares": "*",
     "@trg_package/schemas-auth": "*",
     "@trg_package/schemas-dashboard": "*",
     "@trg_package/schemas-reporting": "*",

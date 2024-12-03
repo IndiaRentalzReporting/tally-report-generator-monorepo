@@ -1,4 +1,4 @@
-import { validateSchema } from '@trg_package/middlewares';
+import { validateSchema } from '@trg_package/express/middlewares';
 import {
   ReportUserInsertSchema,
   ScheduleInsertSchema,

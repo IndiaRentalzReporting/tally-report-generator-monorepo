@@ -1,4 +1,4 @@
-import { validateSchema } from '@trg_package/middlewares';
+import { validateSchema } from '@trg_package/express/middlewares';
 import { Router } from 'express';
 import z from 'zod';
 import { UserInsertSchema } from '@trg_package/schemas-auth/types';

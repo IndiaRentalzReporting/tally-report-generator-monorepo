@@ -1,6 +1,6 @@
 import z from 'zod';
 import { Router } from 'express';
-import { validateSchema } from '@trg_package/middlewares';
+import { validateSchema } from '@trg_package/express/middlewares';
 import { UserInsertSchema as DashboardUserInsertSchema } from '@trg_package/schemas-dashboard/types';
 import { TenantInsertSchema, UserInsertSchema as AuthUserInsertSchema } from '@trg_package/schemas-auth/types';
 import signAuthRouter from './sign';

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { validateSchema } from '@trg_package/middlewares';
+import { validateSchema } from '@trg_package/express/middlewares';
 import { UserInsertSchema } from '@trg_package/schemas-auth/types';
 import {
   readAll,

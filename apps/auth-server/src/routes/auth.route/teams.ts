@@ -1,4 +1,4 @@
-import { validateSchema } from '@trg_package/middlewares';
+import { validateSchema } from '@trg_package/express/middlewares';
 import { TenantSelectSchema, UserTenantSelectSchema } from '@trg_package/schemas-auth/types';
 import { Router } from 'express';
 import { isAuthenticated } from '@/middlewares';
