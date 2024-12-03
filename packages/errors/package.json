@@ -1,16 +1,26 @@
 {
   "name": "@trg_package/errors",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "description": "",
+  "exports":{
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
   "scripts": {
-    "lint": "eslint . --ext ts"
+    "build": "tsup",
+    "lint": "eslint . --ext ts",
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "@trg_package/config-typescript": "*",
     "@trg_package/eslint-config": "*",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint": "8.57.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "tsup": "^8.2.4"
   },
   "dependencies": {
     "http-status-codes": "^2.3.0"

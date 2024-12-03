@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { ConfigError } from '@trg_package/errors';
 
 export function createConfig<T extends z.ZodObject<any>>(
   schema: T,
@@ -17,7 +16,7 @@ export function createConfig<T extends z.ZodObject<any>>(
       error.issues.forEach((issue) => {
         message += `${issue.path.join('.')}: ${issue.message}\n`;
       });
-      throw new ConfigError(message);
+      throw new Error(message);
     } else {
       throw error;
     }
