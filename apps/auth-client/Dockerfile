@@ -1,10 +1,12 @@
 FROM node:18.18.2 as base
 
+ARG APP_NAME
+
 FROM base as builder
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune @trg_app/auth-client --docker
+RUN turbo prune ${APP_NAME} --docker
 
 FROM base as installer
 WORKDIR /app
@@ -17,7 +19,7 @@ RUN npm install
 COPY --from=builder app/out/full .
 COPY turbo.json turbo.json
 RUN npm install -g turbo
-RUN turbo run build --filter=@trg_app/auth-client...
+RUN turbo run build --filter=${APP_NAME}...
 
 FROM base as runner
 WORKDIR /app

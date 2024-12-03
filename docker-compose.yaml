@@ -1,23 +1,43 @@
 version: '3'
 
 services:
-  mern_template_server_container:
-    image: kapoor17/mern_template_server_image:0.0.0.RELEASE
+
+  auth-client:
+    image: trg_app/auth-client:0.0.0.RELEASE
     build:
-      dockerfile: ./apps/server
-    ports:
-      - 4000:4000
-    networks:
-      - mern_template_network
-  mern_template_client_container:
-    image: kapoor17/mern_template_client_image:0.0.0.RELEASE
-    build:
-      dockerfile: ./apps/client
+      dockerfile: ./apps/auth-client
     ports:
       - 3000:3000
     networks:
-      - mern_template_network
+      - trg_network
+
+  auth-server:
+    image: trg_app/auth-server:0.0.0.RELEASE
+    build:
+      dockerfile: ./apps/auth-server
+    ports:
+      - 4000:4000
+    networks:
+      - trg_network
+
+  dashboard-client:
+    image: trg_app/dashboard-client:0.0.0.RELEASE
+    build:
+      dockerfile: ./apps/dashboard-client
+    ports:
+      - 3001:3001
+    networks:
+      - trg_network
+      
+  dashboard-server:
+    image: trg_app/dashboard-server:0.0.0.RELEASE
+    build:
+      dockerfile: ./apps/dashboard-server
+    ports:
+      - 4001:4001
+    networks:
+      - trg_network
 
 networks:
-  mern_template_network:
+  trg_network:
     driver: bridge
