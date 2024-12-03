@@ -1,25 +1,21 @@
-FROM node:18.18.2 as base
-
-ARG APP_NAME
+FROM node:18-alpine as base
 
 FROM base as builder
+RUN apk update
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune ${APP_NAME} --docker
+RUN turbo prune @trg_app/auth-client --docker
 
 FROM base as installer
+RUN apk update
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY .gitignore .gitignore
-COPY --from=builder app/out/json .
-COPY --from=builder app/out/package-lock.json ./package-lock.json
+COPY --from=builder /app/out/json/ .
 RUN npm install
-
-COPY --from=builder app/out/full .
-COPY turbo.json turbo.json
-RUN npm install -g turbo
-RUN turbo run build --filter=${APP_NAME}...
+COPY --from=builder /app/out/full/ .
 
 FROM base as runner
 WORKDIR /app
@@ -29,4 +25,4 @@ COPY --from=installer app .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "preview", "--w=apps/client"]
+CMD ["npm", "run", "preview", "--w=apps/auth-client"]

@@ -5,7 +5,8 @@ services:
   auth-client:
     image: trg_app/auth-client:0.0.0.RELEASE
     build:
-      dockerfile: ./apps/auth-client
+      context: .
+      dockerfile: ./apps/auth-client/Dockerfile
     ports:
       - 3000:3000
     networks:
@@ -14,7 +15,8 @@ services:
   auth-server:
     image: trg_app/auth-server:0.0.0.RELEASE
     build:
-      dockerfile: ./apps/auth-server
+      context: .
+      dockerfile: ./apps/auth-server/Dockerfile
     ports:
       - 4000:4000
     networks:
@@ -23,7 +25,8 @@ services:
   dashboard-client:
     image: trg_app/dashboard-client:0.0.0.RELEASE
     build:
-      dockerfile: ./apps/dashboard-client
+      context: .
+      dockerfile: ./apps/dashboard-client/Dockerfile
     ports:
       - 3001:3001
     networks:
@@ -32,7 +35,8 @@ services:
   dashboard-server:
     image: trg_app/dashboard-server:0.0.0.RELEASE
     build:
-      dockerfile: ./apps/dashboard-server
+      context: .
+      dockerfile: ./apps/dashboard-server/Dockerfile
     ports:
       - 4001:4001
     networks:
