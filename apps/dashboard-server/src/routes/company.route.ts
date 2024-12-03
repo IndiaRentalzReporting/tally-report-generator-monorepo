@@ -14,7 +14,7 @@ import {
 } from '@trg_package/schemas-tally/types';
 import z from 'zod';
 
-import { createOne, readAll, syncData } from '@/controller/company.controller';
+import { createOne, readAll, syncData } from '../controller/company.controller';
 
 const companyRouter = Router();
 

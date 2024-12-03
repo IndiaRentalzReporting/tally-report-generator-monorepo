@@ -1,7 +1,7 @@
 import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { ConnectionManager } from './connectionManager';
-import config from '@/config';
+import config from '../config';
 
 const { DASHBOARD_PG_HOST, DASHBOARD_PG_PORT } = config;
 

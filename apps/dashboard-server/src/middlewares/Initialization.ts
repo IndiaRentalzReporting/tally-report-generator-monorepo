@@ -24,10 +24,10 @@ import {
 import { CompanyService } from '@trg_package/schemas-tally/services';
 import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { Sql } from 'postgres';
-import { createClient, createUrl } from '@/models';
-import * as dashboardSchemas from '@/models/schemas';
-import config from '@/config';
-import { decrypt } from '@/utils/crypto';
+import { createClient, createUrl } from '../models';
+import * as dashboardSchemas from '../models/schemas';
+import config from '../config';
+import { decrypt } from '../utils/crypto';
 
 const { REDIS_PORT, REDIS_HOST } = config;
 

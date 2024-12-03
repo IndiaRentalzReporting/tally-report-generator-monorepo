@@ -11,8 +11,8 @@ import {
   updateAccess,
   updateOne,
   updateSchedule
-} from '@/controller/report.controller/update';
-import { validateReport } from '@/middlewares/validateReport';
+} from '../../controller/report.controller/update';
+import { validateReport } from '../../middlewares/validateReport';
 
 const reportUpdateRouter = Router();
 

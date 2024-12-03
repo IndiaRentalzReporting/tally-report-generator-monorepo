@@ -17,7 +17,7 @@ import {
   getSelectData,
   getUsersWithAccess,
   readAll
-} from '@/controller/report.controller/read';
+} from '../../controller/report.controller/read';
 
 const reportReadRouter = Router();
 

@@ -8,7 +8,7 @@ import {
   ScheduleUserSelect,
   ScheduleUserInsert
 } from '@trg_package/schemas-reporting/types';
-import { getQueryConfig } from '@/utils/queryBuilder';
+import { getQueryConfig } from '../../utils/queryBuilder';
 
 type ReportResponse<isArray extends boolean = false> = isArray extends true
   ? { reports: Partial<ReportSelect>[] }

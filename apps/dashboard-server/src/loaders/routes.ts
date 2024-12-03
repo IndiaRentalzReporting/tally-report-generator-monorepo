@@ -3,7 +3,7 @@ import {
   attachModuleActionData,
   Initialization,
   isRoleAllowed
-} from '@/middlewares';
+} from '../middlewares';
 import {
   userMeRouter,
   roleRouter,
@@ -16,7 +16,7 @@ import {
   permissionRouter,
   permissionActionRouter,
   userTallyCompanyRouter
-} from '@/routes';
+} from '../routes';
 
 const routesLoader = (app: Express) => {
   Initialization.initialize();
