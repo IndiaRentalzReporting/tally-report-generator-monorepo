@@ -11,8 +11,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "lint": "eslint . --ext ts",
-    "dev": "tsup --watch"
+    "lint": "eslint . --ext ts"
   },
   "keywords": [],
   "author": "",
