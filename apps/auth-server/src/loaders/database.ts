@@ -7,6 +7,6 @@ export async function connectAndLog() {
     await db.execute(sql`SELECT NOW() AS now`);
     console.log('Connected to the PostgreSQL Auth Database');
   } catch (err) {
-    throw new DatabaseError('Error connecting to the PostgreSQL Database');
+    throw new DatabaseError(`Error connecting to the PostgreSQL Database: ${err}`);
   }
 }
