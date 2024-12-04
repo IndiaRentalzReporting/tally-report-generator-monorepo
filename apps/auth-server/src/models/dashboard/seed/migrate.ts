@@ -7,7 +7,7 @@ export function migrateDashboardSchema(PG_URL: string) {
 
   try {
     execSync(
-      `cross-env ${envVariable} npm run ${scriptName}`,
+      `${envVariable} npm run ${scriptName}`,
       {
         stdio: 'inherit'
       }

@@ -7,10 +7,13 @@
     "lint": "dotenv -- turbo lint --concurrency=14",
     "lint:fix": "dotenv -- turbo lint --concurrency=14 -- --fix",
     "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json",
+
     "db-auth:generate": "dotenv -- npm run db-auth:generate -w apps/auth-server",
     "db-auth:migrate": "dotenv -- npm run db-auth:migrate -w apps/auth-server",
     "db-auth:studio": "dotenv -- npm run db-auth:studio -w apps/auth-server",
+
     "db-dashboard:generate": "dotenv -- npm run db-dashboard:generate -w apps/auth-server",
+    "db-dashboard:migrate": "dotenv -- npm run db-dashboard:migrate -w apps/auth-server",
     "db-dashboard:studio": "dotenv -- npm run db-dashboard:studio -w apps/auth-server"
   },
   "dependencies": {
@@ -23,7 +26,7 @@
     "eslint": "8.57.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "turbo": "latest"
+    "turbo": "2.3.3"
   },
   "engines": {
     "node": ">=18"

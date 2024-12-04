@@ -10,8 +10,8 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - ./apps/auth-client/.env
-      - ./.env
+      - ./apps/auth-client/.env.production
+      - ./.env.production
     networks:
       - trg_network
 
@@ -23,8 +23,8 @@ services:
     ports:
       - 4000:4000
     env_file:
-      - ./apps/auth-server/.env
-      - ./.env
+      - ./apps/auth-server/.env.production
+      - ./.env.production
     networks:
       - trg_network
 
@@ -36,8 +36,8 @@ services:
     ports:
       - 3001:3001
     env_file:
-      - ./apps/dashboard-client/.env
-      - ./.env
+      - ./apps/dashboard-client/.env.production
+      - ./.env.production
     networks:
       - trg_network
       
@@ -49,14 +49,14 @@ services:
     ports:
       - 4001:4001
     env_file:
-      - ./apps/dashboard-server/.env
-      - ./.env
+      - ./apps/dashboard-server/.env.production
+      - ./.env.production
     networks:
       - trg_network
   
   db:
     image: postgres
-    container_name: db
+    container_name: trg_pg
     ports:
       - "5432:5432"
     restart: always
@@ -66,8 +66,8 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: Root@123
-      POSTGRES_DB: auth
+      POSTGRES_PASSWORD: auth@123
+      POSTGRES_DB: trg_auth
     networks:
       - trg_network
 
