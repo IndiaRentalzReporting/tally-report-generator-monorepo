@@ -11,10 +11,10 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - ./apps/auth-client/.env
-      - ./.env
+      - ./apps/auth-client/.env.production
+      - ./.env.production
     networks:
-      - trg_network
+      - trg_prod_network
 
   auth-server:
     container_name: auth-server
@@ -23,14 +23,14 @@ services:
       context: .
       dockerfile: ./apps/auth-server/Dockerfile
     depends_on:
-      - trg_pg
+      - trg_prod_pg
     ports:
       - 4000:4000
     env_file:
       - ./apps/auth-server/.env
-      - ./.env
+      - ./.env.production
     networks:
-      - trg_network
+      - trg_prod_network
 
   dashboard-client:
     container_name: dashboard-client
@@ -41,10 +41,10 @@ services:
     ports:
       - 3001:3001
     env_file:
-      - ./apps/dashboard-client/.env
-      - ./.env
+      - ./apps/dashboard-client/.env.production
+      - ./.env.production
     networks:
-      - trg_network
+      - trg_prod_network
       
   dashboard-server:
     container_name: dashboard-server
@@ -53,34 +53,34 @@ services:
       context: .
       dockerfile: ./apps/dashboard-server/Dockerfile
     depends_on:
-      - trg_pg
+      - trg_prod_pg
     ports:
       - 4001:4001
     env_file:
       - ./apps/dashboard-server/.env
-      - ./.env
+      - ./.env.production
     networks:
-      - trg_network
+      - trg_prod_network
   
-  trg_pg:
+  trg_prod_pg:
     image: postgres
-    container_name: trg_pg
+    container_name: trg_prod_pg
     ports:
       - "5432:5432"
     restart: always
     shm_size: 128mb
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - trg_prod_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: auth@123
       POSTGRES_DB: trg_auth
     networks:
-      - trg_network
+      - trg_prod_network
 
 
 networks:
-  trg_network:
+  trg_prod_network:
     driver: bridge
 
 volumes:
-  pg_data:
+  trg_prod_data:

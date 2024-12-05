@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  trg_dev_pg:
+    image: postgres
+    container_name: trg_dev_pg
+    ports:
+      - "5432:5432"
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - trg_dev_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: auth@123
+      POSTGRES_DB: trg_auth
+    networks:
+      - trg_dev_network
+
+networks:
+  trg_dev_network:
+    driver: bridge
+
+volumes:
+  trg_dev_data:
