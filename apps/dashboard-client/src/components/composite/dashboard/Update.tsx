@@ -33,7 +33,16 @@ const Update: React.FC<IUpdateEntityProps> = ({
     action: 'Update'
   });
 
-  const Component = lazy(() => import(`../../../views/${type}/Update`));
+  const Component = lazy(() => {
+    const moduleImports = import.meta.glob<{ default: React.FC<{ id: string }> }>('../../../views/**/Update.tsx');
+    const modulePath = `../../../views/${type}/Update.tsx`;
+
+    if (!moduleImports[modulePath]) {
+      throw new Error(`Module ${modulePath} not found`);
+    }
+
+    return moduleImports[modulePath]().then((module) => module);
+  });
 
   return (
     <If condition={!!isEditAllowed}>

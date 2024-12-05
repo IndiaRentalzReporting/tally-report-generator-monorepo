@@ -26,7 +26,16 @@ const Create: React.FC<ICreateDrawerProps> = ({ module }) => {
     action: 'Create'
   });
 
-  const Component = lazy(() => import(`../../../views/${module}/Create`));
+  const Component = lazy(() => {
+    const moduleImports = import.meta.glob<{ default: React.FC }>('../../../views/**/Create.tsx');
+    const modulePath = `../../../views/${module}/Create.tsx`;
+
+    if (!moduleImports[modulePath]) {
+      throw new Error(`Module ${modulePath} not found for Create Drawer`);
+    }
+
+    return moduleImports[modulePath]().then((module) => module);
+  });
 
   return (
     <When condition={!!isCreateAllowed}>
