@@ -17,8 +17,7 @@ COPY --from=builder /app/out/json/ .
 RUN npm install
 COPY --from=builder /app/out/full/ .
 
-RUN npm install -g turbo
-RUN turbo build
+RUN npm run build
 
 FROM base as runner
 WORKDIR /app
@@ -28,4 +27,4 @@ COPY --from=installer app .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "preview", "--w=apps/dashboard-client"]
+CMD ["npm", "run", "preview", "-w=apps/dashboard-client"]
