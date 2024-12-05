@@ -13,6 +13,7 @@ RUN apk update
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+COPY /.env .
 COPY --from=builder /app/out/json/ .
 RUN npm install
 COPY --from=builder /app/out/full/ .
