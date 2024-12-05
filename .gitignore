@@ -6,10 +6,8 @@ node_modules
 .pnp.js
 
 # Local env files
-**/.env
-**/.env.development
-**/.env.staging
-**/.env.production
+**/.env*
+!**/.env.example
 
 # Testing
 coverage

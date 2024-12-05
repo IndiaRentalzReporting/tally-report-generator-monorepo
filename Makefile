@@ -1,5 +1,3 @@
-docker-create-network:
-	docker network create trg_network
 docker-build:
 	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose.yaml build
 docker-start:

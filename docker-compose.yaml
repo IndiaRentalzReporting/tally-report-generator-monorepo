@@ -3,6 +3,7 @@ version: '3'
 services:
 
   auth-client:
+    container_name: auth-client
     image: trg_app/auth-client:0.0.0.RELEASE
     build:
       context: .
@@ -16,10 +17,13 @@ services:
       - trg_network
 
   auth-server:
+    container_name: auth-server
     image: trg_app/auth-server:0.0.0.RELEASE
     build:
       context: .
       dockerfile: ./apps/auth-server/Dockerfile
+    depends_on:
+      - trg_pg
     ports:
       - 4000:4000
     env_file:
@@ -29,6 +33,7 @@ services:
       - trg_network
 
   dashboard-client:
+    container_name: dashboard-client
     image: trg_app/dashboard-client:0.0.0.RELEASE
     build:
       context: .
@@ -42,10 +47,13 @@ services:
       - trg_network
       
   dashboard-server:
+    container_name: dashboard-server
     image: trg_app/dashboard-server:0.0.0.RELEASE
     build:
       context: .
       dockerfile: ./apps/dashboard-server/Dockerfile
+    depends_on:
+      - trg_pg
     ports:
       - 4001:4001
     env_file:
@@ -54,7 +62,7 @@ services:
     networks:
       - trg_network
   
-  db:
+  trg_pg:
     image: postgres
     container_name: trg_pg
     ports:
