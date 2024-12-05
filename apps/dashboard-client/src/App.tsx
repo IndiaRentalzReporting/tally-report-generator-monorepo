@@ -70,9 +70,16 @@ export const ModuleMapper: React.FC<IModuleMapperProps> = ({
   module,
   action
 }) => {
-  const Component = lazy(
-    () => import(`./views/${module}/${action}`)
-  );
+  const Component = lazy(() => {
+    const moduleImports = import.meta.glob('./views/**/*.tsx');
+    const modulePath = `./views/${module}/${action}.tsx`;
+
+    if (!moduleImports[modulePath]) {
+      throw new Error(`Module ${modulePath} not found`);
+    }
+
+    return moduleImports[modulePath]().then((module) => module as { default: React.ComponentType });
+  });
 
   return (
     <Suspense fallback={<Skeleton isLoading className="h-full" />}>
