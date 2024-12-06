@@ -5,16 +5,17 @@
   "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start:dev": "node dist/src/index.js",
     "test": "jest",
     "dev": "nodemon src/index.ts",
     "lint": "eslint . --ext ts",
+
     "db-auth:generate": "drizzle-kit --config=drizzle.auth.config.ts generate",
-    "db-auth:migrate": "DB_MIGRATING=true drizzle-kit --config=drizzle.auth.config.ts migrate",
+    "db-auth:migrate": "drizzle-kit --config=drizzle.auth.config.ts migrate",
     "db-auth:drop": "drizzle-kit --config=drizzle.auth.config.ts drop",
     "db-auth:studio": "drizzle-kit --config=drizzle.auth.config.ts studio",
+
     "db-dashboard:generate": "drizzle-kit --config=drizzle.dashboard.config.ts generate",
-    "db-dashboard:migrate": "DB_MIGRATING=true drizzle-kit --config=drizzle.dashboard.config.ts migrate",
+    "db-dashboard:migrate": "drizzle-kit --config=drizzle.dashboard.config.ts migrate",
     "db-dashboard:drop": "drizzle-kit --config=drizzle.dashboard.config.ts drop",
     "db-dashboard:studio": "drizzle-kit --config=drizzle.dashboard.config.ts studio --port 4893"
   },

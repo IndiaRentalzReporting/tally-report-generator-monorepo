@@ -29,4 +29,6 @@ COPY --from=installer /app .
 
 EXPOSE 4000
 
-CMD node apps/auth-server/dist/src/index.js
+WORKDIR /app/apps/auth-server
+
+CMD node dist/src/index.js

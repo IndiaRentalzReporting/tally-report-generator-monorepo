@@ -28,4 +28,6 @@ COPY --from=installer app .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "preview", "-w=apps/auth-client"]
+WORKDIR /app/apps/auth-client
+
+CMD ["npm", "run", "preview"]

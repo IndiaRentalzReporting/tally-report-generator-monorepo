@@ -2,19 +2,28 @@
   "name": "@trg/monorepo",
   "private": true,
   "scripts": {
-    "build": "dotenv -- turbo build --concurrency=14",
-    "dev": "dotenv -- turbo dev --concurrency=14",
-    "lint": "dotenv -- turbo lint --concurrency=14",
-    "lint:fix": "dotenv -- turbo lint --concurrency=14 -- --fix",
-    "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json",
+    "dev": "dotenv -e .env.development -- turbo dev --concurrency=14",
+    "lint": "dotenv -e .env.development -- turbo lint --concurrency=14",
+    "lint:fix": "dotenv -e .env.development -- turbo lint --concurrency=14 -- --fix",
 
-    "db-auth:generate": "dotenv -- npm run db-auth:generate -w apps/auth-server",
-    "db-auth:migrate": "dotenv -- npm run db-auth:migrate -w apps/auth-server",
-    "db-auth:studio": "dotenv -- npm run db-auth:studio -w apps/auth-server",
+    "build:dev": "dotenv -e .env.development -- turbo build --concurrency=14",
+    "build:production": "dotenv -e .env.production -- turbo build --concurrency=14",
+    
+    "db-auth:generate:development": "dotenv -e .env.development -- npm run db-auth:generate -w apps/auth-server",
+    "db-auth:migrate:development": "dotenv -e .env.development -- npm run db-auth:migrate -w apps/auth-server",
+    "db-auth:studio:development": "dotenv -e .env.development -- npm run db-auth:studio -w apps/auth-server",
+    "db-auth:generate:production": "dotenv -e .env.production -- npm run db-auth:generate -w apps/auth-server",
+    "db-auth:migrate:production": "dotenv -e .env.production -- npm run db-auth:migrate -w apps/auth-server",
+    "db-auth:studio:production": "dotenv -e .env.production -- npm run db-auth:studio -w apps/auth-server",
+    
+    "db-dashboard:generate:development": "dotenv -e .env.development -- npm run db-dashboard:generate -w apps/auth-server",
+    "db-dashboard:migrate:development": "dotenv -e .env.development -- npm run db-dashboard:migrate -w apps/auth-server",
+    "db-dashboard:studio:development": "dotenv -e .env.development -- npm run db-dashboard:studio -w apps/auth-server",
+    "db-dashboard:generate:production": "dotenv -e .env.production -- npm run db-dashboard:generate -w apps/auth-server",
+    "db-dashboard:migrate:production": "dotenv -e .env.production -- npm run db-dashboard:migrate -w apps/auth-server",
+    "db-dashboard:studio:production": "dotenv -e .env.production -- npm run db-dashboard:studio -w apps/auth-server",
 
-    "db-dashboard:generate": "dotenv -- npm run db-dashboard:generate -w apps/auth-server",
-    "db-dashboard:migrate": "dotenv -- npm run db-dashboard:migrate -w apps/auth-server",
-    "db-dashboard:studio": "dotenv -- npm run db-dashboard:studio -w apps/auth-server"
+    "clean": "rimraf --glob **/dist **/.turbo **/node_modules **/package-lock.json"
   },
   "dependencies": {
     "dotenv-cli": "^7.4.2"

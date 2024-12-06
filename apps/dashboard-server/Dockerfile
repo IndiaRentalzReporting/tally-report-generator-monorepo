@@ -29,4 +29,6 @@ COPY --from=installer /app .
 
 EXPOSE 4000
 
-CMD node apps/dashboard-server/dist/src/index.js
+WORKDIR /app/apps/dashboard-server
+
+CMD node dist/src/index.js

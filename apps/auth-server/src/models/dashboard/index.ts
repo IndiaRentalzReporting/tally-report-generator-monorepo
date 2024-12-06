@@ -1,9 +1,9 @@
 import { BadRequestError } from '@trg_package/errors';
 import { createClient } from '../index';
 import * as dashboardSchemas from './schema';
-import config, { DashboardPgUrlKey } from '../../config';
+import config from '../../config';
 
-const DASHBOARD_PG_URL = config[DashboardPgUrlKey];
+const { DASHBOARD_PG_URL } = config;
 
 if (!DASHBOARD_PG_URL) {
   throw new BadRequestError('Dashboard database URL not provided');

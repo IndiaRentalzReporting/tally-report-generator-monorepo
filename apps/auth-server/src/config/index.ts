@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
 import { z } from 'zod';
 
-export const DashboardPgUrlKey = 'DASHBOARD_PG_URL';
+export const DASHBOARD_PG_URL = 'DASHBOARD_PG_URL';
 
 const EnvSchema = z.object({
   NODE_ENV: z
@@ -16,8 +16,6 @@ const EnvSchema = z.object({
 
   DOMAIN: z.string().default('trg'),
   TLD: z.string().default('local'),
-
-  [DashboardPgUrlKey]: z.string().optional(),
 
   SUPERUSER_PG_HOST: z.string(),
   SUPERUSER_PG_PORT: z.coerce.number(),
@@ -38,6 +36,7 @@ const EnvSchema = z.object({
   DASHBOARD_PG_PASSWORD: z.string().optional(),
   DASHBOARD_PG_USER: z.string().optional(),
   DASHBOARD_PG_DATABASE: z.string().optional(),
+  [DASHBOARD_PG_URL]: z.string().optional(),
 
   MAIL_FROM: z.string(),
   SMTP_SECRET: z.string(),

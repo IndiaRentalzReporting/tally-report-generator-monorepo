@@ -28,4 +28,6 @@ COPY --from=installer app .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "preview", "-w=apps/dashboard-client"]
+WORKDIR /app/apps/dashboard-client
+
+CMD ["npm", "run", "preview"]

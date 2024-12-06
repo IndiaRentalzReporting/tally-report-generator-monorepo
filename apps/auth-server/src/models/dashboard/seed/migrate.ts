@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
-import { DashboardPgUrlKey } from '../../../config';
+import { DASHBOARD_PG_URL } from '../../../config';
 
 export function migrateDashboardSchema(PG_URL: string) {
-  const envVariable = `${DashboardPgUrlKey}=${PG_URL}`;
+  const envVariable = `${DASHBOARD_PG_URL}=${PG_URL}`;
   const scriptName = 'db-dashboard:migrate';
 
   try {
