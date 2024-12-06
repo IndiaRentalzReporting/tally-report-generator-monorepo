@@ -25,7 +25,7 @@ const EnvSchema = z.object({
   REDIS_PORT: z.coerce.number(),
 });
 
-expand(config());
+expand(config({ path: `.env.${process.env.NODE_ENV}` }));
 
 const env = createConfig(EnvSchema, process.env);
 

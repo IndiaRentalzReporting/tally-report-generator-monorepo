@@ -18,7 +18,7 @@ RUN npm install
 COPY --from=builder /app/out/full/ .
 
 RUN npm install -g turbo
-RUN turbo build
+RUN npm run build:production
 
 FROM base as runner
 WORKDIR /app

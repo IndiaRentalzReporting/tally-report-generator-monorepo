@@ -27,7 +27,7 @@ services:
     ports:
       - 4000:4000
     env_file:
-      - ./apps/auth-server/.env
+      - ./apps/auth-server/.env.production
       - ./.env.production
     networks:
       - trg_prod_network
@@ -57,7 +57,7 @@ services:
     ports:
       - 4001:4001
     env_file:
-      - ./apps/dashboard-server/.env
+      - ./apps/dashboard-server/.env.production
       - ./.env.production
     networks:
       - trg_prod_network
