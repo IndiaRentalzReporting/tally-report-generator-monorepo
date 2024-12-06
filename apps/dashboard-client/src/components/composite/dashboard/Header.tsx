@@ -10,7 +10,7 @@ const Header: React.FC = () => {
   return (
     <When condition={!!currentModule}>
       <div className="flex items-center w-full justify-between">
-        <Link to={`/dashboard/${currentModule}/Read`}>
+        <Link to={`/dashboard/${currentModule}`}>
           <h1 className="text-lg font-semibold md:text-2xl">{currentModule}</h1>
         </Link>
         <Create module={currentModule!} />

@@ -47,7 +47,7 @@ export const NavigationProvider = ({ children }: NavigationProviderProps) => {
     } = permission;
     const moduleName = name;
     return {
-      to: `/dashboard/${moduleName}/Read`,
+      to: `/dashboard/${moduleName}`,
       name,
       children: [],
       icon
