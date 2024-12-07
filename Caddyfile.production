@@ -1,0 +1,14 @@
+http://auth.trg.local {
+	reverse_proxy /api/* auth-server:4000
+	reverse_proxy /* auth-client:3000
+}
+
+http://dashboard.trg.local {
+	reverse_proxy /api/* dashboard-server:4001
+	reverse_proxy /* dashboard-client:3001
+}
+
+http://master.trg.local {
+	reverse_proxy /api/* localhost:4002
+	reverse_proxy /* localhost:3002
+}
