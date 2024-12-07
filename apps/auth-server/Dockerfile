@@ -31,4 +31,4 @@ EXPOSE 4000
 
 WORKDIR /app/apps/auth-server
 
-CMD node dist/src/index.js
+CMD npm run db-auth:migrate && node dist/src/index.js
