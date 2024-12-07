@@ -71,9 +71,8 @@ services:
     shm_size: 128mb
     volumes:
       - trg_prod_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: auth@123
-      POSTGRES_DB: trg_auth
+    env_file:
+      - ./.env.postgres
     networks:
       - trg_prod_network
 
