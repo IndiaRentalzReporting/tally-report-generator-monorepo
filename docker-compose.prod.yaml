@@ -72,7 +72,10 @@ services:
     volumes:
       - trg_prod_data:/var/lib/postgresql/data
     env_file:
-      - ./.env.postgres
+      - ./.env.production
+    environment:
+      POSTGRES_PASSWORD: ${AUTH_PG_PASSWORD}
+      POSTGRES_DB: ${AUTH_PG_DATABASE}
     networks:
       - trg_prod_network
 

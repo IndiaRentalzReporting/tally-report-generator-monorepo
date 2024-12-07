@@ -19,7 +19,7 @@ export const columns: ColumnDef<FormState>[] = [
       const report = row.original;
       return (
         <Link
-          to={`/dashboard/Reports/${report.id}`}
+          to={`/dashboard/Reports/Read/${report.id}`}
           onClick={() => queryClient.removeQueries({ queryKey: ['Reports'], exact: false })}
         >
           <span className="flex gap-4 items-center">
